@@ -1,7 +1,7 @@
 # Specification model and coverage
 
-The authoritative source for this revision is the `PDF32000_2008.pdf` already
-committed to the repository: ISO 32000-1:2008, PDF 1.7. The additional
+The authoritative source for this revision is the `PDF32000_2008.pdf`
+preserved in the core repository: ISO 32000-1:2008, PDF 1.7. The additional
 `adobe_supplement_iso32000.pdf` describes Adobe ExtensionLevel 3; its [separate
 coverage and source catalogue](adobe-supplement.md) preserve the distinction
 between ISO definitions, Adobe extensions and Acrobat implementation notes.
@@ -10,7 +10,7 @@ have a separate archival catalogue, including the original portfolio and its
 embedded-document relationships. They support comparison and targeted audits;
 their preservation does not alter the active definition inventories or establish
 implementation of all their procedures.
-Core series 0.5 and optional module releases 0.1.3 require PHP 8.3 or later; the older core 0.1 tags
+Core series 0.5 and optional module releases 0.1.4 require PHP 8.3 or later; the older core 0.1 tags
 retain their PHP 8.5 requirement. These PHP versions are independent of the PDF
 format version. Implementing PDF 2.0 requires a separate specification
 and explicit version-specific definitions.

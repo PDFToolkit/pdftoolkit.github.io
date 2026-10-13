@@ -1,6 +1,6 @@
 # 20. Signer sans déplacer les objets
 
-Le [script complet](../../examples/signed-document.php) produit une page visible
+Le [script complet](https://github.com/PDFToolkit/pdf/blob/v0.5.3/examples/signed-document.php) produit une page visible
 et une signature CMS détachée associée à un champ `/Sig` invisible.
 
 ```sh
@@ -50,4 +50,4 @@ et rejette un message modifié.
 
 Référence : ISO 12.8, pages physiques 474–487.
 
-[Index](README.md) · [Code complet](../../examples/signed-document.php)
+[Index](README.md) · [Code complet](https://github.com/PDFToolkit/pdf/blob/v0.5.3/examples/signed-document.php)

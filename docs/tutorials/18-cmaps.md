@@ -1,6 +1,6 @@
 # 18. Un encodage composé différent d'Identity-H
 
-Le [script complet](../../examples/cmap-font.php) affiche `ABCDEF éΩ fi` avec
+Le [script complet](https://github.com/PDFToolkit/pdf/blob/v0.5.3/examples/cmap-font.php) affiche `ABCDEF éΩ fi` avec
 un encodage d'un octet dans une CMap incorporée. La police provient du module
 optionnel de conversion ; les objets PDF et les CMaps restent dans le core.
 
@@ -30,4 +30,4 @@ La CI vérifie le texte extrait avec pypdf et Poppler.
 
 Référence : ISO 9.7 et 9.10, pages physiques 268–292 et 299–302.
 
-[Index](README.md) · [Code complet](../../examples/cmap-font.php)
+[Index](README.md) · [Code complet](https://github.com/PDFToolkit/pdf/blob/v0.5.3/examples/cmap-font.php)

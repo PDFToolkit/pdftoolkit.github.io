@@ -4,16 +4,16 @@ Les [tutoriels](../tutorials/README.md) introduisent les objets du format par é
 
 | Recette | Résultat | Code |
 | --- | --- | --- |
-| [Un tableau dessiné explicitement](table.md) | En-tête, cinq lignes, fonds alternés, grille et total. | [table.php](../../examples/table.php) |
+| [Un tableau dessiné explicitement](table.md) | En-tête, cinq lignes, fonds alternés, grille et total. | [table.php](https://github.com/PDFToolkit/pdf/blob/v0.5.3/examples/table.php) |
 
 ## Proposer une recette
 
 Une contribution peut porter sur un sommaire imprimé, un graphique, une fiche ou une autre composition. Choisir un cas assez petit pour que le lecteur puisse suivre le graphe d'objets et ses opérateurs.
 
-1. Ajouter un script autonome dans `examples/`, avec des données de démonstration reproductibles et un chemin de sortie optionnel.
+1. Ajouter un script autonome dans `examples/` du core, avec des données de démonstration reproductibles et un chemin de sortie optionnel.
 2. Commenter les étapes qui expliquent les objets, les ressources, les références et les coordonnées. Le script charge `vendor/autoload.php` et utilise l'API du checkout.
-3. Ajouter un guide dans `docs/recipes/`, avec une commande, un aperçu dérivé du PDF, les paramètres à essayer et les limites de la composition. Créditer l'auteur et les sources si la recette provient d'une contribution ou d'un travail existant.
-4. Ajouter les liens dans cet index, vérifier le PDF dans un lecteur et exécuter `composer check`. PHPStan analyse aussi les exemples ; la CI exécute chaque script `examples/*.php` et contrôle son PDF avec qpdf.
+3. Ajouter un guide dans `docs/recipes/` du dépôt de documentation, avec une commande, un aperçu dérivé du PDF, les paramètres à essayer et les limites de la composition. Créditer l'auteur et les sources si la recette provient d'une contribution ou d'un travail existant.
+4. Ajouter les liens dans cet index, vérifier le PDF dans un lecteur et exécuter `composer check` dans le checkout du core. PHPStan analyse aussi les exemples ; la CI exécute chaque script `examples/*.php` et contrôle son PDF avec qpdf. Après publication du package, mettre à jour le manifeste de sources et valider la construction du site central.
 
 Les recettes peuvent montrer des calculs de positions et des répétitions en PHP. Les valeurs, ressources et instructions PDF produites restent les objets du modèle. Une API de mise en page réutilisable peut être développée dans une bibliothèque distincte.
 

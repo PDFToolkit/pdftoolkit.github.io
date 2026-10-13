@@ -6,11 +6,11 @@
 
 Créer trois pages, un plan hiérarchique de signets et des destinations nommées. Les tutoriels [premier document](01-first-document.md) et [pages et texte](02-pages-and-text.md) expliquent déjà les ressources, les flux et l'arbre des pages. Installer les dépendances avec `composer install` ; PHP 8.3 ou supérieur et les extensions indiquées par Composer sont nécessaires.
 
-Le script complet est [examples/navigation.php](../../examples/navigation.php). Chaque étape y est commentée ; il fonctionne seul et n'utilise aucun fichier produit par les autres tutoriels.
+Le script complet est [examples/navigation.php](https://github.com/PDFToolkit/pdf/blob/v0.5.3/examples/navigation.php). Chaque étape y est commentée ; il fonctionne seul et n'utilise aucun fichier produit par les autres tutoriels.
 
 ## Exécuter et regarder
 
-Depuis la racine du dépôt :
+Depuis la racine d'un checkout du core :
 
 ```sh
 php examples/navigation.php
@@ -47,7 +47,7 @@ Le script publie les destinations nommées pour montrer leur construction. Ses s
 | `OutlineDictionary`, `OutlineItem` | Plan du document | §12.3.3, tableaux 152 et 153 |
 | `/PageMode`, `/OpenAction`, `/Outlines` | Préférences et accès depuis le catalogue | §7.7.2, tableau 28 |
 
-Ces références désignent la [norme présente dans le dépôt](../../PDF32000_2008.pdf), également utilisée par les définitions générées.
+Ces références désignent la [norme conservée dans le core](https://github.com/PDFToolkit/pdf/blob/v0.5.3/PDF32000_2008.pdf), également utilisée par les définitions générées.
 
 ## Variantes et limites
 

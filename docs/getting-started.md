@@ -29,9 +29,9 @@ projet consommateur pour fixer les versions installées.
 
 | Package | Responsabilité |
 | --- | --- |
-| [`pdftoolkit/pdf-reader`](/modules/reader/index.html) | Lire les objets et révisions d'un PDF externe, vérifier ses pages et leur héritage, inspecter leurs flux. |
-| [`pdftoolkit/pdf-images`](/modules/images/index.html) | Inspecter des fichiers JPEG et décoder des fichiers PNG en objets image du core. |
-| [`pdftoolkit/pdf-fonts`](/modules/fonts/index.html) | Analyser un TrueType statique et préparer ses métriques et correspondances pour les objets de police du core. |
+| [`pdftoolkit/pdf-reader`](https://pdftoolkit.github.io/modules/reader/index.html) | Lire les objets et révisions d'un PDF externe, vérifier ses pages et leur héritage, inspecter leurs flux. |
+| [`pdftoolkit/pdf-images`](https://pdftoolkit.github.io/modules/images/index.html) | Inspecter des fichiers JPEG et décoder des fichiers PNG en objets image du core. |
+| [`pdftoolkit/pdf-fonts`](https://pdftoolkit.github.io/modules/fonts/index.html) | Analyser un TrueType statique et préparer ses métriques et correspondances pour les objets de police du core. |
 
 Depuis la version **0.1.3**, les modules sont compatibles avec les séries 0.2, 0.3, 0.4 et 0.5 du core et PHP 8.3 ou supérieur. Déclarer le dépôt du core et celui du module choisi dans le projet consommateur. Par exemple, pour importer des fichiers image :
 
@@ -90,7 +90,7 @@ $file = new FileStructure(new FileHeader('1.7'), new FileBody($catalog));
 $file->writeTo('hello-world.pdf');
 ```
 
-L'exemple complet, avec les imports et les métadonnées, se trouve dans [`examples/hello-world.php`](../examples/hello-world.php).
+L'exemple complet, avec les imports et les métadonnées, se trouve dans [`examples/hello-world.php`](https://github.com/PDFToolkit/pdf/blob/v0.5.3/examples/hello-world.php).
 
 ## Tutoriels et recettes
 
@@ -139,7 +139,7 @@ Le writer assemble actuellement le fichier en mémoire. Le lecteur est fourni pa
 
 ## Sécurité
 
-La [politique de sécurité](../SECURITY.md) décrit les signalements privés et les frontières de confiance. La [revue de sécurité](security.md) explique les protections de sérialisation et les responsabilités de l'application pour les chemins, les actions PDF et les limites de ressources.
+La [politique de sécurité](https://github.com/PDFToolkit/pdf/blob/v0.5.3/SECURITY.md) décrit les signalements privés et les frontières de confiance. La [revue de sécurité](security.md) explique les protections de sérialisation et les responsabilités de l'application pour les chemins, les actions PDF et les limites de ressources.
 
 ## Génération des définitions
 

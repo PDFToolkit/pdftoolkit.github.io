@@ -2,17 +2,17 @@
 
 Le [tutoriel sur les images](06-images.md) construit directement des pixels.
 Celui-ci part de fichiers encodés : il sépare leur import de leur représentation
-PDF, puis de leur placement. L'exemple utilise le core 0.2 et le module d'images 0.1.
+PDF, puis de leur placement. L'exemple utilise le core et le module d'images aux versions publiées sélectionnées par le [manifeste de sources](../../resources/sources.json).
 
 La lecture de ces fichiers appartient au module optionnel
 [`pdftoolkit/pdf-images`](https://github.com/PDFToolkit/pdf-images). Les
 échantillons, les images DCT et les flux XObject appartiennent au core.
-`composer install` dans ce checkout installe le module pour les exemples ;
+`composer install` dans le checkout du core installe le module pour les exemples ;
 une application doit le [demander explicitement](../packages.md).
 
-- **Exemple complet :** [image-files.php](../../examples/image-files.php).
+- **Exemple complet :** [image-files.php](https://github.com/PDFToolkit/pdf/blob/v0.5.3/examples/image-files.php).
 - **Résultat :** quatre images sur une page Letter, avec un damier révélant la transparence.
-- **Données :** [motifs synthétiques MIT](https://github.com/PDFToolkit/pdf-images/blob/master/examples/assets/images/README.md), distribués avec le module dans `vendor/pdftoolkit/pdf-images/examples/assets/images/`.
+- **Données :** [motifs synthétiques MIT](https://github.com/PDFToolkit/pdf-images/blob/v0.1.4/examples/assets/images/README.md), distribués avec le module dans `vendor/pdftoolkit/pdf-images/examples/assets/images/`.
 - **Prérequis :** [premier document](01-first-document.md), [dessin](03-graphics.md) et [images](06-images.md).
 
 ## 1. Donner des octets, sans déléguer l'accès au fichier

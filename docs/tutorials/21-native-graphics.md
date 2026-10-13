@@ -1,6 +1,6 @@
 # 21. Images, transparence et calques explicites
 
-Le [script complet](../../examples/native-graphics.php) produit deux pages avec
+Le [script complet](https://github.com/PDFToolkit/pdf/blob/v0.5.3/examples/native-graphics.php) produit deux pages avec
 sept images, des masques, un groupe de transparence et des calques. Les données
 sont des échantillons PDF construits directement, sans fichier image externe.
 
@@ -40,4 +40,4 @@ ainsi que des vecteurs indépendants de mélange RGB et CMYK.
 
 Référence : ISO 8.8–8.11 et 11, pages physiques 215–261 et 321–380.
 
-[Index](README.md) · [Code complet](../../examples/native-graphics.php)
+[Index](README.md) · [Code complet](https://github.com/PDFToolkit/pdf/blob/v0.5.3/examples/native-graphics.php)

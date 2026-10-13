@@ -1,7 +1,7 @@
 # Utiliser le core 0.5
 
 Le core 0.5 conserve PHP 8.3 comme minimum, avec une CI sur PHP 8.3, 8.4 et 8.5.
-Les modules 0.1.3 acceptent les séries 0.2, 0.3, 0.4 et 0.5 du core ; ils restent
+Depuis leur version 0.1.3, les modules acceptent les séries 0.2, 0.3, 0.4 et 0.5 du core ; ils restent
 facultatifs pour une application qui génère uniquement des PDF.
 
 ```bash

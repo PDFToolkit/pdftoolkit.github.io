@@ -47,8 +47,8 @@ Le modèle objet est commun, sans copie parallèle des primitives ni registre gl
 
 Les packages sont distribués depuis GitHub, sans publication Packagist. Les
 contraintes stables sont `roukmoute/pdf:^0.5` pour le core et
-`pdftoolkit/pdf-reader:^0.1.3`, `pdftoolkit/pdf-images:^0.1.3` ou
-`pdftoolkit/pdf-fonts:^0.1.3` pour les modules. Les anciens tags du core `v0.1.0`
+`pdftoolkit/pdf-reader:^0.1.4`, `pdftoolkit/pdf-images:^0.1.4` ou
+`pdftoolkit/pdf-fonts:^0.1.4` pour les modules. Les anciens tags du core `v0.1.0`
 et `v0.1.1` conservent leur contrainte PHP 8.5.
 
 Pour générer seulement des PDF :
@@ -63,7 +63,7 @@ Pour ajouter la lecture de PDF existants :
 ```sh
 composer config repositories.pdf vcs https://github.com/PDFToolkit/pdf
 composer config repositories.pdf-reader vcs https://github.com/PDFToolkit/pdf-reader
-composer require 'roukmoute/pdf:^0.5' 'pdftoolkit/pdf-reader:^0.1.3'
+composer require 'roukmoute/pdf:^0.5' 'pdftoolkit/pdf-reader:^0.1.4'
 ```
 
 Pour convertir des images :
@@ -71,7 +71,7 @@ Pour convertir des images :
 ```sh
 composer config repositories.pdf vcs https://github.com/PDFToolkit/pdf
 composer config repositories.pdf-images vcs https://github.com/PDFToolkit/pdf-images
-composer require 'roukmoute/pdf:^0.5' 'pdftoolkit/pdf-images:^0.1.3'
+composer require 'roukmoute/pdf:^0.5' 'pdftoolkit/pdf-images:^0.1.4'
 ```
 
 Pour analyser des fontes TrueType :
@@ -79,7 +79,7 @@ Pour analyser des fontes TrueType :
 ```sh
 composer config repositories.pdf vcs https://github.com/PDFToolkit/pdf
 composer config repositories.pdf-fonts vcs https://github.com/PDFToolkit/pdf-fonts
-composer require 'roukmoute/pdf:^0.5' 'pdftoolkit/pdf-fonts:^0.1.3'
+composer require 'roukmoute/pdf:^0.5' 'pdftoolkit/pdf-fonts:^0.1.4'
 ```
 
 Les modules demandent le core stable transitivement. Le projet consommateur
@@ -88,12 +88,12 @@ par les dépendances. Conserver le `composer.lock` de l'application pour fixer
 les versions et les révisions.
 
 Avant 1.0, une nouvelle version mineure peut changer les noms et signatures.
-Les contraintes `^0.5` et `^0.1.3` autorisent les correctifs de leur série et
+Les contraintes `^0.5` et `^0.1.4` autorisent les correctifs de leur série et
 écartent la version mineure suivante. Consulter les changelogs avant de changer
 de série. Pour travailler sur les développements à venir, demander explicitement
 `dev-master` pour les packages concernés.
 
-Les modules 0.1.3 acceptent les séries `^0.2 || ^0.3 || ^0.4 || ^0.5` du core. Une
+Les modules 0.1.4 acceptent les séries `^0.2 || ^0.3 || ^0.4 || ^0.5` du core. Une
 application qui reste sur 0.2, 0.3 ou 0.4 peut donc les mettre à jour ; les commandes
 ci-dessus sélectionnent explicitement les constructions du core 0.5. Le core
 conserve ses extensions PHP obligatoires `ctype`, `iconv` et `zlib`. Les backends
@@ -150,7 +150,7 @@ concaténation ni décodage. Les limites de parcours et de nombre de flux sont d
 objets explicites ; les budgets cumulatifs de `ReadDocument` continuent de
 s'appliquer. Pour obtenir les octets décodés, demander séparément
 `$document->streamData($stream)`. Le
-[guide de lecture des pages](https://github.com/PDFToolkit/pdf-reader/blob/master/docs/pages.md)
+[guide de lecture des pages](https://github.com/PDFToolkit/pdf-reader/blob/v0.1.4/docs/pages.md)
 explique chaque étape et fournit un exemple exécutable avec trois pages héritées.
 
 Les valeurs PDF restent des objets : `get()` conserve une référence comme
@@ -169,7 +169,7 @@ Les valeurs lues ne sont pas directement réinjectables dans le writer : leurs
 références appartiennent au fichier d'origine. L'import et le remappage du graphe,
 la réécriture, la fusion et la réparation restent à construire. Consulter
 [la documentation du lecteur](https://github.com/PDFToolkit/pdf-reader#readme)
-et [ses contrôles de sécurité](https://github.com/PDFToolkit/pdf-reader/blob/master/docs/security.md)
+et [ses contrôles de sécurité](https://github.com/PDFToolkit/pdf-reader/blob/v0.1.4/docs/security.md)
 pour choisir ses budgets. Par défaut, les octets binaires conservés et le total
 des flux décodés sont chacun bornés à 128 MiB, en plus des autres limites.
 

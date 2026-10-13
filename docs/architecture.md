@@ -1,6 +1,7 @@
 # Architecture
 
-Cette architecture décrit le core **0.4.0** et les modules optionnels **0.1.2**.
+Cette architecture décrit le core et les modules optionnels aux versions publiées
+sélectionnées dans le [manifeste de sources](../resources/sources.json).
 Le [guide des composants](components.md) présente leurs objets concrets ; la
 [couverture](coverage.md) distingue constructions natives, règles vérifiées et
 travail restant dans les deux références conservées.

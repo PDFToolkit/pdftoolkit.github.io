@@ -6,7 +6,7 @@ Cette leçon construit une page contenant une phrase et un titre documentaire. E
 
 ## Exécuter l'exemple
 
-Depuis la racine du dépôt :
+Depuis la racine d'un checkout du core :
 
 ```sh
 php examples/hello-world.php
@@ -16,7 +16,7 @@ Ouvrir `examples/hello-world.pdf`. La page au format Letter porte la phrase « S
 
 ![Aperçu du premier document](previews/hello-world.png)
 
-Le [code complet](../../examples/hello-world.php) contient les imports et les commentaires qui correspondent aux étapes ci-dessous.
+Le [code complet](https://github.com/PDFToolkit/pdf/blob/v0.5.3/examples/hello-world.php) contient les imports et les commentaires qui correspondent aux étapes ci-dessous.
 
 ## 1. Donner un nom à une ressource de police
 

@@ -4,13 +4,13 @@
 
 ## But et prérequis
 
-Dessiner un petit tableau de cinq articles avec un en-tête sombre, des lignes alternées, une grille et deux polices. La mise en page demeure dans [examples/table.php](../../examples/table.php) : le noyau reçoit des objets d'opérateurs PDF.
+Dessiner un petit tableau de cinq articles avec un en-tête sombre, des lignes alternées, une grille et deux polices. La mise en page demeure dans [examples/table.php](https://github.com/PDFToolkit/pdf/blob/v0.5.3/examples/table.php) : le noyau reçoit des objets d'opérateurs PDF.
 
 Lire les tutoriels [pages et texte](../tutorials/02-pages-and-text.md) et [graphiques](../tutorials/03-graphics.md). Installer les dépendances avec `composer install`, puis utiliser PHP 8.3 ou supérieur et les extensions demandées par Composer.
 
 ## Exécuter et regarder
 
-Depuis la racine du dépôt :
+Depuis la racine d'un checkout du core :
 
 ```sh
 php examples/table.php
@@ -55,7 +55,7 @@ Pour les cellules, `y` diminue lorsqu'on descend dans la table. Le décalage hor
 | Polices Type 1 et polices standard | §9.6.2 |
 | États et positionnement du texte | §9.3 et §9.4 |
 
-Le mot « tableau » désigne ici le résultat visuel. Un tableau sémantique et accessible implique une structure logique PDF supplémentaire (§14.7), que cette recette ne construit pas. La [norme du dépôt](../../PDF32000_2008.pdf) et le [guide d'architecture](../architecture.md) donnent le cadre de ces objets.
+Le mot « tableau » désigne ici le résultat visuel. Un tableau sémantique et accessible implique une structure logique PDF supplémentaire (§14.7), que cette recette ne construit pas. La [norme conservée dans le core](https://github.com/PDFToolkit/pdf/blob/v0.5.3/PDF32000_2008.pdf) et le [guide d'architecture](../architecture.md) donnent le cadre de ces objets.
 
 ## Adapter la recette
 

@@ -6,11 +6,11 @@
 
 Créer deux zones cliquables sur une page : l'une ouvre le dépôt GitHub, l'autre affiche une seconde page. Ce tutoriel compose les classes issues des tableaux de la norme pour montrer comment utiliser une fonctionnalité qui n'a pas de façade spécialisée dans le domaine.
 
-Lire [pages et texte](02-pages-and-text.md) et [destinations](04-navigation.md), puis installer les dépendances avec `composer install`. Le script [examples/links.php](../../examples/links.php) fonctionne seul sous PHP 8.3 ou supérieur avec les extensions demandées par Composer.
+Lire [pages et texte](02-pages-and-text.md) et [destinations](04-navigation.md), puis installer les dépendances avec `composer install`. Le script [examples/links.php](https://github.com/PDFToolkit/pdf/blob/v0.5.3/examples/links.php) fonctionne seul sous PHP 8.3 ou supérieur avec les extensions demandées par Composer.
 
 ## Exécuter et regarder
 
-Depuis la racine du dépôt :
+Depuis la racine d'un checkout du core :
 
 ```sh
 php examples/links.php
@@ -56,7 +56,7 @@ Les définitions exposent aussi les règles conditionnelles dans leurs descripti
 | Destination explicite `/Fit` | §12.3.2.2, tableau 151 |
 | Action `/URI` | §12.6.4.7, tableau 206 |
 
-Voir la [norme présente dans le dépôt](../../PDF32000_2008.pdf) et le [guide des définitions](../specification.md).
+Voir la [norme conservée dans le core](https://github.com/PDFToolkit/pdf/blob/v0.5.3/PDF32000_2008.pdf) et le [guide des définitions](../specification.md).
 
 ## Variantes et limites
 

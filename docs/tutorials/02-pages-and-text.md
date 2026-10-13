@@ -2,11 +2,11 @@
 
 [Index des tutoriels](README.md) · [Précédent : premier document](01-first-document.md) · [Suivant : tracés et couleurs](03-graphics.md)
 
-Cette leçon construit trois pages A4 qui partagent leurs ressources. Elle montre comment placer du texte, choisir un interligne et composer un pied de page. Le script complet est [pages-and-text.php](../../examples/pages-and-text.php).
+Cette leçon construit trois pages A4 qui partagent leurs ressources. Elle montre comment placer du texte, choisir un interligne et composer un pied de page. Le script complet est [pages-and-text.php](https://github.com/PDFToolkit/pdf/blob/v0.5.3/examples/pages-and-text.php).
 
 ## Exécuter l'exemple
 
-Utiliser PHP 8.3 ou supérieur et les dépendances installées par `composer install`, comme dans le [premier tutoriel](01-first-document.md). Depuis la racine du dépôt :
+Utiliser PHP 8.3 ou supérieur et les dépendances installées par `composer install`, comme dans le [premier tutoriel](01-first-document.md). Depuis la racine d'un checkout du core :
 
 ```sh
 php examples/pages-and-text.php pages-and-text.pdf

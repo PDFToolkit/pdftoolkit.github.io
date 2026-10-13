@@ -1,6 +1,6 @@
 # 16. Organiser un PDF pour l'accès progressif
 
-Le [script complet](../../examples/linearized.php) écrit trois pages, deux polices
+Le [script complet](https://github.com/PDFToolkit/pdf/blob/v0.5.3/examples/linearized.php) écrit trois pages, deux polices
 partagées, des informations documentaires et des signets. La première page et
 ses dépendances arrivent au début du fichier.
 
@@ -32,4 +32,4 @@ signalée et le contrôle passe par l'oracle séparé.
 
 Référence : ISO annexe F, pages physiques 683–702.
 
-[Index](README.md) · [Code complet](../../examples/linearized.php)
+[Index](README.md) · [Code complet](https://github.com/PDFToolkit/pdf/blob/v0.5.3/examples/linearized.php)

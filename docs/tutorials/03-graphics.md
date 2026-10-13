@@ -2,11 +2,11 @@
 
 [Index des tutoriels](README.md) · [Précédent : pages et texte](02-pages-and-text.md) · [Suivant : plan du document](04-navigation.md)
 
-Cette leçon dessine des rectangles, une courbe de Bézier et un segment pointillé. Elle applique ensuite une translation et une rotation au même rectangle local. Le script complet est [graphics.php](../../examples/graphics.php).
+Cette leçon dessine des rectangles, une courbe de Bézier et un segment pointillé. Elle applique ensuite une translation et une rotation au même rectangle local. Le script complet est [graphics.php](https://github.com/PDFToolkit/pdf/blob/v0.5.3/examples/graphics.php).
 
 ## Exécuter l'exemple
 
-Utiliser PHP 8.3 ou supérieur et les dépendances installées par `composer install`. L'assemblage du document est celui du [premier tutoriel](01-first-document.md). Depuis la racine du dépôt :
+Utiliser PHP 8.3 ou supérieur et les dépendances installées par `composer install`. L'assemblage du document est celui du [premier tutoriel](01-first-document.md). Depuis la racine d'un checkout du core :
 
 ```sh
 php examples/graphics.php graphics.pdf
