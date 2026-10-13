@@ -1,0 +1,79 @@
+name: Documentation
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: documentation-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build the shared documentation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Select released source inputs
+        id: sources
+        run: python tools/check_sources.py --source-root _sources/pdf --github-output "$GITHUB_OUTPUT"
+      - uses: actions/checkout@v6
+        with:
+          repository: PDFToolkit/pdf
+          ref: ${{ steps.sources.outputs.core_revision }}
+          fetch-depth: 0
+          path: _sources/pdf
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: ctype, iconv, zlib, openssl
+          tools: composer:v2
+          coverage: none
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Install the released core's locked build inputs
+        env:
+          COMPOSER_ROOT_VERSION: ${{ steps.sources.outputs.core_alias }}
+        run: |
+          composer install --working-dir _sources/pdf --no-interaction --prefer-dist
+          composer check-platform-reqs --working-dir _sources/pdf
+          composer audit --working-dir _sources/pdf --locked
+      - run: python -m pip install --require-hashes -r tools/site-requirements.txt
+      - run: python -m pip install --require-hashes -r _sources/pdf/tools/public-key-validation-requirements.txt
+      - uses: ./_sources/pdf/.github/actions/setup-qpdf
+      - run: sudo apt-get update && sudo apt-get install -y poppler-utils
+      - name: Build real examples and verify every documentation page
+        run: python tools/build_docs.py --source-root _sources/pdf --docs-revision "$GITHUB_SHA" --remote
+      - name: Verify the old project-site compatibility output
+        run: |
+          python tools/build_legacy_site.py --site-url https://pdftoolkit.github.io/ --site-dir _site --legacy-base /pdf --legacy-manifest resources/legacy-site-manifest.json --output _legacy
+          python tools/check_legacy_site.py _legacy
+          node tests/legacy_redirect.cjs _legacy
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+
+  deploy:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/configure-pages@v5
+      - name: Publish the shared documentation
+        id: deployment
+        uses: actions/deploy-pages@v4
