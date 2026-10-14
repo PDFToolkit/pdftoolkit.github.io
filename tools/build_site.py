@@ -76,6 +76,7 @@ LESSONS = [
     ('31-pdf20-modern-signature', '31-pdf20-signatures-modernes', 'Algorithmes modernes et intégrité PDF', 'pdf20-modern-signature', 'Signature SHA-3, AES-GCM et MAC vérifiés indépendamment.'),
     ('32-pdf20-timestamp-dss', '32-pdf20-horodatages-dss', 'Horodatages et preuves de validation', 'pdf20-timestamp-dss', 'RFC3161, révisions signées, DSS et VRI explicites.'),
     ('33-pdf20-geospatial', '33-pdf20-geospatial', 'Objets géospatiaux et mesures', 'pdf20-geospatial', 'Systèmes de coordonnées, points appariés, viewports et nuages de points.'),
+    ('34-pdf20-structure-destinations', '34-pdf20-destinations-structure', 'Destinations vers la structure logique', 'pdf20-structure-destinations', 'Cibles sémantiques, parcours du contenu et destinations de page de repli.'),
 ]
 EXTERNAL_EXAMPLES = {
     'reading-pages': {

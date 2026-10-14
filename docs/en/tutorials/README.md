@@ -108,6 +108,7 @@ PDF, all three pages and the objects read.
 | [31. Modern signatures and integrity](31-pdf20-modern-signature.md) | Named curves, SHA-3, exact byte ranges and PDF MAC. | [pdf20-modern-signature.php](https://github.com/PDFToolkit/pdf/blob/v0.7.0/examples/pdf20-modern-signature.php) |
 | [32. Document timestamps and DSS](32-pdf20-timestamp-dss.md) | RFC3161, explicit validation policy, VRI and preserved historical signatures. | [pdf20-timestamp-dss.php](https://github.com/PDFToolkit/pdf/blob/v0.7.0/examples/pdf20-timestamp-dss.php) |
 | [33. Geospatial objects and measurements](33-pdf20-geospatial.md) | Coordinate systems, paired control points, viewports, matrices and point clouds. | [pdf20-geospatial.php](https://github.com/PDFToolkit/pdf/blob/v0.7.0/examples/pdf20-geospatial.php) |
+| [34. Structure destinations](34-pdf20-structure-destinations.md) | Semantic targets, content traversal, named SD entries and explicit page fallbacks. | [pdf20-structure-destinations.php](https://github.com/PDFToolkit/pdf/blob/v0.7.0/examples/pdf20-structure-destinations.php) |
 
 After the first document, lessons 03 to 07 can be read in any order matching
 your interests. Lessons 08 and 11 concern file organization; lessons 09 and 10

@@ -214,6 +214,8 @@ TEXT = {
     'RFC3161, révisions signées, DSS et VRI explicites.': 'RFC3161, signed revisions, explicit DSS and VRI.',
     'Objets géospatiaux et mesures': 'Geospatial objects and measurements',
     'Systèmes de coordonnées, points appariés, viewports et nuages de points.': 'Coordinate systems, paired points, viewports and point clouds.',
+    'Destinations vers la structure logique': 'Destinations targeting logical structure',
+    'Cibles sémantiques, parcours du contenu et destinations de page de repli.': 'Semantic targets, content traversal and fallback page destinations.',
     'PHP 8.3+ 64 bits · PDF 1.7 et 2.0': '64-bit PHP 8.3+ · PDF 1.7 and 2.0',
     'PDF 2.0 et fichiers associés': 'PDF 2.0 and associated files',
     'Métadonnées UTF-8, fichiers AF et propriétés MCAF nommées.': 'UTF-8 metadata, AF files and named MCAF properties.',

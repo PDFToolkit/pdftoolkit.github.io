@@ -144,6 +144,17 @@ dimensions, normalized bounds and version requirements. It does not fetch a GIS
 registry or convert projections. The [geospatial tutorial](tutorials/33-pdf20-geospatial.md)
 explains two independently declared sample regions and their serialized data.
 
+## Navigation can target a logical element
+
+`StructureDestination` identifies a real member of the structure tree and an
+explicit `DestinationView`. Page resolution follows the first content item in
+declared child order, with a first-page fallback when no content item qualifies.
+GoTo actions and named destination dictionaries preserve their page fallback
+alongside `SD`. Remote and embedded forms use explicit byte-string IDs without
+opening another file. Effective-graph checks preserve these relationships in
+retained revisions. The [structure-destination tutorial](tutorials/34-pdf20-structure-destinations.md)
+shows semantic links and their actual PDF objects.
+
 ## Independent checks
 
 The PHP suite runs under PHP 8.3, 8.4 and 8.5. The companion checks use separate

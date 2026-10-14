@@ -40,6 +40,8 @@ def build(args) -> None:
         [sys.executable, "tools/validate_adobe_references.py"],
         [sys.executable, "tools/validate_iso32000_bundle.py"],
         [sys.executable, "tools/generate_structure_inclusion.py", "--check"],
+        [sys.executable, "tools/check_wtpdf_requirements.py"],
+        [sys.executable, "-m", "unittest", "discover", "-s", "tests", "-p", "test_wtpdf_requirements.py"],
     ):
         run(command, source)
     api = work / "api.json"
@@ -55,13 +57,14 @@ def build(args) -> None:
     run([args.qpdf, "--check", output], source)
     run([args.php, module / "examples/pages.php", output], source, pdfs / "reading-pages.txt")
     run([args.pdftoppm, "-r", "96", "-png", output, previews / "reading-pages"], source)
-    for validator in ("validate_mechanisms.py", "validate_adobe_supplement.py"):
+    for validator in ("validate_mechanisms.py", "validate_adobe_supplement.py", "validate_pdf20_fonts.py"):
         run([sys.executable, "tools/" + validator, pdfs], source)
     run([sys.executable, "tools/validate_pdf20_foundations.py", "--php", args.php, "--qpdf", args.qpdf, "--example", pdfs / "pdf20-associated-files.pdf"], source)
     run([sys.executable, "tools/validate_pdf20_metadata.py", "--php", args.php, "--qpdf", args.qpdf, "--work-dir", work / "pdf20-metadata"], source)
     run([sys.executable, "tools/validate_iso32000_crypto.py", "--php", args.php, "--qpdf", args.qpdf, "--openssl", args.openssl, "--work-dir", work / "pdf20-crypto"], source)
     run([sys.executable, "tools/validate_pdf20_timestamps.py", "--php", args.php, "--qpdf", args.qpdf, "--openssl", args.openssl, "--work-dir", work / "pdf20-timestamps"], source)
     run([sys.executable, "tools/validate_pdf20_geospatial.py", "--php", args.php, "--qpdf", args.qpdf, "--work-dir", work / "pdf20-geospatial"], source)
+    run([sys.executable, "tools/validate_pdf20_structure_destinations.py", "--php", args.php, "--qpdf", args.qpdf, "--work-dir", work / "pdf20-structure-destinations"], source)
     run([sys.executable, "tools/validate_public_key_security.py", "--php", args.php, "--pdf-version", "2.0"], source)
     poppler = ["--poppler-glib-bin", args.poppler_glib_bin] if args.poppler_glib_bin else ["--pdftotext", args.pdftotext]
     run([sys.executable, "tools/validate_pdf20_tagging.py", "--php", args.php, "--qpdf", args.qpdf, "--example", pdfs / "pdf20-tagged-namespaces.pdf", *poppler], source)

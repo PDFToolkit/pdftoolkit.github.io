@@ -158,6 +158,18 @@ ne consultent pas de registre SIG et ne convertissent pas de projections.
 Le [tutoriel géospatial](tutorials/33-pdf20-geospatial.md) explique deux zones
 d’exemple déclarées indépendamment et leurs données sérialisées.
 
+## La navigation peut cibler un élément logique
+
+`StructureDestination` désigne un véritable membre de l’arbre de structure et un
+`DestinationView` explicite. La résolution de page suit le premier contenu dans
+l’ordre déclaré des enfants, avec repli sur la première page si aucun contenu ne
+convient. Actions GoTo et dictionnaires de destination nommés conservent leur
+repli de page à côté de `SD`. Les formes distantes ou incorporées utilisent des
+ID en chaînes d’octets explicites sans ouvrir un autre fichier. Les contrôles du
+graphe effectif préservent ces relations dans les révisions conservées.
+Le [tutoriel des destinations de structure](tutorials/34-pdf20-structure-destinations.md)
+montre les liens sémantiques et leurs véritables objets PDF.
+
 ## Vérifications indépendantes
 
 La suite PHP est exécutée sous PHP 8.3, 8.4 et 8.5. Les contrôles complémentaires
