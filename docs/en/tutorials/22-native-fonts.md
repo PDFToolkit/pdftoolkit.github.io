@@ -1,0 +1,38 @@
+# 22. Simple fonts, Type3 and vertical writing
+
+The [complete script](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/native-fonts.php)
+combines Type3 glyphs drawn with PDF operators, an embedded simple font and a
+composite font whose metrics position glyphs vertically.
+
+```sh
+php examples/native-fonts.php native-fonts.pdf
+```
+
+A Type3 font contains `CharProcs`, each a drawing stream. `d0` or `d1` declares
+its width and, where applicable, its box. `Type3CharProcs`, `EncodingDifferences`
+and `SimpleWidths` connect names, codes and metrics. The font matrix transforms
+glyph coordinates into text space. The drawing program does not become a layout engine.
+
+A simple font uses one-byte codes, `FirstChar`, `LastChar` and corresponding
+widths. Its `FontDescriptor` describes metrics and references an embedded program.
+`FontFile`, `FontFile2` and `FontFile3` have distinct formats and lengths; the
+program is supplied normalized. The script uses the optional module to prepare
+TrueType data, then composes them into the core's PDF objects.
+
+A composite font uses CIDs. `DW`/`W` supplies horizontal widths; `DW2`/`W2`
+supplies vertical displacement and origin position. Their range representation
+does not expand every CID in memory. Encoding selects vertical mode;
+`/ToUnicode` preserves characters for extraction.
+
+Subset names have a `SubsetFontName` object and explicit tag. The writer shares
+a per-document registry and rejects a collision between distinct programs.
+The core neither automatically subsets programs nor shapes complex scripts.
+
+Change Type3 glyphs or vertical metrics to see their roles directly. CI verifies
+encodings, programs, CID/GID mappings and extracted text with pypdf and Poppler.
+Some readers classify FontFile3/OpenType with glyf outlines as TrueType; Table
+126 permits that declaration, and the example's rendering is checked separately.
+
+Reference: ISO 9.5–9.10, Tables 110–127, physical pages 261–303; Annex D.
+
+[Index](README.md) · [Complete code](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/native-fonts.php)

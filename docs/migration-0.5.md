@@ -8,7 +8,7 @@ facultatifs pour une application qui génère uniquement des PDF.
 composer require 'roukmoute/pdf:^0.5'
 ```
 
-Déclarer le dépôt VCS du core et ceux des modules choisis comme expliqué dans
+Installer le core et les modules choisis depuis Packagist comme expliqué dans
 [le guide des packages](packages.md). Pour développer dans le checkout du core,
 utiliser `COMPOSER_ROOT_VERSION=0.5.x-dev` avant `composer install`.
 

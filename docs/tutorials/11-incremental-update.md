@@ -67,7 +67,7 @@ qpdf --check incremental-update.pdf
 qpdf --show-xref incremental-update.pdf
 ```
 
-Les révisions prises en charge proviennent des objets `FileRevision` produits par la bibliothèque. L'import et l'analyse de PDF externes restent à implémenter. La suppression et le réemploi d'objets, les changements de format xref, les références hybrides, les fichiers chiffrés, les signatures et la linéarisation demandent leurs mécanismes propres. Une mise à jour incrémentale ne retire pas les contenus anciens du fichier : elle ne doit pas servir à effacer une information confidentielle.
+Les révisions prises en charge proviennent des objets `FileRevision` produits par la bibliothèque. Le module optionnel `pdftoolkit/pdf-reader` permet déjà d'inspecter un PDF externe, comme le montre la [leçon 12](12-reading-pages.md). L'import de ses objets dans le writer, leur remappage et leur conversion en révisions modifiables restent à construire. La suppression et le réemploi d'objets, les changements de format xref, les références hybrides, les fichiers chiffrés, les signatures et la linéarisation demandent leurs mécanismes propres. Une mise à jour incrémentale ne retire pas les contenus anciens du fichier : elle ne doit pas servir à effacer une information confidentielle.
 
 Références : ISO 32000-1:2008, **7.5.4–7.5.8** pour xref, trailers, révisions et conteneurs d'objets, et **14.4** pour les identifiants de fichier.
 

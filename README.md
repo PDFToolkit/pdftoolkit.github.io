@@ -1,9 +1,15 @@
 # PDFToolkit documentation
 
+[English](README.md) · [Français](README.fr.md)
+
+The website opens in [English](https://pdftoolkit.github.io/) by default;
+the complete [French documentation](https://pdftoolkit.github.io/fr/) is
+available through the language selector on every page.
+
 The shared documentation for PDFToolkit lives at **https://pdftoolkit.github.io/**.
 It includes the core, PDF reader, image converters and font converters, with
 their guides, complete API reference, tutorials, executable PHP source and PDF
-previews. Start with [the package guide](https://pdftoolkit.github.io/guides/modules.html)
+previews. Start with [the package guide](https://pdftoolkit.github.io/guides/packages.html)
 or the module you need:
 
 - [Core](https://pdftoolkit.github.io/modules/core/)
@@ -44,7 +50,7 @@ repository's own commit.
 
 ## Build and contribute
 
-See [the build guide](docs/site/README.md) for local commands and requirements.
+See [the build guide](docs/en/site/README.md) for local commands and requirements.
 The workflow builds actual PDF examples, checks them with independent readers,
 renders all their pages, generates every API page and validates the whole site.
 

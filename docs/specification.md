@@ -1,118 +1,132 @@
-# Specification model and coverage
+# Modèle de spécification et couverture
 
-The authoritative source for this revision is the `PDF32000_2008.pdf`
-preserved in the core repository: ISO 32000-1:2008, PDF 1.7. The additional
-`adobe_supplement_iso32000.pdf` describes Adobe ExtensionLevel 3; its [separate
-coverage and source catalogue](adobe-supplement.md) preserve the distinction
-between ISO definitions, Adobe extensions and Acrobat implementation notes.
-The retained [Adobe PDF 1.7 reference, errata and redaction addendum](adobe-references.md)
-have a separate archival catalogue, including the original portfolio and its
-embedded-document relationships. They support comparison and targeted audits;
-their preservation does not alter the active definition inventories or establish
-implementation of all their procedures.
-Core series 0.5 and optional module releases 0.1.4 require PHP 8.3 or later; the older core 0.1 tags
-retain their PHP 8.5 requirement. These PHP versions are independent of the PDF
-format version. Implementing PDF 2.0 requires a separate specification
-and explicit version-specific definitions.
+La source faisant autorité pour cette révision est `PDF32000_2008.pdf`,
+conservé dans le dépôt du core : ISO 32000-1:2008, PDF 1.7. Le document
+supplémentaire `adobe_supplement_iso32000.pdf` décrit Adobe ExtensionLevel 3 ;
+sa [couverture et son catalogue de sources distincts](adobe-supplement.md)
+préservent la différence entre définitions ISO, extensions Adobe et notes
+d'implémentation Acrobat. La [référence Adobe PDF 1.7, ses errata et l'addendum
+de caviardisation](adobe-references.md) conservés ont un catalogue d'archivage
+distinct, comprenant le portfolio original et les relations de ses documents
+incorporés. Ils servent à la comparaison et aux audits ciblés ; leur
+conservation ne modifie pas les inventaires de définitions actifs et ne prouve
+pas l'implémentation de toutes leurs procédures.
+La série 0.5 du core et les versions 0.1.5 des modules optionnels nécessitent
+PHP 8.3 ou supérieur ; les anciens tags 0.1 du core conservent leur exigence
+PHP 8.5. Ces versions PHP sont indépendantes de la version du format PDF.
+Implémenter PDF 2.0 demande une spécification distincte et des définitions
+explicites propres à cette version.
 
-The source contains 756 PDF pages, 823 outline entries, 370 main numbered tables
-and 22 annex tables. The catalogue inventories all 392 tables and all 73 content
-stream operator tokens, including the obsolete `F` and inline image delimiters
-`BI`, `ID`, and `EI`.
+La source contient 756 pages PDF, 823 entrées de plan, 370 tableaux numérotés
+principaux et 22 tableaux d'annexes. Le catalogue recense les 392 tableaux et
+les 73 tokens d'opérateur de flux de contenu, y compris l'ancien `F` et les
+délimiteurs d'image inline `BI`, `ID` et `EI`.
 
-The 263 tables describing dictionary entries, parameters, or attribute entries
-produce 263 concrete dictionary classes, 263 immutable table definition classes,
-1,399 concrete fixed entry classes and six concrete variable entry classes.
-Table identifiers remain in class names to distinguish similarly named
-dictionaries and to make each source definition traceable. PDF names are case
-sensitive; PHP class names are not. For conflicting names such as `/OP` and `/op`,
-the generated class name includes the hexadecimal spelling of its PDF name.
+Les 263 tableaux décrivant des entrées de dictionnaires, des paramètres ou des
+entrées d'attributs produisent 263 classes concrètes de dictionnaires, 263
+classes immuables de définitions de tableaux, 1 399 classes concrètes d'entrées
+fixes et six classes concrètes d'entrées variables. Les identifiants de tableaux
+restent dans les noms de classes pour distinguer les dictionnaires de noms
+similaires et rendre chaque définition traçable. Les noms PDF sont sensibles
+à la casse ; les noms de classes PHP ne le sont pas. Pour les noms en conflit
+comme `/OP` et `/op`, le nom de classe généré contient l'écriture hexadécimale
+de son nom PDF.
 
-Each entry accepts PDF objects, with a PHP union matching the source's object
-types. References remain explicit objects. An indirect reference is checked
-against its target type. Stream values require an `IndirectReference`; callers
-never pass a direct stream as a dictionary value. Known fixed `Type` names are
-validated. Rectangles require four direct numbers. Cross-reference stream entries
-and their `Index`/`W` array elements must remain direct.
+Chaque entrée accepte des objets PDF, avec une union PHP correspondant aux
+types d'objets de la source. Les références restent des objets explicites.
+Une référence indirecte est vérifiée par rapport au type de sa cible. Les
+valeurs de flux exigent un `IndirectReference` ; l'appelant ne fournit jamais
+un flux direct comme valeur de dictionnaire. Les noms `Type` fixes connus
+sont validés. Les rectangles exigent quatre nombres directs. Les entrées
+des flux de références croisées et les éléments de leurs tableaux `Index`/`W`
+doivent rester directs.
 
-Each definition is an object composed of `SourceReference`, `Requirement`,
-`ObjectTypeConstraint`, and `EntryDefinition` objects. `TableDefinition` composes
-common dictionary tables explicitly. `Catalogue` is an immutable collection
-constructed by the caller. There is no singleton, shared cache, global service
-registry, or runtime JSON lookup. The JSON files are source inventories used by
-the reproducible build tools.
+Chaque définition est un objet composé de `SourceReference`, `Requirement`,
+`ObjectTypeConstraint` et `EntryDefinition`. `TableDefinition` compose
+explicitement les tableaux de dictionnaires communs. `Catalogue` est une
+collection immuable construite par l'appelant. Il n'y a ni singleton, ni cache
+partagé, ni registre global de services, ni recherche JSON à l'exécution.
+Les fichiers JSON sont des inventaires de sources utilisés par les outils
+de construction reproductible.
 
-Dictionary classes allow incremental construction through immutable `with()`
-operations. Serializing them checks unconditional required entries. Conditional
-requirements, inherited entries, numeric limits, enumerations other than fixed
-`Type` names, relationships between dictionaries, and algorithm-specific rules
-are preserved in the source description but are **not all automatically checked**.
-Specialized document, page, font, content stream and function objects provide
-additional behavior and constraints.
+Les classes de dictionnaires permettent une construction progressive par
+des opérations `with()` immuables. Leur sérialisation contrôle les entrées
+obligatoires inconditionnelles. Les exigences conditionnelles, entrées héritées,
+limites numériques, énumérations autres que les noms `Type` fixes, relations
+entre dictionnaires et règles propres aux algorithmes sont conservées dans
+la description de source, mais **ne sont pas toutes contrôlées automatiquement**.
+Les objets spécialisés de document, page, police, flux de contenu et fonction
+apportent des comportements et contraintes supplémentaires.
 
-This is an inventory and a low-level object construction model. It is not a
-claim that every algorithm or every valid document allowed by the 756-page
-standard has an implemented, independently verified semantic model. Native
-signing, tagging, compression, colour/shading and linearization now have executable
-models and independent validations. Remaining variants, constraints and external
-processors are tracked in the [mechanism coverage guide](coverage.md) and its
-source inventory. Named dictionary classes alone do not implement algorithms.
-Rendering, external image/font conversion, script execution and multimedia playback
-retain separate responsibilities.
+Il s'agit d'un inventaire et d'un modèle de construction objet de bas niveau.
+Ce n'est pas une affirmation que chaque algorithme ou chaque document valide
+permis par les 756 pages de la norme dispose d'un modèle sémantique implémenté
+et vérifié indépendamment. La signature, le balisage, la compression, les
+couleurs/dégradés et la linéarisation natifs disposent maintenant de modèles
+exécutables et de validations indépendantes. Les variantes, contraintes et
+processeurs externes restants sont suivis dans le [guide de couverture des
+mécanismes](coverage.md) et son inventaire de sources. Les classes de
+dictionnaires nommées n'implémentent pas les algorithmes à elles seules.
+Le rendu, la conversion externe d'images/polices, l'exécution de scripts et
+la lecture multimédia conservent des responsabilités distinctes.
 
-The additional [historical AES-256 revision 5 backend](adobe-supplement.md)
-implements the algorithms of the retained Adobe supplement with explicit
-credentials, permissions, SASLprep Unicode 3.2 and writer integration. This is
-an opt-in legacy protocol. The ISO R=2/3/4 and public-key s3/s4/s5 handlers
-also have explicit writer operations. AES-CBC does not authenticate file contents.
+Le [backend historique AES-256 révision 5](adobe-supplement.md) supplémentaire
+implémente les algorithmes du supplément Adobe conservé, avec credentials,
+permissions, SASLprep Unicode 3.2 et intégration au writer explicites. Ce
+protocole ancien est sélectionné volontairement. Les handlers ISO R=2/3/4
+et à clé publique s3/s4/s5 ont aussi des opérations de writer explicites.
+AES-CBC n'authentifie pas le contenu du fichier.
 
-The supplement also has separately validated historical R=2–R=4 key derivation,
-an ordered public-key recipient digest, 3D unit mapping and barcode data
-preparation/module-width calculation. Their APIs state their exact inputs and
-limits. Native CMS backends and public-key operations are composed explicitly;
-media rendering and barcode symbology encoding still require external processors.
-See the [supplement guide](adobe-supplement.md)
-and its versioned coverage inventory for each algorithm's status.
+Le supplément possède aussi une dérivation historique de clés R=2–R=4
+validée séparément, un condensat ordonné des destinataires à clé publique,
+la correspondance des unités 3D et la préparation des données/calcul de largeur
+des modules de codes-barres. Leurs API précisent leurs entrées et limites
+exactes. Les backends CMS natifs et les opérations à clé publique se composent
+explicitement ; le rendu des médias et l'encodage des symbologies de codes-barres
+demandent toujours des processeurs externes. Voir le [guide du supplément](adobe-supplement.md)
+et son inventaire de couverture versionné pour le statut de chaque algorithme.
 
-## Implemented mechanisms beyond the syntax model
+## Mécanismes implémentés au-delà du modèle syntaxique
 
-The core implements the PDF objects and mechanisms described by the Adobe/ISO
-reference. External TrueType, JPEG and PNG parsing is supplied by optional
-packages; reading existing PDFs is also a separate package. Modules depend on
-the core, which has no production dependency on them. See the
-[package boundaries and installation guide](packages.md).
+Le core implémente les objets et mécanismes PDF décrits par la référence
+Adobe/ISO. L'analyse externe TrueType, JPEG et PNG est fournie par des packages
+optionnels ; la lecture des PDF existants est aussi un package distinct.
+Les modules dépendent du core, qui n'a aucune dépendance de production vers eux.
+Voir le [guide des frontières de packages et d'installation](packages.md).
 
-| Mechanism | Executable behavior | Explicit limits |
+| Mécanisme | Comportement exécutable | Limites explicites |
 | --- | --- | --- |
-| PDF fonts — core | Explicit font programs and metrics, simple and composite fonts, encodings, horizontal/vertical CID widths, CMaps, UseCMap and Unicode mappings. | The core receives normalized programs and values; external font parsing, subsetting and shaping need their own processors. |
-| TrueType conversion — pdf-fonts | Static sfnt/glyf validation, Unicode cmap 4/12, metrics, full-glyph CIDFont program and conversion factories producing core font objects. | No font collections, CFF/variable fonts, glyph subsetting, vertical writing, kerning or complex-script shaping. The derived CIDFontProgram removes cmap as required by 9.9 and the invalidated DSIG. The original font's embedding permissions are checked. |
-| PDF images — core | Explicit dimensions, sample layouts, colour spaces, Decode, image stencils, colour-key/explicit/soft masks and declarations of encoded image data. | Encoded data and its colour/alpha semantics are caller-declared. External codecs and file inspection belong to optional converters. |
-| JPEG conversion — pdf-images | Marker/frame/table validation, baseline and progressive eight-bit grayscale/RGB JPEG and Adobe CMYK transform zero into a core DCTImage. Original DCT bytes are preserved. | No entropy decoding or JPEG encoding; the reader decodes the coefficients. ICC, YCCK and ambiguous colour semantics are rejected. EXIF orientation is not applied. |
-| PNG conversion — pdf-images | CRC/framing/order checks, bounded zlib decoding, all five scanline filters, eight-bit grayscale/RGB/indexed/alpha samples and tRNS into core sample objects. | Static non-interlaced PNG only; other depths, APNG and embedded colour profiles are rejected. Ancillary colour metadata does not create calibrated PDF spaces. Import limits are explicit objects. |
-| Incremental revisions | Exact frozen FileRevision snapshots and timeline, additions/replacements, linked free lists, release/reuse, retired generations and aliases, offsets and Prev, ordinary/stream/hybrid xrefs, encrypted variants and updates after initial linearization. | Generated revisions only. Replacing a live value retains its object family and dictionary Type; a new identity reusing a free number may have a different type. Old bytes remain, so updates cannot erase confidential content. |
-| Navigation | Page labels, explicit and named destinations, viewport calculations, article rings and page drawing order, transitions and presentation sequences. | Native graph and arithmetic are checked against the effective catalog; a viewer renders and animates their presentation. |
-| Files and collections | Supplied embedded bytes, Size/MD5 metadata, Mac information, EF/RF/CI, attachment name trees and typed collection schemas/items/sorts; external-stream declarations. | No implicit filesystem/URL loading, platform conversion or collection UI execution. |
-| Signature field policies | Written seeds/locks, actual certificate/digest/backend/appearance choices, verified output before finalization and intrinsic historical signing permissions. | Full authenticated revision-difference analysis and UR authority/intersection remain open; timestamp, revocation and PKI trust need explicit external components. |
-| External PDF reading — pdf-reader | PDF 1.0–1.7 object syntax, traditional and stream xrefs, Prev revisions, object streams, explicit reference resolution, encoded stream retention and bounded Flate/ASCIIHex/ASCII85/RunLength decoding with eight-bit TIFF/PNG predictors. Ordered page-tree traversal checks counts, parents and unique identities; effective Resources, MediaBox, CropBox and Rotate preserve PDF objects. Page-local Contents streams are resolved separately in order. | No PDF 2.0, encrypted documents, hybrid XRefStm, repair, content interpretation, rendering or text extraction. Unknown codecs can be retained encoded but cannot be decoded. Page traversal does not inspect all resource contents. Contents inspection does not concatenate or decode streams. Reading does not implement import or remapping into the writer. |
+| Polices PDF — core | Programmes de police et métriques explicites, polices simples et composites, encodages, largeurs CID horizontales/verticales, CMaps, UseCMap et correspondances Unicode. | Le core reçoit des programmes et valeurs normalisés ; l'analyse externe des polices, les sous-ensembles et la composition demandent leurs propres processeurs. |
+| Conversion TrueType — pdf-fonts | Validation sfnt/glyf statique, cmap Unicode 4/12, métriques, programme CIDFont complet et fabriques de conversion produisant des objets de police du core. | Pas de collections de polices, CFF/polices variables, sous-ensembles de glyphes, écriture verticale, crénage ou composition de scripts complexes. Le CIDFontProgram dérivé retire cmap selon 9.9 et le DSIG invalidé. Les permissions d'incorporation de la police d'origine sont contrôlées. |
+| Images PDF — core | Dimensions, disposition des échantillons, espaces couleur, Decode, stencils, masques par couleur/explicites/souples et déclarations de données image encodées explicites. | Les données encodées et leur sémantique couleur/alpha sont déclarées par l'appelant. Les codecs externes et l'inspection des fichiers appartiennent aux convertisseurs optionnels. |
+| Conversion JPEG — pdf-images | Validation des marqueurs/frames/tables, JPEG grayscale/RGB huit bits baseline et progressif, et transformation Adobe CMYK zéro vers un DCTImage du core. Les octets DCT originaux sont conservés. | Aucun décodage entropique ni encodage JPEG ; le lecteur décode les coefficients. ICC, YCCK et sémantiques couleur ambiguës sont refusés. L'orientation EXIF n'est pas appliquée. |
+| Conversion PNG — pdf-images | Contrôles CRC/cadrage/ordre, décodage zlib borné, les cinq filtres de scanline, échantillons grayscale/RGB/indexés/alpha huit bits et tRNS vers les objets d'échantillons du core. | PNG statique non entrelacé seulement ; autres profondeurs, APNG et profils couleur incorporés refusés. Les métadonnées couleur auxiliaires ne créent pas d'espaces PDF calibrés. Les limites d'import sont des objets explicites. |
+| Révisions incrémentales | Snapshots et historique FileRevision exactement figés, ajouts/remplacements, listes libres chaînées, suppression/réutilisation, générations retirées et alias, offsets et Prev, xref classiques/stream/hybrides, variantes chiffrées et mises à jour après linéarisation initiale. | Révisions générées seulement. Le remplacement d'une valeur vivante conserve sa famille d'objet et son Type de dictionnaire ; une nouvelle identité réutilisant un numéro libre peut avoir un autre type. Les anciens octets demeurent, donc une update ne peut effacer un contenu confidentiel. |
+| Navigation | Labels de pages, destinations explicites et nommées, calculs de cadrage, anneaux d'articles et ordre de dessin des pages, transitions et séquences de présentation. | Le graphe natif et l'arithmétique sont contrôlés contre le catalogue effectif ; un lecteur rend et anime leur présentation. |
+| Fichiers et collections | Octets incorporés fournis, métadonnées Size/MD5, informations Mac, EF/RF/CI, arbres de noms de pièces jointes et schémas/items/tris typés de collections ; déclarations de flux externes. | Aucun chargement implicite du système de fichiers/URL, conversion de plateforme ou exécution d'interface de collection. |
+| Politiques de champs de signature | Seeds/verrous écrits, choix réels de certificat/digest/backend/apparence, sortie vérifiée avant finalisation et permissions intrinsèques historiques de signature. | L'analyse complète et authentifiée des différences de révisions et l'autorité/intersection UR restent ouvertes ; horodatage, révocation et confiance PKI demandent des composants externes explicites. |
+| Lecture de PDF externes — pdf-reader | Syntaxe des objets PDF 1.0–1.7, xref classiques et stream, révisions Prev, flux d'objets, résolution explicite des références, conservation des flux encodés et décodage borné Flate/ASCIIHex/ASCII85/RunLength avec prédicteurs TIFF/PNG huit bits. Le parcours ordonné de l'arbre de pages contrôle comptes, parents et identités uniques ; Resources, MediaBox, CropBox et Rotate effectifs conservent les objets PDF. Les flux Contents locaux à la page sont résolus séparément dans l'ordre. | Pas de PDF 2.0, documents chiffrés, XRefStm hybrides, réparation, interprétation du contenu, rendu ou extraction de texte. Les codecs inconnus peuvent être conservés encodés mais pas décodés. Le parcours des pages n'inspecte pas tous les contenus de ressources. L'inspection de Contents ne concatène ni ne décode les flux. La lecture n'implémente pas l'import ou le remappage dans le writer. |
 
-The initial writer emits free records for every unused object number below Size.
-Incremental sections emit changed records and newly introduced free holes, keeping
-the previous free-list chain. CrossReferenceLimits caps cumulative Size at 100,000
-entries by default, before allocating gap records; applications can supply an
-explicit capacity to a writer. New objects have generation zero, while a live
-replacement retains its existing generation. Release increments the free generation,
-reuse uses that stored generation, and generation 65535 is permanent. A number
-from the free list cannot create a new ObjStm container or compressed member.
+Le writer initial émet des enregistrements libres pour chaque numéro d'objet
+inutilisé inférieur à Size. Les sections incrémentales émettent les enregistrements
+modifiés et les nouveaux trous libres, en conservant la chaîne de liste libre
+précédente. CrossReferenceLimits limite Size cumulé à 100 000 entrées par défaut,
+avant d'allouer les enregistrements des trous ; l'application peut fournir une
+capacité explicite au writer. Les nouveaux objets ont une génération zéro,
+tandis que le remplacement d'un objet vivant conserve sa génération. Une
+suppression incrémente la génération libre, une réutilisation emploie cette
+génération conservée, et la génération 65535 est permanente. Un numéro de la
+liste libre ne peut créer ni un nouveau conteneur ObjStm ni un membre comprimé.
 
-The tutorials for [embedded fonts](tutorials/09-embedded-font.md),
-[image files](tutorials/10-image-files.md) and
-[incremental updates](tutorials/11-incremental-update.md) explain their object
-graphs and include executable documents. None of these mechanisms adds an
-application-global registry or automatic layout engine.
+Les tutoriels sur les [polices incorporées](tutorials/09-embedded-font.md), les
+[fichiers image](tutorials/10-image-files.md) et les
+[mises à jour incrémentales](tutorials/11-incremental-update.md) expliquent leurs
+graphes d'objets et incluent des documents exécutables. Aucun de ces mécanismes
+n'ajoute de registre global à l'application ni de moteur de mise en page automatique.
 
-## Rebuilding the source inventory
+## Reconstruire l'inventaire de sources
 
-Use Python with `pypdf` and `pdfplumber` installed:
+Utiliser Python avec `pypdf` et `pdfplumber` installés :
 
 ```sh
 python tools/extract_spec.py
@@ -120,43 +134,49 @@ python tools/generate_specification.py
 python tools/generate_specification.py --check
 ```
 
-`extract_spec.py` verifies that all main table identifiers from 1 to 370 are
-present, extracts ruled table cells, checks the complete 73-token operator list,
-and records unresolved extraction problems in `extraction-issues.json`. The
-checked-in inventory has zero unresolved extraction problems. It records the
-SHA-256 fingerprint of the source PDF and physical PDF page numbers.
+`extract_spec.py` vérifie la présence de tous les identifiants de tableaux
+principaux de 1 à 370, extrait les cellules des tableaux bordés, contrôle la
+liste complète des 73 tokens d'opérateur et consigne les problèmes d'extraction
+non résolus dans `extraction-issues.json`. L'inventaire versionné n'a aucun
+problème d'extraction non résolu. Il consigne l'empreinte SHA-256 du PDF source
+et les numéros de pages physiques du PDF.
 
-`generate_specification.py` emits named classes and immutable definition objects.
-Its `--check` mode compares the generated files without modifying them. Only
-stale PHP files bearing this generator's marker in its two generated directories
-may be removed during regeneration. The Python tools are development tools;
-the PHP library has no Python runtime dependency.
+`generate_specification.py` produit des classes nommées et des objets de
+définition immuables. Son mode `--check` compare les fichiers générés sans
+les modifier. Seuls les fichiers PHP obsolètes portant le marqueur de ce
+générateur dans ses deux dossiers générés peuvent être retirés pendant une
+régénération. Les outils Python sont des outils de développement ; la
+bibliothèque PHP n'a aucune dépendance Python à l'exécution.
 
-The generated source and its inventory must be reviewed together. Extraction
-repairs are narrow and documented in the tool: two wrapped key names and two OPI
-keys that overflow their printed table cells. Variable names remain variable;
-descriptive phrases such as “Other keys” are never emitted as fixed PDF keys.
+Les sources générées et leur inventaire doivent être examinés ensemble.
+Les corrections d'extraction sont ciblées et documentées dans l'outil : deux
+noms de clés coupés sur plusieurs lignes et deux clés OPI dépassant leurs
+cellules imprimées. Les noms variables restent variables ; des formulations
+descriptives comme « Other keys » ne sont jamais produites comme clés PDF fixes.
 
-`corrections.json` records explicit implementation decisions where the source
-wording is inconsistent. In Table 15 the ISO 2008 qualifier for `/Prev` says it
-shall be indirect, whereas [Adobe PDF Reference 1.7, Table 3.13](https://opensource.adobe.com/dc-acrobat-sdk-docs/pdfstandards/pdfreference1.7old.pdf)
-requires a direct integer. This implementation keeps `/Prev` direct so that the
-previous cross-reference section can be located before indirect objects are
-resolved. The original description and qualifier are retained, and an immutable
-`ImplementationCorrection` object exposes the rationale and evidence. This is a
-documented implementation decision, not a claim of an official ISO erratum.
-Negative qualifiers such as “shall not be an indirect reference” are interpreted
-as direct-object constraints without changing their source wording.
+`corrections.json` consigne les décisions explicites d'implémentation lorsque
+la formulation source est incohérente. Dans le tableau 15, le qualificatif ISO
+2008 de `/Prev` indique qu'il doit être indirect, tandis que
+[Adobe PDF Reference 1.7, tableau 3.13](https://opensource.adobe.com/dc-acrobat-sdk-docs/pdfstandards/pdfreference1.7old.pdf)
+exige un entier direct. Cette implémentation conserve `/Prev` direct pour
+permettre de localiser la section précédente de références croisées avant
+la résolution des objets indirects. La description et le qualificatif originaux
+sont conservés, et un objet `ImplementationCorrection` immuable expose la
+justification et les preuves. C'est une décision d'implémentation documentée,
+pas une affirmation d'erratum ISO officiel. Les qualificatifs négatifs comme
+« shall not be an indirect reference » sont interprétés comme contraintes
+d'objet direct sans modifier leur formulation source.
 
-## Extending semantic coverage
+## Étendre la couverture sémantique
 
-Add a specialized immutable object for the normative concept, its exact source
-clause, and the meaningful constraints on its values and relationships. Compose
-existing entry definitions rather than maintaining a second catalogue of names.
-Keep parsers, encoders, compression, encryption, signatures, document writing,
-and rendering separate from the definition objects, with explicit dependencies.
-External-format parsing belongs in optional modules; normalized PDF values and
-mechanisms remain in the core.
-Use independent readers and validators to test emitted bytes, alongside focused
-unit tests for invalid cases. An entry's implementation status should distinguish
-its object model, its serialization, its constraints and its associated algorithm.
+Ajouter un objet immuable spécialisé pour le concept normatif, sa clause
+source exacte et les contraintes significatives sur ses valeurs et relations.
+Composer les définitions d'entrées existantes plutôt que maintenir un second
+catalogue de noms. Conserver des parseurs, encodeurs, compression, chiffrement,
+signatures, écriture de documents et rendu distincts des objets de définition,
+avec des dépendances explicites. L'analyse de formats externes appartient aux
+modules optionnels ; les valeurs PDF normalisées et mécanismes restent dans
+le core. Utiliser des lecteurs et validateurs indépendants pour tester les
+octets émis, en complément de tests unitaires ciblant les cas invalides.
+Le statut d'implémentation d'une entrée doit distinguer son modèle objet,
+sa sérialisation, ses contraintes et son algorithme associé.
