@@ -31,7 +31,7 @@ Its [requirement inventory](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resour
 records each assessed aspect, source clause, execution boundary and evidence path.
 The reproducible checker rejects omitted clauses and missing evidence files.
 No automatic WTPDF/PDF/UA-2 certification or complete base-standard conformance
-is claimed. The reader retains its PDF 1.0–1.7 input scope.
+is claimed. Reader 0.2 accepts PDF 1.0–2.0 syntax and PDF 2.0 UTF-8 strings; this does not provide the writer’s encryption or rendering mechanisms.
 
 The [original main standard](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf)
 and all eleven newly supplied originals remain unchanged in the public core

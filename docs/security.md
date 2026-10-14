@@ -7,10 +7,10 @@ dans les modules optionnels [pdf-fonts](https://github.com/PDFToolkit/pdf-fonts)
 et [pdf-images](https://github.com/PDFToolkit/pdf-images). Les objets PDF et leurs
 invariants restent dans le core. Le module
 [pdf-reader](https://github.com/PDFToolkit/pdf-reader) a sa propre
-[documentation de sécurité](https://github.com/PDFToolkit/pdf-reader/blob/v0.1.9/docs/security.md)
+[documentation de sécurité](https://github.com/PDFToolkit/pdf-reader/blob/v0.2.1/docs/security.md)
 pour la lecture de fichiers externes ; cette revue du générateur ne s'y substitue pas.
 
-Les versions documentées sont le core **0.7.1**, le lecteur PDF **0.1.9**, les modules images/fontes **0.1.8** et
+Les versions documentées sont le core **0.7.1**, le lecteur PDF **0.2.1**, les modules images/fontes **0.1.8** et
 OpenType indépendant **0.1.0**. Ces packages nécessitent **PHP 8.3 ou supérieur**
 et sont vérifiés sous PHP 8.3, 8.4 et 8.5. Le core **0.7** exige aussi PHP en
 64 bits ; OpenType reste indépendant du core PDF. La revue inclut les

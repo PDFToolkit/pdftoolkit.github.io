@@ -28,7 +28,7 @@ extraction corrections are traceable. This coverage and these companion
 mechanisms do not establish complete conformance to every clause of the base
 standard. The [PDF 2.0 guide](pdf-2-0.md) and [coverage guide](coverage.md) retain
 that distinction. The optional reader's supported input scope is unchanged;
-the writer's new mechanisms do not turn it into a PDF 2.0 reader.
+the writer’s new mechanisms are distinct from reader 0.2’s PDF 2.0 syntax and UTF-8 support.
 
 ## Algorithms are selected independently
 

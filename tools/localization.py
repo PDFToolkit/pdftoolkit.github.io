@@ -27,10 +27,10 @@ GROUP_ROUTES = {
     'lexique': 'lexical-conventions', 'norme': 'specification',
     'dictionnaires': 'dictionaries', 'entrees': 'entries', 'definitions': 'definitions',
     'adobe': 'adobe', 'iso2': 'pdf-2-0', 'securite': 'security', 'polices-externes': 'external-fonts',
-    'images-externes': 'external-images', 'lecture': 'reader', 'fontes-opentype': 'opentype',
+    'images-externes': 'external-images', 'lecture': 'reader', 'fontes-opentype': 'opentype', 'conversion-html': 'to-html',
 }
 ENGLISH_ROUTES.update({f'reference/groups/{old}.html': f'reference/groups/{new}.html' for old, new in GROUP_ROUTES.items()})
-for module in ('reader', 'images', 'fonts', 'opentype'):
+for module in ('reader', 'images', 'fonts', 'opentype', 'to-html'):
     ENGLISH_ROUTES[f'modules/{module}/signalements.html'] = f'modules/{module}/reporting.html'
     ENGLISH_ROUTES[f'modules/{module}/versions.html'] = f'modules/{module}/changelog.html'
 
@@ -199,6 +199,19 @@ def canonical_source(owner, source):
 
 
 TEXT = {
+    'Dériver du HTML depuis un PDF': 'Derive HTML from PDF',
+    'Dériver du HTML depuis un PDF balisé': 'Derive HTML from tagged PDF',
+    'Structure logique, contenu Unicode et HTML sémantique avec diagnostics explicites.': 'Logical structure, Unicode content and semantic HTML with explicit diagnostics.',
+    'Architecture de la dérivation HTML': 'HTML derivation architecture',
+    'Couverture de la dérivation HTML': 'HTML derivation coverage',
+    'Sécurité du HTML dérivé': 'Derived HTML security',
+    'Référence Deriving HTML from PDF': 'Deriving HTML from PDF reference',
+    'Module optionnel : dérivation HTML': 'Optional module: HTML derivation',
+    'Résultat HTML': 'HTML result',
+    'Télécharger le HTML': 'Download the HTML',
+    'Lire la source HTML': 'Read the HTML source',
+    'Ce PDF balisé est l’entrée de la conversion. Le résultat HTML est produit par le script exécuté pendant la construction du site ; l’aperçu conserve la structure sémantique plutôt que la mise en page du PDF.': 'This tagged PDF is the conversion input. The HTML result is produced by the script run during the site build; its preview preserves semantic structure rather than the PDF layout.',
+    'Sortie réelle de la dérivation, isolée dans une frame sans autorisation de script, de formulaire ou de navigation de la page principale.': 'Actual derivation output, isolated in a frame without permission to run scripts, submit forms or navigate the parent page.',
     'Bundle PDF 2.0 : mécanismes et vérifications': 'PDF 2.0 bundle: mechanisms and validation',
     'Métadonnées, déclarations et parties documentaires': 'Metadata, declarations and document parts',
     'XMP, portée des déclarations, compensation du point noir et DPart.': 'XMP, declaration scope, black point compensation and DPart.',

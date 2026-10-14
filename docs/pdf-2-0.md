@@ -145,8 +145,7 @@ La conformité conditionnelle et sémantique complète, la revue exhaustive EC3,
 le rendu et le traitement des couleurs externes ainsi que la certification
 automatique d’accessibilité ne sont pas établis par cet inventaire. Le
 [relevé de couverture](coverage.md) distingue mécanismes natifs, objets déclaratifs
-et travaux restants. Le lecteur optionnel conserve son
-[périmètre d’entrée PDF 1.0–1.7 documenté](packages.md).
+et travaux restants. Le lecteur optionnel 0.2 accepte la [syntaxe PDF 1.0–2.0 et les chaînes UTF-8 PDF 2.0](packages.md), avec ses autres limites explicites.
 
 ## Source et vérifications
 

@@ -22,6 +22,38 @@ REPOSITORY = 'https://github.com/PDFToolkit/pdf'
 DOCUMENTATION_REPOSITORY = 'https://github.com/PDFToolkit/pdftoolkit.github.io'
 SITE_ORIGIN = 'https://pdftoolkit.github.io'
 CORE_PACKAGE = 'roukmoute/pdf'
+
+
+def publish_derivation_assets(report_path: Path, html_path: Path, target: Path) -> list[dict]:
+    """Publish only the exact basename/hash inventory returned by the real CLI."""
+    report = json.loads(report_path.read_text(encoding='utf-8'))
+    if report.get('htmlSha256') != hashlib.sha256(html_path.read_bytes()).hexdigest():
+        raise ValueError('Derived HTML does not match its CLI report')
+    assets = report.get('assets')
+    if not isinstance(assets, list):
+        raise ValueError('Missing derived asset inventory')
+    records, seen = [], set()
+    for asset in assets:
+        name = asset.get('filename', '')
+        if not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.-]*', name) or '..' in name or name in seen:
+            raise ValueError('Invalid or duplicate derived asset filename: ' + name)
+        seen.add(name)
+        source = html_path.parent / name
+        if source.resolve().parent != html_path.parent.resolve() or not source.is_file():
+            raise ValueError('Missing or external derived asset: ' + name)
+        data = source.read_bytes()
+        digest = hashlib.sha256(data).hexdigest()
+        if digest != asset.get('sha256') or not isinstance(asset.get('mediaType'), str):
+            raise ValueError('Derived asset does not match its CLI report: ' + name)
+        destination = target / name
+        if destination.exists() and destination.read_bytes() != data:
+            raise ValueError('Derived asset collides with another example: ' + name)
+        shutil.copyfile(source, destination)
+        records.append({'filename': name, 'path': 'examples/' + name,
+                        'mediaType': asset['mediaType'], 'sha256': digest, 'bytes': len(data)})
+    return records
+
+
 GUIDES = [
     ('docs/coverage.md', 'guides/mecanismes.html', 'Couverture des éditions PDF', 'Guides'),
     ('docs/pdf-2-0.md', 'guides/pdf-2-0.html', 'PDF 2.0 : objets et mécanismes', 'Guides'),
@@ -77,6 +109,7 @@ LESSONS = [
     ('32-pdf20-timestamp-dss', '32-pdf20-horodatages-dss', 'Horodatages et preuves de validation', 'pdf20-timestamp-dss', 'RFC3161, révisions signées, DSS et VRI explicites.'),
     ('33-pdf20-geospatial', '33-pdf20-geospatial', 'Objets géospatiaux et mesures', 'pdf20-geospatial', 'Systèmes de coordonnées, points appariés, viewports et nuages de points.'),
     ('34-pdf20-structure-destinations', '34-pdf20-destinations-structure', 'Destinations vers la structure logique', 'pdf20-structure-destinations', 'Cibles sémantiques, parcours du contenu et destinations de page de repli.'),
+    ('35-derive-html', '35-deriver-html', 'Dériver du HTML depuis un PDF balisé', 'derive-html', 'Structure logique, contenu Unicode et HTML sémantique avec diagnostics explicites.'),
 ]
 EXTERNAL_EXAMPLES = {
     'reading-pages': {
@@ -84,6 +117,12 @@ EXTERNAL_EXAMPLES = {
         'source': 'examples/pages.php',
         'input': 'tests/Fixtures/page-tree/classic.pdf',
         'expectedPages': 3,
+    },
+    'derive-html': {
+        'package': 'pdftoolkit/pdf-to-html',
+        'source': 'examples/01-derive-tagged-pdf.php',
+        'input': 'tests/Fixtures/tagged.pdf',
+        'kind': 'conversion',
     },
 }
 GROUPS = [
@@ -99,18 +138,21 @@ GROUPS = [
     ('images-externes', 'Module optionnel : images externes'),
     ('lecture', 'Module optionnel : lecture de PDF'),
     ('fontes-opentype', 'Modèle objet OpenType indépendant'),
+    ('conversion-html', 'Module optionnel : dérivation HTML'),
 ]
 MODULE_GROUPS = {
     'pdftoolkit/pdf-fonts': 'polices-externes',
     'pdftoolkit/pdf-images': 'images-externes',
     'pdftoolkit/pdf-reader': 'lecture',
     'pdftoolkit/opentype': 'fontes-opentype',
+    'pdftoolkit/pdf-to-html': 'conversion-html',
 }
 MODULES = {
     'pdftoolkit/pdf-reader': ('reader', 'Lire un PDF', [('docs/architecture.md', 'architecture', 'Architecture du lecteur'), ('docs/pages.md', 'pages', 'Pages, héritage et flux'), ('docs/components.md', 'components', 'Composants du lecteur'), ('docs/security.md', 'security', 'Limites et sécurité du lecteur')]),
     'pdftoolkit/pdf-images': ('images', 'Convertir des images', [('docs/architecture.md', 'architecture', 'Contrats des convertisseurs d’images')]),
     'pdftoolkit/pdf-fonts': ('fonts', 'Analyser des fontes', [('docs/true-type-to-pdf.md', 'true-type-to-pdf', 'Du programme TrueType aux objets PDF')]),
     'pdftoolkit/opentype': ('opentype', 'Modèle objet OpenType indépendant', [('docs/architecture.md', 'architecture', 'Architecture OpenType'), ('docs/coverage.md', 'coverage', 'Couverture OpenType'), ('docs/substitutions.md', 'substitutions', 'Substitutions de glyphes')]),
+    'pdftoolkit/pdf-to-html': ('to-html', 'Dériver du HTML depuis un PDF', [('docs/architecture.md', 'architecture', 'Architecture de la dérivation HTML'), ('docs/coverage.md', 'coverage', 'Couverture de la dérivation HTML'), ('docs/security.md', 'security', 'Sécurité du HTML dérivé'), ('docs/reference.md', 'reference', 'Référence Deriving HTML from PDF')]),
 }
 
 
@@ -175,7 +217,7 @@ def group_for(component: dict) -> str:
 
 
 class Site:
-    def __init__(self, content_root: Path, source_root: Path, output: Path, api: Path, pdfs: Path, pdf_previews: Path, base: str, docs_revision: str, sources: Path, opentype_root: Path | None = None):
+    def __init__(self, content_root: Path, source_root: Path, output: Path, api: Path, pdfs: Path, pdf_previews: Path, base: str, docs_revision: str, sources: Path, opentype_root: Path | None = None, pdf_to_html_root: Path | None = None):
         self.root, self.content_root, self.output, self.pdfs = source_root, content_root, output, pdfs
         root = source_root
         self.pdf_previews = pdf_previews
@@ -196,7 +238,7 @@ class Site:
         locked = json.loads((root / 'composer.lock').read_text(encoding='utf-8'))
         locked_packages = {item['name']: item for item in locked['packages'] + locked['packages-dev']}
         for name in MODULES:
-            if name == "pdftoolkit/opentype":
+            if name in {"pdftoolkit/opentype", "pdftoolkit/pdf-to-html", "pdftoolkit/pdf-reader"}:
                 continue
             item = locked_packages.get(name, {})
             if item.get('version', '').removeprefix('v') != self.packages[name]['version'] or item.get('source', {}).get('reference') != self.packages[name]['revision']:
@@ -212,7 +254,25 @@ class Site:
         opentype_revision = subprocess.run(['git', '-C', str(opentype_root), 'rev-parse', 'HEAD'], check=True, capture_output=True, text=True).stdout.strip()
         if opentype_revision != self.packages['pdftoolkit/opentype']['revision']:
             raise ValueError('OpenType checkout differs from the released-source manifest')
-        self.package_roots = {CORE_PACKAGE: root, **{name: root / 'vendor' / name for name in MODULES if name != 'pdftoolkit/opentype'}, 'pdftoolkit/opentype': opentype_root}
+        if pdf_to_html_root is None:
+            raise ValueError('The released PDF-to-HTML checkout is required')
+        html_revision = subprocess.run(['git', '-C', str(pdf_to_html_root), 'rev-parse', 'HEAD'], check=True, capture_output=True, text=True).stdout.strip()
+        if html_revision != self.packages['pdftoolkit/pdf-to-html']['revision']:
+            raise ValueError('PDF-to-HTML checkout differs from the released-source manifest')
+        html_lock = json.loads((pdf_to_html_root / 'composer.lock').read_text(encoding='utf-8'))
+        html_locked = {item['name']: item for item in html_lock['packages'] + html_lock['packages-dev']}
+        for name in (CORE_PACKAGE, 'pdftoolkit/pdf-reader'):
+            item = html_locked.get(name, {})
+            if item.get('version', '').removeprefix('v') != self.packages[name]['version'] or item.get('source', {}).get('reference') != self.packages[name]['revision']:
+                raise ValueError('PDF-to-HTML Composer lock differs from the selected release: ' + name)
+        self.package_roots = {CORE_PACKAGE: root, **{name: root / 'vendor' / name for name in MODULES if name not in {'pdftoolkit/opentype', 'pdftoolkit/pdf-to-html', 'pdftoolkit/pdf-reader'}}, 'pdftoolkit/opentype': opentype_root, 'pdftoolkit/pdf-to-html': pdf_to_html_root, 'pdftoolkit/pdf-reader': pdf_to_html_root / 'vendor/pdftoolkit/pdf-reader'}
+        self.html_reference = json.loads((pdf_to_html_root / 'resources/reference.json').read_text(encoding='utf-8'))
+        reference_path = self.html_reference['source']
+        if reference_path != 'resources/reference-documents/Deriving_HTML_from_PDF_1-2.pdf':
+            raise ValueError('The supplied derivation reference must preserve its original filename')
+        reference_file = pdf_to_html_root / reference_path
+        if reference_file.stat().st_size != self.html_reference['bytes'] or hashlib.sha256(reference_file.read_bytes()).hexdigest() != self.html_reference['sha256'] or self.html_reference['physicalPdfPages'] != 74:
+            raise ValueError('The supplied derivation reference must preserve its original bytes and physical pages')
         self.documentation = {'repository': DOCUMENTATION_REPOSITORY, 'revision': docs_revision}
         self.documentation_sources = []
         self.components = inventory['components']
@@ -252,9 +312,9 @@ class Site:
             if package is None:
                 raise ValueError('Missing example source package: ' + package_name)
             source = external['source'] if external else f'examples/{example}.php'
-            directory = root / 'vendor' / package_name if external else root
+            directory = self.package_roots[package_name]
             record = {
-                'kind': 'input' if external else 'generated',
+                'kind': external.get('kind', 'input') if external else 'generated',
                 'package': package_name,
                 'page': route,
                 'source': source,
@@ -268,7 +328,7 @@ class Site:
                     input=external['input'],
                     inputPath=directory / external['input'],
                     inputSourceUrl=self.source_url(external['input'], owner=package),
-                    expectedPages=external['expectedPages'],
+                    expectedPages=external.get('expectedPages'),
                 )
             self.example_sources[example] = record
         self.markdown_routes = {(owner, source): route for owner, source, route, _, _ in self.pages}
@@ -488,7 +548,7 @@ class Site:
     def rewrite_link(self, source: str, href: str, owner: str = 'documentation') -> str:
         parsed = urlsplit(href)
         if parsed.netloc == 'github.com':
-            match = re.fullmatch(r'/PDFToolkit/(pdf|pdf-fonts|pdf-images|pdf-reader|opentype)/(?:blob|tree)/[^/]+/(.+)', parsed.path)
+            match = re.fullmatch(r'/PDFToolkit/(pdf|pdf-fonts|pdf-images|pdf-reader|pdf-to-html|opentype)/(?:blob|tree)/[^/]+/(.+)', parsed.path)
             if match:
                 package_name = CORE_PACKAGE if match.group(1) == 'pdf' else 'pdftoolkit/' + match.group(1)
                 target = posixpath.normpath(unquote(match.group(2), errors='strict'))
@@ -501,7 +561,7 @@ class Site:
                 if result:
                     return result
                 raise ValueError(f'Unresolved package source link: {source} -> {href}')
-            match = re.fullmatch(r'/PDFToolkit/(pdf|pdf-fonts|pdf-images|pdf-reader|opentype)/?', parsed.path)
+            match = re.fullmatch(r'/PDFToolkit/(pdf|pdf-fonts|pdf-images|pdf-reader|pdf-to-html|opentype)/?', parsed.path)
             if match and parsed.fragment in {'', 'readme'}:
                 package_name = CORE_PACKAGE if match.group(1) == 'pdf' else 'pdftoolkit/' + match.group(1)
                 route = 'modules/core/index.html' if package_name == CORE_PACKAGE else self.markdown_routes[(package_name, 'README.md')]
@@ -610,7 +670,8 @@ class Site:
         pdf = self.url(f'examples/{example}.pdf')
         source = self.url(f'examples/{example}.php.txt')
         pages = self.pdf_pages[example]
-        is_input = record['kind'] == 'input'
+        is_input = record['kind'] in {'input', 'conversion'}
+        is_conversion = record['kind'] == 'conversion'
         pdf_label = 'PDF d’entrée' if is_input else 'Résultat PDF'
         heading = 'Voir le PDF d’entrée' if is_input else 'Voir le résultat PDF'
         source_name = Path(record['source']).name
@@ -620,7 +681,7 @@ class Site:
             f'<figcaption>Page {number} sur {len(pages)}</figcaption></figure>'
             for number, image in enumerate(pages, 1)
         )
-        description = (
+        description = 'Ce PDF balisé est l’entrée de la conversion. Le résultat HTML est produit par le script exécuté pendant la construction du site ; l’aperçu conserve la structure sémantique plutôt que la mise en page du PDF.' if is_conversion else (
             'Ce PDF est l’entrée du lecteur : une fixture originale créée avec pypdf et qpdf, indépendamment du writer PHP. '
             'Ses trois pages sont reproduites ci-dessous ; le résultat de la lecture figure ensuite dans la sortie console.'
             if is_input else
@@ -637,6 +698,13 @@ class Site:
 <p>Sortie réelle du script exécuté sur le PDF d’entrée pendant la construction de cette documentation.
 <a href="{e(self.url(f"examples/{example}.txt"))}" download>Télécharger la sortie console</a>.</p></div>
 <pre><code class="language-text">{e(result)}</code></pre></section>'''
+        if is_conversion:
+            html_result = self.url(f'examples/{example}.html')
+            console += f'''<section class="source-panel" id="resultat-html"><div class="panel-intro"><h2>Résultat HTML</h2>
+<p>Sortie réelle de la dérivation, isolée dans une frame sans autorisation de script, de formulaire ou de navigation de la page principale.</p>
+<p><a href="{e(html_result)}" download>Télécharger le HTML</a></p></div>
+<iframe class="pdf-viewer" sandbox="" src="{e(html_result)}" title="Résultat HTML" loading="lazy"></iframe>
+<details><summary>Lire la source HTML</summary><pre><code class="language-html">{e((self.pdfs / (example + '.html')).read_text(encoding='utf-8'))}</code></pre></details></section>'''
         return f'''<section class="pdf-panel" id="resultat-pdf"><div class="panel-intro"><h2>{heading}</h2>
 <p>{description}</p></div>
 <div class="pdf-actions"><a class="button" href="{e(pdf)}" target="_blank" rel="noopener">Ouvrir le PDF ↗</a><a class="button secondary" href="{e(pdf)}" download>Télécharger</a><a class="button secondary" href="{e(source)}" download="{e(source_name)}">Télécharger le code PHP</a></div>
@@ -1037,7 +1105,7 @@ class Site:
             shutil.copyfile(record['path'], examples / (example + '.php.txt'))
             record['sourceSha256'] = hashlib.sha256(record['path'].read_bytes()).hexdigest()
             record['pdfSha256'] = hashlib.sha256(source_pdf.read_bytes()).hexdigest()
-            if record['kind'] == 'input':
+            if record['kind'] in {'input', 'conversion'}:
                 if not record['inputPath'].is_file() or source_pdf.read_bytes() != record['inputPath'].read_bytes():
                     raise ValueError('The reader example PDF must preserve its original input: ' + example)
                 console_path = self.pdfs / (example + '.txt')
@@ -1046,6 +1114,19 @@ class Site:
                 shutil.copyfile(console_path, examples / console_path.name)
                 record['console'] = f'examples/{example}.txt'
                 record['consoleSha256'] = hashlib.sha256(console_path.read_bytes()).hexdigest()
+            if record['kind'] == 'conversion':
+                html_path = self.pdfs / (example + '.html')
+                if not html_path.is_file():
+                    raise ValueError('Run the PDF-to-HTML conversion first: ' + example)
+                shutil.copyfile(html_path, examples / html_path.name)
+                record['html'] = f'examples/{example}.html'
+                record['htmlSha256'] = hashlib.sha256(html_path.read_bytes()).hexdigest()
+                record['assets'] = publish_derivation_assets(console_path, html_path, examples)
+                css_path = self.pdfs / (example + '.css')
+                if css_path.is_file():
+                    shutil.copyfile(css_path, examples / css_path.name)
+                    record['css'] = f'examples/{example}.css'
+                    record['cssSha256'] = hashlib.sha256(css_path.read_bytes()).hexdigest()
             images = {}
             for image in self.pdf_previews.glob(example + '-*.png'):
                 match = re.fullmatch(re.escape(example) + r'-(\d+)\.png', image.name)
@@ -1085,6 +1166,9 @@ class Site:
         for record in sources.values():
             record['pages'] = {language: route_for(record['page'], language) for language in LANGUAGES}
         manifest = {'basePath': self.base, 'revision': self.revision, 'docsRevision': self.docs_revision, 'documentation': self.documentation, 'documentationSources': self.documentation_sources, 'packages': packages, 'components': len(self.components), 'examples': sorted(expected), 'exampleSources': sources, 'pdfPages': {example: ['assets/pdf-pages/' + image['file'] for image in images] for example, images in self.pdf_pages.items()}, 'pages': sorted(route for route in self.written if route.endswith('.html'))}
+        manifest['derivedHtml'] = [{'example': name, 'path': record['html'], 'sha256': record['htmlSha256'], 'package': record['package'], 'revision': self.packages[record['package']]['revision']} for name, record in sources.items() if record['kind'] == 'conversion']
+        html_package = self.packages['pdftoolkit/pdf-to-html']
+        manifest['htmlDerivationReference'] = {**self.html_reference, 'repository': html_package['repository'], 'revision': html_package['revision'], 'sourceUrl': self.source_url(self.html_reference['source'], owner=html_package), 'metadataUrl': self.source_url('resources/reference.json', owner=html_package)}
         manifest.update(defaultLanguage='en', languages=list(LANGUAGES), translations=self.translations, aliases=self.aliases, searchIndexes={'en': 'assets/search-index.json', 'fr': 'assets/search-index.fr.json'})
         manifest['specificationSources'] = [
             {'source': 'PDF32000_2008.pdf', 'download': 'downloads/iso-32000-1.pdf', 'sha256': self.metadata['sha256'], 'pdfPages': self.metadata['pdf_pages']},
@@ -1151,6 +1235,8 @@ class Site:
                 body += self.example_panel(example)
                 if example in EXTERNAL_EXAMPLES:
                     toc += [{'id': 'resultat-pdf', 'name': 'PDF d’entrée', 'level': 2}, {'id': 'resultat-lecture', 'name': 'Résultat de la lecture', 'level': 2}]
+                    if self.example_sources[example]['kind'] == 'conversion':
+                        toc += [{'id': 'resultat-html', 'name': 'Résultat HTML', 'level': 2}]
                 else:
                     toc += [{'id': 'resultat-pdf', 'name': 'Résultat PDF', 'level': 2}]
                 toc += [{'id': 'code-source', 'name': 'Code source', 'level': 2}]
@@ -1181,6 +1267,7 @@ if __name__ == '__main__':
     parser.add_argument('--content-root', type=Path, default=Path(__file__).resolve().parents[1])
     parser.add_argument('--source-root', type=Path, required=True)
     parser.add_argument('--opentype-root', type=Path, required=True, help='Independent released OpenType checkout')
+    parser.add_argument('--pdf-to-html-root', type=Path, required=True, help='Released PDF-to-HTML checkout and its locked reader')
     parser.add_argument('--sources', type=Path, help='Released-source manifest; defaults to content-root/resources/sources.json')
     parser.add_argument('--api', type=Path, required=True)
     parser.add_argument('--pdf-dir', type=Path, required=True)
@@ -1195,4 +1282,4 @@ if __name__ == '__main__':
         parser.error('base-path must contain only URL path segments')
     content_root = args.content_root.resolve()
     sources = args.sources.resolve() if args.sources else content_root / 'resources' / 'sources.json'
-    Site(content_root, args.source_root.resolve(), args.output.resolve(), args.api.resolve(), args.pdf_dir.resolve(), args.pdf_preview_dir.resolve(), args.base_path, args.docs_revision, sources, args.opentype_root.resolve()).build()
+    Site(content_root, args.source_root.resolve(), args.output.resolve(), args.api.resolve(), args.pdf_dir.resolve(), args.pdf_preview_dir.resolve(), args.base_path, args.docs_revision, sources, args.opentype_root.resolve(), args.pdf_to_html_root.resolve()).build()

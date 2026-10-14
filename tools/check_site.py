@@ -19,6 +19,7 @@ MODULE_GUIDES = {
     'images': ['index', 'architecture', 'signalements', 'versions'],
     'fonts': ['index', 'true-type-to-pdf', 'signalements', 'versions'],
     'opentype': ['index', 'architecture', 'coverage', 'substitutions', 'signalements', 'versions'],
+    'to-html': ['index', 'architecture', 'coverage', 'security', 'reference', 'signalements', 'versions'],
 }
 
 
@@ -70,12 +71,70 @@ class Document(HTMLParser):
             raise ValueError('Unexpected third-party runtime resource: ' + attrs['src'])
 
 
+class DerivedHtml(HTMLParser):
+    """Check executable boundaries separately from the documentation interface."""
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.html = 0
+        self.in_style = False
+
+    def handle_starttag(self, tag, attrs):
+        attributes = dict(attrs)
+        if tag == 'html':
+            self.html += 1
+        if tag == 'style':
+            self.in_style = True
+        if tag in {'script', 'iframe', 'object', 'embed', 'base'}:
+            raise ValueError('Executable or embedding element in derived HTML: ' + tag)
+        for name, value in attrs:
+            if name.lower().startswith('on') or name.lower() == 'srcdoc':
+                raise ValueError('Event handler or embedded document in derived HTML')
+            if name in {'href', 'src', 'action', 'formaction', 'xlink:href'} and value:
+                normalized = re.sub(r'[\x00-\x20]', '', value)
+                scheme = urlsplit(normalized).scheme.lower()
+                if name in {'src', 'xlink:href'} and scheme in {'https', 'http'}:
+                    raise ValueError('Remote runtime resource in derived HTML')
+                if scheme not in {'', 'https', 'http', 'mailto', 'tel'} and not (tag == 'img' and name == 'src' and re.match(r'^data:image/(?:png|jpeg);base64,', normalized)):
+                    raise ValueError('Unsafe URL scheme in derived HTML')
+            if name == 'style' and value and re.search(r'@import|expression\s*\(|javascript\s*:|url\s*\(', value, re.I):
+                raise ValueError('Active or remote inline CSS in derived HTML')
+        if tag == 'meta' and attributes.get('http-equiv', '').lower() == 'refresh':
+            raise ValueError('Navigation refresh in derived HTML')
+
+    def handle_endtag(self, tag):
+        if tag == 'style':
+            self.in_style = False
+
+    def handle_data(self, value):
+        if self.in_style and re.search(r'@import|expression\s*\(|javascript\s*:|url\s*\(', value, re.I):
+            raise ValueError('Active or remote CSS in derived HTML')
+
+
+def validate_derived_html(value):
+    parser = DerivedHtml()
+    parser.feed(value)
+    if parser.html != 1:
+        raise ValueError('Derived output must contain one HTML document')
+
+
 def check(root):
     root = root.resolve()
     manifest = json.loads((root / 'site-manifest.json').read_text(encoding='utf-8'))
     pages = manifest['pages']
     published_files = {path.relative_to(root).as_posix() for path in root.rglob('*') if path.is_file()}
-    actual = {path for path in published_files if path.endswith('.html')}
+    derived = manifest.get('derivedHtml', [])
+    derived_paths = {item.get('path', '') for item in derived}
+    if len(derived_paths) != len(derived) or derived_paths & set(pages):
+        raise ValueError('Derived HTML must have unique paths outside documentation pages')
+    for item in derived:
+        path = item.get('path', '')
+        if not re.fullmatch(r'examples/[a-z0-9-]+\.html', path):
+            raise ValueError('Invalid derived HTML output path')
+        output = root / path
+        if not output.is_file() or hashlib.sha256(output.read_bytes()).hexdigest() != item.get('sha256'):
+            raise ValueError('Missing or modified derived HTML output: ' + path)
+        validate_derived_html(output.read_text(encoding='utf-8'))
+    actual = {path for path in published_files if path.endswith('.html')} - derived_paths
     if actual != set(pages):
         raise ValueError('Stale or missing HTML pages: ' + str(actual ^ set(pages)))
     documents = {page: Document((root / page).read_text(encoding='utf-8')) for page in pages}
@@ -254,7 +313,7 @@ def check(root):
         if (english['url'], french['url']) not in translated_pairs:
             errors.append('API search records must target their reciprocal translation pair: ' + title)
     packages = {item['name']: item for item in manifest['packages']}
-    if len(packages) != len(manifest['packages']) or set(packages) != {'roukmoute/pdf', 'pdftoolkit/pdf-reader', 'pdftoolkit/pdf-images', 'pdftoolkit/pdf-fonts', 'pdftoolkit/opentype'}:
+    if len(packages) != len(manifest['packages']) or set(packages) != {'roukmoute/pdf', 'pdftoolkit/pdf-reader', 'pdftoolkit/pdf-images', 'pdftoolkit/pdf-fonts', 'pdftoolkit/opentype', 'pdftoolkit/pdf-to-html'}:
         errors.append('Package inventory must cover every unique package name')
     if packages.get('roukmoute/pdf', {}).get('revision') != manifest.get('revision'):
         errors.append('Core source revision differs from the site source revision')
@@ -315,7 +374,7 @@ def check(root):
         if page in documents:
             for link in documents[page].links:
                 url = urlsplit(link)
-                match = re.fullmatch(r'/PDFToolkit/(pdf-reader|pdf-images|pdf-fonts|opentype)/(?:blob|tree)/[^/]+/(README(?:\.fr)?\.md|CHANGELOG(?:\.fr)?\.md|SECURITY(?:\.fr)?\.md|docs/.+\.md)', url.path)
+                match = re.fullmatch(r'/PDFToolkit/(pdf-reader|pdf-images|pdf-fonts|pdf-to-html|opentype)/(?:blob|tree)/[^/]+/(README(?:\.fr)?\.md|CHANGELOG(?:\.fr)?\.md|SECURITY(?:\.fr)?\.md|docs/.+\.md)', url.path)
                 if url.netloc == 'github.com' and match and link != expected_source:
                     errors.append('Module guide navigation must stay on the central site: ' + page + ' -> ' + link)
     for slug, routes in MODULE_GUIDES.items():
@@ -324,6 +383,16 @@ def check(root):
                 page = localized(f'modules/{slug}/{route}.html', language)
                 if page not in guides or guides[page].get('package') != ('pdftoolkit/opentype' if slug == 'opentype' else 'pdftoolkit/pdf-' + slug):
                     errors.append('Missing local module guide and provenance: ' + str(page))
+    html_reference = manifest.get('htmlDerivationReference', {})
+    html_package = packages.get('pdftoolkit/pdf-to-html', {})
+    expected_reference = html_package.get('repository', '') + '/blob/' + html_package.get('revision', '') + '/resources/reference-documents/Deriving_HTML_from_PDF_1-2.pdf'
+    expected_metadata = html_package.get('repository', '') + '/blob/' + html_package.get('revision', '') + '/resources/reference.json'
+    if html_reference.get('sourceUrl') != expected_reference or html_reference.get('metadataUrl') != expected_metadata or html_reference.get('physicalPdfPages') != 74 or html_reference.get('sha256') != '272669b92b073f74ae8ccd75ad35c94f0ee4f907fd8f9ded41fe3d1bc41f0f7d' or html_reference.get('bytes') != 900894 or html_reference.get('version') != '1.2' or html_reference.get('license') != 'CC-BY-4.0':
+        errors.append('The HTML derivation reference must retain its supplied identity and released provenance')
+    for language in ['en', 'fr']:
+        reference_page = localized('modules/to-html/reference.html', language)
+        if reference_page not in documents or expected_reference not in documents[reference_page].links or expected_metadata not in documents[reference_page].links:
+            errors.append('Missing retained HTML derivation reference links: ' + str(reference_page))
     for language in ['en', 'fr']:
         if localized('modules/core/index.html', language) not in documents:
             errors.append('Missing localized core package hub: ' + language)
@@ -350,6 +419,9 @@ def check(root):
                 errors.append('Incorrect API declaration source link: ' + item['title'] + ' / ' + language)
     examples = manifest['examples']
     sources = manifest.get('exampleSources', {})
+    expected_derived = {name for name, record in sources.items() if record.get('kind') == 'conversion'}
+    if {item.get('example') for item in derived} != expected_derived or len(derived) != len(expected_derived):
+        errors.append('Derived HTML inventory must cover every conversion example exactly once')
     if len(set(examples)) != len(examples) or set(sources) != set(examples):
         errors.append('Example source inventory must cover every example exactly once')
     if set(manifest.get('pdfPages', {})) != set(examples):
@@ -381,7 +453,7 @@ def check(root):
             if record.get('kind') == 'generated':
                 if package['name'] != 'roukmoute/pdf' or source_path != f'examples/{name}.php':
                     errors.append('Generated example must retain its core writer source: ' + name)
-            elif record.get('kind') == 'input':
+            elif record.get('kind') in {'input', 'conversion'}:
                 input_path = record.get('input', '')
                 expected_input = package['repository'] + '/blob/' + package['revision'] + '/' + quote(input_path, safe='/')
                 if not package['optional'] or not input_path.startswith('tests/Fixtures/') or '..' in Path(input_path).parts:
@@ -403,6 +475,35 @@ def check(root):
                             errors.append('Reader console result is missing or incorrectly escaped: ' + name + ' / ' + page)
             else:
                 errors.append('Unknown example source kind: ' + name)
+            if record.get('kind') == 'conversion':
+                expected_html = f'examples/{name}.html'
+                report = json.loads((root / f'examples/{name}.txt').read_text(encoding='utf-8'))
+                if report.get('htmlSha256') != record.get('htmlSha256'):
+                    errors.append('Derived HTML differs from its CLI report: ' + name)
+                reported_assets = report.get('assets', [])
+                assets = record.get('assets', [])
+                if len(assets) != len(reported_assets) or len({item.get('filename') for item in assets}) != len(assets):
+                    errors.append('Derived assets must cover the CLI inventory exactly once: ' + name)
+                for asset, reported in zip(assets, reported_assets):
+                    filename = asset.get('filename', '')
+                    if not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.-]*', filename) or '..' in filename or asset.get('path') != 'examples/' + filename:
+                        errors.append('Invalid derived asset path: ' + name)
+                        continue
+                    asset_file = root / asset['path']
+                    if any(asset.get(key) != reported.get(key) for key in ('filename', 'mediaType', 'sha256')) or not asset_file.is_file() or asset_file.stat().st_size != asset.get('bytes') or hashlib.sha256(asset_file.read_bytes()).hexdigest() != asset.get('sha256'):
+                        errors.append('Missing or modified derived asset: ' + filename)
+                entries = [item for item in derived if item.get('example') == name]
+                if len(entries) != 1 or entries[0].get('path') != expected_html or entries[0].get('sha256') != record.get('htmlSha256') or entries[0].get('package') != package['name'] or entries[0].get('revision') != package['revision'] or record.get('html') != expected_html:
+                    errors.append('Derived HTML must retain its example, hash and exact package provenance: ' + name)
+                for page in example_pages.values():
+                    markup = (root / page).read_text(encoding='utf-8')
+                    frame = re.search(r'<iframe\b([^>]*\bsrc="' + re.escape(manifest['basePath'] + expected_html) + r'"[^>]*)>', markup)
+                    if 'resultat-html' not in documents[page].ids or frame is None or re.search(r'\bsandbox=""', frame[1]) is None:
+                        errors.append('Derived HTML must be isolated in a sandboxed example frame: ' + page)
+                if record.get('css'):
+                    css = root / record['css']
+                    if record['css'] != f'examples/{name}.css' or not css.is_file() or hashlib.sha256(css.read_bytes()).hexdigest() != record.get('cssSha256'):
+                        errors.append('Derived CSS must match its inventory: ' + name)
         previews = manifest.get('pdfPages', {}).get(name, [])
         if not previews:
             errors.append('Missing rendered PDF pages: ' + name)

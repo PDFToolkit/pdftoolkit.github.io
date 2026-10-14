@@ -337,7 +337,7 @@ function componentRecord(ReflectionClass $reflection, array $packages): array
 }
 
 /** @return array<string, array<string, mixed>> */
-function documentationPackages(string $root, string $sourcesPath, string $opentypeRoot): array
+function documentationPackages(string $root, string $sourcesPath, string $opentypeRoot, string $pdfToHtmlRoot): array
 {
     $root = realpath($root) ?: throw new \RuntimeException('Cannot resolve the core source tree.');
     $manifestBytes = file_get_contents($sourcesPath);
@@ -355,7 +355,7 @@ function documentationPackages(string $root, string $sourcesPath, string $openty
     }
     $names = array_keys($selected);
     sort($names);
-    if (($manifest['schemaVersion'] ?? null) !== 1 || $names !== ['pdftoolkit/opentype', 'pdftoolkit/pdf-fonts', 'pdftoolkit/pdf-images', 'pdftoolkit/pdf-reader', 'roukmoute/pdf']) {
+    if (($manifest['schemaVersion'] ?? null) !== 1 || $names !== ['pdftoolkit/opentype', 'pdftoolkit/pdf-fonts', 'pdftoolkit/pdf-images', 'pdftoolkit/pdf-reader', 'pdftoolkit/pdf-to-html', 'roukmoute/pdf']) {
         throw new \RuntimeException('The released-source manifest must describe every package exactly once.');
     }
     foreach ($selected as $name => $package) {
@@ -386,7 +386,7 @@ function documentationPackages(string $root, string $sourcesPath, string $openty
     foreach ([...$lock['packages'], ...$lock['packages-dev']] as $package) {
         $lockedPackages[$package['name']] = $package;
     }
-    foreach (['pdf-fonts', 'pdf-images', 'pdf-reader'] as $module) {
+    foreach (['pdf-fonts', 'pdf-images'] as $module) {
         $name = 'pdftoolkit/' . $module;
         if (!InstalledVersions::isInstalled($name)) {
             throw new \RuntimeException('A documented optional package is not installed: ' . $name);
@@ -440,6 +440,44 @@ function documentationPackages(string $root, string $sourcesPath, string $openty
     }
     require $opentypeRoot . '/vendor/autoload.php';
     $packages['pdftoolkit/opentype'] = ['root' => $opentypeRoot, ...$opentype];
+    $pdfToHtmlRoot = realpath($pdfToHtmlRoot) ?: throw new \RuntimeException('Cannot resolve the PDF-to-HTML source tree.');
+    $html = $selected['pdftoolkit/pdf-to-html'];
+    foreach (['HEAD', 'v' . $html['version'] . '^{commit}'] as $reference) {
+        $process = proc_open(['git', '-C', $pdfToHtmlRoot, 'rev-parse', $reference], [1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes);
+        if (!is_resource($process)) {
+            throw new \RuntimeException('Cannot verify the PDF-to-HTML checkout.');
+        }
+        $revision = trim(stream_get_contents($pipes[1]));
+        $error = stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+        if (proc_close($process) !== 0 || $revision !== $html['revision']) {
+            throw new \RuntimeException('PDF-to-HTML checkout or tag differs from the released-source manifest. ' . trim($error));
+        }
+    }
+    $composer = json_decode(file_get_contents($pdfToHtmlRoot . '/composer.json') ?: '{}', true, flags: JSON_THROW_ON_ERROR);
+    if (($composer['name'] ?? null) !== 'pdftoolkit/pdf-to-html') {
+        throw new \RuntimeException('Incorrect PDF-to-HTML package identity.');
+    }
+    $htmlLock = json_decode(file_get_contents($pdfToHtmlRoot . '/composer.lock') ?: '{}', true, flags: JSON_THROW_ON_ERROR);
+    $htmlInstalled = json_decode(file_get_contents($pdfToHtmlRoot . '/vendor/composer/installed.json') ?: '{}', true, flags: JSON_THROW_ON_ERROR);
+    foreach ([array_merge($htmlLock['packages'] ?? [], $htmlLock['packages-dev'] ?? []), $htmlInstalled['packages'] ?? []] as $inventory) {
+        $records = array_column($inventory, null, 'name');
+        foreach (['roukmoute/pdf', 'pdftoolkit/pdf-reader'] as $name) {
+            $record = $records[$name] ?? [];
+            if (ltrim($record['version'] ?? '', 'v') !== $selected[$name]['version'] || ($record['source']['reference'] ?? null) !== $selected[$name]['revision'] || ($record['dist']['reference'] ?? null) !== $selected[$name]['revision']) {
+                throw new \RuntimeException('PDF-to-HTML dependency differs from the released source pin: ' . $name);
+            }
+        }
+    }
+    $readerRoot = realpath($pdfToHtmlRoot . '/vendor/pdftoolkit/pdf-reader') ?: throw new \RuntimeException('Missing released PDF reader.');
+    // Select one source tree per namespace; the core lock may retain an older reader.
+    $loader = new \Composer\Autoload\ClassLoader();
+    $loader->addPsr4('PDF\\Html\\', $pdfToHtmlRoot . '/src');
+    $loader->addPsr4('PDF\\Reading\\', $readerRoot . '/src');
+    $loader->register(true);
+    $packages['pdftoolkit/pdf-to-html'] = ['root' => $pdfToHtmlRoot, ...$html];
+    $packages['pdftoolkit/pdf-reader'] = ['root' => $readerRoot, ...$selected['pdftoolkit/pdf-reader']];
     return $packages;
 }
 
@@ -467,15 +505,15 @@ function sourceLocation(string $file, array $packages): array
 }
 
 $arguments = $_SERVER['argv'] ?? [];
-if (!is_array($arguments) || count($arguments) !== 5 || !isset($arguments[1], $arguments[2], $arguments[3], $arguments[4]) || !is_string($arguments[1]) || $arguments[1] === '') {
-    fwrite(STDERR, "Usage: php tools/export_api.php <output.json> <source-root> <sources.json> <opentype-root>\n");
+if (!is_array($arguments) || count($arguments) !== 6 || !isset($arguments[1], $arguments[2], $arguments[3], $arguments[4], $arguments[5]) || !is_string($arguments[1]) || $arguments[1] === '') {
+    fwrite(STDERR, "Usage: php tools/export_api.php <output.json> <source-root> <sources.json> <opentype-root> <pdf-to-html-root>\n");
     exit(1);
 }
 
 try {
     $root = realpath($arguments[2]) ?: throw new \RuntimeException('Cannot resolve the core source tree.');
     require $root . '/vendor/autoload.php';
-    $packages = documentationPackages($root, $arguments[3], $arguments[4]);
+    $packages = documentationPackages($root, $arguments[3], $arguments[4], $arguments[5]);
     $files = [];
     foreach ($packages as $package) {
         $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($package['root'] . '/src', \FilesystemIterator::SKIP_DOTS));

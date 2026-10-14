@@ -28,8 +28,7 @@ de dictionnaires avec 1 709 entrées fixes ou variables. Les pages de continuati
 et les corrections d’extraction sont traçables. Cette couverture et les mécanismes
 complémentaires n’établissent pas la conformité à toutes les clauses de la norme.
 Le [guide PDF 2.0](pdf-2-0.md) et la [couverture](coverage.md)
-conservent cette distinction. Le périmètre d’entrée du lecteur optionnel reste
-inchangé ; les nouveaux mécanismes d’écriture n’en font pas un lecteur PDF 2.0.
+conservent cette distinction. Le lecteur 0.2 accepte la syntaxe PDF 1.0–2.0 et les chaînes UTF-8 PDF 2.0. Ce périmètre syntaxique reste distinct des nouveaux mécanismes d’écriture et de chiffrement du core.
 
 ## Des algorithmes sélectionnés indépendamment
 

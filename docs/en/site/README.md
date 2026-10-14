@@ -2,7 +2,7 @@
 
 The site is published at [pdftoolkit.github.io](https://pdftoolkit.github.io/)
 from [PDFToolkit/pdftoolkit.github.io](https://github.com/PDFToolkit/pdftoolkit.github.io).
-It presents the core, three optional PDF modules and the independent OpenType model from published versions
+It presents the core, optional PDF modules, HTML derivation and the independent OpenType model from published versions
 selected in the manifest. The documentation text and tools commit is
 identified separately from documented package versions and commits.
 
@@ -67,6 +67,15 @@ It publishes input-PDF bytes, its three previews and reading console output.
 Their provenance uses the reader commit pinned in the manifest; the core
 retains its generation examples.
 
+The PDF-to-HTML checkout is separately pinned under `_sources/pdf-to-html`.
+Its locked reader supplies the documented reader 0.2.1 without changing the core
+lock. Tutorial 35 runs its real CLI against the independently generated tagged
+fixture. The build checks the retained reference and fixture bytes, then executes
+the package's pypdf/HTML5 oracle. It copies every asset listed in the CLI JSON,
+checking filenames, SHA-256 and output collisions. `derivedHtml` stays outside
+the bilingual documentation-page inventory and is previewed in an empty sandbox.
+Module guides/API are published under `/modules/to-html/`.
+
 The ISO 32000-2:2020 EC3 catalogue is read from `resources/iso32000-2-2020/`.
 Its API panels use explicit edition mappings rather than bare table numbers.
 `repositorySpecificationSources` records the original filename, hash, size, pages and links to the PDF and its metadata at the documented core commit. The original is public in that repository following confirmed redistribution authorization; its 19 MB are not duplicated in site output. The build verifies original bytes before publishing that link. Lesson 27 uses a real generated PDF and the selected font module.
@@ -106,9 +115,15 @@ COMPOSER_ROOT_VERSION="$core_alias" composer install --working-dir=_sources/pdf 
 git clone "$opentype_repository" _sources/opentype
 git -C _sources/opentype checkout --detach "$opentype_revision"
 composer install --working-dir=_sources/opentype --no-interaction --prefer-dist
+html_repository=$(python -c "import json; print(next(p for p in json.load(open('resources/sources.json'))['packages'] if p['name']=='pdftoolkit/pdf-to-html')['repository'])")
+html_revision=$(python -c "import json; print(next(p for p in json.load(open('resources/sources.json'))['packages'] if p['name']=='pdftoolkit/pdf-to-html')['revision'])")
+git clone "$html_repository" _sources/pdf-to-html
+git -C _sources/pdf-to-html checkout --detach "$html_revision"
+composer install --working-dir=_sources/pdf-to-html --no-interaction --prefer-dist
 python -m pip install --require-hashes -r tools/site-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf/tools/public-key-validation-requirements.txt
-python tools/build_docs.py --source-root _sources/pdf --opentype-root _sources/opentype --docs-revision "$(git rev-parse HEAD)" --remote
+python -m pip install --require-hashes -r _sources/pdf-to-html/tools/validation-requirements.txt
+python tools/build_docs.py --source-root _sources/pdf --opentype-root _sources/opentype --pdf-to-html-root _sources/pdf-to-html --docs-revision "$(git rev-parse HEAD)" --remote
 ```
 
 On PowerShell:
@@ -124,10 +139,15 @@ composer install --working-dir=_sources/pdf --no-interaction --prefer-dist
 git clone $opentypeSource.repository _sources/opentype
 git -C _sources/opentype checkout --detach $opentypeSource.revision
 composer install --working-dir=_sources/opentype --no-interaction --prefer-dist
+$htmlSource = $sourceManifest.packages | Where-Object name -eq 'pdftoolkit/pdf-to-html'
+git clone $htmlSource.repository _sources/pdf-to-html
+git -C _sources/pdf-to-html checkout --detach $htmlSource.revision
+composer install --working-dir=_sources/pdf-to-html --no-interaction --prefer-dist
 python -m pip install --require-hashes -r tools/site-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf/tools/public-key-validation-requirements.txt
+python -m pip install --require-hashes -r _sources/pdf-to-html/tools/validation-requirements.txt
 $docsRevision = git rev-parse HEAD
-python tools/build_docs.py --source-root _sources/pdf --opentype-root _sources/opentype --docs-revision $docsRevision --remote
+python tools/build_docs.py --source-root _sources/pdf --opentype-root _sources/opentype --pdf-to-html-root _sources/pdf-to-html --docs-revision $docsRevision --remote
 ```
 
 `tools/build_docs.py` verifies published commits and tags, retained sources
@@ -141,8 +161,8 @@ revisions in the manifest. Tool paths can be specified with `--php`,
 To rebuild only the rendering from already-validated inputs:
 
 ```sh
-php tools/export_api.php _build/api.json _sources/pdf resources/sources.json _sources/opentype
-python tools/build_site.py --content-root . --source-root _sources/pdf --opentype-root _sources/opentype --sources resources/sources.json --docs-revision "$(git rev-parse HEAD)" --api _build/api.json --pdf-dir _build/pdfs --pdf-preview-dir _build/pdf-pages --output _site --base-path /
+php tools/export_api.php _build/api.json _sources/pdf resources/sources.json _sources/opentype _sources/pdf-to-html
+python tools/build_site.py --content-root . --source-root _sources/pdf --opentype-root _sources/opentype --pdf-to-html-root _sources/pdf-to-html --sources resources/sources.json --docs-revision "$(git rev-parse HEAD)" --api _build/api.json --pdf-dir _build/pdfs --pdf-preview-dir _build/pdf-pages --output _site --base-path /
 python tools/check_site.py _site
 ```
 
@@ -219,3 +239,7 @@ examples and original references are shared unchanged by both languages.
 Run `node tests/site_locales.cjs` and the full site checker. They verify the
 language switch, search filters, section anchors, clipboard messages, each
 locale's API inventory, reciprocal alternates and compatibility routes.
+
+## HTML derivation inputs
+
+The released PDF-to-HTML checkout under `_sources/pdf-to-html` is selected independently. Its locked core and reader must match `resources/sources.json`; the selected reader comes from this checkout’s vendor directory, while the core’s original lock stays unchanged. The API exporter registers only the selected HTML and reader namespaces against their chosen trees. Module guides appear under `/modules/to-html/` in both languages. Tutorial 35 copies the input PDF, renders every page and runs the module CLI to produce actual HTML plus JSON diagnostics. `derivedHtml` inventories output HTML separately from documentation routes, with package/SHA provenance and sandboxed frames; the site checker rejects active content in these previews. The supplied 74-page original remains in the package and is linked at its selected release commit.

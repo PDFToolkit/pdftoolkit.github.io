@@ -24,7 +24,7 @@ text is a sequence of operators.
 The core and modules are available on Packagist. From your project:
 
 ```sh
-composer require "roukmoute/pdf:^0.6.2"
+composer require "roukmoute/pdf:^0.7.1"
 ```
 
 Lessons 09, 10 and 12 use `pdftoolkit/pdf-fonts`, `pdftoolkit/pdf-images` and
@@ -42,12 +42,12 @@ see the [build instructions](../site/README.md) to prepare sources at the
 documented versions. From the core checkout:
 
 ```sh
-export COMPOSER_ROOT_VERSION=0.6.x-dev
+export COMPOSER_ROOT_VERSION=0.7.x-dev
 composer install
 php examples/hello-world.php
 ```
 
-Under PowerShell, set `$env:COMPOSER_ROOT_VERSION = '0.6.x-dev'` before
+Under PowerShell, set `$env:COMPOSER_ROOT_VERSION = '0.7.x-dev'` before
 `composer install`. The checkout uses its `composer.lock` to install development
 tools and all three modules at the documented versions.
 
@@ -86,7 +86,7 @@ PDF, all three pages and the objects read.
 | [09. TrueType font and Unicode](09-embedded-font.md) | Embedded program, CIDs, widths and ToUnicode mapping. | [embedded-font.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/embedded-font.php) |
 | [10. JPEG and PNG images](10-image-files.md) | JPEG inspection, PNG decoding, samples and transparency. | [image-files.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/image-files.php) |
 | [11. Incremental revisions](11-incremental-update.md) | Preserved bytes, replacements and xref chaining. | [incremental-update.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/incremental-update.php) |
-| [12. Read an external PDF](12-reading-pages.md) | Verified tree, inherited values and content streams inspected then decoded. | [reader module's pages.php](https://github.com/PDFToolkit/pdf-reader/blob/v0.1.6/examples/pages.php) |
+| [12. Read an external PDF](12-reading-pages.md) | Verified tree, inherited values and content streams inspected then decoded. | [reader module's pages.php](https://github.com/PDFToolkit/pdf-reader/blob/v0.2.1/examples/pages.php) |
 | [13. Adobe extensions and Bates numbering](13-adobe-extensions.md) | Extension declarations, artifact properties and Bates footer. | [adobe-extensions.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/adobe-extensions.php) |
 | [14. AcroForm fields](14-acroform-fields.md) | Tree, values, widgets and appearances. | [acroform-fields.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/acroform-fields.php) |
 | [15. Logical structure](15-tagged-structure.md) | Marked content, ParentTree, IDTree and annotations. | [tagged-structure.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/tagged-structure.php) |
@@ -109,6 +109,7 @@ PDF, all three pages and the objects read.
 | [32. Document timestamps and DSS](32-pdf20-timestamp-dss.md) | RFC3161, explicit validation policy, VRI and preserved historical signatures. | [pdf20-timestamp-dss.php](https://github.com/PDFToolkit/pdf/blob/v0.7.1/examples/pdf20-timestamp-dss.php) |
 | [33. Geospatial objects and measurements](33-pdf20-geospatial.md) | Coordinate systems, paired control points, viewports, matrices and point clouds. | [pdf20-geospatial.php](https://github.com/PDFToolkit/pdf/blob/v0.7.1/examples/pdf20-geospatial.php) |
 | [34. Structure destinations](34-pdf20-structure-destinations.md) | Semantic targets, content traversal, named SD entries and explicit page fallbacks. | [pdf20-structure-destinations.php](https://github.com/PDFToolkit/pdf/blob/v0.7.1/examples/pdf20-structure-destinations.php) |
+| [35. Derive HTML from tagged PDF](35-derive-html.md) | Logical structure, Unicode content, actual HTML and explicit diagnostics. | [01-derive-tagged-pdf.php](https://github.com/PDFToolkit/pdf-to-html/blob/v0.1.0/examples/01-derive-tagged-pdf.php) |
 
 After the first document, lessons 03 to 07 can be read in any order matching
 your interests. Lessons 08 and 11 concern file organization; lessons 09 and 10
@@ -186,3 +187,6 @@ rendering; they do not certify a document's full conformance, accessibility or
 certificate trust.
 
 [Start with the first document](01-first-document.md) · [Back to the README](../../../README.md)
+
+
+Lesson 35 uses a separate released PDF-to-HTML checkout and its locked reader; see the [build instructions](../site/README.md).

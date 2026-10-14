@@ -31,7 +31,7 @@ Son [inventaire d’exigences](https://github.com/PDFToolkit/pdf/blob/v0.7.1/res
 consigne chaque aspect étudié, clause source, frontière d’exécution et chemin de preuve.
 Le vérificateur reproductible rejette clauses omises et fichiers de preuve absents.
 Aucune certification WTPDF/PDF/UA-2 automatique ni conformité complète à la norme
-de base n’est revendiquée. Le lecteur conserve son périmètre d’entrée PDF 1.0–1.7.
+de base n’est revendiquée. Le lecteur 0.2 accepte la syntaxe PDF 1.0–2.0 et les chaînes UTF-8 PDF 2.0 ; il ne fournit pas les mécanismes de chiffrement ou de rendu du writer.
 
 L’[original de la norme principale](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf)
 et les onze nouveaux originaux restent inchangés dans le dépôt public du core,

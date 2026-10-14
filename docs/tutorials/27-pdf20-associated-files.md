@@ -88,7 +88,7 @@ avec la police incorporée et la correspondance ToUnicode. Les contrôles
 indépendants examinent ces octets et références, pas seulement le succès d'une
 commande de génération.
 
-Le package optionnel `pdf-reader` documente toujours une lecture PDF 1.0–1.7.
+Le package optionnel `pdf-reader` 0.2 lit la syntaxe PDF 1.0–2.0 et les chaînes UTF-8 PDF 2.0, sans reprendre les mécanismes de chiffrement du writer.
 L'exemple est validé par des outils externes pour PDF 2.0. Cette leçon ne chiffre
 pas le fichier et n'implémente pas R=6, les espaces de noms natifs,
 DSS/horodatages, parties documentaires ni la conformité ISO 32000-2 complète.

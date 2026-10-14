@@ -34,7 +34,7 @@ projet consommateur pour fixer les versions installées.
 | [`pdftoolkit/pdf-images`](https://pdftoolkit.github.io/modules/images/index.html) | Inspecter des fichiers JPEG et décoder des fichiers PNG en objets image du core. |
 | [`pdftoolkit/pdf-fonts`](https://pdftoolkit.github.io/modules/fonts/index.html) | Analyser un TrueType statique et préparer ses métriques et correspondances pour les objets de police du core. |
 
-Le lecteur PDF **0.1.9** et les modules images/fontes **0.1.8** acceptent les séries 0.2, 0.3, 0.4, 0.5, 0.6 et 0.7 du core sous PHP 8.3 ou supérieur. Le lecteur accepte toujours les PDF 1.0–1.7 en entrée ; la conversion d’images reste PNG/JPEG et celle des fontes reste TrueType statique. Les trois packages sont disponibles sur Packagist : [lecteur](https://packagist.org/packages/pdftoolkit/pdf-reader), [images](https://packagist.org/packages/pdftoolkit/pdf-images) et [fontes](https://packagist.org/packages/pdftoolkit/pdf-fonts). Par exemple, pour importer des fichiers image avec le core 0.7 :
+Le lecteur PDF **0.2.1** et les modules images/fontes **0.1.8** acceptent les séries 0.2, 0.3, 0.4, 0.5, 0.6 et 0.7 du core sous PHP 8.3 ou supérieur. Le lecteur 0.2 accepte la syntaxe PDF 1.0–2.0 et les chaînes UTF-8 PDF 2.0 ; la conversion d’images reste PNG/JPEG et celle des fontes reste TrueType statique. Les trois packages sont disponibles sur Packagist : [lecteur](https://packagist.org/packages/pdftoolkit/pdf-reader), [images](https://packagist.org/packages/pdftoolkit/pdf-images) et [fontes](https://packagist.org/packages/pdftoolkit/pdf-fonts). Par exemple, pour importer des fichiers image avec le core 0.7 :
 
 ```sh
 composer require "roukmoute/pdf:^0.7.1" "pdftoolkit/pdf-images:^0.1.8"
@@ -159,3 +159,9 @@ python tools/generate_specification.py
 ```
 
 L'extracteur `tools/extract_spec.py` conserve la source et les localisations dans le PDF. Son utilisation demande les dépendances Python indiquées dans la documentation de la spécification. Les descriptions normatives servent à tracer les contraintes encore à implémenter ; les algorithmes ne sont pas remplacés par une génération de classes.
+
+## Dériver du HTML
+
+Pour dériver du HTML sémantique depuis un PDF balisé, installer `pdftoolkit/pdf-to-html:^0.1.0` puis suivre le [tutoriel 35](tutorials/35-derive-html.md). Cette conversion optionnelle reste hors du core.
+
+[Packagist: pdftoolkit/pdf-to-html](https://packagist.org/packages/pdftoolkit/pdf-to-html).

@@ -34,7 +34,7 @@ API changes appear in the [changelog](../../CHANGELOG.md) and the
 | [`pdftoolkit/pdf-images`](https://pdftoolkit.github.io/modules/images/index.html) | Inspect JPEG files and decode PNG files into core image objects. |
 | [`pdftoolkit/pdf-fonts`](https://pdftoolkit.github.io/modules/fonts/index.html) | Analyze a static TrueType font and prepare its metrics and mappings for core font objects. |
 
-The PDF reader **0.1.9** and image/font modules **0.1.8** accept core series 0.2, 0.3, 0.4, 0.5, 0.6 and 0.7 on PHP 8.3 or later. The reader still accepts PDF 1.0–1.7 input; image conversion remains PNG/JPEG and font conversion remains static TrueType. All three packages are available on Packagist: [reader](https://packagist.org/packages/pdftoolkit/pdf-reader), [images](https://packagist.org/packages/pdftoolkit/pdf-images) and [fonts](https://packagist.org/packages/pdftoolkit/pdf-fonts). For example, to import image files with core 0.7:
+The PDF reader **0.2.1** and image/font modules **0.1.8** accept core series 0.2, 0.3, 0.4, 0.5, 0.6 and 0.7 on PHP 8.3 or later. Reader 0.2 accepts PDF 1.0–2.0 syntax and PDF 2.0 UTF-8 strings; image conversion remains PNG/JPEG and font conversion remains static TrueType. All three packages are available on Packagist: [reader](https://packagist.org/packages/pdftoolkit/pdf-reader), [images](https://packagist.org/packages/pdftoolkit/pdf-images) and [fonts](https://packagist.org/packages/pdftoolkit/pdf-fonts). For example, to import image files with core 0.7:
 
 ```sh
 composer require "roukmoute/pdf:^0.7.1" "pdftoolkit/pdf-images:^0.1.8"
@@ -159,3 +159,9 @@ python tools/generate_specification.py
 ```
 
 The `tools/extract_spec.py` extractor retains the source and PDF locations. Using it requires the Python dependencies listed in the specification documentation. Normative descriptions trace constraints still to implement; class generation does not replace algorithms.
+
+## Derive HTML
+
+For semantic HTML from tagged PDF, install `pdftoolkit/pdf-to-html:^0.1.0` and follow [tutorial 35](tutorials/35-derive-html.md). This optional conversion remains outside the core.
+
+[Packagist: pdftoolkit/pdf-to-html](https://packagist.org/packages/pdftoolkit/pdf-to-html).

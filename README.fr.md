@@ -18,6 +18,7 @@ ou le module nécessaire :
 - [Images](https://pdftoolkit.github.io/fr/modules/images/)
 - [Polices](https://pdftoolkit.github.io/fr/modules/fonts/)
 - [OpenType](https://pdftoolkit.github.io/fr/modules/opentype/)
+- [PDF vers HTML](https://pdftoolkit.github.io/fr/modules/to-html/)
 
 Ce dépôt contient les textes communs, les assets du site, le générateur et le
 workflow de déploiement. Le code PHP, les exemples exécutables, les fixtures
@@ -37,8 +38,8 @@ Composer :
 composer require "roukmoute/pdf:^0.7.1"
 ```
 
-Les versions documentées sont le core **0.7.1**, le lecteur **0.1.9**, les modules
-images/fontes **0.1.8** et OpenType indépendant **0.1.0**. Elles nécessitent **PHP 8.3 ou supérieur**
+Les versions documentées sont le core **0.7.1**, le lecteur **0.2.1**, les modules
+images/fontes **0.1.8**, OpenType indépendant **0.1.0** et PDF vers HTML **0.1.0**. Elles nécessitent **PHP 8.3 ou supérieur**
 et sont vérifiées sous PHP 8.3, 8.4 et 8.5. Le core **0.7** exige aussi PHP en
 64 bits ; OpenType reste indépendant du core PDF.
 
@@ -49,8 +50,9 @@ Choisir les modules optionnels selon les fichiers traités par l'application :
 - [Images : pdftoolkit/pdf-images](https://packagist.org/packages/pdftoolkit/pdf-images)
 - [Polices : pdftoolkit/pdf-fonts](https://packagist.org/packages/pdftoolkit/pdf-fonts)
 - [OpenType: pdftoolkit/opentype](https://packagist.org/packages/pdftoolkit/opentype)
+- [PDF vers HTML : pdftoolkit/pdf-to-html](https://packagist.org/packages/pdftoolkit/pdf-to-html)
 
-Les trois modules PDF installent le core comme dépendance. OpenType possède son propre modèle objet et s’installe sans dépendance PDF. Le guide des packages explique
+Les modules images/fontes/lecteur installent le core comme dépendance. PDF vers HTML ajoute la dérivation sémantique et installe aussi le lecteur. OpenType possède son propre modèle objet et s’installe sans dépendance PDF. Le guide des packages explique
 leurs commandes Composer et les versions prises en charge.
 
 ## Guides et exemples PDF 2.0
@@ -61,7 +63,7 @@ expliquent ISO 32000-2:2020 EC3, les chiffrements et signatures modernes, PDF MA
 les métadonnées/déclarations, les fichiers associés, les parties de document et
 les rôles de structure qualifiés, les horodatages documentaires, les preuves
 DSS/VRI, les mesures géospatiales et les destinations de structure.
-Les [34 tutoriels](https://pdftoolkit.github.io/fr/tutorials/)
+Les [35 tutoriels](https://pdftoolkit.github.io/fr/tutorials/)
 comprennent des exemples exécutables et leurs véritables aperçus PDF. L'audit
 WTPDF distingue les contrôles mécaniques et les preuves encore nécessaires ;
 il ne certifie ni l'accessibilité ni PDF/UA.

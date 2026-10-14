@@ -83,7 +83,7 @@ UTF-8 metadata. Compare visible text with the embedded font and ToUnicode mappin
 Independent checks exercise those bytes and references rather than only accepting
 a successful generation call.
 
-The optional `pdf-reader` package still documents PDF 1.0–1.7 reading. The example
+The optional `pdf-reader` 0.2 package reads PDF 1.0–2.0 syntax and PDF 2.0 UTF-8 strings, without providing the writer’s encryption mechanisms. The example
 uses external validation tools for PDF 2.0. This lesson does not encrypt the file
 and does not implement R=6, native namespaces, DSS/timestamps, document parts or
 full ISO 32000-2 conformance.
