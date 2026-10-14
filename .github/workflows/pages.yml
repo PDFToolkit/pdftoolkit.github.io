@@ -16,6 +16,8 @@ jobs:
   build:
     name: Build the shared documentation
     runs-on: ubuntu-latest
+    env:
+      COMPOSER_MAX_PARALLEL_HTTP: 4
     steps:
       - uses: actions/checkout@v6
       - name: Select released source inputs
@@ -46,18 +48,32 @@ jobs:
         with:
           node-version: '24'
           package-manager-cache: false
-      - name: Install the released core's locked build inputs
+      - name: Install the released packages' locked build inputs
         env:
-          COMPOSER_ROOT_VERSION: ${{ steps.sources.outputs.core_alias }}
+          CORE_ROOT_VERSION: ${{ steps.sources.outputs.core_alias }}
         run: |
-          composer install --working-dir _sources/pdf --no-interaction --prefer-dist
-          composer check-platform-reqs --working-dir _sources/pdf
-          composer audit --working-dir _sources/pdf --locked
-      - name: Install the independent OpenType release inputs
-        run: |
-          composer install --working-dir _sources/opentype --no-interaction --prefer-dist
-          composer check-platform-reqs --working-dir _sources/opentype
-          composer audit --working-dir _sources/opentype --locked
+          install_locked_inputs() {
+            local directory="$1"
+            local log="$RUNNER_TEMP/composer-$(basename "$directory").log"
+            local status
+            for attempt in 1 2 3; do
+              set +e
+              composer install --working-dir "$directory" --no-interaction --prefer-dist > "$log" 2>&1
+              status=$?
+              set -e
+              cat "$log"
+              if [ "$status" -eq 0 ]; then break; fi
+              if ! grep -Eq 'HTTP(/[0-9.]+)?[[:space:]]+(429|502|503|504)([^0-9]|$)' "$log"; then
+                return "$status"
+              fi
+              if [ "$attempt" -eq 3 ]; then return "$status"; fi
+              sleep "$((attempt * 5))"
+            done
+            composer check-platform-reqs --working-dir "$directory"
+            composer audit --working-dir "$directory" --locked
+          }
+          COMPOSER_ROOT_VERSION="$CORE_ROOT_VERSION" install_locked_inputs _sources/pdf
+          install_locked_inputs _sources/opentype
       - run: python -m pip install --require-hashes -r tools/site-requirements.txt
       - run: python -m pip install --require-hashes -r _sources/pdf/tools/public-key-validation-requirements.txt
       - uses: ./_sources/pdf/.github/actions/setup-qpdf
