@@ -1,7 +1,7 @@
 # Core and optional modules
 
 PDFToolkit separates the PDF model from external-file processing. The
-**0.7.1 core**, **0.2.0 PDF reader**, **0.1.8 image/font modules** and the independent **0.1.0 OpenType model**
+**0.7.1 core**, **0.2.3 PDF reader**, **0.1.8 image/font modules**, independent **0.1.0 OpenType model** and **0.2.0 PDF-to-HTML module**
 require PHP 8.3 or later and are checked on PHP 8.3, 8.4 and 8.5.
 Core **0.7** additionally requires 64-bit PHP; OpenType remains independent of the
 PDF core. The core retains its Composer name `roukmoute/pdf`
@@ -58,9 +58,10 @@ All six packages are available on Packagist:
 [reader](https://packagist.org/packages/pdftoolkit/pdf-reader),
 [images](https://packagist.org/packages/pdftoolkit/pdf-images),
 [PDF fonts](https://packagist.org/packages/pdftoolkit/pdf-fonts) and
-[OpenType](https://packagist.org/packages/pdftoolkit/opentype).
+[OpenType](https://packagist.org/packages/pdftoolkit/opentype) and
+[PDF to HTML](https://packagist.org/packages/pdftoolkit/pdf-to-html).
 Stable constraints are `roukmoute/pdf:^0.7.1` for the core and
-`pdftoolkit/pdf-reader:^0.2.1`, `pdftoolkit/pdf-images:^0.1.8` or
+`pdftoolkit/pdf-reader:^0.2.3`, `pdftoolkit/pdf-images:^0.1.8` or
 `pdftoolkit/pdf-fonts:^0.1.8` for PDF modules, and `pdftoolkit/opentype:^0.1.0` for the independent font model. Older core tags `v0.1.0` and
 `v0.1.1` retain their PHP 8.5 constraint.
 
@@ -73,7 +74,7 @@ composer require "roukmoute/pdf:^0.7.1"
 To add reading of existing PDFs:
 
 ```sh
-composer require "roukmoute/pdf:^0.7.1" "pdftoolkit/pdf-reader:^0.2.1"
+composer require "roukmoute/pdf:^0.7.1" "pdftoolkit/pdf-reader:^0.2.3"
 ```
 
 To convert images:
@@ -105,12 +106,12 @@ Applications that added GitHub repositories under `repositories` can remove
 those entries from `composer.json`. Composer package names remain identical.
 
 Before 1.0, a new minor release may change names and signatures. The
-`^0.7.1`, `^0.2.1` and `^0.1.8` constraints allow patches within their series and
+`^0.7.1`, `^0.2.3` and `^0.1.8` constraints allow patches within their series and
 exclude the next minor release. Consult changelogs before switching series.
 To work with upcoming development, explicitly request `dev-master` for the
 relevant packages.
 
-Reader 0.2.0 and image/font modules 0.1.8 accept core series `^0.2 || ^0.3 || ^0.4 || ^0.5 || ^0.6 || ^0.7`.
+Reader 0.2.3 and image/font modules 0.1.8 accept core series `^0.2 || ^0.3 || ^0.4 || ^0.5 || ^0.6 || ^0.7`.
 An application remaining on an accepted older core series can therefore update them; the
 commands above explicitly select core 0.7 constructions. The core retains
 mandatory PHP extensions `ctype`, `iconv` and `zlib`. AES, CMS and signature
@@ -167,7 +168,7 @@ without concatenation or decoding. Traversal and stream-count limits are
 explicit objects; cumulative `ReadDocument` budgets continue to apply.
 To obtain decoded bytes, separately request
 `$document->streamData($stream)`. The
-[page-reading guide](https://github.com/PDFToolkit/pdf-reader/blob/v0.2.1/docs/pages.md)
+[page-reading guide](https://github.com/PDFToolkit/pdf-reader/blob/v0.2.3/docs/pages.md)
 explains every step and supplies an executable example with three inherited
 pages.
 
@@ -186,7 +187,7 @@ Read values cannot be directly passed back to the writer: their references
 belong to the original file. Graph import and remapping, rewriting, merging
 and repair remain to be built. Consult the
 [reader documentation](https://github.com/PDFToolkit/pdf-reader#readme)
-and [its security checks](https://github.com/PDFToolkit/pdf-reader/blob/v0.2.1/docs/security.md)
+and [its security checks](https://github.com/PDFToolkit/pdf-reader/blob/v0.2.3/docs/security.md)
 when choosing budgets. By default, retained binary bytes and total decoded
 stream bytes are each bounded to 128 MiB, in addition to other limits.
 
@@ -212,12 +213,16 @@ and [coverage guide](coverage.md).
 
 ## Derive HTML from a tagged PDF
 
-The optional [PDF-to-HTML module](https://github.com/PDFToolkit/pdf-to-html) follows the retained PDF Association **Deriving HTML from PDF 1.2** usage specification. It installs the core and reader transitively. It derives semantic HTML from logical structure; it does not infer untagged structure, run OCR or reproduce PDF page layout. Model coverage, file-adapter coverage and browser/runtime integration are distinct.
+The optional [PDF-to-HTML module](https://pdftoolkit.github.io/modules/to-html/index.html) follows the retained PDF Association **Deriving HTML from PDF 1.2** usage specification. Version 0.2.0 installs core 0.7.1+ and reader 0.2.3+ transitively, requiring 64-bit PHP 8.3+ with DOM and mbstring. It derives semantic HTML from logical structure; it does not infer untagged structure, run OCR or reproduce PDF page layout. Model coverage, file-adapter coverage and browser/runtime integration are distinct.
 
 ```sh
-composer require "pdftoolkit/pdf-to-html:^0.1.0"
+composer require "pdftoolkit/pdf-to-html:^0.2.0"
 ```
 
-[Follow the executable tutorial](tutorials/35-derive-html.md) and inspect diagnostics before publishing HTML. The safe default does not execute scripts or fetch external resources.
+[Follow the executable tutorial](tutorials/35-derive-html.md) and inspect diagnostics before publishing HTML. ParentTree associations, table-header identities, destinations, Unicode mappings, inline images and form actions have tests and independent oracles. The [requirements ledger](https://pdftoolkit.github.io/modules/to-html/requirements.html) links each rule to decisions and evidence; it does not certify universal PDF acceptance.
+
+The [default profile](https://pdftoolkit.github.io/modules/to-html/policies.html) executes neither PDF scripts nor ResetForm/SubmitForm actions and fetches no external resources. `FormActionPolicy` enables targeted reset to `/DV` or supported HTML submissions separately, without enabling PDF ECMAScript. Keep every returned asset with the HTML.
+
+[Graphics](https://pdftoolkit.github.io/modules/to-html/graphics.html) retain their programs and resources: `GraphicPdfExporter` produces an isolated PDF, then `RasterContentRenderer` calls the application's `GraphicsRasterizer`. Rendering engines, encrypted-input authentication, additional codecs and HTML-viewer permission enforcement remain explicit capabilities. A requested visual profile fails explicitly when its engine is unavailable.
 
 [Packagist: pdftoolkit/pdf-to-html](https://packagist.org/packages/pdftoolkit/pdf-to-html).

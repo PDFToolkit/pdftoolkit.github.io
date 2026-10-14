@@ -51,7 +51,7 @@ tableau, document et page de référence. Les entrées composées distinguent le
 sources Adobe et ISO ; voir le [guide de couverture](../coverage.md).
 
 Les guides propres aux modules sont publiés sous `/modules/reader/`,
-`/modules/images/`, `/modules/fonts/` et `/modules/opentype/`. Leur package qualifie les pages et liens
+`/modules/images/`, `/modules/fonts/`, `/modules/opentype/` et `/modules/to-html/`. Leur package qualifie les pages et liens
 pour que les fichiers Markdown de même nom restent distincts.
 
 Chaque script de `examples/` du core doit avoir un tutoriel ou une recette et
@@ -69,13 +69,27 @@ Leur provenance utilise le commit du lecteur fixé dans le manifeste ; le core
 conserve ses exemples de génération.
 
 Le checkout PDF vers HTML est fixé séparément sous `_sources/pdf-to-html`.
-Son lecteur verrouillé fournit la version 0.2.1 documentée sans changer le lock
+Son lecteur verrouillé fournit la version 0.2.3 documentée sans changer le lock
 du core. Le tutoriel 35 exécute son vrai CLI sur la fixture balisée produite
 indépendamment. La construction vérifie les octets de référence et de fixture,
 puis exécute l'oracle pypdf/HTML5 du package. Elle copie chaque ressource du JSON
 CLI en contrôlant noms, SHA-256 et collisions de sortie. `derivedHtml` reste hors
 de l'inventaire des pages documentaires bilingues et apparaît dans un sandbox
 sans permission. Les guides/API du module sont sous `/modules/to-html/`.
+
+La sélection actuelle documente PDF vers HTML 0.2.0 et le lecteur 0.2.3. Le
+[registre des exigences](https://pdftoolkit.github.io/fr/modules/to-html/requirements.html),
+les [politiques](https://pdftoolkit.github.io/fr/modules/to-html/policies.html) et
+les [graphiques](https://pdftoolkit.github.io/fr/modules/to-html/graphics.html)
+distinguent règles natives, adaptations HTML et capacités explicites de
+rasterisation, d'authentification et de codecs supplémentaires.
+
+`tools/build_docs.py` reproduit les tables de glyphes et les fixtures inline/fax,
+puis exécute les oracles HTML5/pypdf, les comparaisons de pixels Poppler pour
+graphiques/contextes/fax, le contrôle des parents d'ancres et le runtime Node.
+Il exécute aussi les exemples 02/03 d'export de figure et de reset ciblé `/DV`,
+qui n'active pas ECMAScript PDF. Ces deux sorties et leurs ressources restent dans
+`_build/pdfs/html-validation/` ; elles n'ajoutent ni pages ni assets au site.
 
 Le catalogue ISO 32000-2:2020 EC3 est lu dans `resources/iso32000-2-2020/`.
 Ses fiches API utilisent une édition explicite au lieu du seul numéro de tableau.
@@ -97,7 +111,7 @@ anglaises/françaises et de véritables rendus PDF.
 
 ## Construction locale
 
-PHP 8.3 ou supérieur en 64 bits, Composer, Python 3.13, OpenSSL, Poppler (`pdftoppm`) et qpdf 12.4.2
+PHP 8.3 ou supérieur en 64 bits, Composer, Python 3.13, Node 24, OpenSSL, Poppler (`pdftoppm`) et qpdf 12.4.2
 sont utilisés par le workflow. Les dépendances Python sont verrouillées avec
 leurs empreintes. Le site publié est statique.
 
@@ -247,5 +261,12 @@ messages de copie, les deux inventaires API, les variantes réciproques et les
 adresses de compatibilité.
 
 ## Entrées de la dérivation HTML
+
+L'option `--node` permet de choisir l'exécutable Node ; elle vaut `node` par
+défaut. Le harness reçoit aussi `--php` pour ses sous-processus de fixtures,
+sans dépendre d'un autre PHP trouvé sur le PATH. Les oracles de rendu utilisent
+le `--pdftoppm` choisi. Le profil par défaut et les frames du site n'exécutent
+pas le runtime ; les cas activés explicitement sont contrôlés dans l'espace privé
+de validation. Tous les guides du module conservent leur variante EN/FR.
 
 Le checkout publié `_sources/pdf-to-html` est sélectionné indépendamment. Ses dépendances core/lecteur verrouillées correspondent à `resources/sources.json` ; le lecteur sélectionné vient de son vendor et le lock original du core reste inchangé. L’exporteur API enregistre uniquement les namespaces HTML et lecteur sélectionnés contre leurs arbres choisis. Les guides apparaissent sous `/modules/to-html/` dans les deux langues. Le tutoriel 35 copie le PDF d’entrée, rend toutes ses pages et exécute le CLI pour produire le vrai HTML et les diagnostics JSON. `derivedHtml` inventorie cette sortie séparément des routes documentaires avec package/SHA et frames sandboxées ; le vérificateur refuse le contenu actif dans ces aperçus. L’original fourni de 74 pages reste dans le package, lié au commit de la version retenue.

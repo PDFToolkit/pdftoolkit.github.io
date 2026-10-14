@@ -35,8 +35,8 @@ The PHP libraries are available on Packagist. Install the core with Composer:
 composer require "roukmoute/pdf:^0.7.1"
 ```
 
-The documented releases are core **0.7.1**, PDF reader **0.2.1**, images/fonts **0.1.8**
-independent OpenType **0.1.0** and PDF-to-HTML **0.1.0**. They require **PHP 8.3 or later** and are
+The documented releases are core **0.7.1**, PDF reader **0.2.3**, images/fonts **0.1.8**,
+independent OpenType **0.1.0** and PDF-to-HTML **0.2.0**. They require **PHP 8.3 or later** and are
 checked on PHP 8.3, 8.4 and 8.5. Core **0.7** additionally requires 64-bit PHP;
 OpenType remains independent of the PDF core.
 
@@ -51,6 +51,17 @@ Choose the optional modules according to the files your application handles:
 
 The image/font/reader modules install the core as a dependency. The PDF-to-HTML module adds semantic derivation from tagged PDF and installs the reader as well. OpenType provides its own object model and installs without PDF dependencies. The package guide explains
 their Composer commands and supported versions.
+
+PDF-to-HTML 0.2.0 derives semantic content from tagged PDFs with checked structure
+associations, Unicode, images, tables, navigation and form fields. Its
+[clause ledger](https://pdftoolkit.github.io/modules/to-html/requirements.html)
+links the retained reference to executable decisions and independent tests.
+The [profiles and policies](https://pdftoolkit.github.io/modules/to-html/policies.html)
+separate semantic output, optional ResetForm/SubmitForm behavior and trusted PDF
+scripts. The [graphics guide](https://pdftoolkit.github.io/modules/to-html/graphics.html)
+explains isolated PDF export and the application-supplied rendering engine.
+Rendering, authentication and unsupported codecs remain explicit capabilities;
+the default profile executes no PDF scripts or form actions.
 
 ## PDF 2.0 guides and examples
 
@@ -76,6 +87,11 @@ repository's own commit.
 See [the build guide](docs/en/site/README.md) for local commands and requirements.
 The workflow builds actual PDF examples, checks them with independent readers,
 renders all their pages, generates every API page and validates the whole site.
+It also verifies the HTML module's glyph and inline/fax fixtures, actual semantic
+HTML, isolated graphics and original rendering contexts with HTML5/pypdf/Poppler,
+page-navigation targets, the Node runtime and the figure-export/safe-reset examples.
+Those additional validation outputs stay in the build workspace; only the
+documented tutorial artifacts are published.
 
 When a package release is published, update its source pin, validate the site,
 and publish a new documentation release. Package installations remain

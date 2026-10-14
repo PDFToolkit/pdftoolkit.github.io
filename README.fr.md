@@ -38,8 +38,8 @@ Composer :
 composer require "roukmoute/pdf:^0.7.1"
 ```
 
-Les versions documentées sont le core **0.7.1**, le lecteur **0.2.1**, les modules
-images/fontes **0.1.8**, OpenType indépendant **0.1.0** et PDF vers HTML **0.1.0**. Elles nécessitent **PHP 8.3 ou supérieur**
+Les versions documentées sont le core **0.7.1**, le lecteur **0.2.3**, les modules
+images/fontes **0.1.8**, OpenType indépendant **0.1.0** et PDF vers HTML **0.2.0**. Elles nécessitent **PHP 8.3 ou supérieur**
 et sont vérifiées sous PHP 8.3, 8.4 et 8.5. Le core **0.7** exige aussi PHP en
 64 bits ; OpenType reste indépendant du core PDF.
 
@@ -54,6 +54,17 @@ Choisir les modules optionnels selon les fichiers traités par l'application :
 
 Les modules images/fontes/lecteur installent le core comme dépendance. PDF vers HTML ajoute la dérivation sémantique et installe aussi le lecteur. OpenType possède son propre modèle objet et s’installe sans dépendance PDF. Le guide des packages explique
 leurs commandes Composer et les versions prises en charge.
+
+PDF vers HTML 0.2.0 dérive le contenu sémantique des PDF balisés avec vérification
+des associations structurelles, Unicode, images, tableaux, navigation et champs.
+Son [registre des clauses](https://pdftoolkit.github.io/fr/modules/to-html/requirements.html)
+relie la référence conservée aux décisions exécutables et aux tests indépendants.
+Les [profils et politiques](https://pdftoolkit.github.io/fr/modules/to-html/policies.html)
+distinguent sortie sémantique, actions ResetForm/SubmitForm optionnelles et scripts
+PDF de confiance. Le [guide des graphiques](https://pdftoolkit.github.io/fr/modules/to-html/graphics.html)
+explique l'export PDF isolé et le moteur de rendu fourni par l'application.
+Rendu, authentification et codecs non pris en charge restent des capacités
+explicites ; le profil par défaut n'exécute aucun script PDF ni action de formulaire.
 
 ## Guides et exemples PDF 2.0
 
@@ -82,6 +93,12 @@ Consulter [le guide de construction](docs/site/README.md) pour les commandes
 locales et les prérequis. Le workflow produit les vrais PDF d'exemple, les
 contrôle avec des lecteurs indépendants, rend toutes leurs pages, génère
 chaque fiche API et valide l'ensemble du site.
+Il vérifie aussi les fixtures de glyphes et d'images inline/fax du module HTML,
+le HTML sémantique réel, les graphiques isolés et leurs contextes de rendu avec
+HTML5/pypdf/Poppler, les cibles de navigation, le runtime Node et les exemples
+d'export de figure et de reset sûr. Ces sorties de validation supplémentaires
+restent dans l'espace de construction ; seuls les artefacts documentés des
+tutoriels sont publiés.
 
 Lorsqu'une version de package est publiée, mettre à jour son épinglage de source,
 valider le site et publier une nouvelle version de documentation. Les

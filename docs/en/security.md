@@ -7,16 +7,26 @@ TrueType and PNG/JPEG converter checks are now maintained in the optional
 [pdf-images](https://github.com/PDFToolkit/pdf-images) modules. PDF objects
 and their invariants remain in the core. The
 [pdf-reader](https://github.com/PDFToolkit/pdf-reader) module has its own
-[security documentation](https://github.com/PDFToolkit/pdf-reader/blob/v0.2.1/docs/security.md)
+[security documentation](https://github.com/PDFToolkit/pdf-reader/blob/v0.2.3/docs/security.md)
 for reading external files; this generator review does not replace it.
 
-The documented versions are core **0.7.1**, PDF reader **0.2.1**, image/font modules **0.1.8** and independent
+The documented versions are core **0.7.1**, PDF reader **0.2.3**, image/font modules **0.1.8** and independent
 OpenType **0.1.0**. These packages require **PHP 8.3 or later** and are checked on
 PHP 8.3, 8.4 and 8.5. Core **0.7** additionally requires 64-bit PHP; OpenType
 remains independent of the PDF core. The review includes the [PDF 2.0 companion mechanisms](pdf-2-0-bundle.md);
 individual source definitions and conformance declarations are not security
 certificates. OpenType's independent parser has its own
 [security boundaries](https://github.com/PDFToolkit/opentype/blob/v0.1.0/SECURITY.md).
+
+The **0.2.0** PDF-to-HTML module with reader **0.2.3+** retains its own
+[security checks](https://pdftoolkit.github.io/modules/to-html/security.html)
+and [explicit policies](https://pdftoolkit.github.io/modules/to-html/policies.html).
+Independent tests verify HTML/CSS/URL filtering, associations and IDs,
+cumulative budgets, inline images and runtime confinement to bound controls.
+PDF scripts, remote resources and ResetForm/SubmitForm actions are disabled
+by default. Enabling the library-owned reset does not enable source scripts.
+The application supplies rendering and authentication; the receiving HTML
+viewer must enforce verified permissions.
 
 ## Results and protections
 

@@ -7,10 +7,10 @@ dans les modules optionnels [pdf-fonts](https://github.com/PDFToolkit/pdf-fonts)
 et [pdf-images](https://github.com/PDFToolkit/pdf-images). Les objets PDF et leurs
 invariants restent dans le core. Le module
 [pdf-reader](https://github.com/PDFToolkit/pdf-reader) a sa propre
-[documentation de sécurité](https://github.com/PDFToolkit/pdf-reader/blob/v0.2.1/docs/security.md)
+[documentation de sécurité](https://github.com/PDFToolkit/pdf-reader/blob/v0.2.3/docs/security.md)
 pour la lecture de fichiers externes ; cette revue du générateur ne s'y substitue pas.
 
-Les versions documentées sont le core **0.7.1**, le lecteur PDF **0.2.1**, les modules images/fontes **0.1.8** et
+Les versions documentées sont le core **0.7.1**, le lecteur PDF **0.2.3**, les modules images/fontes **0.1.8** et
 OpenType indépendant **0.1.0**. Ces packages nécessitent **PHP 8.3 ou supérieur**
 et sont vérifiés sous PHP 8.3, 8.4 et 8.5. Le core **0.7** exige aussi PHP en
 64 bits ; OpenType reste indépendant du core PDF. La revue inclut les
@@ -18,6 +18,16 @@ et sont vérifiés sous PHP 8.3, 8.4 et 8.5. Le core **0.7** exige aussi PHP en
 source et déclarations de conformité ne sont pas des certificats de sécurité.
 Le parseur OpenType indépendant possède ses propres
 [frontières de sécurité](https://github.com/PDFToolkit/opentype/blob/v0.1.0/SECURITY.fr.md).
+
+Le module PDF vers HTML **0.2.0**, avec le lecteur **0.2.3+**, conserve ses propres
+[contrôles de sécurité](https://pdftoolkit.github.io/fr/modules/to-html/security.html)
+et [politiques explicites](https://pdftoolkit.github.io/fr/modules/to-html/policies.html).
+Ses tests indépendants vérifient filtrage HTML/CSS/URL, associations et IDs,
+budgets cumulatifs, images inline et confinement du runtime aux contrôles liés.
+Par défaut, scripts PDF, ressources distantes et actions ResetForm/SubmitForm sont
+désactivés. Activer le reset de la bibliothèque n'autorise pas les scripts source.
+Le moteur de rendu et l'authentification sont fournis par l'application ; les
+permissions vérifiées doivent être respectées par le lecteur HTML qui reçoit la sortie.
 
 ## Résultats et protections
 

@@ -50,7 +50,7 @@ reference page. Composed entries distinguish Adobe and ISO sources; see
 the [coverage guide](../coverage.md).
 
 Module-specific guides are published under `/modules/reader/`,
-`/modules/images/`, `/modules/fonts/` and `/modules/opentype/`. Their package qualifies pages
+`/modules/images/`, `/modules/fonts/`, `/modules/opentype/` and `/modules/to-html/`. Their package qualifies pages
 and links so Markdown files sharing the same name remain distinct.
 
 Every script in the core's `examples/` must have a tutorial or recipe and
@@ -68,13 +68,27 @@ Their provenance uses the reader commit pinned in the manifest; the core
 retains its generation examples.
 
 The PDF-to-HTML checkout is separately pinned under `_sources/pdf-to-html`.
-Its locked reader supplies the documented reader 0.2.1 without changing the core
+Its locked reader supplies the documented reader 0.2.3 without changing the core
 lock. Tutorial 35 runs its real CLI against the independently generated tagged
 fixture. The build checks the retained reference and fixture bytes, then executes
 the package's pypdf/HTML5 oracle. It copies every asset listed in the CLI JSON,
 checking filenames, SHA-256 and output collisions. `derivedHtml` stays outside
 the bilingual documentation-page inventory and is previewed in an empty sandbox.
 Module guides/API are published under `/modules/to-html/`.
+
+The current selection documents PDF-to-HTML 0.2.0 and reader 0.2.3. The
+[requirements ledger](https://pdftoolkit.github.io/modules/to-html/requirements.html),
+[policies](https://pdftoolkit.github.io/modules/to-html/policies.html) and
+[graphics](https://pdftoolkit.github.io/modules/to-html/graphics.html) guides
+distinguish native rules, HTML adaptations and explicit capabilities for
+rasterization, authentication and additional codecs.
+
+`tools/build_docs.py` reproduces glyph tables and inline/fax fixtures, then runs
+the HTML5/pypdf oracles, Poppler pixel comparisons for graphics/contexts/fax,
+content-parent anchor checks and the Node runtime. It also executes examples
+02/03 for figure export and targeted `/DV` reset, which does not enable PDF
+ECMAScript. These two outputs and their assets stay under
+`_build/pdfs/html-validation/`; they add neither pages nor assets to the site.
 
 The ISO 32000-2:2020 EC3 catalogue is read from `resources/iso32000-2-2020/`.
 Its API panels use explicit edition mappings rather than bare table numbers.
@@ -95,7 +109,7 @@ All examples have paired English/French explanations and actual rendered PDFs.
 
 ## Local build
 
-The workflow uses 64-bit PHP 8.3 or later, Composer, Python 3.13, OpenSSL, Poppler
+The workflow uses 64-bit PHP 8.3 or later, Composer, Python 3.13, Node 24, OpenSSL, Poppler
 (`pdftoppm`) and qpdf 12.4.2. Python dependencies are locked with their
 hashes. The published site is static.
 
@@ -241,5 +255,12 @@ language switch, search filters, section anchors, clipboard messages, each
 locale's API inventory, reciprocal alternates and compatibility routes.
 
 ## HTML derivation inputs
+
+The optional `--node` argument selects the Node executable and defaults to
+`node`. The harness also receives the selected `--php` for its fixture
+subprocesses instead of relying on a different PHP on PATH. Rendering oracles
+use the selected `--pdftoppm`. The default profile and site frames execute no
+runtime; explicitly enabled cases are checked in the private validation
+workspace. Every module guide retains its EN/FR counterpart.
 
 The released PDF-to-HTML checkout under `_sources/pdf-to-html` is selected independently. Its locked core and reader must match `resources/sources.json`; the selected reader comes from this checkout’s vendor directory, while the core’s original lock stays unchanged. The API exporter registers only the selected HTML and reader namespaces against their chosen trees. Module guides appear under `/modules/to-html/` in both languages. Tutorial 35 copies the input PDF, renders every page and runs the module CLI to produce actual HTML plus JSON diagnostics. `derivedHtml` inventories output HTML separately from documentation routes, with package/SHA provenance and sandboxed frames; the site checker rejects active content in these previews. The supplied 74-page original remains in the package and is linked at its selected release commit.

@@ -4,6 +4,24 @@
 
 ## [Non publié]
 
+## [0.7.0] - 2026-10-15
+
+- Documenter PDF-to-HTML 0.2.0 et le lecteur PDF 0.2.3 depuis leurs tags publiés
+  et commits exacts ; conserver les versions du core, des images, des fontes
+  et d'OpenType qui n'ont pas changé.
+- Publier sept guides de dérivation HTML en anglais et en français, dont un
+  registre clause par clause de Deriving HTML 1.2, la construction des politiques
+  et l'export graphique avec un moteur de rendu fourni par l'application.
+- Enrichir le tutoriel 35 avec des exemples exécutables d'export de figure et
+  de remise à zéro des champs, les frontières source/runtime explicites et
+  le véritable résultat HTML sémantique.
+- Exécuter les contrôles indépendants du module sur les glyphes, images inline,
+  CCITT, graphiques, HTML5 et le runtime Node pendant la construction du site.
+  Préserver les octets originaux, la provenance des packages, chaque téléchargement
+  public et les anciennes adresses.
+- Aligner commandes d'installation, liens API et instructions de contribution
+  dans les deux langues sur les versions sélectionnées.
+
 ## [0.5.1] - 2026-10-14
 
 - Documenter le core 0.7.1 et le lecteur PDF 0.1.9 depuis leurs sources publiées ;

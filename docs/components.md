@@ -2,7 +2,7 @@
 
 Ce guide explique les familles d'objets, leurs responsabilités et leur composition. La [référence API exhaustive](https://pdftoolkit.github.io/reference/index.html) donne ensuite les signatures de chaque classe, interface, enum, méthode et propriété. Les [tutoriels](tutorials/README.md) montrent des documents complets, leurs instructions PDF et leur résultat visuel ; les [recettes](recipes/README.md) combinent plusieurs familles pour un usage concret.
 
-Cette documentation décrit les versions publiées du core et des modules sélectionnées dans le [manifeste de sources](../resources/sources.json). La référence API indique le package de chaque composant et relie sa déclaration au commit exact de la version documentée. Le core 0.7.1, le lecteur PDF 0.2.1, les modules images/fontes 0.1.8 et OpenType indépendant 0.1.0 nécessitent PHP 8.3 ou supérieur et sont vérifiés sous PHP 8.3, 8.4 et 8.5. Le core 0.7 exige aussi PHP en 64 bits ; OpenType reste indépendant du core PDF. Les modules PDF acceptent les séries 0.2 à 0.7 du core ; le lecteur 0.2 accepte la syntaxe PDF 1.0–2.0 et les chaînes UTF-8 PDF 2.0. Avant 1.0, les nouvelles versions mineures peuvent modifier les noms et signatures pour améliorer le modèle ; les versions correctives préservent l'API de leur série.
+Cette documentation décrit les versions publiées du core et des modules sélectionnées dans le [manifeste de sources](../resources/sources.json). La référence API indique le package de chaque composant et relie sa déclaration au commit exact de la version documentée. Le core 0.7.1, le lecteur PDF 0.2.3, les modules images/fontes 0.1.8 et OpenType indépendant 0.1.0 nécessitent PHP 8.3 ou supérieur et sont vérifiés sous PHP 8.3, 8.4 et 8.5. Le core 0.7 exige aussi PHP en 64 bits ; OpenType reste indépendant du core PDF. Les modules PDF acceptent les séries 0.2 à 0.7 du core ; le lecteur 0.2 accepte la syntaxe PDF 1.0–2.0 et les chaînes UTF-8 PDF 2.0. Avant 1.0, les nouvelles versions mineures peuvent modifier les noms et signatures pour améliorer le modèle ; les versions correctives préservent l'API de leur série.
 
 Le modèle couvre **PDF 1.7 / ISO 32000-1:2008**, le [supplément Adobe niveau 3](adobe-supplement.md), [PDF 2.0 / ISO 32000-2:2020 EC3](pdf-2-0.md) et ses [spécifications complémentaires](pdf-2-0-bundle.md). Les PDF de référence originaux gardent leurs noms fournis et leurs octets dans `resources/reference-documents/` du core. Les grands originaux du bundle sont liés depuis ce site et exclus des archives Composer. La version du runtime PHP est indépendante de celle du format PDF. La [couverture](coverage.md) distingue définitions, constructions natives, règles sémantiques vérifiées et traitements externes.
 
@@ -394,13 +394,13 @@ pas déduits automatiquement.
 Le [premier document](tutorials/01-first-document.md) présente une page ; le [tutoriel pages et texte](tutorials/02-pages-and-text.md) montre des pages partageant des ressources et des propriétés héritées.
 
 Pour consulter des pages d'un PDF existant, le module optionnel
-[`PageTreeReader`](https://github.com/PDFToolkit/pdf-reader/blob/v0.2.1/src/PageTreeReader.php)
+[`PageTreeReader`](https://github.com/PDFToolkit/pdf-reader/blob/v0.2.3/src/PageTreeReader.php)
 parcourt et vérifie son arbre. Il produit un
-[`ReadPageTree`](https://github.com/PDFToolkit/pdf-reader/blob/v0.2.1/src/ReadPageTree.php)
-dont les [`ReadPage`](https://github.com/PDFToolkit/pdf-reader/blob/v0.2.1/src/ReadPage.php)
+[`ReadPageTree`](https://github.com/PDFToolkit/pdf-reader/blob/v0.2.3/src/ReadPageTree.php)
+dont les [`ReadPage`](https://github.com/PDFToolkit/pdf-reader/blob/v0.2.3/src/ReadPage.php)
 gardent leurs dictionnaires source et leurs
-[`PageAttributes`](https://github.com/PDFToolkit/pdf-reader/blob/v0.2.1/src/PageAttributes.php)
-effectifs. [`PageContentsReader`](https://github.com/PDFToolkit/pdf-reader/blob/v0.2.1/src/PageContentsReader.php)
+[`PageAttributes`](https://github.com/PDFToolkit/pdf-reader/blob/v0.2.3/src/PageAttributes.php)
+effectifs. [`PageContentsReader`](https://github.com/PDFToolkit/pdf-reader/blob/v0.2.3/src/PageContentsReader.php)
 résout séparément les flux locaux de chaque page, sans décodage implicite.
 Le [guide des modules](packages.md#lire-un-pdf-externe) montre cette construction ;
 ces vues de lecture ne remplacent pas les objets de génération du core.
@@ -586,3 +586,5 @@ Pour créer un document, commencer par les objets de domaine : pages, ressources
 Les constructeurs vérifient les valeurs locales, les builders vérifient la propriété des graphes, et l'écriture vérifie les états qui nécessitent un graphe complet. L'application choisit les données, les chemins, les ressources accessibles et les actions qu'elle accepte. La [documentation de sécurité](security.md) précise les limites et les protections disponibles.
 
 Pour passer à des documents complets, suivre les [tutoriels](tutorials/README.md), comparer leur aperçu au PDF téléchargeable sur le site, puis étudier la [recette de tableau](recipes/table.md). Pour lire un PDF externe, utiliser le [module lecteur](packages.md#lire-un-pdf-externe), avec résolution et décodage explicites. Pour ajouter un comportement au modèle, consulter l'[architecture](architecture.md), la [couverture de spécification](specification.md) et la [référence API](https://pdftoolkit.github.io/reference/index.html).
+
+Pour dériver le contenu logique en HTML, le module optionnel PDF vers HTML 0.2.0 construit des objets source immuables et des processeurs propres au document, en utilisant le lecteur 0.2.3+. `HtmlDeriver` produit HTML, CSS, ressources et diagnostics ; `GraphicPdfExporter` conserve les programmes et prépare un PDF isolé pour le moteur `GraphicsRasterizer` de l'application. `FormActionPolicy` distingue le reset/soumission de formulaire de l'autorisation d'ECMAScript PDF. Les [exigences](https://pdftoolkit.github.io/fr/modules/to-html/requirements.html), [politiques](https://pdftoolkit.github.io/fr/modules/to-html/policies.html) et [graphiques](https://pdftoolkit.github.io/fr/modules/to-html/graphics.html) documentent les règles natives et ces capacités explicites ; le [tutoriel 35](tutorials/35-derive-html.md) montre la vraie sortie.
