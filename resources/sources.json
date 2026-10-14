@@ -4,8 +4,8 @@
     {
       "name": "roukmoute/pdf",
       "repository": "https://github.com/PDFToolkit/pdf",
-      "version": "0.6.1",
-      "revision": "a9c44210491ce26092cb5277010ee5879c42be82",
+      "version": "0.6.2",
+      "revision": "c20aa8f5a7c54afa556ba4a962250783ce25d9b5",
       "optional": false
     },
     {
@@ -27,6 +27,13 @@
       "repository": "https://github.com/PDFToolkit/pdf-fonts",
       "version": "0.1.7",
       "revision": "d162bc1607cb81a7e4f84704e0e42ca01c7cc9aa",
+      "optional": true
+    },
+    {
+      "name": "pdftoolkit/opentype",
+      "repository": "https://github.com/PDFToolkit/opentype",
+      "version": "0.1.0",
+      "revision": "69f0eb1352498f961e109208616b938c144b1ed2",
       "optional": true
     }
   ]

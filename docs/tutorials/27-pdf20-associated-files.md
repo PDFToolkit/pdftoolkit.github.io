@@ -1,6 +1,6 @@
 # 27. PDF 2.0, métadonnées Unicode et fichiers associés
 
-Le [script complet](https://github.com/PDFToolkit/pdf/blob/v0.6.1/examples/pdf20-associated-files.php)
+Le [script complet](https://github.com/PDFToolkit/pdf/blob/v0.6.2/examples/pdf20-associated-files.php)
 génère une page PDF 2.0 avec police incorporée, métadonnées Unicode et CSV
 incorporé. Le CSV est associé au document et à la page ; une liste de propriétés
 MCAF nommée relie le contenu marqué au fichier. Ce sont de véritables objets PDF,
@@ -8,7 +8,7 @@ pas seulement un nom de fichier dessiné sur la page.
 
 ## Exécuter l'exemple
 
-Depuis un checkout du core 0.6.1 avec ses dépendances de développement verrouillées :
+Depuis un checkout du core 0.6.2 avec ses dépendances de développement verrouillées :
 
 ```bash
 php examples/pdf20-associated-files.php pdf20-associated-files.pdf
@@ -98,8 +98,7 @@ DSS/horodatages, parties documentaires ni la conformité ISO 32000-2 complète.
 Le [guide PDF 2.0](../pdf-2-0.md) explique les éditions, l'applicabilité et les
 mécanismes restants. Pages physiques de source : chaînes textuelles 131–132 ;
 catalogue 113–117 ; fichiers 149–152 ; fichiers associés 853–856 ; tableau MCAF
-409a corrigé 1015. La copie fournie est privée ; utiliser
-l'[accès sponsorisé officiel](https://pdfa.org/sponsored-standards/)
+409a corrigé 1015. L'[original](https://github.com/PDFToolkit/pdf/blob/v0.6.2/ISO_32000-2_sponsored_EC3.pdf) est conservé sans modification dans le dépôt public du core. Consulter aussi l'[accès sponsorisé officiel](https://pdfa.org/sponsored-standards/)
 et l'[erratum public 374](https://github.com/pdf-association/pdf-issues/issues/374).
 
 [Parcours des tutoriels](README.md) · [Couverture](../coverage.md)

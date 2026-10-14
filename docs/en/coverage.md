@@ -12,7 +12,7 @@ or reader behavior.
 The [PDF 2.0 guide](pdf-2-0.md) records a distinct edition and correction profile.
 Its pilot has four tables and 53 entries: 29 (catalog, pp.113–117), 43
 (file specification, pp.149–152), 356 (namespace, p.744) and 409a (MCAF, p.1015).
-The [ISO2 inventory](https://github.com/PDFToolkit/pdf/blob/v0.6.1/resources/iso32000-2-2020/coverage.json)
+The [ISO2 inventory](https://github.com/PDFToolkit/pdf/blob/v0.6.2/resources/iso32000-2-2020/coverage.json)
 explicitly leaves the complete dictionary catalogue pending. No percentage mixes
 this pilot with the complete ISO1/Adobe table inventories.
 
@@ -25,9 +25,7 @@ metadata, visible CID text and a CSV associated with document, page and marked c
 
 R=6, native namespace/role graphs, DSS/timestamps, document-parts trees,
 encrypted wrappers, geospatial features and complete conformance remain open.
-The supplied personalised standard is retained privately, with metadata and
-physical page provenance; it has no public PDF download. The public Adobe
-reference downloads below remain available unchanged.
+The [supplied standard](https://github.com/PDFToolkit/pdf/blob/v0.6.2/ISO_32000-2_sponsored_EC3.pdf) is retained in the public core repository with its original name and bytes, following confirmed redistribution authorization. Its metadata identifies physical pages and its fingerprint. The public Adobe reference downloads below remain available unchanged.
 
 ## Retained references
 
@@ -35,6 +33,7 @@ reference downloads below remain available unchanged.
 | --- | --- | --- |
 | ISO 32000-1:2008, PDF 1.7 | 756 pages; 392 tables; 263 dictionary tables; 1,405 entry classes; 73 content operators | [PDF32000_2008.pdf](https://github.com/PDFToolkit/pdf/blob/v0.5.4/PDF32000_2008.pdf) |
 | Adobe supplement, extension level 3 | 140 pages; 66 tables, including 61 dictionary tables | [adobe_supplement_iso32000.pdf](https://github.com/PDFToolkit/pdf/blob/v0.5.4/adobe_supplement_iso32000.pdf) |
+| ISO 32000-2:2020 EC3, PDF 2.0 | 1,023 physical pages; pilot catalogue of 4 tables and 53 entries | [ISO_32000-2_sponsored_EC3.pdf](https://github.com/PDFToolkit/pdf/blob/v0.6.2/ISO_32000-2_sponsored_EC3.pdf) |
 
 Original files remain in the core repository. Catalogues record their SHA-256
 hashes and physical page numbers; interpretation corrections retain the

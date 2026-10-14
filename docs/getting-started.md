@@ -17,7 +17,7 @@ Les définitions se fondent sur les documents Adobe/ISO `PDF32000_2008.pdf` et `
 Le core **0.6** nécessite PHP 8.3 ou supérieur et les extensions `ctype`, `iconv` et `zlib`. Les backends AES et CMS sont optionnels et nécessitent `openssl`. Le package [`roukmoute/pdf`](https://packagist.org/packages/roukmoute/pdf) est disponible sur Packagist. Depuis le projet consommateur :
 
 ```sh
-composer require "roukmoute/pdf:^0.6.1"
+composer require "roukmoute/pdf:^0.6.2"
 ```
 
 Les modifications d'API figurent dans le [changelog](../CHANGELOG.md) et le
@@ -35,10 +35,17 @@ projet consommateur pour fixer les versions installées.
 Depuis la version **0.1.7**, les modules sont compatibles avec les séries 0.2, 0.3, 0.4, 0.5 et 0.6 du core et PHP 8.3 ou supérieur. Les trois packages sont disponibles sur Packagist : [lecteur](https://packagist.org/packages/pdftoolkit/pdf-reader), [images](https://packagist.org/packages/pdftoolkit/pdf-images) et [fontes](https://packagist.org/packages/pdftoolkit/pdf-fonts). Par exemple, pour importer des fichiers image avec le core 0.6 :
 
 ```sh
-composer require "roukmoute/pdf:^0.6.1" "pdftoolkit/pdf-images:^0.1.7"
+composer require "roukmoute/pdf:^0.6.2" "pdftoolkit/pdf-images:^0.1.7"
 ```
 
 Le module installe le core avec sa contrainte stable. Le [guide des packages](packages.md) explique leur frontière, les installations et le fonctionnement du lecteur. Conserver le `composer.lock` de l'application pour fixer les versions et les commits utilisés.
+
+
+Le [modèle OpenType indépendant](https://pdftoolkit.github.io/fr/modules/opentype/index.html), [`pdftoolkit/opentype`](https://packagist.org/packages/pdftoolkit/opentype), représente les tables de fonte, les correspondances Unicode, les métriques et les premières substitutions GSUB. Il ne dépend d’aucun package PDF. Sa [couverture](https://github.com/PDFToolkit/opentype/blob/v0.1.0/docs/coverage.md) détaille les mécanismes présents et ceux restant à construire.
+
+```sh
+composer require "pdftoolkit/opentype:^0.1.0"
+```
 
 ## Développement et vérifications
 

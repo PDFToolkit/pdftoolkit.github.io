@@ -90,16 +90,19 @@ GROUPS = [
     ('polices-externes', 'Module optionnel : fontes externes'),
     ('images-externes', 'Module optionnel : images externes'),
     ('lecture', 'Module optionnel : lecture de PDF'),
+    ('fontes-opentype', 'Modèle objet OpenType indépendant'),
 ]
 MODULE_GROUPS = {
     'pdftoolkit/pdf-fonts': 'polices-externes',
     'pdftoolkit/pdf-images': 'images-externes',
     'pdftoolkit/pdf-reader': 'lecture',
+    'pdftoolkit/opentype': 'fontes-opentype',
 }
 MODULES = {
     'pdftoolkit/pdf-reader': ('reader', 'Lire un PDF', [('docs/architecture.md', 'architecture', 'Architecture du lecteur'), ('docs/pages.md', 'pages', 'Pages, héritage et flux'), ('docs/components.md', 'components', 'Composants du lecteur'), ('docs/security.md', 'security', 'Limites et sécurité du lecteur')]),
     'pdftoolkit/pdf-images': ('images', 'Convertir des images', [('docs/architecture.md', 'architecture', 'Contrats des convertisseurs d’images')]),
     'pdftoolkit/pdf-fonts': ('fonts', 'Analyser des fontes', [('docs/true-type-to-pdf.md', 'true-type-to-pdf', 'Du programme TrueType aux objets PDF')]),
+    'pdftoolkit/opentype': ('opentype', 'Modèle objet OpenType indépendant', [('docs/architecture.md', 'architecture', 'Architecture OpenType'), ('docs/coverage.md', 'coverage', 'Couverture OpenType'), ('docs/substitutions.md', 'substitutions', 'Substitutions de glyphes')]),
 }
 
 
@@ -107,7 +110,7 @@ def load_sources(path: Path) -> dict[str, dict]:
     inventory = json.loads(path.read_text(encoding='utf-8'))
     packages = {item['name']: item for item in inventory['packages']}
     if inventory.get('schemaVersion') != 1 or len(packages) != len(inventory['packages']) or set(packages) != {CORE_PACKAGE, *MODULES}:
-        raise ValueError('The released-source manifest must describe the four packages exactly once')
+        raise ValueError('The released-source manifest must describe every package exactly once')
     for name, package in packages.items():
         if not re.fullmatch(r'\d+\.\d+\.\d+', package.get('version', '')) or not re.fullmatch(r'[0-9a-f]{40}', package.get('revision', '')):
             raise ValueError('Every documented package needs a stable version and exact commit: ' + name)
@@ -164,7 +167,7 @@ def group_for(component: dict) -> str:
 
 
 class Site:
-    def __init__(self, content_root: Path, source_root: Path, output: Path, api: Path, pdfs: Path, pdf_previews: Path, base: str, docs_revision: str, sources: Path):
+    def __init__(self, content_root: Path, source_root: Path, output: Path, api: Path, pdfs: Path, pdf_previews: Path, base: str, docs_revision: str, sources: Path, opentype_root: Path | None = None):
         self.root, self.content_root, self.output, self.pdfs = source_root, content_root, output, pdfs
         root = source_root
         self.pdf_previews = pdf_previews
@@ -185,6 +188,8 @@ class Site:
         locked = json.loads((root / 'composer.lock').read_text(encoding='utf-8'))
         locked_packages = {item['name']: item for item in locked['packages'] + locked['packages-dev']}
         for name in MODULES:
+            if name == "pdftoolkit/opentype":
+                continue
             item = locked_packages.get(name, {})
             if item.get('version', '').removeprefix('v') != self.packages[name]['version'] or item.get('source', {}).get('reference') != self.packages[name]['revision']:
                 raise ValueError('Core Composer lock differs from the selected released source: ' + name)
@@ -194,7 +199,12 @@ class Site:
         api_packages = {item['name']: item for item in inventory['packages']}
         if api_packages != self.packages:
             raise ValueError('API export and released-source manifest disagree')
-        self.package_roots = {CORE_PACKAGE: root, **{name: root / 'vendor' / name for name in MODULES}}
+        if opentype_root is None:
+            raise ValueError('The independent OpenType checkout is required')
+        opentype_revision = subprocess.run(['git', '-C', str(opentype_root), 'rev-parse', 'HEAD'], check=True, capture_output=True, text=True).stdout.strip()
+        if opentype_revision != self.packages['pdftoolkit/opentype']['revision']:
+            raise ValueError('OpenType checkout differs from the released-source manifest')
+        self.package_roots = {CORE_PACKAGE: root, **{name: root / 'vendor' / name for name in MODULES if name != 'pdftoolkit/opentype'}, 'pdftoolkit/opentype': opentype_root}
         self.documentation = {'repository': DOCUMENTATION_REPOSITORY, 'revision': docs_revision}
         self.documentation_sources = []
         self.components = inventory['components']
@@ -347,7 +357,7 @@ class Site:
         if value is None:
             return ''
         parts, previous = [], 0
-        for match in re.finditer(r'PDF\\[A-Za-z_][A-Za-z0-9_\\]*', value):
+        for match in re.finditer(r'\b(?:PDF|PDFToolkit\\OpenType)\\[A-Za-z_][A-Za-z0-9_\\]*', value):
             parts.append(e(value[previous:match.start()]))
             name = match.group()
             if name in self.routes:
@@ -446,7 +456,7 @@ class Site:
     def rewrite_link(self, source: str, href: str, owner: str = 'documentation') -> str:
         parsed = urlsplit(href)
         if parsed.netloc == 'github.com':
-            match = re.fullmatch(r'/PDFToolkit/(pdf|pdf-fonts|pdf-images|pdf-reader)/(?:blob|tree)/[^/]+/(.+)', parsed.path)
+            match = re.fullmatch(r'/PDFToolkit/(pdf|pdf-fonts|pdf-images|pdf-reader|opentype)/(?:blob|tree)/[^/]+/(.+)', parsed.path)
             if match:
                 package_name = CORE_PACKAGE if match.group(1) == 'pdf' else 'pdftoolkit/' + match.group(1)
                 target = match.group(2)
@@ -457,7 +467,7 @@ class Site:
                 if result:
                     return result
                 raise ValueError(f'Unresolved package source link: {source} -> {href}')
-            match = re.fullmatch(r'/PDFToolkit/(pdf|pdf-fonts|pdf-images|pdf-reader)/?', parsed.path)
+            match = re.fullmatch(r'/PDFToolkit/(pdf|pdf-fonts|pdf-images|pdf-reader|opentype)/?', parsed.path)
             if match and parsed.fragment in {'', 'readme'}:
                 package_name = CORE_PACKAGE if match.group(1) == 'pdf' else 'pdftoolkit/' + match.group(1)
                 route = 'modules/core/index.html' if package_name == CORE_PACKAGE else self.markdown_routes[(package_name, 'README.md')]
@@ -660,7 +670,7 @@ class Site:
         body = f'''<section class="hero"><div class="hero-copy"><p class="eyebrow">PHP 8.3+ · PDF 1.7 · Premiers mécanismes PDF 2.0</p><h1>Le format PDF.<br>Objet par objet.</h1><p class="hero-description">Comprendre les structures, composer les objets, maîtriser les octets. Une documentation pour explorer le format et construire vos propres fichiers PDF.</p><div class="pdf-actions"><a class="button" href="{e(self.url('tutorials/01-premier-document.html'))}">Créer mon premier PDF →</a><a class="button secondary" href="{e(self.url('reference/index.html'))}">Explorer les composants</a></div></div><div class="hero-visual" aria-label="Du catalogue à la page"><div class="graph-card"><span class="badge">01 / point d’entrée</span><code>DocumentCatalog</code></div><div class="graph-connector" aria-hidden="true">↓</div><div class="graph-card"><span class="badge">02 / arbre du document</span><code>PageTreeNode</code></div><div class="graph-connector" aria-hidden="true">↓</div><div class="graph-card"><span class="badge">03 / contenu & ressources</span><code>PageObject</code><span class="graph-leaves">StreamObject · ResourceDictionary</span></div></div></section>
 <div class="stats"><div class="stat"><strong>{number(len(self.components))}</strong><span>composants documentés</span></div><div class="stat"><strong>{self.metadata['dictionary_table_count'] + self.adobe_metadata['dictionary_tables'] + len(self.iso2_tables)}</strong><span>dictionnaires ISO et Adobe</span></div><div class="stat"><strong>{len(self.examples)}</strong><span>exemples PDF à explorer</span></div><div class="stat"><strong>{self.metadata['operator_count']}</strong><span>tokens d’opérateurs PDF</span></div></div>
 <section><p class="eyebrow">Apprendre avec les objets</p><h2>Construire un document et explorer ses pages</h2><p>Chaque tutoriel relie les explications aux objets PHP et au PDF créé ou lu. Consultez ses pages, le script et le résultat de son exécution.</p>{self.tutorial_cards()}</section>
-<section><h2>Un core PDF, des modules au choix</h2><p>Le core représente les objets et les mécanismes de la norme Adobe. La lecture de PDF externes et la conversion de fichiers image ou de fontes sont des dépendances optionnelles : chaque module dépend du core.</p><p><a href="{e(self.url('guides/modules.html'))}">Choisir les packages et comprendre leur frontière →</a></p>{self.package_cards()}</section>
+<section><h2>Un core PDF, des modules au choix</h2><p>Le core représente les objets et les mécanismes de la norme Adobe. Les modules de lecture PDF et de conversion d’images ou de fontes dépendent du core. Le modèle OpenType est indépendant et s’installe sans aucun package PDF.</p><p><a href="{e(self.url('guides/modules.html'))}">Choisir les packages et comprendre leur frontière →</a></p>{self.package_cards()}</section>
 <section><h2>Trois chemins pour explorer le projet</h2><div class="cards"><a class="card" href="{e(self.url('guides/composants.html'))}"><div class="card-body"><h3>Comprendre les responsabilités</h3><p>Valeurs, graphes, ressources, fonctions et écriture : comment les familles se composent.</p></div></a><a class="card" href="{e(self.url('reference/index.html'))}"><div class="card-body"><h3>Consulter la référence</h3><p>Les signatures et l’héritage de chaque composant, avec les sources et les tableaux de la norme.</p></div></a><a class="card" href="{e(self.url('recipes/table.html'))}"><div class="card-body"><h3>Assembler un exemple pratique</h3><p>Un tableau explicite : cellules, couleurs, grille et positionnement du texte.</p></div></a></div></section>
 <aside class="callout"><strong>Core {e(self.release)} · Modules {e(self.module_versions)}.</strong> Les signatures, exemples et guides des modules proviennent de ces versions publiées, fixées à leurs commits exacts. La couverture et les traitements restant à implémenter sont détaillés dans <a href="{e(self.url('guides/couverture.html'))}">la couverture de la norme</a>.</aside>'''
         self.page('index.html', 'Le format PDF, objet par objet', 'Accueil', body)
@@ -747,9 +757,10 @@ class Site:
         entries = [entry for entry in record['entries'] if key is None or entry['name'] == key]
         page = entries[0]['pdf_page'] if key is not None and entries else record['pdf_pages'][0]
         source = self.source_url('resources/iso32000-2-2020/metadata.json')
+        original = self.source_url(self.iso2_metadata['source']['document']) + f'#page={page}'
         errata = self.iso2_metadata['official_references']['public_errata']
         html = f'<section id="norme" data-specification-edition="iso32000-2:2020" data-specification-table="{e(table)}"><h2>Définition ISO 32000-2:2020 EC3</h2><p><strong>Tableau {e(table)}</strong> · {e(record["title"])}<br>§{e(record["section"])} · page PDF {page}</p>'
-        html += f'<p><a href="{e(source)}">Métadonnées de la source au commit documenté ↗</a> · <a href="{e(errata)}">Errata publics ↗</a></p><p>Copie source conservée en privé. Catalogue pilote — couverture complète en attente.</p>'
+        html += f'<p><a href="{e(original)}">Original PDF au commit documenté ↗</a> · <a href="{e(source)}">Métadonnées de la source au commit documenté ↗</a> · <a href="{e(errata)}">Errata publics ↗</a></p><p>Original conservé dans le dépôt du core. Catalogue pilote — couverture complète en attente.</p>'
         if key is not None:
             for entry in entries:
                 summary, summary_language = iso2_description(entry['description'], self.language)
@@ -944,7 +955,7 @@ class Site:
         self.page('reference/index.html', 'Tous les composants', 'Référence API', body)
 
     def build(self) -> None:
-        for root in (self.root, self.content_root):
+        for root in (self.content_root, *self.package_roots.values()):
             if self.output == root or root in self.output.parents and self.output.relative_to(root).parts[0] in {'src', 'docs', 'examples', 'tools', 'resources', 'vendor'}:
                 raise ValueError('Build output must be separate from source directories')
         self.output.mkdir(parents=True, exist_ok=True)
@@ -1036,13 +1047,21 @@ class Site:
             {'source': self.adobe_metadata['document'], 'download': 'downloads/adobe-supplement-iso32000.pdf', 'sha256': self.adobe_metadata['document_sha256'], 'pdfPages': self.adobe_metadata['pdf_pages']},
         ]
         original = self.iso2_metadata['source']
-        manifest['privateSpecificationSources'] = [{
+        source_file = self.root / original['document']
+        if not original['public_copy_included'] or not source_file.is_file() or hashlib.sha256(source_file.read_bytes()).hexdigest() != original['sha256']:
+            raise ValueError('The public ISO 32000-2 reference must preserve its supplied original bytes')
+        manifest['repositorySpecificationSources'] = [{
             'source': original['document'], 'standard': self.iso2_metadata['standard'],
             'editionIdentifier': self.iso2_metadata['edition_identifier'],
             'specifiedPdfVersion': self.iso2_metadata['specified_pdf_version'],
             'errataCollection': self.iso2_metadata['errata_collection'],
             'sha256': original['sha256'], 'pdfPages': original['physical_pdf_pages'],
+            'bytes': source_file.stat().st_size,
+            'repository': self.packages[CORE_PACKAGE]['repository'],
+            'revision': self.revision,
+            'sourceUrl': self.source_url(original['document']),
             'publicCopyIncluded': original['public_copy_included'],
+            'provider': original['provider'], 'providerUrl': original['provider_url'],
             'catalogueSourceUrl': self.source_url('resources/iso32000-2-2020/metadata.json'),
             'dictionaryTables': len(self.iso2_tables),
             'entryClasses': sum(len(item['entries']) for item in self.iso2_classes.values()),
@@ -1106,6 +1125,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--content-root', type=Path, default=Path(__file__).resolve().parents[1])
     parser.add_argument('--source-root', type=Path, required=True)
+    parser.add_argument('--opentype-root', type=Path, required=True, help='Independent released OpenType checkout')
     parser.add_argument('--sources', type=Path, help='Released-source manifest; defaults to content-root/resources/sources.json')
     parser.add_argument('--api', type=Path, required=True)
     parser.add_argument('--pdf-dir', type=Path, required=True)
@@ -1120,4 +1140,4 @@ if __name__ == '__main__':
         parser.error('base-path must contain only URL path segments')
     content_root = args.content_root.resolve()
     sources = args.sources.resolve() if args.sources else content_root / 'resources' / 'sources.json'
-    Site(content_root, args.source_root.resolve(), args.output.resolve(), args.api.resolve(), args.pdf_dir.resolve(), args.pdf_preview_dir.resolve(), args.base_path, args.docs_revision, sources).build()
+    Site(content_root, args.source_root.resolve(), args.output.resolve(), args.api.resolve(), args.pdf_dir.resolve(), args.pdf_preview_dir.resolve(), args.base_path, args.docs_revision, sources, args.opentype_root.resolve()).build()

@@ -126,12 +126,10 @@ implement its associated mechanism. The optional reader remains limited to its
 
 ## Source and checks
 
-The original supplied `ISO_32000-2_sponsored_EC3.pdf` is preserved privately,
-with its original name and bytes. Its personalised copy is not a public download.
-Its identity, physical pages and fingerprint appear in the
-[pilot metadata](https://github.com/PDFToolkit/pdf/blob/v0.6.1/resources/iso32000-2-2020/metadata.json)
-and [coverage inventory](https://github.com/PDFToolkit/pdf/blob/v0.6.1/resources/iso32000-2-2020/coverage.json).
-Obtain the standard through [official sponsored access](https://pdfa.org/sponsored-standards/).
+The [supplied original `ISO_32000-2_sponsored_EC3.pdf`](https://github.com/PDFToolkit/pdf/blob/v0.6.2/ISO_32000-2_sponsored_EC3.pdf) is preserved in the public core repository with its original name and bytes, following redistribution authorization confirmed by the project owner. Its identity, physical pages and fingerprint appear in the
+[pilot metadata](https://github.com/PDFToolkit/pdf/blob/v0.6.2/resources/iso32000-2-2020/metadata.json)
+and [coverage inventory](https://github.com/PDFToolkit/pdf/blob/v0.6.2/resources/iso32000-2-2020/coverage.json).
+The supplied file comes from the **PDF Association**, through its [official sponsored access](https://www.pdfa.org/sponsored-standards/).
 
 The [public errata](https://pdf-issues.pdfa.org/32000-2-2020/) provide the
 [corrected associated-files rules](https://pdf-issues.pdfa.org/32000-2-2020/clause14.html#14135-associated-files-linked-to-graphics-objects).

@@ -106,6 +106,8 @@ A convenience library can transform its own layout objects into this model. A ne
 
 In `pdftoolkit/pdf-fonts`, TrueType fonts consist of a program, tables and metrics, a character/CID mapping and an embeddable CIDFont program. These data feed the core objects: FontFile2, descriptor, CID font, Type0 font, metrics and ToUnicode. Text encoding remains a separate service. The module supplies bytes; it does not select a system font or shape complex scripts.
 
+The independent [OpenType](https://github.com/PDFToolkit/opentype) model retains its own table, glyph, metric and GSUB substitution objects. It depends on neither the PDF core nor the font converter. Selected typographic features are explicit; complete script shaping, GPOS and variable fonts remain pending. Its objects do not directly produce PDF dictionaries. See its [coverage](https://github.com/PDFToolkit/opentype/blob/v0.1.0/docs/coverage.md).
+
 In `pdftoolkit/pdf-images`, image readers receive an `ImageFileBytes`. PNG becomes color samples and, where present, alpha; JPEG becomes a core `DCTImage` with its encoded bytes and color transform. `ImageXObjectFactory`, in the core, composes their dictionaries and streams without knowing the original file. Resource names and painting matrices remain explicit. An `ImageImportLimits` from the module supplies read limits.
 
 In `pdftoolkit/pdf-reader`, `DocumentReader` reads a `FileBytes` with `ReaderLimits` budgets. A `ReadDocument` owns its references, xref index and cache; the application explicitly calls `resolve()` and `streamData()`. PDF values reuse core primitives. External references and streams cannot be serialized into a new document without import and remapping, mechanisms that remain distinct from reading.

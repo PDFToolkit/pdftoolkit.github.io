@@ -135,12 +135,10 @@ son [périmètre PDF 1.0–1.7 documenté](packages.md) ; cette étape du writer
 
 ## Source et vérifications
 
-L'original fourni `ISO_32000-2_sponsored_EC3.pdf` est conservé en privé, avec
-son nom et ses octets d'origine. Sa copie personnalisée n'est pas un téléchargement
-public. Son identité, ses pages physiques et son empreinte figurent dans les
-[métadonnées du pilote](https://github.com/PDFToolkit/pdf/blob/v0.6.1/resources/iso32000-2-2020/metadata.json)
-et l'[inventaire de couverture](https://github.com/PDFToolkit/pdf/blob/v0.6.1/resources/iso32000-2-2020/coverage.json).
-La norme est accessible par l'[accès sponsorisé officiel](https://pdfa.org/sponsored-standards/).
+L'[original fourni `ISO_32000-2_sponsored_EC3.pdf`](https://github.com/PDFToolkit/pdf/blob/v0.6.2/ISO_32000-2_sponsored_EC3.pdf) est conservé dans le dépôt public du core, avec son nom et ses octets d'origine, après autorisation de redistribution confirmée par le propriétaire du projet. Son identité, ses pages physiques et son empreinte figurent dans les
+[métadonnées du pilote](https://github.com/PDFToolkit/pdf/blob/v0.6.2/resources/iso32000-2-2020/metadata.json)
+et l'[inventaire de couverture](https://github.com/PDFToolkit/pdf/blob/v0.6.2/resources/iso32000-2-2020/coverage.json).
+Le fichier fourni provient de la **PDF Association**, via son [accès sponsorisé officiel](https://www.pdfa.org/sponsored-standards/).
 
 Les [errata publics](https://pdf-issues.pdfa.org/32000-2-2020/) présentent les
 [règles corrigées des fichiers associés](https://pdf-issues.pdfa.org/32000-2-2020/clause14.html#14135-associated-files-linked-to-graphics-objects).

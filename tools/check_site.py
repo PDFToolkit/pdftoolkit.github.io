@@ -18,6 +18,7 @@ MODULE_GUIDES = {
     'reader': ['index', 'architecture', 'components', 'pages', 'security', 'signalements', 'versions'],
     'images': ['index', 'architecture', 'signalements', 'versions'],
     'fonts': ['index', 'true-type-to-pdf', 'signalements', 'versions'],
+    'opentype': ['index', 'architecture', 'coverage', 'substitutions', 'signalements', 'versions'],
 }
 
 
@@ -253,8 +254,8 @@ def check(root):
         if (english['url'], french['url']) not in translated_pairs:
             errors.append('API search records must target their reciprocal translation pair: ' + title)
     packages = {item['name']: item for item in manifest['packages']}
-    if len(packages) != len(manifest['packages']) or set(packages) != {'roukmoute/pdf', 'pdftoolkit/pdf-reader', 'pdftoolkit/pdf-images', 'pdftoolkit/pdf-fonts'}:
-        errors.append('Package inventory needs all four unique package names')
+    if len(packages) != len(manifest['packages']) or set(packages) != {'roukmoute/pdf', 'pdftoolkit/pdf-reader', 'pdftoolkit/pdf-images', 'pdftoolkit/pdf-fonts', 'pdftoolkit/opentype'}:
+        errors.append('Package inventory must cover every unique package name')
     if packages.get('roukmoute/pdf', {}).get('revision') != manifest.get('revision'):
         errors.append('Core source revision differs from the site source revision')
     if sum(package['components'] for package in packages.values()) != len(index):
@@ -268,7 +269,7 @@ def check(root):
         repository = 'https://github.com/PDFToolkit/' + (name.split('/')[-1] if optional else 'pdf')
         if package.get('optional') is not optional or package.get('repository') != repository:
             errors.append('Incorrect source package identity: ' + name)
-        slug = name.removeprefix('pdftoolkit/pdf-') if optional else 'core'
+        slug = ('opentype' if name == 'pdftoolkit/opentype' else name.removeprefix('pdftoolkit/pdf-')) if optional else 'core'
         package_url = 'https://packagist.org/packages/' + name
         for language in ['en', 'fr']:
             for logical in ('index.html', 'reference/index.html', f'reference/packages/{slug}.html', f'modules/{slug}/index.html', 'guides/demarrer.html', 'guides/modules.html'):
@@ -314,14 +315,14 @@ def check(root):
         if page in documents:
             for link in documents[page].links:
                 url = urlsplit(link)
-                match = re.fullmatch(r'/PDFToolkit/(pdf-reader|pdf-images|pdf-fonts)/(?:blob|tree)/[^/]+/(README(?:\.fr)?\.md|CHANGELOG(?:\.fr)?\.md|SECURITY(?:\.fr)?\.md|docs/.+\.md)', url.path)
+                match = re.fullmatch(r'/PDFToolkit/(pdf-reader|pdf-images|pdf-fonts|opentype)/(?:blob|tree)/[^/]+/(README(?:\.fr)?\.md|CHANGELOG(?:\.fr)?\.md|SECURITY(?:\.fr)?\.md|docs/.+\.md)', url.path)
                 if url.netloc == 'github.com' and match and link != expected_source:
                     errors.append('Module guide navigation must stay on the central site: ' + page + ' -> ' + link)
     for slug, routes in MODULE_GUIDES.items():
         for language in ['en', 'fr']:
             for route in routes:
                 page = localized(f'modules/{slug}/{route}.html', language)
-                if page not in guides or guides[page].get('package') != 'pdftoolkit/pdf-' + slug:
+                if page not in guides or guides[page].get('package') != ('pdftoolkit/opentype' if slug == 'opentype' else 'pdftoolkit/pdf-' + slug):
                     errors.append('Missing local module guide and provenance: ' + str(page))
     for language in ['en', 'fr']:
         if localized('modules/core/index.html', language) not in documents:
@@ -425,24 +426,29 @@ def check(root):
         target = root / source['download']
         if not target.is_file() or hashlib.sha256(target.read_bytes()).hexdigest() != source['sha256']:
             errors.append('Missing or modified specification source: ' + source['source'])
-    private_sources = manifest.get('privateSpecificationSources', [])
-    if len(private_sources) != 1:
-        errors.append('ISO 32000-2 needs one distinct private-source provenance record')
+    repository_sources = manifest.get('repositorySpecificationSources', [])
+    if len(repository_sources) != 1:
+        errors.append('ISO 32000-2 needs one distinct repository-source provenance record')
     else:
-        source = private_sources[0]
+        source = repository_sources[0]
         core = packages.get('roukmoute/pdf', {})
         metadata_url = core.get('repository', '') + '/blob/' + core.get('revision', '') + '/resources/iso32000-2-2020/metadata.json'
         if source.get('source') != 'ISO_32000-2_sponsored_EC3.pdf' or source.get('editionIdentifier') != 'iso32000-2:2020' or source.get('standard') != 'ISO 32000-2:2020' or source.get('specifiedPdfVersion') != '2.0':
-            errors.append('Private-source identity must remain the distinct ISO 32000-2:2020 edition')
+            errors.append('Repository-source identity must remain the distinct ISO 32000-2:2020 edition')
         if source.get('errataCollection') != {'number': 3, 'publication_date': '2026-06-01'} or source.get('pdfPages') != 1023 or source.get('sha256') != '90f4b666d46405dd62630a98d514158b4de5304b749523c4081680ac4fe2e230':
-            errors.append('Private EC3 source provenance differs from the reviewed supplied copy')
-        if source.get('publicCopyIncluded') is not False or 'download' in source or any(Path(name).name == source.get('source') for name in published_files):
-            errors.append('The personalised ISO 32000-2 source must not be a public PDF download')
+            errors.append('Public EC3 source provenance differs from the reviewed supplied copy')
+        source_url = core.get('repository', '') + '/blob/' + core.get('revision', '') + '/ISO_32000-2_sponsored_EC3.pdf'
+        if source.get('publicCopyIncluded') is not True or source.get('sourceUrl') != source_url or source.get('repository') != core.get('repository') or source.get('revision') != core.get('revision') or source.get('bytes') != 19205142:
+            errors.append('ISO 32000-2 must link the unchanged original in the pinned public core repository')
+        if 'download' in source or any(Path(name).name == source.get('source') for name in published_files):
+            errors.append('The large ISO 32000-2 original is linked from its source repository without a duplicate site asset')
+        if source.get('provider') != 'PDF Association' or source.get('providerUrl') != 'https://www.pdfa.org/sponsored-standards/':
+            errors.append('ISO source provider must identify PDF Association sponsored access')
         if source.get('catalogueSourceUrl') != metadata_url or source.get('dictionaryTables') != 4 or source.get('entryClasses') != 53 or source.get('completeCatalogue') is not False:
             errors.append('ISO 32000-2 pilot scope or metadata provenance is inconsistent')
         for language in ['en', 'fr']:
             guide = localized('guides/pdf-2-0.html', language)
-            if guide not in documents or metadata_url not in documents[guide].links:
+            if guide not in documents or metadata_url not in documents[guide].links or source_url not in documents[guide].links:
                 errors.append('PDF 2.0 guide must identify its published pilot source metadata: ' + guide)
             for item in indexes[language]:
                 name = item['title']
@@ -450,7 +456,7 @@ def check(root):
                 if expected_pilot or item.get('specificationEdition'):
                     table = item.get('specificationTable')
                     document = documents.get(item['url'])
-                    if item.get('specificationEdition') != 'iso32000-2:2020' or table not in {'29', '43', '356', '409a'} or document is None or document.specification_panels != [('iso32000-2:2020', table)] or metadata_url not in document.links:
+                    if item.get('specificationEdition') != 'iso32000-2:2020' or table not in {'29', '43', '356', '409a'} or document is None or document.specification_panels != [('iso32000-2:2020', table)] or metadata_url not in document.links or not any(link.startswith(source_url + '#page=') for link in document.links):
                         errors.append('ISO 32000-2 component must retain its own edition/table provenance: ' + name + ' / ' + language)
     references = manifest.get('referenceSources', [])
     expected_references = {

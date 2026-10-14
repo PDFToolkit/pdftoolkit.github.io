@@ -4,6 +4,17 @@
 
 ## [Non publié]
 
+## [0.4.0] - 2026-10-14
+
+- Ajouter OpenType 0.1.0 indépendant à côté du core et des convertisseurs PDF :
+  source publiée exacte, composants d'API, navigation et guides anglais/français complets.
+- Expliquer les correspondances Unicode, métriques, ligatures, petites capitales,
+  variantes et construction directe, avec la couverture et les mécanismes restants.
+- Documenter le core 0.6.2 et relier l'original ISO 32000-2:2020 EC3 inchangé dans
+  son dépôt public. Indiquer l'accès sponsorisé de la PDF Association et vérifier les octets.
+- Garder les modules PDF optionnels en 0.1.7 ; préserver routes, aperçus,
+  téléchargements et alias. OpenType n'ajoute aucune dépendance de production au core.
+
 ## [0.3.0] - 2026-10-14
 
 - Documenter le core 0.6.1 et les modules optionnels 0.1.7 depuis leurs versions

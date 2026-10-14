@@ -17,7 +17,7 @@ Definitions are based on the Adobe/ISO documents `PDF32000_2008.pdf` and `adobe_
 Core **0.6** requires PHP 8.3 or later and the `ctype`, `iconv` and `zlib` extensions. AES and CMS backends are optional and require `openssl`. The [`roukmoute/pdf`](https://packagist.org/packages/roukmoute/pdf) package is available on Packagist. From the consuming project:
 
 ```sh
-composer require "roukmoute/pdf:^0.6.1"
+composer require "roukmoute/pdf:^0.6.2"
 ```
 
 API changes appear in the [changelog](../../CHANGELOG.md) and the
@@ -35,10 +35,17 @@ API changes appear in the [changelog](../../CHANGELOG.md) and the
 Since version **0.1.7**, modules are compatible with core series 0.2, 0.3, 0.4, 0.5 and 0.6 and PHP 8.3 or later. All three packages are available on Packagist: [reader](https://packagist.org/packages/pdftoolkit/pdf-reader), [images](https://packagist.org/packages/pdftoolkit/pdf-images) and [fonts](https://packagist.org/packages/pdftoolkit/pdf-fonts). For example, to import image files with core 0.6:
 
 ```sh
-composer require "roukmoute/pdf:^0.6.1" "pdftoolkit/pdf-images:^0.1.7"
+composer require "roukmoute/pdf:^0.6.2" "pdftoolkit/pdf-images:^0.1.7"
 ```
 
 The module installs the core with its stable constraint. The [package guide](packages.md) explains boundaries, installation and reader behavior. Keep the application's `composer.lock` to pin the versions and commits used.
+
+
+The [independent OpenType model](https://pdftoolkit.github.io/modules/opentype/index.html), [`pdftoolkit/opentype`](https://packagist.org/packages/pdftoolkit/opentype), represents font tables, Unicode mappings, metrics and initial GSUB substitutions. It depends on no PDF package. Its [coverage](https://github.com/PDFToolkit/opentype/blob/v0.1.0/docs/coverage.md) details the implemented mechanisms and work remaining.
+
+```sh
+composer require "pdftoolkit/opentype:^0.1.0"
+```
 
 ## Development and checks
 

@@ -17,6 +17,7 @@ ou le module nécessaire :
 - [Lecteur PDF](https://pdftoolkit.github.io/fr/modules/reader/)
 - [Images](https://pdftoolkit.github.io/fr/modules/images/)
 - [Polices](https://pdftoolkit.github.io/fr/modules/fonts/)
+- [OpenType](https://pdftoolkit.github.io/fr/modules/opentype/)
 
 Ce dépôt contient les textes communs, les assets du site, le générateur et le
 workflow de déploiement. Le code PHP, les exemples exécutables, les fixtures
@@ -30,7 +31,7 @@ Les bibliothèques PHP sont disponibles sur Packagist. Installer le core avec
 Composer :
 
 ```sh
-composer require "roukmoute/pdf:^0.6.1"
+composer require "roukmoute/pdf:^0.6.2"
 ```
 
 Choisir les modules optionnels selon les fichiers traités par l'application :
@@ -39,8 +40,9 @@ Choisir les modules optionnels selon les fichiers traités par l'application :
 - [Lecteur PDF : pdftoolkit/pdf-reader](https://packagist.org/packages/pdftoolkit/pdf-reader)
 - [Images : pdftoolkit/pdf-images](https://packagist.org/packages/pdftoolkit/pdf-images)
 - [Polices : pdftoolkit/pdf-fonts](https://packagist.org/packages/pdftoolkit/pdf-fonts)
+- [OpenType: pdftoolkit/opentype](https://packagist.org/packages/pdftoolkit/opentype)
 
-Chaque module installe le core comme dépendance. Le guide des packages explique
+Les trois modules PDF installent le core comme dépendance. OpenType possède son propre modèle objet et s’installe sans dépendance PDF. Le guide des packages explique
 leurs commandes Composer et les versions prises en charge.
 
 ## Sources reproductibles

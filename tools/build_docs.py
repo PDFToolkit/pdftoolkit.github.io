@@ -28,7 +28,8 @@ def build(args) -> None:
     pdfs.mkdir(exist_ok=True)
     previews.mkdir(exist_ok=True)
     manifest = args.sources.resolve() if args.sources else content / "resources/sources.json"
-    check(source, manifest, args.remote)
+    opentype = args.opentype_root.resolve()
+    check(source, manifest, args.remote, opentype)
     run([sys.executable, "-m", "unittest", "discover", "-s", content / "tests", "-p", "test_*.py"], content)
     for command in (
         [sys.executable, "tools/generate_specification.py", "--check"],
@@ -39,7 +40,7 @@ def build(args) -> None:
     ):
         run(command, source)
     api = work / "api.json"
-    run([args.php, content / "tools/export_api.php", api, source, manifest], source)
+    run([args.php, content / "tools/export_api.php", api, source, manifest, opentype], source)
     for example in sorted((source / "examples").glob("*.php")):
         output = pdfs / (example.stem + ".pdf")
         run([args.php, example, output], source)
@@ -58,7 +59,7 @@ def build(args) -> None:
     poppler = ["--poppler-glib-bin", args.poppler_glib_bin] if args.poppler_glib_bin else ["--pdftotext", args.pdftotext]
     run([sys.executable, "tools/validate_source_mechanisms.py", pdfs, "--php", args.php, "--qpdf", args.qpdf, *poppler], source)
     run([sys.executable, content / "tools/build_site.py", "--content-root", content, "--source-root", source,
-         "--sources", manifest, "--api", api, "--pdf-dir", pdfs, "--pdf-preview-dir", previews,
+         "--opentype-root", opentype, "--sources", manifest, "--api", api, "--pdf-dir", pdfs, "--pdf-preview-dir", previews,
          "--output", args.output.resolve(), "--base-path", "/", "--docs-revision", args.docs_revision], content)
     run([sys.executable, content / "tools/check_site.py", args.output.resolve()], content)
 
@@ -67,6 +68,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--content-root", type=Path, default=Path(__file__).resolve().parents[1])
     parser.add_argument("--source-root", type=Path, required=True)
+    parser.add_argument("--opentype-root", type=Path, required=True, help="Independent released OpenType checkout")
     parser.add_argument("--sources", type=Path)
     parser.add_argument("--work-dir", type=Path, default=Path("_build"))
     parser.add_argument("--output", type=Path, default=Path("_site"))

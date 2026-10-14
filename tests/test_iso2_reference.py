@@ -20,7 +20,7 @@ class Iso2ReferenceTest(unittest.TestCase):
         type_entry = {'name': 'Type', 'type': 'name', 'description': 'Identifies the document catalog.', 'required': True, 'conditional': False, 'pdf_page': 113, 'indirect': False, 'direct': False, 'fixed_name': 'Catalog', 'errata': None}
         mcaf = {'name': 'MCAF', 'type': 'array', 'description': 'Associated file specifications.', 'required': False, 'conditional': False, 'pdf_page': 1015, 'indirect': False, 'direct': False, 'fixed_name': None, 'errata': {'review_status': 'Completed', 'pdf_page': 1015, 'issue_number': 374}}
         site.iso2_tables = {'29': {'title': 'Entries in the catalog dictionary', 'section': '7.7.2', 'pdf_pages': [113, 114, 115, 116, 117], 'entries': [type_entry]}, '409a': {'title': 'Property list entries for associated files', 'section': '14.13.5', 'pdf_pages': [1015], 'entries': [mcaf]}}
-        site.iso2_metadata = {'official_references': {'public_errata': 'https://pdf-issues.pdfa.org/32000-2-2020/'}}
+        site.iso2_metadata = {'source': {'document': 'ISO_32000-2_sponsored_EC3.pdf'}, 'official_references': {'public_errata': 'https://pdf-issues.pdfa.org/32000-2-2020/'}}
         site.iso2_spec_by_name = {'PDF\\Specification\\Iso32000_2\\Dictionary\\CatalogDictionaryTable29': ('29', None), 'PDF\\Document\\Files\\AssociatedFilesPropertyList': ('409a', None)}
         site.adobe_spec_by_name = {}
         site.adobe_tables = {}
@@ -52,17 +52,18 @@ class Iso2ReferenceTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'Missing edition-specific pilot provenance'):
             self.site().spec_panel({'name': 'PDF\\Specification\\Iso32000_2\\Unknown', 'source': 'src/Specification/Iso32000_2/Unknown.php', 'constants': [{'name': 'TABLE', 'value': "'29'"}]})
 
-    def test_private_source_has_metadata_and_errata_links_without_pdf_download(self):
+    def test_public_original_keeps_source_metadata_errata_and_physical_page(self):
         panel = self.site().iso2_spec_panel('29', None)
         links = Document(panel).links
         self.assertTrue(any(link.endswith('/metadata.json') for link in links))
         self.assertTrue(any(link.startswith('https://pdf-issues.pdfa.org/') for link in links))
-        self.assertFalse(any(urlsplit(link).path.endswith('.pdf') for link in links))
+        self.assertTrue(any(urlsplit(link).path.endswith('/ISO_32000-2_sponsored_EC3.pdf') and urlsplit(link).fragment == 'page=113' for link in links))
 
     def test_new_interface_is_translated_while_edition_attributes_are_preserved(self):
         panel = translate_interface(self.site().iso2_spec_panel('409a', None))
         self.assertEqual([('iso32000-2:2020', '409a')], Document(panel).specification_panels)
-        self.assertIn('Source copy retained privately', panel)
+        self.assertIn('Original retained in the core repository', panel)
+        self.assertIn('Original PDF at the documented commit', panel)
         self.assertIn('Physical PDF page', panel)
         self.assertIn('EC3 correction /MCAF', panel)
         self.assertNotIn('Copie source', panel)

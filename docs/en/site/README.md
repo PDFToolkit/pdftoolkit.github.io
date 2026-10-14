@@ -2,7 +2,7 @@
 
 The site is published at [pdftoolkit.github.io](https://pdftoolkit.github.io/)
 from [PDFToolkit/pdftoolkit.github.io](https://github.com/PDFToolkit/pdftoolkit.github.io).
-It presents the core and three optional modules from published versions
+It presents the core, three optional PDF modules and the independent OpenType model from published versions
 selected in the manifest. The documentation text and tools commit is
 identified separately from documented package versions and commits.
 
@@ -12,7 +12,7 @@ This repository retains guides, tutorials, shared assets, build tools and
 the publication workflow. PHP sources, examples, tests, specification
 resources and Adobe PDFs remain in their package repositories. The build
 reads them from a full core checkout prepared under `_sources/pdf`, with
-modules installed by Composer from their published distributions.
+PDF modules installed by Composer from their published distributions. The OpenType package comes from a separate checkout under `_sources/opentype`, at the published commit and tag selected by the same manifest. Its independent installation changes neither the core nor its lock.
 
 The `resources/sources.json` manifest uses `schemaVersion: 1`. Its `packages`
 list describes every package with `name`, `repository`, `version`, `revision`
@@ -30,7 +30,7 @@ them with the [package guide](../packages.md) commands without building
 the site.
 
 `tools/export_api.php` loads the prepared core's autoloader and discovers
-classes, interfaces, enums and traits in its `src/` and installed modules.
+classes, interfaces, enums and traits in its `src/`, installed PDF modules and the OpenType checkout. It also loads OpenType’s own autoloader.
 It exports their signatures, properties, constants and package provenance.
 It reads default-parameter expressions without instantiating the objects
 they describe. Source links use manifest commits, including for the core.
@@ -44,7 +44,7 @@ reference page. Composed entries distinguish Adobe and ISO sources; see
 the [coverage guide](../coverage.md).
 
 Module-specific guides are published under `/modules/reader/`,
-`/modules/images/` and `/modules/fonts/`. Their package qualifies pages
+`/modules/images/`, `/modules/fonts/` and `/modules/opentype/`. Their package qualifies pages
 and links so Markdown files sharing the same name remain distinct.
 
 Every script in the core's `examples/` must have a tutorial or recipe and
@@ -63,9 +63,7 @@ retains its generation examples.
 
 The ISO 32000-2:2020 EC3 pilot is read from `resources/iso32000-2-2020/`.
 Its API panels use explicit edition mappings rather than bare table numbers.
-`privateSpecificationSources` records its source identity and published metadata
-URL without a PDF download. The personalised private copy is never copied into
-site output. Lesson 27 uses a real generated PDF and the selected font module.
+`repositorySpecificationSources` records the original filename, hash, size, pages and links to the PDF and its metadata at the documented core commit. The original is public in that repository following confirmed redistribution authorization; its 19 MB are not duplicated in site output. The build verifies original bytes before publishing that link. Lesson 27 uses a real generated PDF and the selected font module.
 
 ## Local build
 
@@ -80,12 +78,18 @@ commit, then run the same complete build as CI:
 core_repository=$(python -c "import json; print(next(p for p in json.load(open('resources/sources.json'))['packages'] if p['name']=='roukmoute/pdf')['repository'])")
 core_revision=$(python -c "import json; print(next(p for p in json.load(open('resources/sources.json'))['packages'] if p['name']=='roukmoute/pdf')['revision'])")
 core_alias=$(python -c "import json; print(next(p for p in json.load(open('resources/sources.json'))['packages'] if p['name']=='roukmoute/pdf')['version'].rsplit('.', 1)[0]+'.x-dev')")
+opentype_repository=$(python -c "import json; print(next(p for p in json.load(open('resources/sources.json'))['packages'] if p['name']=='pdftoolkit/opentype')['repository'])")
+opentype_revision=$(python -c "import json; print(next(p for p in json.load(open('resources/sources.json'))['packages'] if p['name']=='pdftoolkit/opentype')['revision'])")
+
 git clone "$core_repository" _sources/pdf
 git -C _sources/pdf checkout --detach "$core_revision"
 COMPOSER_ROOT_VERSION="$core_alias" composer install --working-dir=_sources/pdf --no-interaction --prefer-dist
+git clone "$opentype_repository" _sources/opentype
+git -C _sources/opentype checkout --detach "$opentype_revision"
+composer install --working-dir=_sources/opentype --no-interaction --prefer-dist
 python -m pip install --require-hashes -r tools/site-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf/tools/public-key-validation-requirements.txt
-python tools/build_docs.py --source-root _sources/pdf --docs-revision "$(git rev-parse HEAD)" --remote
+python tools/build_docs.py --source-root _sources/pdf --opentype-root _sources/opentype --docs-revision "$(git rev-parse HEAD)" --remote
 ```
 
 On PowerShell:
@@ -93,14 +97,18 @@ On PowerShell:
 ```powershell
 $sourceManifest = Get-Content resources/sources.json -Raw | ConvertFrom-Json
 $coreSource = $sourceManifest.packages | Where-Object name -eq 'roukmoute/pdf'
+$opentypeSource = $sourceManifest.packages | Where-Object name -eq 'pdftoolkit/opentype'
 git clone $coreSource.repository _sources/pdf
 git -C _sources/pdf checkout --detach $coreSource.revision
 $env:COMPOSER_ROOT_VERSION = ($coreSource.version -replace '\.\d+$', '.x-dev')
 composer install --working-dir=_sources/pdf --no-interaction --prefer-dist
+git clone $opentypeSource.repository _sources/opentype
+git -C _sources/opentype checkout --detach $opentypeSource.revision
+composer install --working-dir=_sources/opentype --no-interaction --prefer-dist
 python -m pip install --require-hashes -r tools/site-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf/tools/public-key-validation-requirements.txt
 $docsRevision = git rev-parse HEAD
-python tools/build_docs.py --source-root _sources/pdf --docs-revision $docsRevision --remote
+python tools/build_docs.py --source-root _sources/pdf --opentype-root _sources/opentype --docs-revision $docsRevision --remote
 ```
 
 `tools/build_docs.py` verifies published commits and tags, retained sources
@@ -114,8 +122,8 @@ revisions in the manifest. Tool paths can be specified with `--php`,
 To rebuild only the rendering from already-validated inputs:
 
 ```sh
-php tools/export_api.php _build/api.json _sources/pdf resources/sources.json
-python tools/build_site.py --content-root . --source-root _sources/pdf --sources resources/sources.json --docs-revision "$(git rev-parse HEAD)" --api _build/api.json --pdf-dir _build/pdfs --pdf-preview-dir _build/pdf-pages --output _site --base-path /
+php tools/export_api.php _build/api.json _sources/pdf resources/sources.json _sources/opentype
+python tools/build_site.py --content-root . --source-root _sources/pdf --opentype-root _sources/opentype --sources resources/sources.json --docs-revision "$(git rev-parse HEAD)" --api _build/api.json --pdf-dir _build/pdfs --pdf-preview-dir _build/pdf-pages --output _site --base-path /
 python tools/check_site.py _site
 ```
 

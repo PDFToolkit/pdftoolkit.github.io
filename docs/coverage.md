@@ -12,7 +12,7 @@ ou un comportement de lecteur.
 Le [guide PDF 2.0](pdf-2-0.md) conserve une édition et un profil de corrections
 distincts. Son pilote contient quatre tableaux et 53 entrées : 29 (catalogue,
 pp.113–117), 43 (fichier, pp.149–152), 356 (espace de noms, p.744) et 409a
-(MCAF, p.1015). L'[inventaire ISO2](https://github.com/PDFToolkit/pdf/blob/v0.6.1/resources/iso32000-2-2020/coverage.json)
+(MCAF, p.1015). L'[inventaire ISO2](https://github.com/PDFToolkit/pdf/blob/v0.6.2/resources/iso32000-2-2020/coverage.json)
 laisse explicitement le catalogue complet en attente. Aucun pourcentage ne
 mélange ce pilote aux inventaires de tableaux ISO1/Adobe complets.
 
@@ -25,9 +25,7 @@ Unicode, texte visible CID et CSV associé au document, à la page et au contenu
 
 R=6, graphes natifs d'espaces de noms/rôles, DSS/horodatages, arbres de parties
 documentaires, enveloppes chiffrées, géospatial et conformité complète restent
-à construire. La norme personnalisée fournie est conservée en privé avec
-métadonnées et pages physiques ; aucun téléchargement public de ce PDF n'est
-proposé. Les références Adobe ci-dessous restent téléchargeables sans modification.
+à construire. La [norme fournie](https://github.com/PDFToolkit/pdf/blob/v0.6.2/ISO_32000-2_sponsored_EC3.pdf) est conservée dans le dépôt public du core avec son nom et ses octets d'origine, après autorisation de redistribution confirmée. Ses métadonnées identifient les pages physiques et son empreinte. Les références Adobe ci-dessous restent téléchargeables sans modification.
 
 ## Références conservées
 
@@ -35,6 +33,7 @@ proposé. Les références Adobe ci-dessous restent téléchargeables sans modif
 | --- | --- | --- |
 | ISO 32000-1:2008, PDF 1.7 | 756 pages ; 392 tableaux ; 263 tableaux de dictionnaires ; 1 405 classes d'entrée ; 73 opérateurs de contenu | [PDF32000_2008.pdf](https://github.com/PDFToolkit/pdf/blob/v0.5.4/PDF32000_2008.pdf) |
 | Supplément Adobe, niveau d'extension 3 | 140 pages ; 66 tableaux, dont 61 tableaux de dictionnaires | [adobe_supplement_iso32000.pdf](https://github.com/PDFToolkit/pdf/blob/v0.5.4/adobe_supplement_iso32000.pdf) |
+| ISO 32000-2:2020 EC3, PDF 2.0 | 1 023 pages physiques ; catalogue pilote de 4 tableaux et 53 entrées | [ISO_32000-2_sponsored_EC3.pdf](https://github.com/PDFToolkit/pdf/blob/v0.6.2/ISO_32000-2_sponsored_EC3.pdf) |
 
 Les fichiers originaux restent dans le dépôt du core. Les catalogues enregistrent leur
 SHA-256 et les numéros de pages physiques ; les corrections d'interprétation

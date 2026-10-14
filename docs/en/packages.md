@@ -1,7 +1,7 @@
 # Core and optional modules
 
 PDFToolkit separates the PDF model from external-file processing. The
-**0.6-series core** and three **0.1-series modules** use PHP 8.3 or later and CI
+**0.6-series core**, three **0.1-series PDF modules** and the independent **0.1-series OpenType model** use PHP 8.3 or later and CI
 on PHP 8.3, 8.4 and 8.5. The core retains its Composer name `roukmoute/pdf`
 after transfer to the organization; new modules use the `pdftoolkit/` prefix.
 
@@ -38,52 +38,64 @@ verified before finalization.
 | [PDFToolkit/pdf-images](https://github.com/PDFToolkit/pdf-images) — `pdftoolkit/pdf-images` | PNG or JPEG bytes and explicit limits | Color/alpha samples or core DCT representation |
 | [PDFToolkit/pdf-fonts](https://github.com/PDFToolkit/pdf-fonts) — `pdftoolkit/pdf-fonts` | TrueType bytes, text and explicit parameters | Embeddable program, metrics and mappings for the core |
 | [PDFToolkit/pdf-reader](https://github.com/PDFToolkit/pdf-reader) — `pdftoolkit/pdf-reader` | PDF bytes and reading budgets | Read graph, pages and inherited attributes, references to resolve and encoded or decoded streams |
+| [PDFToolkit/opentype](https://github.com/PDFToolkit/opentype) — `pdftoolkit/opentype` | OpenType SFNT bytes and explicit limits | Tables, metrics, Unicode mappings and GSUB glyph substitutions |
 
-Dependencies go **from modules to the core**. Modules do not depend on one
+Dependencies go **from the three PDF modules to the core**. These modules do not depend on one
 another. The core knows none of their parsers: an application can directly
 construct its PDF objects or feed them through another converter. The object
 model is shared, without parallel copies of primitives or a global registry.
+
+The [OpenType model](https://github.com/PDFToolkit/opentype) is independent: it depends on neither the core nor `pdf-fonts`. It analyzes a font into its own objects without constructing PDF dictionaries. The `pdf-fonts` converter remains the entry point for current TrueType embedding in PDF. The first OpenType release does not yet provide full script shaping, GPOS, GDEF, variable fonts or CFF. See its [coverage](https://github.com/PDFToolkit/opentype/blob/v0.1.0/docs/coverage.md).
 
 Core 0.6 adds [initial PDF 2.0 writing](pdf-2-0.md), UTF-8 dictionary text and associated files. This does not expand the optional reader’s PDF 1.0–1.7 scope.
 
 ## Installing what the application needs
 
-All four packages are available on Packagist:
+All five packages are available on Packagist:
 [core](https://packagist.org/packages/roukmoute/pdf),
 [reader](https://packagist.org/packages/pdftoolkit/pdf-reader),
-[images](https://packagist.org/packages/pdftoolkit/pdf-images) and
-[fonts](https://packagist.org/packages/pdftoolkit/pdf-fonts).
-Stable constraints are `roukmoute/pdf:^0.6.1` for the core and
+[images](https://packagist.org/packages/pdftoolkit/pdf-images),
+[PDF fonts](https://packagist.org/packages/pdftoolkit/pdf-fonts) and
+[OpenType](https://packagist.org/packages/pdftoolkit/opentype).
+Stable constraints are `roukmoute/pdf:^0.6.2` for the core and
 `pdftoolkit/pdf-reader:^0.1.7`, `pdftoolkit/pdf-images:^0.1.7` or
-`pdftoolkit/pdf-fonts:^0.1.7` for modules. Older core tags `v0.1.0` and
+`pdftoolkit/pdf-fonts:^0.1.7` for PDF modules, and `pdftoolkit/opentype:^0.1.0` for the independent font model. Older core tags `v0.1.0` and
 `v0.1.1` retain their PHP 8.5 constraint.
 
 To generate PDFs only:
 
 ```sh
-composer require "roukmoute/pdf:^0.6.1"
+composer require "roukmoute/pdf:^0.6.2"
 ```
 
 To add reading of existing PDFs:
 
 ```sh
-composer require "roukmoute/pdf:^0.6.1" "pdftoolkit/pdf-reader:^0.1.7"
+composer require "roukmoute/pdf:^0.6.2" "pdftoolkit/pdf-reader:^0.1.7"
 ```
 
 To convert images:
 
 ```sh
-composer require "roukmoute/pdf:^0.6.1" "pdftoolkit/pdf-images:^0.1.7"
+composer require "roukmoute/pdf:^0.6.2" "pdftoolkit/pdf-images:^0.1.7"
 ```
 
 To analyze TrueType fonts:
 
 ```sh
-composer require "roukmoute/pdf:^0.6.1" "pdftoolkit/pdf-fonts:^0.1.7"
+composer require "roukmoute/pdf:^0.6.2" "pdftoolkit/pdf-fonts:^0.1.7"
 ```
 
+To analyze a font independently of PDF:
+
+```sh
+composer require "pdftoolkit/opentype:^0.1.0"
+```
+
+This command installs only OpenType, without the PDF core or converters.
+
 Composer resolves these packages from Packagist and downloads their published
-distributions. Modules require the stable core transitively; installing the
+distributions. The three PDF modules require the stable core transitively; installing the
 core alone installs no module. Keep the application's `composer.lock` to
 pin versions and revisions.
 
@@ -91,7 +103,7 @@ Applications that added GitHub repositories under `repositories` can remove
 those entries from `composer.json`. Composer package names remain identical.
 
 Before 1.0, a new minor release may change names and signatures. The
-`^0.6.1` and `^0.1.7` constraints allow patches within their series and
+`^0.6.2` and `^0.1.7` constraints allow patches within their series and
 exclude the next minor release. Consult changelogs before switching series.
 To work with upcoming development, explicitly request `dev-master` for the
 relevant packages.
@@ -179,9 +191,9 @@ stream bytes are each bounded to 128 MiB, in addition to other limits.
 
 ## Central documentation, independent installations
 
-This documentation presents the API of all four packages. Module pages carry
+This documentation presents the API of all five packages. Module pages carry
 an **optional** badge, and their source links use the module commit pinned
-by the build lock. This adds no dependency to applications installing only
+by the build lock, or by the separate release tag and checkout for OpenType. This adds no dependency to applications installing only
 the core.
 
 The core development checkout installs modules in `require-dev` to generate

@@ -1,7 +1,7 @@
 # Core et modules optionnels
 
 PDFToolkit sépare le modèle PDF des traitements de fichiers externes. Le core
-**de la série 0.6** et les trois modules **de la série 0.1** utilisent PHP 8.3 ou supérieur et une CI
+**de la série 0.6**, les trois modules PDF **de la série 0.1** et le modèle OpenType indépendant **de la série 0.1** utilisent PHP 8.3 ou supérieur et une CI
 sur PHP 8.3, 8.4 et 8.5.
 Le core conserve son nom Composer `roukmoute/pdf` après son transfert dans
 l'organisation ; les nouveaux modules utilisent le préfixe `pdftoolkit/`.
@@ -37,52 +37,64 @@ collections. Les politiques de champs de signature sont appliquées aux snapshot
 | [PDFToolkit/pdf-images](https://github.com/PDFToolkit/pdf-images) — `pdftoolkit/pdf-images` | Octets PNG ou JPEG et limites explicites | Échantillons couleur/alpha ou représentation DCT du core |
 | [PDFToolkit/pdf-fonts](https://github.com/PDFToolkit/pdf-fonts) — `pdftoolkit/pdf-fonts` | Octets TrueType, texte et paramètres explicites | Programme incorporable, métriques et correspondances pour le core |
 | [PDFToolkit/pdf-reader](https://github.com/PDFToolkit/pdf-reader) — `pdftoolkit/pdf-reader` | Octets PDF et budgets de lecture | Graphe lu, pages et attributs hérités, références à résoudre et flux encodés ou décodés |
+| [PDFToolkit/opentype](https://github.com/PDFToolkit/opentype) — `pdftoolkit/opentype` | Octets OpenType SFNT et limites explicites | Tables, métriques, correspondances Unicode et substitutions de glyphes GSUB |
 
-Les dépendances vont **des modules vers le core**. Les modules ne se dépendent
+Les dépendances vont **des trois modules PDF vers le core**. Ces modules ne se dépendent
 pas entre eux. Le core ne connaît aucun de leurs parseurs : une application peut
 construire directement ses objets PDF ou les alimenter avec un autre convertisseur.
-Le modèle objet est commun, sans copie parallèle des primitives ni registre global.
+Le modèle objet PDF est commun, sans copie parallèle des primitives ni registre global.
+
+Le [modèle OpenType](https://github.com/PDFToolkit/opentype) est indépendant : il ne dépend ni du core ni de `pdf-fonts`. Il analyse une fonte pour produire ses propres objets, sans construire de dictionnaires PDF. Le convertisseur `pdf-fonts` reste le point d’entrée pour l’incorporation actuelle de fontes TrueType dans un PDF. La première version OpenType ne fournit pas encore de composition complète des scripts, de GPOS, de GDEF, de fontes variables ou de CFF. Consulter sa [couverture](https://github.com/PDFToolkit/opentype/blob/v0.1.0/docs/coverage.md).
 
 Le core 0.6 ajoute les [premiers mécanismes d’écriture PDF 2.0](pdf-2-0.md), le texte UTF-8 des dictionnaires et les fichiers associés. Cela n’étend pas le périmètre PDF 1.0–1.7 du lecteur optionnel.
 
 ## Installer ce dont l'application a besoin
 
-Les quatre packages sont disponibles sur Packagist :
+Les cinq packages sont disponibles sur Packagist :
 [core](https://packagist.org/packages/roukmoute/pdf),
 [lecteur](https://packagist.org/packages/pdftoolkit/pdf-reader),
-[images](https://packagist.org/packages/pdftoolkit/pdf-images) et
-[fontes](https://packagist.org/packages/pdftoolkit/pdf-fonts).
-Les contraintes stables sont `roukmoute/pdf:^0.6.1` pour le core et
+[images](https://packagist.org/packages/pdftoolkit/pdf-images),
+[fontes PDF](https://packagist.org/packages/pdftoolkit/pdf-fonts) et
+[OpenType](https://packagist.org/packages/pdftoolkit/opentype).
+Les contraintes stables sont `roukmoute/pdf:^0.6.2` pour le core et
 `pdftoolkit/pdf-reader:^0.1.7`, `pdftoolkit/pdf-images:^0.1.7` ou
-`pdftoolkit/pdf-fonts:^0.1.7` pour les modules. Les anciens tags du core `v0.1.0`
+`pdftoolkit/pdf-fonts:^0.1.7` pour les modules PDF, et `pdftoolkit/opentype:^0.1.0` pour le modèle de fonte indépendant. Les anciens tags du core `v0.1.0`
 et `v0.1.1` conservent leur contrainte PHP 8.5.
 
 Pour générer seulement des PDF :
 
 ```sh
-composer require "roukmoute/pdf:^0.6.1"
+composer require "roukmoute/pdf:^0.6.2"
 ```
 
 Pour ajouter la lecture de PDF existants :
 
 ```sh
-composer require "roukmoute/pdf:^0.6.1" "pdftoolkit/pdf-reader:^0.1.7"
+composer require "roukmoute/pdf:^0.6.2" "pdftoolkit/pdf-reader:^0.1.7"
 ```
 
 Pour convertir des images :
 
 ```sh
-composer require "roukmoute/pdf:^0.6.1" "pdftoolkit/pdf-images:^0.1.7"
+composer require "roukmoute/pdf:^0.6.2" "pdftoolkit/pdf-images:^0.1.7"
 ```
 
 Pour analyser des fontes TrueType :
 
 ```sh
-composer require "roukmoute/pdf:^0.6.1" "pdftoolkit/pdf-fonts:^0.1.7"
+composer require "roukmoute/pdf:^0.6.2" "pdftoolkit/pdf-fonts:^0.1.7"
 ```
 
+Pour analyser une fonte indépendamment du PDF :
+
+```sh
+composer require "pdftoolkit/opentype:^0.1.0"
+```
+
+Cette commande installe uniquement OpenType, sans le core ni les convertisseurs PDF.
+
 Composer résout ces packages depuis Packagist et télécharge leurs distributions
-publiées. Les modules demandent le core stable transitivement ; installer le core
+publiées. Les trois modules PDF demandent le core stable transitivement ; installer le core
 seul n'installe aucun module. Conserver le `composer.lock` de l'application pour
 fixer les versions et les révisions.
 
@@ -91,7 +103,7 @@ peuvent retirer ces entrées de leur `composer.json`. Les noms Composer des
 packages restent identiques.
 
 Avant 1.0, une nouvelle version mineure peut changer les noms et signatures.
-Les contraintes `^0.6.1` et `^0.1.7` autorisent les correctifs de leur série et
+Les contraintes `^0.6.2` et `^0.1.7` autorisent les correctifs de leur série et
 écartent la version mineure suivante. Consulter les changelogs avant de changer
 de série. Pour travailler sur les développements à venir, demander explicitement
 `dev-master` pour les packages concernés.
@@ -178,9 +190,9 @@ des flux décodés sont chacun bornés à 128 MiB, en plus des autres limites.
 
 ## Une documentation centrale, des installations indépendantes
 
-Cette documentation présente l'API des quatre packages. Les fiches des modules
+Cette documentation présente l'API des cinq packages. Les fiches des modules
 portent un badge **optionnel** et leurs liens de source utilisent le commit
-du module fixé par le lock de construction. Cela n'ajoute aucune dépendance aux
+du module fixé par le lock de construction, ou par le tag et le checkout séparé du package OpenType. Cela n'ajoute aucune dépendance aux
 applications qui installent uniquement le core.
 
 Le checkout de développement du core installe les modules en `require-dev`

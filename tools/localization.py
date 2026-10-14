@@ -27,10 +27,10 @@ GROUP_ROUTES = {
     'lexique': 'lexical-conventions', 'norme': 'specification',
     'dictionnaires': 'dictionaries', 'entrees': 'entries', 'definitions': 'definitions',
     'adobe': 'adobe', 'iso2': 'pdf-2-0', 'securite': 'security', 'polices-externes': 'external-fonts',
-    'images-externes': 'external-images', 'lecture': 'reader',
+    'images-externes': 'external-images', 'lecture': 'reader', 'fontes-opentype': 'opentype',
 }
 ENGLISH_ROUTES.update({f'reference/groups/{old}.html': f'reference/groups/{new}.html' for old, new in GROUP_ROUTES.items()})
-for module in ('reader', 'images', 'fonts'):
+for module in ('reader', 'images', 'fonts', 'opentype'):
     ENGLISH_ROUTES[f'modules/{module}/signalements.html'] = f'modules/{module}/reporting.html'
     ENGLISH_ROUTES[f'modules/{module}/versions.html'] = f'modules/{module}/changelog.html'
 
@@ -210,7 +210,8 @@ TEXT = {
     'Définition ISO 32000-2:2020 EC3': 'ISO 32000-2:2020 EC3 definition',
     'Métadonnées de la source au commit documenté ↗': 'Source metadata at the documented commit ↗',
     'Errata publics ↗': 'Public errata ↗',
-    'Copie source conservée en privé. Catalogue pilote — couverture complète en attente.': 'Source copy retained privately. Pilot catalogue — complete coverage pending.',
+    'Original conservé dans le dépôt du core. Catalogue pilote — couverture complète en attente.': 'Original retained in the core repository. Pilot catalogue — complete coverage pending.',
+    'Original PDF au commit documenté ↗': 'Original PDF at the documented commit ↗',
     'Page PDF physique': 'Physical PDF page',
     'Correction EC3': 'EC3 correction',
     'Résumé d’implémentation rédigé pour le projet.': 'Project-authored implementation summary.',
@@ -279,6 +280,10 @@ TEXT = {
     'Module optionnel : fontes externes': 'Optional module: external fonts',
     'Module optionnel : images externes': 'Optional module: external images',
     'Module optionnel : lecture de PDF': 'Optional module: PDF reading',
+    'Modèle objet OpenType indépendant': 'Independent OpenType object model',
+    'Architecture OpenType': 'OpenType architecture',
+    'Couverture OpenType': 'OpenType coverage',
+    'Substitutions de glyphes': 'Glyph substitutions',
     'Lire un PDF': 'Reading a PDF', 'Architecture du lecteur': 'Reader architecture',
     'Pages, héritage et flux': 'Pages, inheritance and streams', 'Composants du lecteur': 'Reader components',
     'Limites et sécurité du lecteur': 'Reader limits and security', 'Convertir des images': 'Converting images',
@@ -326,7 +331,7 @@ TEXT = {
     'Apprendre avec les objets': 'Learn with objects', 'Construire un document et explorer ses pages': 'Build a document and explore its pages',
     'Chaque tutoriel relie les explications aux objets PHP et au PDF créé ou lu. Consultez ses pages, le script et le résultat de son exécution.': 'Each tutorial connects the explanations to PHP objects and the PDF being created or read. Explore its pages, script and execution result.',
     'Un core PDF, des modules au choix': 'A PDF core, optional modules',
-    'Le core représente les objets et les mécanismes de la norme Adobe. La lecture de PDF externes et la conversion de fichiers image ou de fontes sont des dépendances optionnelles : chaque module dépend du core.': 'The core represents the objects and mechanisms in the Adobe specification. Reading external PDFs and converting image or font files are optional dependencies: each module depends on the core.',
+    'Le core représente les objets et les mécanismes de la norme Adobe. Les modules de lecture PDF et de conversion d’images ou de fontes dépendent du core. Le modèle OpenType est indépendant et s’installe sans aucun package PDF.': 'The core represents the objects and mechanisms in the Adobe specification. PDF reading and image or font conversion modules depend on the core. The OpenType model is independent and installs without any PDF package.',
     'Choisir les packages et comprendre leur frontière →': 'Choose packages and understand their scope →',
     'Trois chemins pour explorer le projet': 'Three ways to explore the project', 'Comprendre les responsabilités': 'Understand responsibilities',
     'Valeurs, graphes, ressources, fonctions et écriture : comment les familles se composent.': 'Values, graphs, resources, functions and writing: how the component families fit together.',

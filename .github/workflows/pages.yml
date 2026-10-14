@@ -27,6 +27,12 @@ jobs:
           ref: ${{ steps.sources.outputs.core_revision }}
           fetch-depth: 0
           path: _sources/pdf
+      - uses: actions/checkout@v6
+        with:
+          repository: PDFToolkit/opentype
+          ref: ${{ steps.sources.outputs.opentype_revision }}
+          fetch-depth: 0
+          path: _sources/opentype
       - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.3'
@@ -47,6 +53,11 @@ jobs:
           composer install --working-dir _sources/pdf --no-interaction --prefer-dist
           composer check-platform-reqs --working-dir _sources/pdf
           composer audit --working-dir _sources/pdf --locked
+      - name: Install the independent OpenType release inputs
+        run: |
+          composer install --working-dir _sources/opentype --no-interaction --prefer-dist
+          composer check-platform-reqs --working-dir _sources/opentype
+          composer audit --working-dir _sources/opentype --locked
       - run: python -m pip install --require-hashes -r tools/site-requirements.txt
       - run: python -m pip install --require-hashes -r _sources/pdf/tools/public-key-validation-requirements.txt
       - uses: ./_sources/pdf/.github/actions/setup-qpdf
@@ -54,7 +65,7 @@ jobs:
       - name: Verify bilingual navigation and search behavior
         run: node tests/site_locales.cjs
       - name: Build real examples and verify every documentation page
-        run: python tools/build_docs.py --source-root _sources/pdf --docs-revision "$GITHUB_SHA" --remote
+        run: python tools/build_docs.py --source-root _sources/pdf --opentype-root _sources/opentype --docs-revision "$GITHUB_SHA" --remote
       - name: Verify the old project-site compatibility output
         run: |
           python tools/build_legacy_site.py --site-url https://pdftoolkit.github.io/ --site-dir _site --legacy-base /pdf --legacy-manifest resources/legacy-site-manifest.json --output _legacy

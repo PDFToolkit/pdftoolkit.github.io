@@ -15,7 +15,7 @@ Le parcours s'inspire de l'organisation des [tutoriels FPDF](https://www.fpdf.or
 Le core et les modules sont disponibles sur Packagist. Depuis votre projet :
 
 ```sh
-composer require "roukmoute/pdf:^0.6.1"
+composer require "roukmoute/pdf:^0.6.2"
 ```
 
 Les leçons 09, 10 et 12 utilisent respectivement `pdftoolkit/pdf-fonts`,
@@ -85,7 +85,7 @@ présente le PDF d'entrée, ses trois pages et les objets lus.
 | [24. Fichiers incorporés](24-embedded-files.md) | EF, RF, métadonnées et collections. | [embedded-files.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/embedded-files.php) |
 | [25. Générations des objets](25-object-lifecycle.md) | Suppression, liste libre et réutilisation. | [object-lifecycle.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/object-lifecycle.php) |
 | [26. Politique de signature](26-signature-field-policy.md) | Champ, seeds, verrou et résultat effectivement signé. | [signature-field-policy.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/signature-field-policy.php) |
-| [27. PDF 2.0 et fichiers associés](27-pdf20-associated-files.md) | Métadonnées Unicode, relations AF et ressources MCAF nommées corrigées. | [pdf20-associated-files.php](https://github.com/PDFToolkit/pdf/blob/v0.6.1/examples/pdf20-associated-files.php) |
+| [27. PDF 2.0 et fichiers associés](27-pdf20-associated-files.md) | Métadonnées Unicode, relations AF et ressources MCAF nommées corrigées. | [pdf20-associated-files.php](https://github.com/PDFToolkit/pdf/blob/v0.6.2/examples/pdf20-associated-files.php) |
 
 Les leçons 03 à 07 peuvent se lire dans l'ordre des sujets qui vous intéressent, après le premier document. Les leçons 08 et 11 concernent l'organisation du fichier ; les leçons 09 et 10 ajoutent des programmes de police et des fichiers image réels au graphe. La leçon 12 consulte les structures d'un PDF existant avec les objets du lecteur.
 
