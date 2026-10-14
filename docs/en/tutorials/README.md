@@ -102,6 +102,7 @@ PDF, all three pages and the objects read.
 | [25. Object generations](25-object-lifecycle.md) | Deletion, free list and reuse. | [object-lifecycle.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/object-lifecycle.php) |
 | [26. Signature policy](26-signature-field-policy.md) | Field, seeds, lock and an actually signed result. | [signature-field-policy.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/signature-field-policy.php) |
 | [27. PDF 2.0 and associated files](27-pdf20-associated-files.md) | Unicode metadata, AF relationships and corrected named MCAF resources. | [pdf20-associated-files.php](https://github.com/PDFToolkit/pdf/blob/v0.6.2/examples/pdf20-associated-files.php) |
+| [30. Namespaces and WTPDF checks](30-pdf20-tagged-namespaces.md) | Qualified roles, PDF 1.7/2.0 types, reciprocal ParentTree and mechanical-audit boundaries. | [pdf20-tagged-namespaces.php](https://github.com/PDFToolkit/pdf/blob/v0.7.0/examples/pdf20-tagged-namespaces.php) |
 
 After the first document, lessons 03 to 07 can be read in any order matching
 your interests. Lessons 08 and 11 concern file organization; lessons 09 and 10
