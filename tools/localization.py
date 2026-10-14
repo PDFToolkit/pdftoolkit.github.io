@@ -175,7 +175,8 @@ def iso2_description(value, language):
 
 
 def route_for(route, language):
-    if not route.endswith('.html'):
+    # Generated example documents are shared artifacts, including HTML outputs.
+    if route.startswith('examples/') or not route.endswith('.html'):
         return route
     if language == 'fr':
         return 'fr/' + route

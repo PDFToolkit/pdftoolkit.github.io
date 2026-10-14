@@ -8,7 +8,7 @@ import json
 from pathlib import Path
 import tempfile
 from unittest.mock import patch
-from build_site import MODULES, group_for, publish_derivation_assets
+from build_site import MODULES, Site, group_for, publish_derivation_assets
 from check_sources import check
 from check_site import validate_derived_html
 from localization import localized_source, route_for, translate_interface
@@ -40,6 +40,18 @@ class HtmlDerivationSourcesTest(unittest.TestCase):
         self.assertEqual('docs/fr/coverage.md', localized_source(owner, 'docs/coverage.md', 'fr'))
         self.assertEqual('modules/to-html/reporting.html', route_for('modules/to-html/signalements.html', 'en'))
         self.assertIn('HTML derivation', translate_interface('<h2>Architecture de la dérivation HTML</h2>'))
+
+    def test_generated_html_downloads_and_frames_share_the_same_url_in_both_languages(self):
+        site = Site.__new__(Site)
+        for language in ('en', 'fr'):
+            site.language = language
+            for base in ('/', '/pdf/'):
+                site.base = base
+                with self.subTest(language=language, base=base):
+                    self.assertEqual('examples/derive-html.html', route_for('examples/derive-html.html', language))
+                    self.assertEqual(base + 'examples/derive-html.html', site.url('examples/derive-html.html'))
+                    self.assertEqual(base + 'examples/derive-html.html?download=1#heading', site.rewrite_link('docs/tutorials/35-derive-html.md', '/examples/derive-html.html?download=1#heading'))
+                    self.assertEqual(base + ('fr/' if language == 'fr' else '') + 'modules/to-html/index.html', site.url('modules/to-html/index.html'))
 
 
 class DerivedHtmlBoundaryTest(unittest.TestCase):
