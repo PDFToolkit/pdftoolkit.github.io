@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [0.1.2] - 2026-10-14
+
+- Keep the component search input at its normal control height on desktop and
+  mobile. Remove a flex basis that incorrectly applied 230 pixels to its height
+  inside a column label; retain the responsive width and minimum 44-pixel height.
+
 ## [0.1.1] - 2026-10-14
 
 - Document Composer installation of all four PHP libraries from Packagist,
