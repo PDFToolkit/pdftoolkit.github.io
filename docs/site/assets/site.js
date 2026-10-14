@@ -99,6 +99,7 @@
             status.setAttribute("role", "status");
             status.setAttribute("aria-live", "polite");
             block.classList.add("has-copy");
+            if (!/[\r\n]/.test(code.textContent.replace(/\r?\n$/, ""))) block.classList.add("is-single-line");
             block.append(button);
             block.after(status);
             let resetTimer;

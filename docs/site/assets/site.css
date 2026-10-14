@@ -96,6 +96,9 @@ p { margin: 0 0 18px; }
 pre.has-copy { padding-top: 48px; }
 .copy-code { position: absolute; top: 9px; right: 10px; min-height: 29px; padding: 4px 9px; border: 1px solid #c7d4ca; border-radius: 5px; background: #fbfdfa; color: #365950; font: 10px var(--mono); }
 .copy-code:hover { background: white; border-color: var(--accent); }
+.prose pre.has-copy.is-single-line, .source-panel pre.has-copy.is-single-line { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 16px; padding: 12px 16px; overflow: visible; white-space: normal; }
+pre.is-single-line code { display: block; min-width: 0; overflow-x: auto; white-space: pre; scrollbar-width: thin; }
+pre.is-single-line .copy-code { position: static; }
 .copy-status { display: block; margin-top: -14px; margin-bottom: 18px; color: var(--muted); font-size: 12px; }
 .highlight .k, .highlight .kd, .highlight .kn, .highlight .kr, .highlight .ow, .highlight .p { color: #0d6257; }
 .highlight .s, .highlight .s1, .highlight .s2, .highlight .sd, .highlight .se { color: #a14324; }
@@ -267,6 +270,8 @@ a.card { color: var(--ink); text-decoration: none; }
     .hero { display: block; }
     .hero-visual { max-width: 250px; }
     .prose pre, .source-panel pre, .api-signature { white-space: pre-wrap; overflow: visible; font-size: 8pt; border-color: #ccc; }
+    .prose pre.has-copy.is-single-line, .source-panel pre.has-copy.is-single-line { display: block; white-space: pre-wrap; }
+    pre.is-single-line code { overflow: visible; white-space: inherit; overflow-wrap: anywhere; }
     .prose table { display: table; font-size: 8pt; }
     .cards, .reference-grid, .stats { display: block; }
     .card, .component-card, .stat { margin-bottom: 12pt; break-inside: avoid; }
