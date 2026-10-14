@@ -39,7 +39,7 @@ composer require "roukmoute/pdf:^0.7.1"
 ```
 
 Les versions documentées sont le core **0.7.1**, le lecteur **0.2.3**, les modules
-images/fontes **0.1.8**, OpenType indépendant **0.1.0** et PDF vers HTML **0.2.0**. Elles nécessitent **PHP 8.3 ou supérieur**
+images/fontes **0.1.8**, OpenType indépendant **0.1.0** et PDF vers HTML **0.2.1**. Elles nécessitent **PHP 8.3 ou supérieur**
 et sont vérifiées sous PHP 8.3, 8.4 et 8.5. Le core **0.7** exige aussi PHP en
 64 bits ; OpenType reste indépendant du core PDF.
 
@@ -55,7 +55,7 @@ Choisir les modules optionnels selon les fichiers traités par l'application :
 Les modules images/fontes/lecteur installent le core comme dépendance. PDF vers HTML ajoute la dérivation sémantique et installe aussi le lecteur. OpenType possède son propre modèle objet et s’installe sans dépendance PDF. Le guide des packages explique
 leurs commandes Composer et les versions prises en charge.
 
-PDF vers HTML 0.2.0 dérive le contenu sémantique des PDF balisés avec vérification
+PDF vers HTML 0.2.1 dérive le contenu sémantique des PDF balisés avec vérification
 des associations structurelles, Unicode, images, tableaux, navigation et champs.
 Son [registre des clauses](https://pdftoolkit.github.io/fr/modules/to-html/requirements.html)
 relie la référence conservée aux décisions exécutables et aux tests indépendants.

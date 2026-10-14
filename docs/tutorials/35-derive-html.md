@@ -7,14 +7,14 @@ et l'ordre de lecture. Le module optionnel `pdftoolkit/pdf-to-html` utilise cett
 seconde description pour dériver du HTML selon **Deriving HTML from PDF 1.2**,
 publication PDF Association conservée avec son code source.
 
-Le dépôt [PDFToolkit/pdf-to-html](https://github.com/PDFToolkit/pdf-to-html/tree/v0.2.0) a été
+Le dépôt [PDFToolkit/pdf-to-html](https://github.com/PDFToolkit/pdf-to-html/tree/v0.2.1) a été
 créé spécialement pour implémenter les règles de ce
-[document de référence](https://github.com/PDFToolkit/pdf-to-html/blob/v0.2.0/resources/reference-documents/Deriving_HTML_from_PDF_1-2.pdf).
-La version **0.2.0** distingue les règles exécutées, les décisions de sécurité,
+[document de référence](https://github.com/PDFToolkit/pdf-to-html/blob/v0.2.1/resources/reference-documents/Deriving_HTML_from_PDF_1-2.pdf).
+La version **0.2.1** distingue les règles exécutées, les décisions de sécurité,
 les adaptations nécessaires au navigateur et les capacités fournies par
-l'application. Le [registre des exigences](https://github.com/PDFToolkit/pdf-to-html/blob/v0.2.0/docs/fr/requirements.md)
+l'application. Le [registre des exigences](https://github.com/PDFToolkit/pdf-to-html/blob/v0.2.1/docs/fr/requirements.md)
 relie les clauses du document aux décisions et aux tests ; le
-[guide de couverture](https://github.com/PDFToolkit/pdf-to-html/blob/v0.2.0/docs/fr/coverage.md)
+[guide de couverture](https://github.com/PDFToolkit/pdf-to-html/blob/v0.2.1/docs/fr/coverage.md)
 précise les entrées acceptées et les preuves indépendantes.
 
 Ce tutoriel exécute réellement `examples/01-derive-tagged-pdf.php` depuis la
@@ -26,7 +26,7 @@ une illustration écrite à la main.
 ## Installer le module optionnel
 
 ```sh
-composer require "pdftoolkit/pdf-to-html:^0.2.0"
+composer require "pdftoolkit/pdf-to-html:^0.2.1"
 ```
 
 Cette commande installe le core et le lecteur comme dépendances. Une application
@@ -87,12 +87,12 @@ Une lecture stricte refuse les associations inverses incohérentes. La lecture
 permissive les signale ; elle ne désactive ni les contrôles de cycles ni les
 budgets. Les PDF chiffrés nécessitent une capacité d'authentification explicite,
 et le lecteur HTML destinataire doit appliquer les permissions vérifiées.
-Le [guide des politiques](https://github.com/PDFToolkit/pdf-to-html/blob/v0.2.0/docs/fr/policies.md)
+Le [guide des politiques](https://github.com/PDFToolkit/pdf-to-html/blob/v0.2.1/docs/fr/policies.md)
 explique ces objets et leurs responsabilités.
 
 ## Exporter une figure et fournir le moteur de rendu
 
-L'[exemple 02](https://github.com/PDFToolkit/pdf-to-html/blob/v0.2.0/examples/02-export-figure.php)
+L'[exemple 02](https://github.com/PDFToolkit/pdf-to-html/blob/v0.2.1/examples/02-export-figure.php)
 lit un PDF balisé, trouve une `Figure` et transmet son `ContentGroup` à
 `GraphicPdfExporter` :
 
@@ -106,6 +106,16 @@ la figure dépend, tout en retirant les peintures non sélectionnées. La CLI é
 `figure.pdf` et affiche sa page source, ses dimensions en points et son SHA-256.
 Le document de rendu ne contient pas les actions du catalogue, l'AcroForm ou les
 scripts du document source.
+
+Un XObject Form peut aussi être référencé directement par un `OBJR`, sans appel
+`Do` dans une page. La version **0.2.1** conserve alors le clipping de son `/BBox`
+dans les coordonnées locales du Form, y compris avec une matrice cisaillée, et
+son groupe de transparence `/Group`. Sa `/Matrix` n'est appliquée qu'une fois.
+Si vous fournissez un viewport explicite, il utilise les coordonnées de la page :
+il ne reçoit pas une seconde fois la matrice du Form. L'[oracle de pixels
+indépendant](https://github.com/PDFToolkit/pdf-to-html/blob/v0.2.1/tools/validate_graphics_context.py)
+compare les rendus Poppler pour vérifier le clipping et la transparence, au-delà
+de la seule présence de ces entrées dans le PDF exporté.
 
 Pour obtenir une image dans le HTML, fournissez un objet implémentant
 `GraphicsRasterizer::rasterize(RenderingDocument): ImageContent`. Cet objet reçoit
@@ -131,13 +141,13 @@ $result = $converter->convert(new FileBytes($pdfBytes), 'chart.pdf');
 logiques de la fenêtre de rendu indépendamment de la résolution du raster. Le profil
 visuel demandé échoue explicitement si le moteur manque ou refuse le groupe.
 L'application choisit son installation, son isolation et ses limites d'exécution.
-Voir le [guide des graphiques](https://github.com/PDFToolkit/pdf-to-html/blob/v0.2.0/docs/fr/graphics.md)
+Voir le [guide des graphiques](https://github.com/PDFToolkit/pdf-to-html/blob/v0.2.1/docs/fr/graphics.md)
 pour les programmes `GraphicProgram` conservés et les contrôles de pixels avec
 Poppler.
 
 ## Restaurer un groupe de champs sans exécuter les scripts PDF
 
-L'[exemple 03](https://github.com/PDFToolkit/pdf-to-html/blob/v0.2.0/examples/03-safe-form-reset.php)
+L'[exemple 03](https://github.com/PDFToolkit/pdf-to-html/blob/v0.2.1/examples/03-safe-form-reset.php)
 construit un modèle source objet et produit un formulaire HTML autonome :
 
 ```sh
@@ -196,8 +206,8 @@ ou élémentaire ne garantit pas son rendu natif par le navigateur ; le vocabula
 étendu produit un diagnostic et le package ne fournit ni polyfill de rendu ni
 évaluateur mathématique.
 
-Lire l'[architecture du module](https://github.com/PDFToolkit/pdf-to-html/blob/v0.2.0/docs/fr/architecture.md),
-sa [couverture](https://github.com/PDFToolkit/pdf-to-html/blob/v0.2.0/docs/fr/coverage.md)
-et son [guide de sécurité](https://github.com/PDFToolkit/pdf-to-html/blob/v0.2.0/docs/fr/security.md)
+Lire l'[architecture du module](https://github.com/PDFToolkit/pdf-to-html/blob/v0.2.1/docs/fr/architecture.md),
+sa [couverture](https://github.com/PDFToolkit/pdf-to-html/blob/v0.2.1/docs/fr/coverage.md)
+et son [guide de sécurité](https://github.com/PDFToolkit/pdf-to-html/blob/v0.2.1/docs/fr/security.md)
 pour distinguer modèle, fichier et runtime. Un HTML sémantique ne certifie pas
 automatiquement l'accessibilité ou PDF/UA.

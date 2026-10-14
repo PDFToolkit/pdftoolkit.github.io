@@ -19,7 +19,7 @@ source et déclarations de conformité ne sont pas des certificats de sécurité
 Le parseur OpenType indépendant possède ses propres
 [frontières de sécurité](https://github.com/PDFToolkit/opentype/blob/v0.1.0/SECURITY.fr.md).
 
-Le module PDF vers HTML **0.2.0**, avec le lecteur **0.2.3+**, conserve ses propres
+Le module PDF vers HTML **0.2.1**, avec le lecteur **0.2.3+**, conserve ses propres
 [contrôles de sécurité](https://pdftoolkit.github.io/fr/modules/to-html/security.html)
 et [politiques explicites](https://pdftoolkit.github.io/fr/modules/to-html/policies.html).
 Ses tests indépendants vérifient filtrage HTML/CSS/URL, associations et IDs,

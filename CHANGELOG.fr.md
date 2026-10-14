@@ -6,7 +6,7 @@
 
 ## [0.7.0] - 2026-10-15
 
-- Documenter PDF-to-HTML 0.2.0 et le lecteur PDF 0.2.3 depuis leurs tags publiés
+- Documenter PDF-to-HTML 0.2.1 et le lecteur PDF 0.2.3 depuis leurs tags publiés
   et commits exacts ; conserver les versions du core, des images, des fontes
   et d'OpenType qui n'ont pas changé.
 - Publier sept guides de dérivation HTML en anglais et en français, dont un
@@ -21,6 +21,8 @@
   public et les anciennes adresses.
 - Aligner commandes d'installation, liens API et instructions de contribution
   dans les deux langues sur les versions sélectionnées.
+- Expliquer le clipping, la transparence et les viewports en coordonnées page
+  des Form/OBJR racines, vérifiés par des programmes PDF et pixels Poppler indépendants.
 
 ## [0.5.1] - 2026-10-14
 

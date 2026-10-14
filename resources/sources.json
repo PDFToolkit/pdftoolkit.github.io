@@ -39,8 +39,8 @@
     {
       "name": "pdftoolkit/pdf-to-html",
       "repository": "https://github.com/PDFToolkit/pdf-to-html",
-      "version": "0.2.0",
-      "revision": "6652b4b6dfee9dba689174e038f660e91858c573",
+      "version": "0.2.1",
+      "revision": "522414cfe06cd071efce5843bdbdae59802a8388",
       "optional": true
     }
   ]

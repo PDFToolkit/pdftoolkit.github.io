@@ -6,7 +6,7 @@
 
 ## [0.7.0] - 2026-10-15
 
-- Document PDF-to-HTML 0.2.0 and PDF reader 0.2.3 from their published tags and
+- Document PDF-to-HTML 0.2.1 and PDF reader 0.2.3 from their published tags and
   exact commits; retain the unchanged core, image, font and OpenType releases.
 - Publish seven paired English/French HTML-derivation guides, including a
   clause-by-clause Deriving HTML 1.2 ledger, policy construction and graphics
@@ -18,6 +18,8 @@
   reference bytes, package provenance, every public download and legacy route.
 - Align installation commands, API links and contributor instructions in both
   languages with the selected releases.
+- Explain standalone Form/OBJR clipping, transparency and page-space viewports,
+  verified with independent PDF programs and Poppler pixels.
 
 ## [0.5.1] - 2026-10-14
 

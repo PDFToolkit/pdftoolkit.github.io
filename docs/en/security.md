@@ -18,7 +18,7 @@ individual source definitions and conformance declarations are not security
 certificates. OpenType's independent parser has its own
 [security boundaries](https://github.com/PDFToolkit/opentype/blob/v0.1.0/SECURITY.md).
 
-The **0.2.0** PDF-to-HTML module with reader **0.2.3+** retains its own
+The **0.2.1** PDF-to-HTML module with reader **0.2.3+** retains its own
 [security checks](https://pdftoolkit.github.io/modules/to-html/security.html)
 and [explicit policies](https://pdftoolkit.github.io/modules/to-html/policies.html).
 Independent tests verify HTML/CSS/URL filtering, associations and IDs,

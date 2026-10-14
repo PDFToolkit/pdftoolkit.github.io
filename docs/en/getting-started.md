@@ -162,8 +162,8 @@ The `tools/extract_spec.py` extractor retains the source and PDF locations. Usin
 
 ## Derive HTML
 
-For semantic HTML from tagged PDF, install `pdftoolkit/pdf-to-html:^0.2.0` and follow [tutorial 35](tutorials/35-derive-html.md). This optional conversion remains outside the core.
+For semantic HTML from tagged PDF, install `pdftoolkit/pdf-to-html:^0.2.1` and follow [tutorial 35](tutorials/35-derive-html.md). This optional conversion remains outside the core.
 
-Version 0.2.0 uses reader 0.2.3+ and requires 64-bit PHP 8.3+ with DOM and mbstring. Its [requirements ledger](https://pdftoolkit.github.io/modules/to-html/requirements.html) links rules to tests. [Profiles](https://pdftoolkit.github.io/modules/to-html/policies.html) distinguish semantic content, optional form actions and PDF scripts; none of those active operations is enabled by default. [Graphics rendering](https://pdftoolkit.github.io/modules/to-html/graphics.html) and authentication remain capabilities supplied explicitly by the application. Keep returned assets and read diagnostics before publication.
+Version 0.2.1 uses reader 0.2.3+ and requires 64-bit PHP 8.3+ with DOM and mbstring. Its [requirements ledger](https://pdftoolkit.github.io/modules/to-html/requirements.html) links rules to tests. [Profiles](https://pdftoolkit.github.io/modules/to-html/policies.html) distinguish semantic content, optional form actions and PDF scripts; none of those active operations is enabled by default. [Graphics rendering](https://pdftoolkit.github.io/modules/to-html/graphics.html) and authentication remain capabilities supplied explicitly by the application. Keep returned assets and read diagnostics before publication.
 
 [Packagist: pdftoolkit/pdf-to-html](https://packagist.org/packages/pdftoolkit/pdf-to-html).

@@ -1,7 +1,7 @@
 # Core et modules optionnels
 
 PDFToolkit sépare le modèle PDF des traitements de fichiers externes. Le core
-**0.7.1**, le lecteur PDF **0.2.3**, les modules images/fontes **0.1.8**, le modèle OpenType indépendant **0.1.0** et PDF vers HTML **0.2.0**
+**0.7.1**, le lecteur PDF **0.2.3**, les modules images/fontes **0.1.8**, le modèle OpenType indépendant **0.1.0** et PDF vers HTML **0.2.1**
 nécessitent PHP 8.3 ou supérieur et sont vérifiés sous PHP 8.3, 8.4 et 8.5.
 Le core **0.7** exige aussi PHP en 64 bits ; OpenType reste indépendant du core PDF.
 Le core conserve son nom Composer `roukmoute/pdf` après son transfert dans
@@ -211,10 +211,10 @@ politique de confiance d'une signature. Ces frontières sont détaillées dans l
 
 ## Dériver du HTML depuis un PDF balisé
 
-Le [module PDF vers HTML](https://pdftoolkit.github.io/fr/modules/to-html/index.html), optionnel, suit la spécification d’usage PDF Association **Deriving HTML from PDF 1.2** conservée. La version 0.2.0 installe transitivement le core 0.7.1+ et le lecteur 0.2.3+, sous PHP 8.3+ en 64 bits avec DOM et mbstring. Elle dérive le HTML sémantique de la structure logique, sans inférer de structure absente, faire d’OCR ni reproduire la mise en page. Couverture du modèle, de l’adaptateur de fichiers et intégration navigateur/runtime restent distinctes.
+Le [module PDF vers HTML](https://pdftoolkit.github.io/fr/modules/to-html/index.html), optionnel, suit la spécification d’usage PDF Association **Deriving HTML from PDF 1.2** conservée. La version 0.2.1 installe transitivement le core 0.7.1+ et le lecteur 0.2.3+, sous PHP 8.3+ en 64 bits avec DOM et mbstring. Elle dérive le HTML sémantique de la structure logique, sans inférer de structure absente, faire d’OCR ni reproduire la mise en page. Couverture du modèle, de l’adaptateur de fichiers et intégration navigateur/runtime restent distinctes.
 
 ```sh
-composer require "pdftoolkit/pdf-to-html:^0.2.0"
+composer require "pdftoolkit/pdf-to-html:^0.2.1"
 ```
 
 [Suivre le tutoriel exécutable](tutorials/35-derive-html.md) et examiner les diagnostics avant publication du HTML. Les associations ParentTree, identités des en-têtes de tableaux, destinations, correspondances Unicode, images inline et actions de formulaire disposent de tests et d'oracles indépendants. Le [registre des exigences](https://pdftoolkit.github.io/fr/modules/to-html/requirements.html) relie chaque règle aux décisions et preuves ; il ne certifie pas l'acceptation de tout PDF.

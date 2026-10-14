@@ -76,7 +76,7 @@ checking filenames, SHA-256 and output collisions. `derivedHtml` stays outside
 the bilingual documentation-page inventory and is previewed in an empty sandbox.
 Module guides/API are published under `/modules/to-html/`.
 
-The current selection documents PDF-to-HTML 0.2.0 and reader 0.2.3. The
+The current selection documents PDF-to-HTML 0.2.1 and reader 0.2.3. The
 [requirements ledger](https://pdftoolkit.github.io/modules/to-html/requirements.html),
 [policies](https://pdftoolkit.github.io/modules/to-html/policies.html) and
 [graphics](https://pdftoolkit.github.io/modules/to-html/graphics.html) guides

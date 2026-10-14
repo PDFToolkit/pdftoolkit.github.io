@@ -77,7 +77,7 @@ CLI en contrôlant noms, SHA-256 et collisions de sortie. `derivedHtml` reste ho
 de l'inventaire des pages documentaires bilingues et apparaît dans un sandbox
 sans permission. Les guides/API du module sont sous `/modules/to-html/`.
 
-La sélection actuelle documente PDF vers HTML 0.2.0 et le lecteur 0.2.3. Le
+La sélection actuelle documente PDF vers HTML 0.2.1 et le lecteur 0.2.3. Le
 [registre des exigences](https://pdftoolkit.github.io/fr/modules/to-html/requirements.html),
 les [politiques](https://pdftoolkit.github.io/fr/modules/to-html/policies.html) et
 les [graphiques](https://pdftoolkit.github.io/fr/modules/to-html/graphics.html)
