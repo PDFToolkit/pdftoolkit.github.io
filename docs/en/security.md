@@ -7,7 +7,7 @@ TrueType and PNG/JPEG converter checks are now maintained in the optional
 [pdf-images](https://github.com/PDFToolkit/pdf-images) modules. PDF objects
 and their invariants remain in the core. The
 [pdf-reader](https://github.com/PDFToolkit/pdf-reader) module has its own
-[security documentation](https://github.com/PDFToolkit/pdf-reader/blob/v0.1.5/docs/security.md)
+[security documentation](https://github.com/PDFToolkit/pdf-reader/blob/v0.1.6/docs/security.md)
 for reading external files; this generator review does not replace it.
 
 ## Results and protections
@@ -62,7 +62,7 @@ The download filename is fixed here. Request data must not be interpolated direc
 
 Numeric checks prevent identified overflows; operand validation avoids unnecessary revisits. They do not replace service quotas. A shared direct graph can represent very large output when expanded into PDF syntax. A filter chain can also greatly increase byte counts. An input-size limit alone therefore does not bound all serialization.
 
-[SecuritySerializationTest](https://github.com/PDFToolkit/pdf/blob/v0.5.4/tests/SecuritySerializationTest.php), [SecurityLimitsTest](https://github.com/PDFToolkit/pdf/blob/v0.5.4/tests/SecurityLimitsTest.php) and [FileOutputTest](https://github.com/PDFToolkit/pdf/blob/v0.5.4/tests/FileOutputTest.php) cover injection payloads, all 256 byte values, inline terminators, numeric bounds, shared graphs and output. [ImageObjectsTest](https://github.com/PDFToolkit/pdf/blob/v0.5.4/tests/ImageObjectsTest.php), [CrossReferenceSectionTest](https://github.com/PDFToolkit/pdf/blob/v0.5.4/tests/CrossReferenceSectionTest.php) and [IncrementalUpdateTest](https://github.com/PDFToolkit/pdf/blob/v0.5.4/tests/IncrementalUpdateTest.php) cover core PDF invariants. Image-decoding regressions are in the module's [ImageImportTest](https://github.com/PDFToolkit/pdf-images/blob/v0.1.5/tests/ImageImportTest.php). TrueType validation remains in [font module tests](https://github.com/PDFToolkit/pdf-fonts/tree/v0.1.5/tests). Independent pypdf reads confirmed binary vectors and reproduction of the inline ambiguity. qpdf checks every example in CI.
+[SecuritySerializationTest](https://github.com/PDFToolkit/pdf/blob/v0.5.4/tests/SecuritySerializationTest.php), [SecurityLimitsTest](https://github.com/PDFToolkit/pdf/blob/v0.5.4/tests/SecurityLimitsTest.php) and [FileOutputTest](https://github.com/PDFToolkit/pdf/blob/v0.5.4/tests/FileOutputTest.php) cover injection payloads, all 256 byte values, inline terminators, numeric bounds, shared graphs and output. [ImageObjectsTest](https://github.com/PDFToolkit/pdf/blob/v0.5.4/tests/ImageObjectsTest.php), [CrossReferenceSectionTest](https://github.com/PDFToolkit/pdf/blob/v0.5.4/tests/CrossReferenceSectionTest.php) and [IncrementalUpdateTest](https://github.com/PDFToolkit/pdf/blob/v0.5.4/tests/IncrementalUpdateTest.php) cover core PDF invariants. Image-decoding regressions are in the module's [ImageImportTest](https://github.com/PDFToolkit/pdf-images/blob/v0.1.6/tests/ImageImportTest.php). TrueType validation remains in [font module tests](https://github.com/PDFToolkit/pdf-fonts/tree/v0.1.6/tests). Independent pypdf reads confirmed binary vectors and reproduction of the inline ambiguity. qpdf checks every example in CI.
 
 This review is not an audit of PDF readers, PHP, the HTTP server or a future layout library. Generated definition files express standard constraints; they are not a general document-sanitization policy.
 

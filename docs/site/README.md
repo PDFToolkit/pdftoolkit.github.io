@@ -171,3 +171,23 @@ le tutoriel ou la recette dans ce dépôt et déclarer sa route dans
 page correspondante. Pour un exemple de module, déclarer son package, ses
 chemins source/entrée et son nombre attendu de pages dans `EXTERNAL_EXAMPLES`,
 puis conserver sa sortie console et ses aperçus pendant la construction.
+
+## Langues de la documentation
+
+L’anglais est publié à la racine ; les pages françaises sont sous `/fr/`. Les
+textes anglais communs sont dans `docs/en/` ; les guides originaux de `docs/`
+sont en français. Les packages conservent leurs guides anglais avec leur code
+et les versions françaises sous `docs/fr/` ou dans `README.fr.md`,
+`SECURITY.fr.md` et `CHANGELOG.fr.md`.
+
+Ajouter ou modifier les deux traductions ensemble, avec la même hiérarchie de
+ titres. `tools/localization.py` contient les traductions explicites de
+l’interface et les routes de langue. Le générateur associe les identifiants des
+ titres pour le sélecteur, conserve les anciens liens de section français et
+consigne le chemin et le hash de la véritable source traduite. Les exemples
+PDF et références originales sont partagés sans modification.
+
+Exécuter `node tests/site_locales.cjs` et le contrôle complet du site. Ils
+vérifient le sélecteur, les filtres de recherche, les ancres de section, les
+messages de copie, les deux inventaires API, les variantes réciproques et les
+adresses de compatibilité.

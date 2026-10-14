@@ -1,6 +1,61 @@
 "use strict";
 
 (() => {
+    const language = document.documentElement.lang === "fr" ? "fr" : "en";
+    const messages = language === "fr" ? {
+        copy: "Copier", copied: "Copié", copyLabel: "Copier ce bloc de code",
+        copySuccess: "Code copié dans le presse-papiers.",
+        copyFailure: "La copie n’est pas disponible. Sélectionnez le code pour le copier.",
+        explore: "Explorez les composants ou recherchez un nom, un espace de noms ou une notion.",
+        loading: "Chargement de la référence…", optional: "Optionnel",
+        empty: "Aucun composant ne correspond à cette recherche. Essayez un nom PDF comme Catalog, Font ou Stream.",
+        failure: "La recherche n’a pas pu être chargée. Les liens ci-dessous restent disponibles.",
+        more: " Les 40 premiers sont affichés ; précisez votre recherche pour réduire la liste.",
+        count: (count) => `${count} composant${count === 1 ? "" : "s"} trouvé${count === 1 ? "" : "s"}.`,
+    } : {
+        copy: "Copy", copied: "Copied", copyLabel: "Copy this code block",
+        copySuccess: "Code copied to the clipboard.",
+        copyFailure: "Copying is unavailable. Select the code to copy it.",
+        explore: "Explore components or search for a name, namespace or concept.",
+        loading: "Loading the reference…", optional: "Optional",
+        empty: "No components match this search. Try a PDF name such as Catalog, Font or Stream.",
+        failure: "Search could not be loaded. The links below remain available.",
+        more: " Showing the first 40; refine your search to narrow the list.",
+        count: (count) => `${count} component${count === 1 ? "" : "s"} found.`,
+    };
+    const pageRoot = new URL(document.querySelector("main")?.dataset.root || "./", document.baseURI);
+    if (pageRoot.origin !== window.location.origin || pageRoot.username || pageRoot.password) return;
+    const redirect = document.querySelector("main[data-redirect-to]");
+    if (redirect) {
+        const destination = new URL(redirect.dataset.redirectTo, document.baseURI);
+        if (destination.origin === pageRoot.origin && destination.pathname.startsWith(pageRoot.pathname)
+            && !destination.username && !destination.password
+            && ["http:", "https:", "file:"].includes(destination.protocol)) {
+            destination.search = window.location.search;
+            destination.hash = window.location.hash;
+            document.getElementById("destination")?.setAttribute("href", destination.href);
+            window.location.replace(destination.href);
+        }
+        return;
+    }
+    const languageLinks = Array.from(document.querySelectorAll("a[data-language-link]"));
+    const updateLanguageLinks = () => {
+        for (const link of languageLinks) {
+            try {
+                const destination = new URL(link.getAttribute("href"), document.baseURI);
+                if (destination.origin !== pageRoot.origin || !destination.pathname.startsWith(pageRoot.pathname)
+                    || destination.username || destination.password) continue;
+                const anchors = JSON.parse(link.dataset.anchorMap || "{}");
+                const current = decodeURIComponent(window.location.hash.slice(1));
+                const mapped = Object.hasOwn(anchors, current) && typeof anchors[current] === "string" ? anchors[current] : current;
+                destination.search = window.location.search;
+                destination.hash = mapped ? encodeURIComponent(mapped) : "";
+                link.href = destination.href;
+            } catch { /* The static language link remains available. */ }
+        }
+    };
+    updateLanguageLinks();
+    window.addEventListener("hashchange", updateLanguageLinks);
     const menuButton = document.getElementById("menu-button");
     const navigation = document.getElementById("site-nav");
 
@@ -37,8 +92,8 @@
             const button = document.createElement("button");
             button.type = "button";
             button.className = "copy-code";
-            button.textContent = "Copier";
-            button.setAttribute("aria-label", "Copier ce bloc de code");
+            button.textContent = messages.copy;
+            button.setAttribute("aria-label", messages.copyLabel);
             const status = document.createElement("span");
             status.className = "copy-status visually-hidden";
             status.setAttribute("role", "status");
@@ -51,15 +106,15 @@
                 clearTimeout(resetTimer);
                 try {
                     await navigator.clipboard.writeText(code.textContent);
-                    button.textContent = "Copié";
+                    button.textContent = messages.copied;
                     status.classList.add("visually-hidden");
-                    status.textContent = "Code copié dans le presse-papiers.";
+                    status.textContent = messages.copySuccess;
                 } catch {
-                    button.textContent = "Copier";
+                    button.textContent = messages.copy;
                     status.classList.remove("visually-hidden");
-                    status.textContent = "La copie n’est pas disponible. Sélectionnez le code pour le copier.";
+                    status.textContent = messages.copyFailure;
                 }
-                resetTimer = setTimeout(() => { button.textContent = "Copier"; }, 2200);
+                resetTimer = setTimeout(() => { button.textContent = messages.copy; }, 2200);
             });
         });
     }
@@ -129,6 +184,7 @@
         if (selectedKind) url.searchParams.set("kind", selectedKind);
         else url.searchParams.delete("kind");
         window.history.replaceState(null, "", url);
+        updateLanguageLinks();
     };
 
     const makeCard = (record) => {
@@ -147,7 +203,7 @@
         if (record.optional) {
             const packageBadge = document.createElement("span");
             packageBadge.className = "badge";
-            packageBadge.textContent = `Optionnel · ${record.packageName}`;
+            packageBadge.textContent = `${messages.optional} · ${record.packageName}`;
             card.append(packageBadge);
         }
         if (record.description) {
@@ -166,10 +222,10 @@
             results.replaceChildren();
             results.hidden = true;
             staticList.hidden = false;
-            status.textContent = "Explorez les composants ou recherchez un nom, un espace de noms ou une notion.";
+            status.textContent = messages.explore;
             return;
         }
-        status.textContent = "Chargement de la référence…";
+        status.textContent = messages.loading;
         try {
             const records = await loadIndex();
             if (currentUpdate !== updateNumber) return;
@@ -180,30 +236,30 @@
                 const leftName = normalize(left.shortName);
                 const rightName = normalize(right.shortName);
                 const score = (name) => name === query ? 0 : name.startsWith(query) ? 1 : 2;
-                return score(leftName) - score(rightName) || left.title.localeCompare(right.title, "fr");
+                return score(leftName) - score(rightName) || left.title.localeCompare(right.title, language);
             });
             const fragment = document.createDocumentFragment();
             matches.slice(0, 40).forEach((record) => fragment.append(makeCard(record)));
             if (!matches.length) {
                 const empty = document.createElement("p");
                 empty.className = "empty-state";
-                empty.textContent = "Aucun composant ne correspond à cette recherche. Essayez un nom PDF comme Catalog, Font ou Stream.";
+                empty.textContent = messages.empty;
                 fragment.append(empty);
             }
             results.replaceChildren(fragment);
             results.hidden = false;
             staticList.hidden = true;
-            status.textContent = `${matches.length} composant${matches.length === 1 ? "" : "s"} trouvé${matches.length === 1 ? "" : "s"}.`
-                + (matches.length > 40 ? " Les 40 premiers sont affichés ; précisez votre recherche pour réduire la liste." : "");
+            status.textContent = messages.count(matches.length) + (matches.length > 40 ? messages.more : "");
         } catch {
             if (currentUpdate !== updateNumber) return;
             results.hidden = true;
             staticList.hidden = false;
-            status.textContent = "La recherche n’a pas pu être chargée. Les liens ci-dessous restent disponibles.";
+            status.textContent = messages.failure;
         }
     };
 
     const readAddress = () => {
+        updateLanguageLinks();
         const parameters = new URL(window.location.href).searchParams;
         input.value = (parameters.get("q") || "").slice(0, 200);
         if (kind) {

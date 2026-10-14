@@ -22,3 +22,8 @@
   after the exact candidate's build succeeds and the deployed site is verified.
   Do not change published tags. A package source-pin update is a documentation
   release; unchanged PHP packages do not need another release for it.
+
+- Publish English by default and maintain complete French counterparts for all
+  public guides, tutorials, recipes, package documentation and interface strings.
+  Update both languages together. Preserve API/PDF identifiers and original
+  normative quotations. Verify reciprocal language links and heading mappings.

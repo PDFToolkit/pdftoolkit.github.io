@@ -24,7 +24,7 @@ text is a sequence of operators.
 The core and modules are available on Packagist. From your project:
 
 ```sh
-composer require "roukmoute/pdf:^0.5.4"
+composer require "roukmoute/pdf:^0.5.5"
 ```
 
 Lessons 09, 10 and 12 use `pdftoolkit/pdf-fonts`, `pdftoolkit/pdf-images` and
@@ -86,7 +86,7 @@ PDF, all three pages and the objects read.
 | [09. TrueType font and Unicode](09-embedded-font.md) | Embedded program, CIDs, widths and ToUnicode mapping. | [embedded-font.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/embedded-font.php) |
 | [10. JPEG and PNG images](10-image-files.md) | JPEG inspection, PNG decoding, samples and transparency. | [image-files.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/image-files.php) |
 | [11. Incremental revisions](11-incremental-update.md) | Preserved bytes, replacements and xref chaining. | [incremental-update.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/incremental-update.php) |
-| [12. Read an external PDF](12-reading-pages.md) | Verified tree, inherited values and content streams inspected then decoded. | [reader module's pages.php](https://github.com/PDFToolkit/pdf-reader/blob/v0.1.5/examples/pages.php) |
+| [12. Read an external PDF](12-reading-pages.md) | Verified tree, inherited values and content streams inspected then decoded. | [reader module's pages.php](https://github.com/PDFToolkit/pdf-reader/blob/v0.1.6/examples/pages.php) |
 | [13. Adobe extensions and Bates numbering](13-adobe-extensions.md) | Extension declarations, artifact properties and Bates footer. | [adobe-extensions.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/adobe-extensions.php) |
 | [14. AcroForm fields](14-acroform-fields.md) | Tree, values, widgets and appearances. | [acroform-fields.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/acroform-fields.php) |
 | [15. Logical structure](15-tagged-structure.md) | Marked content, ParentTree, IDTree and annotations. | [tagged-structure.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/tagged-structure.php) |

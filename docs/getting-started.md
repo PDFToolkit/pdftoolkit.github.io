@@ -17,7 +17,7 @@ Les définitions se fondent sur les documents Adobe/ISO `PDF32000_2008.pdf` et `
 Le core **0.5** nécessite PHP 8.3 ou supérieur et les extensions `ctype`, `iconv` et `zlib`. Les backends AES et CMS sont optionnels et nécessitent `openssl`. Le package [`roukmoute/pdf`](https://packagist.org/packages/roukmoute/pdf) est disponible sur Packagist. Depuis le projet consommateur :
 
 ```sh
-composer require "roukmoute/pdf:^0.5.4"
+composer require "roukmoute/pdf:^0.5.5"
 ```
 
 Les modifications d'API figurent dans le [changelog](../CHANGELOG.md) et le
@@ -35,7 +35,7 @@ projet consommateur pour fixer les versions installées.
 Depuis la version **0.1.3**, les modules sont compatibles avec les séries 0.2, 0.3, 0.4 et 0.5 du core et PHP 8.3 ou supérieur. Les trois packages sont disponibles sur Packagist : [lecteur](https://packagist.org/packages/pdftoolkit/pdf-reader), [images](https://packagist.org/packages/pdftoolkit/pdf-images) et [fontes](https://packagist.org/packages/pdftoolkit/pdf-fonts). Par exemple, pour importer des fichiers image avec le core 0.5 :
 
 ```sh
-composer require "roukmoute/pdf:^0.5.4" "pdftoolkit/pdf-images:^0.1.5"
+composer require "roukmoute/pdf:^0.5.5" "pdftoolkit/pdf-images:^0.1.6"
 ```
 
 Le module installe le core avec sa contrainte stable. Le [guide des packages](packages.md) explique leur frontière, les installations et le fonctionnement du lecteur. Conserver le `composer.lock` de l'application pour fixer les versions et les commits utilisés.

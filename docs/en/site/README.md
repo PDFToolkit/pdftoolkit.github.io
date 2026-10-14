@@ -169,3 +169,20 @@ Verification fails if a core script has no corresponding page. For a module
 example, declare its package, source/input paths and expected page count in
 `EXTERNAL_EXAMPLES`, then retain its console output and previews during
 the build.
+
+## Documentation languages
+
+English is published at the root; French pages are under `/fr/`. Shared English
+Markdown lives in `docs/en/`; the original `docs/` guides are French. Packages
+keep English guides alongside their code and French counterparts in `docs/fr/`
+or `README.fr.md`, `SECURITY.fr.md` and `CHANGELOG.fr.md`.
+
+Add or update both translations together, keeping the same heading hierarchy.
+`tools/localization.py` owns explicit interface translations and locale routes.
+The builder pairs heading IDs for the language selector, preserves old French
+section links, and records the actual translated source path and hash. PDF
+examples and original references are shared unchanged by both languages.
+
+Run `node tests/site_locales.cjs` and the full site checker. They verify the
+language switch, search filters, section anchors, clipboard messages, each
+locale's API inventory, reciprocal alternates and compatibility routes.

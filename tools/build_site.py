@@ -12,9 +12,10 @@ import posixpath
 import re
 import shutil
 import subprocess
-from urllib.parse import quote, urlsplit
+from urllib.parse import quote, unquote, urlsplit
 
 import markdown
+from localization import LANGUAGES, ENGLISH_ROUTES, canonical_source, localized_source, route_for, translate, translate_interface
 
 
 REPOSITORY = 'https://github.com/PDFToolkit/pdf'
@@ -164,8 +165,12 @@ class Site:
         self.pdf_previews = pdf_previews
         self.pdf_pages = {}
         self.base = '/' + base.strip('/') + '/' if base.strip('/') else '/'
+        self.language = 'en'
+        self.translations = {}
+        self.anchor_maps = {}
         self.docs_revision = docs_revision
         self.stylesheet_revision = hashlib.sha256((content_root / 'docs/site/assets/site.css').read_bytes()).hexdigest()[:12]
+        self.script_revision = hashlib.sha256((content_root / 'docs/site/assets/site.js').read_bytes()).hexdigest()[:12]
         self.packages = load_sources(sources)
         self.revision = self.packages[CORE_PACKAGE]['revision']
         self.release = self.packages[CORE_PACKAGE]['version']
@@ -246,6 +251,7 @@ class Site:
         self.markdown_routes = {(owner, source): route for owner, source, route, _, _ in self.pages}
         self.markdown_routes.update({(CORE_PACKAGE, source): route for owner, source, route, _, _ in self.pages if owner == 'documentation'})
         self.markdown_routes[(CORE_PACKAGE, 'README.md')] = 'guides/demarrer.html'
+        ENGLISH_ROUTES.update({f'tutorials/{slug}.html': f'tutorials/{source}.html' for source, slug, _, _, _ in LESSONS})
         resources = root / 'resources' / 'iso32000-1'
         self.metadata = json.loads((resources / 'metadata.json').read_text(encoding='utf-8'))
         self.tables = {item['id']: item for item in json.loads((resources / 'dictionaries.json').read_text(encoding='utf-8'))}
@@ -281,8 +287,31 @@ class Site:
                 self.children[item['parent']].append(item)
         self.written = []
 
-    def url(self, route: str) -> str:
-        return self.base + route
+    def url(self, route: str, language: str | None = None) -> str:
+        return self.base + route_for(route, language or self.language)
+
+    def prepare_anchors(self) -> None:
+        """Pair translated headings in order, failing on incomplete structure."""
+        def headings(text):
+            renderer = markdown.Markdown(extensions=['tables', 'fenced_code', 'toc', 'sane_lists'])
+            renderer.convert(text)
+            def flatten(tokens):
+                return [value for token in tokens for value in [token, *flatten(token.get('children', []))]]
+            return flatten(renderer.toc_tokens)
+        for owner, source, route, _, _ in self.pages:
+            root = self.content_root if owner == 'documentation' else self.package_roots[owner]
+            tokens = {language: headings((root / localized_source(owner, source, language)).read_text(encoding='utf-8')) for language in LANGUAGES}
+            if [token['level'] for token in tokens['en']] != [token['level'] for token in tokens['fr']]:
+                raise ValueError('Translated heading structure differs: ' + owner + ':' + source)
+            self.anchor_maps[route] = {
+                'en': {en['id']: fr['id'] for en, fr in zip(tokens['en'], tokens['fr']) if en['level'] > 1},
+                'fr': {fr['id']: en['id'] for en, fr in zip(tokens['en'], tokens['fr']) if fr['level'] > 1},
+            }
+
+    def fragment_for(self, route: str, fragment: str, language: str | None = None) -> str:
+        language = language or self.language
+        other = 'fr' if language == 'en' else 'en'
+        return self.anchor_maps.get(route, {}).get(other, {}).get(unquote(fragment), fragment)
 
     def source_url(self, source: str, line: int | None = None, owner: dict | None = None) -> str:
         package = owner if owner is not None else self.packages[CORE_PACKAGE]
@@ -306,6 +335,7 @@ class Site:
         return ''.join(parts) + e(value[previous:])
 
     def write(self, route: str, html: str) -> None:
+        route = route_for(route, self.language)
         file = self.output / route
         file.parent.mkdir(parents=True, exist_ok=True)
         file.write_text(html, encoding='utf-8', newline='\n')
@@ -329,6 +359,12 @@ class Site:
         return html
 
     def page(self, route: str, title: str, category: str, body: str, toc: list[dict] | None = None, description: str = '') -> None:
+        self.translations[route] = {language: route_for(route, language) for language in LANGUAGES}
+        alternates = ''.join(f'<link rel="alternate" hreflang="{language}" href="{e(SITE_ORIGIN + self.base + route_for(route, language))}">' for language in LANGUAGES)
+        alternates += f'<link rel="alternate" hreflang="x-default" href="{e(SITE_ORIGIN + self.base + route_for(route, "en"))}">'
+        other = 'fr' if self.language == 'en' else 'en'
+        anchor_map = self.anchor_maps.get(route, {}).get(self.language, {})
+        switch = f'<nav class="language-switch" aria-label="Language / Langue"><span lang="{self.language}" aria-current="true">{"English" if self.language == "en" else "Français"}</span><a lang="{other}" hreflang="{other}" href="{e(self.base + route_for(route, other))}" data-language-link data-anchor-map="{e(json.dumps(anchor_map, ensure_ascii=False, separators=(",", ":")))}">{"Français" if other == "fr" else "English"}</a></nav>'
         toc_html = ''
         if toc:
             links = ''.join(f'<li><a href="#{e(item["id"])}">{e(item["name"])}</a></li>' for item in toc if item['level'] == 2)
@@ -336,26 +372,30 @@ class Site:
                 toc_html = f'<aside class="toc" aria-label="Sur cette page"><h2>Sur cette page</h2><ul>{links}</ul></aside>'
         header = '' if route == 'index.html' else f'<header class="page-header"><p class="eyebrow">{e(category)}</p><h1>{e(title)}</h1></header>'
         html = f'''<!doctype html>
-<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="{self.language}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{e(title)} · PDFToolkit</title><meta name="description" content="{e(description or title + ' — modèle objet PDF pour PHP 8.3+.')}">
 <link rel="canonical" href="{e(SITE_ORIGIN + self.url(route))}">
+{alternates}
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; frame-src 'self'; object-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'">
 <link rel="icon" href="{e(self.url('assets/favicon.svg'))}" type="image/svg+xml">
-<link rel="stylesheet" href="{e(self.url('assets/site.css') + '?v=' + self.stylesheet_revision)}"><script defer src="{e(self.url('assets/site.js'))}"></script></head>
+<link rel="stylesheet" href="{e(self.url('assets/site.css') + '?v=' + self.stylesheet_revision)}"><script defer src="{e(self.url('assets/site.js') + '?v=' + self.script_revision)}"></script></head>
 <body><a class="skip-link" href="#main">Aller au contenu</a>
 <header class="site-header"><a class="brand" href="{e(self.url('index.html'))}"><span class="brand-mark" aria-hidden="true">◈</span> PDFToolkit <small>objet par objet</small></a>
 <nav class="top-nav" aria-label="Navigation principale"><a href="{e(self.url('guides/modules.html'))}">Packages</a><a href="{e(self.url('tutorials/index.html'))}">Tutoriels</a><a href="{e(self.url('reference/index.html'))}">Référence</a><a href="{DOCUMENTATION_REPOSITORY}">GitHub ↗</a></nav>
+{switch}
 <button id="menu-button" class="menu-button" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button></header>
 <div class="site-shell"><aside id="site-nav" class="sidebar" aria-label="Documentation">{self.sidebar(route)}<p class="sidebar-version">Core <strong>{e(self.release)}</strong> · modules {e(self.module_versions)}<br>PHP 8.3+ · PDF 1.7</p></aside>
 <main id="main" data-root="{e(self.base)}">{header}<div class="content-grid"><article class="prose">{body}</article>{toc_html}</div>
 <footer class="site-footer"><span>PDFToolkit · ISO 32000-1:2008 · Adobe ExtensionLevel 3 · MIT</span><span><a href="{REPOSITORY}/releases/tag/v{e(self.release)}">Core {e(self.release)}</a> · <a href="{DOCUMENTATION_REPOSITORY}/commit/{e(self.docs_revision)}">Documentation {e(self.docs_revision[:7])}</a></span></footer></main></div></body></html>'''
-        self.write(route, html)
+        self.write(route, translate_interface(html) if self.language == 'en' else html)
 
-    def package_link(self, package_name: str, target: str, fragment: str = '', query: str = '') -> str | None:
+    def package_link(self, package_name: str, target: str, fragment: str = '', query: str = '', language: str | None = None) -> str | None:
         suffix = ('?' + query if query else '') + ('#' + fragment if fragment else '')
-        route = self.markdown_routes.get((package_name, target))
+        canonical = canonical_source(package_name, target)
+        route = self.markdown_routes.get((package_name, canonical))
         if route:
-            return self.url(route) + suffix
+            fragment = self.fragment_for(route, fragment)
+            return self.url(route) + ('?' + query if query else '') + ('#' + fragment if fragment else '')
         item = self.by_package_source.get((package_name, target))
         if item and not fragment:
             return self.url(self.routes[item['name']]) + suffix
@@ -386,7 +426,11 @@ class Site:
             match = re.fullmatch(r'/PDFToolkit/(pdf|pdf-fonts|pdf-images|pdf-reader)/(?:blob|tree)/[^/]+/(.+)', parsed.path)
             if match:
                 package_name = CORE_PACKAGE if match.group(1) == 'pdf' else 'pdftoolkit/' + match.group(1)
-                result = self.package_link(package_name, match.group(2), parsed.fragment, parsed.query)
+                target = match.group(2)
+                language = 'fr' if target.endswith('.fr.md') or target.startswith('docs/fr/') else self.language
+                if owner == package_name and canonical_source(owner, source) == canonical_source(owner, target) and source != target:
+                    language = 'fr' if self.language == 'en' else 'en'
+                result = self.package_link(package_name, target, parsed.fragment, parsed.query, language)
                 if result:
                     return result
                 raise ValueError(f'Unresolved package source link: {source} -> {href}')
@@ -397,7 +441,10 @@ class Site:
                 return self.url(route) + ('?' + parsed.query if parsed.query else '')
         if parsed.netloc == 'pdftoolkit.github.io':
             route = parsed.path.removeprefix('/pdf/').lstrip('/') if parsed.path.startswith('/pdf/') else parsed.path.lstrip('/')
-            return self.url(route or 'index.html') + ('?' + parsed.query if parsed.query else '') + ('#' + parsed.fragment if parsed.fragment else '')
+            route = route.removeprefix('fr/')
+            route = next((old for old, new in ENGLISH_ROUTES.items() if new == route), route) or 'index.html'
+            fragment = self.fragment_for(route, parsed.fragment)
+            return self.url(route) + ('?' + parsed.query if parsed.query else '') + ('#' + fragment if fragment else '')
         if parsed.scheme or parsed.netloc or not parsed.path:
             return href
         if parsed.path.startswith('/'):
@@ -406,12 +453,17 @@ class Site:
         if target.startswith('../') or target == '..' or target.startswith('/'):
             raise ValueError(f'Markdown link escapes its source package: {source} -> {href}')
         suffix = ('?' + parsed.query if parsed.query else '') + ('#' + parsed.fragment if parsed.fragment else '')
-        route = self.markdown_routes.get((owner, target))
+        canonical = canonical_source(owner, target)
+        route = self.markdown_routes.get((owner, canonical))
         if route:
-            return self.url(route) + suffix
+            language = self.language
+            if canonical_source(owner, source) == canonical and source != target:
+                language = 'fr' if self.language == 'en' else 'en'
+            fragment = self.fragment_for(route, parsed.fragment, language)
+            return self.url(route, language) + ('?' + parsed.query if parsed.query else '') + ('#' + fragment if fragment else '')
         if owner == 'documentation':
-            if target in {'README.md', 'SECURITY.md', 'CHANGELOG.md'}:
-                return self.package_link(CORE_PACKAGE, target, parsed.fragment, parsed.query)
+            if canonical in {'README.md', 'SECURITY.md', 'CHANGELOG.md'}:
+                return self.package_link(CORE_PACKAGE, canonical, parsed.fragment, parsed.query)
             if target.startswith('docs/tutorials/previews/'):
                 return self.url('assets/previews/' + Path(target).name) + suffix
             if (self.content_root / target).is_file():
@@ -429,6 +481,16 @@ class Site:
         root = self.content_root if owner == 'documentation' else self.package_roots[owner]
         html = renderer.convert((root / source).read_text(encoding='utf-8'))
         html = re.sub(r'<h1\b[^>]*>.*?</h1>\s*', '', html, count=1, flags=re.S)
+        # Keep published French section links usable on English routes as well.
+        logical = self.markdown_routes.get((owner, canonical_source(owner, source)))
+        if self.language == 'en' and logical:
+            existing_ids = set(re.findall(r'\bid="([^"]+)"', html))
+            for french, english in self.anchor_maps.get(logical, {}).get('fr', {}).items():
+                if french != english and french not in existing_ids:
+                    pattern = r'(<h[2-6]\b[^>]*\bid="' + re.escape(english) + r'"[^>]*>)'
+                    html, count = re.subn(pattern, lambda match: f'<span class="legacy-anchor" id="{e(french)}" aria-hidden="true"></span>' + match.group(0), html, count=1)
+                    if count:
+                        existing_ids.add(french)
         def rewrite(match):
             from html import unescape
             value = self.rewrite_link(source, unescape(match.group(2)), owner)
@@ -530,11 +592,12 @@ class Site:
         for item in components:
             description = item['description'].split('\n')[0][:200]
             package = f'<span class="badge">Optionnel · {e(item["package"])}</span>' if item['optional'] else ''
-            html += f'<a class="component-card" href="{e(self.url(self.routes[item["name"]]))}"><span class="badge">{e(item["kind"])}</span>{package}<h3>{e(item["shortName"])}</h3><code>{e(item["namespace"])}</code><p>{e(description)}</p></a>'
+            html += f'<a class="component-card" href="{e(self.url(self.routes[item["name"]]))}"><span class="badge">{e(item["kind"])}</span>{package}<h3>{e(item["shortName"])}</h3><code>{e(item["namespace"])}</code><p lang="en">{e(description)}</p></a>'
         return html + '</div>'
 
     def search(self) -> str:
-        return f'''<div class="search-field"><label for="component-search">Rechercher un composant<input id="component-search" type="search" placeholder="NameType, /MediaBox, FlateDecode…" data-search-index="{e(self.url('assets/search-index.json'))}" autocomplete="off"></label><label for="component-kind">Type de composant<select id="component-kind"><option value="">Tous les types</option><option value="class">Classes</option><option value="interface">Interfaces</option><option value="enum">Enums</option><option value="trait">Traits</option></select></label></div><p id="search-status" class="search-hint" role="status" aria-live="polite">{number(len(self.components))} composants dans le code, dont les définitions et entrées normalisées.</p><div id="search-results" class="search-results" hidden></div>'''
+        index = 'assets/search-index.fr.json' if self.language == 'fr' else 'assets/search-index.json'
+        return f'''<div class="search-field"><label for="component-search">Rechercher un composant<input id="component-search" type="search" placeholder="NameType, /MediaBox, FlateDecode…" data-search-index="{e(self.url(index))}" autocomplete="off"></label><label for="component-kind">Type de composant<select id="component-kind"><option value="">Tous les types</option><option value="class">Classes</option><option value="interface">Interfaces</option><option value="enum">Enums</option><option value="trait">Traits</option></select></label></div><p id="search-status" class="search-hint" role="status" aria-live="polite">{number(len(self.components))} composants dans le code, dont les définitions et entrées normalisées.</p><div id="search-results" class="search-results" hidden></div>'''
 
     def package_route(self, name: str) -> str:
         slug = 'core' if name == CORE_PACKAGE else MODULES[name][0]
@@ -631,7 +694,7 @@ class Site:
                     constraints.append('Éléments directs dans le tableau')
                 if entry['fixed_name']:
                     constraints.append('Nom fixe /' + entry['fixed_name'])
-                html += f'<p><span class="badge">/{e(entry["name"])}</span> <span class="badge">{e(entry["type"])}</span></p><p>{e(entry["description"])}</p><p><strong>Qualificateur :</strong> {e(entry["qualifier"] or "Non précisé")}</p>'
+                html += f'<p><span class="badge">/{e(entry["name"])}</span> <span class="badge">{e(entry["type"])}</span></p><p lang="en">{e(entry["description"])}</p><p><strong>Qualificateur :</strong> {e(entry["qualifier"] or "Non précisé")}</p>'
                 if constraints:
                     html += '<ul>' + ''.join(f'<li>{e(value)}</li>' for value in constraints) + '</ul>'
         else:
@@ -694,7 +757,7 @@ class Site:
         html = f'<section id="norme"><h2>{heading}</h2><p><strong>Tableau {e(source_table)}</strong> · {e(source_record["title"])}<br>{standard} · §{e(source_record["section"])} · <a href="{e(source)}#page={page}">page PDF {page} ↗</a></p>'
         if key is not None:
             for entry in entries:
-                html += f'<p><span class="badge">/{e(entry["name"])}</span> <span class="badge">{e(entry["type"])}</span></p><p>{e(entry["description"])}</p><p><strong>Qualificateur :</strong> {e(entry["qualifier"] or "Non précisé")}</p>'
+                html += f'<p><span class="badge">/{e(entry["name"])}</span> <span class="badge">{e(entry["type"])}</span></p><p lang="en">{e(entry["description"])}</p><p><strong>Qualificateur :</strong> {e(entry["qualifier"] or "Non précisé")}</p>'
         else:
             html += '<div class="table-scroll"><table><thead><tr><th>Entrée</th><th>Type PDF</th><th>Exigence</th><th>Source</th></tr></thead><tbody>'
             for entry in entries:
@@ -732,7 +795,7 @@ class Site:
             signature += ': ' + self.link_type(method['returnType'])
         owner = self.by_name.get(method['declaringClass'], component)
         source = self.source_url(method.get('source') or owner['source'], method['line'], method if 'package' in method else owner)
-        description = f'<pre class="member-doc">{e(method["description"])}</pre>' if method['description'] else ''
+        description = f'<pre class="member-doc" lang="en">{e(method["description"])}</pre>' if method['description'] else ''
         return f'<section class="member" id="method-{e(method["name"])}"><h3>{e(method["name"])}()</h3><div class="api-signature"><code>{signature}</code></div>{description}<p class="member-meta">Déclarée par {self.link_type(method["declaringClass"])} · <a href="{e(source)}">Voir le code ↗</a></p></section>'
 
     def api_pages(self) -> None:
@@ -743,12 +806,12 @@ class Site:
             group = group_for(item)
             spec = self.spec_by_name.get(name)
             search_extra = (' /' + spec[1] + ' tableau ' + spec[0]) if spec and spec[1] else ''
-            records.append({'title': name, 'shortName': item['shortName'], 'namespace': item['namespace'], 'kind': item['kind'], 'url': self.routes[name], 'description': item['description'].split('\n')[0][:240] + search_extra, 'group': labels[group], 'package': item['package'], 'optional': item['optional'], 'sourceUrl': self.source_url(item['source'], item['line'], item)})
+            records.append({'title': name, 'shortName': item['shortName'], 'namespace': item['namespace'], 'kind': item['kind'], 'url': route_for(self.routes[name], self.language), 'description': item['description'].split('\n')[0][:240] + search_extra, 'group': translate(labels[group]) if self.language == 'en' else labels[group], 'package': item['package'], 'optional': item['optional'], 'sourceUrl': self.source_url(item['source'], item['line'], item)})
             flags = [item['kind'], *[flag for flag in ['abstract', 'final', 'readonly'] if item[flag]]]
             flags.append(('Optionnel · ' if item['optional'] else 'Core · ') + item['package'] + ' ' + item['version'])
             body = f'<p class="breadcrumbs"><a href="{e(self.url("reference/index.html"))}">Référence</a> / <a href="{e(self.url("reference/groups/" + group + ".html"))}">{e(labels[group])}</a></p><p>' + ' '.join(f'<span class="badge">{e(flag)}</span>' for flag in flags) + f'</p><div class="api-signature"><code>{e(name)}</code></div>'
             if item['description']:
-                body += f'<pre class="member-doc">{e(item["description"])}</pre>'
+                body += f'<pre class="member-doc" lang="en">{e(item["description"])}</pre>'
             body += f'<p><a href="{e(self.source_url(item["source"], item["line"], item))}">Lire la déclaration source ↗</a></p>'
             if item['optional']:
                 module_route = f'modules/{MODULES[item["package"]][0]}/index.html'
@@ -774,7 +837,7 @@ class Site:
                 body += '<section id="proprietes"><h2>Propriétés</h2><div class="table-scroll"><table><thead><tr><th>Déclaration</th><th>Provenance et documentation</th></tr></thead><tbody>'
                 for prop in item['properties']:
                     signature = e(prop['visibility'] + (' static' if prop['static'] else '') + (' readonly' if prop['readonly'] else '')) + ' ' + self.link_type(prop['type']) + ' $' + e(prop['name'])
-                    body += f'<tr><td><code>{signature}</code></td><td>{self.link_type(prop["declaringClass"])}<pre class="member-doc">{e(prop["description"])}</pre></td></tr>'
+                    body += f'<tr><td><code>{signature}</code></td><td>{self.link_type(prop["declaringClass"])}<pre class="member-doc" lang="en">{e(prop["description"])}</pre></td></tr>'
                 body += '</tbody></table></div></section>'
             if item['constants']:
                 body += '<section id="constantes"><h2>Constantes</h2><div class="table-scroll"><table><thead><tr><th>Nom</th><th>Valeur PHP</th><th>Provenance</th></tr></thead><tbody>'
@@ -785,7 +848,8 @@ class Site:
                 body += '<section id="cas"><h2>Cas de l’enum</h2><ul>' + ''.join(f'<li><code>{e(case["name"])}</code>' + (f' = <code>{e(json.dumps(case["value"], ensure_ascii=False))}</code>' if case['value'] is not None else '') + '</li>' for case in item['cases']) + '</ul></section>'
             toc = [{'id': key, 'name': label, 'level': 2} for key, label in [('relations', 'Héritage'), ('norme', 'Norme'), ('construction', 'Construction'), ('methodes', 'Méthodes'), ('methodes-heritees', 'Méthodes héritées'), ('proprietes', 'Propriétés'), ('constantes', 'Constantes'), ('cas', 'Cas de l’enum')] if f'id="{key}"' in body]
             self.page(self.routes[name], item['shortName'], labels[group], body, toc)
-        (self.output / 'assets' / 'search-index.json').write_text(json.dumps(records, ensure_ascii=False, separators=(',', ':')), encoding='utf-8')
+        index_file = 'search-index.json' if self.language == 'en' else 'search-index.fr.json'
+        (self.output / 'assets' / index_file).write_text(json.dumps(records, ensure_ascii=False, separators=(',', ':')), encoding='utf-8')
         for name, package in self.packages.items():
             items = [item for item in self.components if item['package'] == name]
             package_body = f'<p><code>{e(name)}</code> · version <a href="{e(package["repository"] + "/releases/tag/v" + package["version"])}">{e(package["version"])}</a> · <a href="{e(package["repository"] + "/commit/" + package["revision"])}">source {e(package["revision"][:7])}</a></p>'
@@ -882,14 +946,40 @@ class Site:
                 shutil.copyfile(image, target)
                 self.pdf_pages[example].append({'file': filename, 'width': width, 'height': height})
         self.write('assets/favicon.svg', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="7" fill="#0a7166"/><path d="M9 7h10l5 5v13H9z" fill="none" stroke="white" stroke-width="2"/><path d="M19 7v6h5" fill="none" stroke="white" stroke-width="2"/></svg>')
+        self.prepare_anchors()
+        for language in LANGUAGES:
+            self.language = language
+            self.build_language_pages()
+        self.build_aliases()
+        (self.output / '.nojekyll').write_text('')
+        packages = [dict(package, components=sum(item['package'] == name for item in self.components)) for name, package in self.packages.items()]
+        sources = {example: {key: value for key, value in record.items() if key not in {'path', 'inputPath'}} for example, record in self.example_sources.items()}
+        for record in sources.values():
+            record['pages'] = {language: route_for(record['page'], language) for language in LANGUAGES}
+        manifest = {'basePath': self.base, 'revision': self.revision, 'docsRevision': self.docs_revision, 'documentation': self.documentation, 'documentationSources': self.documentation_sources, 'packages': packages, 'components': len(self.components), 'examples': sorted(expected), 'exampleSources': sources, 'pdfPages': {example: ['assets/pdf-pages/' + image['file'] for image in images] for example, images in self.pdf_pages.items()}, 'pages': sorted(route for route in self.written if route.endswith('.html'))}
+        manifest.update(defaultLanguage='en', languages=list(LANGUAGES), translations=self.translations, aliases=self.aliases, searchIndexes={'en': 'assets/search-index.json', 'fr': 'assets/search-index.fr.json'})
+        manifest['specificationSources'] = [
+            {'source': 'PDF32000_2008.pdf', 'download': 'downloads/iso-32000-1.pdf', 'sha256': self.metadata['sha256'], 'pdfPages': self.metadata['pdf_pages']},
+            {'source': self.adobe_metadata['document'], 'download': 'downloads/adobe-supplement-iso32000.pdf', 'sha256': self.adobe_metadata['document_sha256'], 'pdfPages': self.adobe_metadata['pdf_pages']},
+        ]
+        manifest['referenceSources'] = [
+            {'source': item['document'], 'role': item['role'], 'download': 'downloads/adobe-references/' + item['document'], 'sha256': item['document_sha256'], 'bytes': item['bytes'], 'pdfPages': item['pdf_pages']}
+            for item in self.reference_sources.values()
+        ]
+        manifest['staticAssets'] = [{'path': path.relative_to(self.output).as_posix(), 'bytes': path.stat().st_size, 'sha256': hashlib.sha256(path.read_bytes()).hexdigest()} for path in sorted(self.output.rglob('*')) if path.is_file() and path.suffix != '.html' and path.name not in {'site-manifest.json', '.nojekyll'}]
+        (self.output / 'site-manifest.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+        print(f'Built {len(manifest["pages"])} pages, {len(self.components)} API components and {len(expected)} PDF examples into {self.output}')
+
+    def build_language_pages(self) -> None:
         self.home()
         self.core_hub()
-        for owner, source, route, title, category in self.pages:
+        for owner, original, route, title, category in self.pages:
+            source = localized_source(owner, original, self.language)
             body, toc = self.render_markdown(owner, source)
             package = self.documentation if owner == 'documentation' else self.packages[owner]
             root = self.content_root if owner == 'documentation' else self.package_roots[owner]
             source_url = self.source_url(source, owner=package)
-            self.documentation_sources.append({'page': route, 'package': owner, 'source': source, 'repository': package['repository'], 'revision': package['revision'], 'sourceUrl': source_url, 'sourceSha256': hashlib.sha256((root / source).read_bytes()).hexdigest()})
+            self.documentation_sources.append({'page': route_for(route, self.language), 'language': self.language, 'package': owner, 'source': source, 'repository': package['repository'], 'revision': package['revision'], 'sourceUrl': source_url, 'sourceSha256': hashlib.sha256((root / source).read_bytes()).hexdigest()})
             if owner in MODULES:
                 body = f'<p><span class="badge">Module optionnel · {e(owner)} {e(package["version"])}</span></p>' + self.module_navigation(owner) + body
                 if route == f'modules/{MODULES[owner][0]}/index.html':
@@ -908,21 +998,22 @@ class Site:
             self.page(route, title, category, body, toc)
         self.api_pages()
         self.page('404.html', 'Page introuvable', 'Documentation', f'<p>Cette adresse ne correspond pas à une page publiée.</p><p><a href="{e(self.url("reference/index.html"))}">Rechercher un composant</a> ou <a href="{e(self.url("index.html"))}">revenir à l’accueil</a>.</p>')
-        (self.output / '.nojekyll').write_text('')
-        packages = [dict(package, components=sum(item['package'] == name for item in self.components)) for name, package in self.packages.items()]
-        sources = {example: {key: value for key, value in record.items() if key not in {'path', 'inputPath'}} for example, record in self.example_sources.items()}
-        manifest = {'basePath': self.base, 'revision': self.revision, 'docsRevision': self.docs_revision, 'documentation': self.documentation, 'documentationSources': self.documentation_sources, 'packages': packages, 'components': len(self.components), 'examples': sorted(expected), 'exampleSources': sources, 'pdfPages': {example: ['assets/pdf-pages/' + image['file'] for image in images] for example, images in self.pdf_pages.items()}, 'pages': sorted(route for route in self.written if route.endswith('.html'))}
-        manifest['specificationSources'] = [
-            {'source': 'PDF32000_2008.pdf', 'download': 'downloads/iso-32000-1.pdf', 'sha256': self.metadata['sha256'], 'pdfPages': self.metadata['pdf_pages']},
-            {'source': self.adobe_metadata['document'], 'download': 'downloads/adobe-supplement-iso32000.pdf', 'sha256': self.adobe_metadata['document_sha256'], 'pdfPages': self.adobe_metadata['pdf_pages']},
-        ]
-        manifest['referenceSources'] = [
-            {'source': item['document'], 'role': item['role'], 'download': 'downloads/adobe-references/' + item['document'], 'sha256': item['document_sha256'], 'bytes': item['bytes'], 'pdfPages': item['pdf_pages']}
-            for item in self.reference_sources.values()
-        ]
-        manifest['staticAssets'] = [{'path': path.relative_to(self.output).as_posix(), 'bytes': path.stat().st_size, 'sha256': hashlib.sha256(path.read_bytes()).hexdigest()} for path in sorted(self.output.rglob('*')) if path.is_file() and path.suffix != '.html' and path.name not in {'site-manifest.json', '.nojekyll'}]
-        (self.output / 'site-manifest.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
-        print(f'Built {len(manifest["pages"])} pages, {len(self.components)} API components and {len(expected)} PDF examples into {self.output}')
+
+    def build_aliases(self) -> None:
+        """Old French root addresses continue to their French equivalents."""
+        canonical_pages = {page for translations in self.translations.values() for page in translations.values()}
+        self.aliases = {logical: variants['fr'] for logical, variants in self.translations.items() if logical not in canonical_pages}
+        for route, destination in self.aliases.items():
+            url = self.base + destination
+            html = f'''<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Documentation PDFToolkit</title><link rel="canonical" href="{e(SITE_ORIGIN + url)}">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; base-uri 'none'; form-action 'none'">
+<script defer src="{e(self.base + 'assets/site.js?v=' + self.script_revision)}"></script></head>
+<body><main data-root="{e(self.base)}" data-redirect-to="{e(url)}"><h1>Documentation PDFToolkit</h1><p>Cette page est disponible en français et en anglais.</p><a id="destination" href="{e(url)}">Continuer en français</a></main></body></html>'''
+            path = self.output / route
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(html, encoding='utf-8', newline='\n')
+            self.written.append(route)
 
 
 if __name__ == '__main__':

@@ -51,6 +51,8 @@ jobs:
       - run: python -m pip install --require-hashes -r _sources/pdf/tools/public-key-validation-requirements.txt
       - uses: ./_sources/pdf/.github/actions/setup-qpdf
       - run: sudo apt-get update && sudo apt-get install -y poppler-utils
+      - name: Verify bilingual navigation and search behavior
+        run: node tests/site_locales.cjs
       - name: Build real examples and verify every documentation page
         run: python tools/build_docs.py --source-root _sources/pdf --docs-revision "$GITHUB_SHA" --remote
       - name: Verify the old project-site compatibility output

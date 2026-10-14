@@ -51,33 +51,33 @@ All four packages are available on Packagist:
 [reader](https://packagist.org/packages/pdftoolkit/pdf-reader),
 [images](https://packagist.org/packages/pdftoolkit/pdf-images) and
 [fonts](https://packagist.org/packages/pdftoolkit/pdf-fonts).
-Stable constraints are `roukmoute/pdf:^0.5.4` for the core and
-`pdftoolkit/pdf-reader:^0.1.5`, `pdftoolkit/pdf-images:^0.1.5` or
-`pdftoolkit/pdf-fonts:^0.1.5` for modules. Older core tags `v0.1.0` and
+Stable constraints are `roukmoute/pdf:^0.5.5` for the core and
+`pdftoolkit/pdf-reader:^0.1.6`, `pdftoolkit/pdf-images:^0.1.6` or
+`pdftoolkit/pdf-fonts:^0.1.6` for modules. Older core tags `v0.1.0` and
 `v0.1.1` retain their PHP 8.5 constraint.
 
 To generate PDFs only:
 
 ```sh
-composer require "roukmoute/pdf:^0.5.4"
+composer require "roukmoute/pdf:^0.5.5"
 ```
 
 To add reading of existing PDFs:
 
 ```sh
-composer require "roukmoute/pdf:^0.5.4" "pdftoolkit/pdf-reader:^0.1.5"
+composer require "roukmoute/pdf:^0.5.5" "pdftoolkit/pdf-reader:^0.1.6"
 ```
 
 To convert images:
 
 ```sh
-composer require "roukmoute/pdf:^0.5.4" "pdftoolkit/pdf-images:^0.1.5"
+composer require "roukmoute/pdf:^0.5.5" "pdftoolkit/pdf-images:^0.1.6"
 ```
 
 To analyze TrueType fonts:
 
 ```sh
-composer require "roukmoute/pdf:^0.5.4" "pdftoolkit/pdf-fonts:^0.1.5"
+composer require "roukmoute/pdf:^0.5.5" "pdftoolkit/pdf-fonts:^0.1.6"
 ```
 
 Composer resolves these packages from Packagist and downloads their published
@@ -89,7 +89,7 @@ Applications that added GitHub repositories under `repositories` can remove
 those entries from `composer.json`. Composer package names remain identical.
 
 Before 1.0, a new minor release may change names and signatures. The
-`^0.5.4` and `^0.1.5` constraints allow patches within their series and
+`^0.5.5` and `^0.1.6` constraints allow patches within their series and
 exclude the next minor release. Consult changelogs before switching series.
 To work with upcoming development, explicitly request `dev-master` for the
 relevant packages.
@@ -151,7 +151,7 @@ without concatenation or decoding. Traversal and stream-count limits are
 explicit objects; cumulative `ReadDocument` budgets continue to apply.
 To obtain decoded bytes, separately request
 `$document->streamData($stream)`. The
-[page-reading guide](https://github.com/PDFToolkit/pdf-reader/blob/v0.1.5/docs/pages.md)
+[page-reading guide](https://github.com/PDFToolkit/pdf-reader/blob/v0.1.6/docs/pages.md)
 explains every step and supplies an executable example with three inherited
 pages.
 
@@ -171,7 +171,7 @@ Read values cannot be directly passed back to the writer: their references
 belong to the original file. Graph import and remapping, rewriting, merging
 and repair remain to be built. Consult the
 [reader documentation](https://github.com/PDFToolkit/pdf-reader#readme)
-and [its security checks](https://github.com/PDFToolkit/pdf-reader/blob/v0.1.5/docs/security.md)
+and [its security checks](https://github.com/PDFToolkit/pdf-reader/blob/v0.1.6/docs/security.md)
 when choosing budgets. By default, retained binary bytes and total decoded
 stream bytes are each bounded to 128 MiB, in addition to other limits.
 

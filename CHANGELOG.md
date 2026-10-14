@@ -1,6 +1,21 @@
 # Documentation changelog
 
+[English](CHANGELOG.md) · [Français](CHANGELOG.fr.md)
+
 ## [Unreleased]
+
+## [0.2.0] - 2026-10-14
+
+- Publish complete English and French guides, all 26 tutorials, recipes and
+  package documentation, with English as the default site language.
+- Add matching-page language navigation, translated search and clipboard
+  messages, localized source provenance and reciprocal search-engine alternates.
+- Preserve search filters and map translated section anchors when switching
+  languages; keep existing French addresses available through compatibility
+  redirects and share unchanged PDF, source and reference downloads.
+- Validate both complete API inventories, equivalent pages, locale links,
+  heading mappings and the user-facing language/search/copy behavior.
+- Select core 0.5.5 and optional modules 0.1.6 from their published tags.
 
 ## [0.1.3] - 2026-10-14
 

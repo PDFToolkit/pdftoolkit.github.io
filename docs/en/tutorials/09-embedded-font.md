@@ -12,11 +12,11 @@ module with the core, at the published versions selected by the
 program, dictionaries and PDF mappings remain core objects. `composer install`
 in the core checkout installs the module as a development dependency; an
 application installs it from Packagist using
-`composer require "pdftoolkit/pdf-fonts:^0.1.5"`. The [package guide](../packages.md)
+`composer require "pdftoolkit/pdf-fonts:^0.1.6"`. The [package guide](../packages.md)
 also explains how to select the core release series.
 
 The demonstration font and its SIL Open Font License are preserved in the
-[font module's resources](https://github.com/PDFToolkit/pdf-fonts/blob/v0.1.5/examples/assets/fonts/README.md).
+[font module's resources](https://github.com/PDFToolkit/pdf-fonts/blob/v0.1.6/examples/assets/fonts/README.md).
 Composer installs them with the module; the core does not distribute the TrueType file.
 
 ## Run the example
@@ -35,7 +35,7 @@ copy French and Greek thanks to the Unicode mappings constructed by the script.
 ## 1. The font program is a separate object
 
 The application reads the file and supplies its **bytes** to
-[`FontProgram`](https://github.com/PDFToolkit/pdf-fonts/blob/v0.1.5/src/TrueType/FontProgram.php).
+[`FontProgram`](https://github.com/PDFToolkit/pdf-fonts/blob/v0.1.6/src/TrueType/FontProgram.php).
 The model reads no paths and contacts no URLs. The program retains the complete
 bytes, its PostScript name, `cmap`, horizontal metrics and glyph bounding boxes.
 
@@ -49,14 +49,14 @@ $body = new UnicodeText('Français : été, cœur, Noël. Ελληνικά : Α�
 ```
 
 The input budget is an explicit
-[`FontProgramLimits`](https://github.com/PDFToolkit/pdf-fonts/blob/v0.1.5/src/TrueType/FontProgramLimits.php)
+[`FontProgramLimits`](https://github.com/PDFToolkit/pdf-fonts/blob/v0.1.6/src/TrueType/FontProgramLimits.php)
 object, defaulting to 32 MiB. The application can impose a lower limit, for example:
 
 ```php
 $program = new FontProgram($fontBytes, new FontProgramLimits(maxBytes: 1048576));
 ```
 
-[`UnicodeText`](https://github.com/PDFToolkit/pdf-fonts/blob/v0.1.5/src/TrueType/UnicodeText.php)
+[`UnicodeText`](https://github.com/PDFToolkit/pdf-fonts/blob/v0.1.6/src/TrueType/UnicodeText.php)
 validates UTF-8 and retains a list of Unicode scalar values. It does not normalize
 text or transform its direction or typographic composition.
 
@@ -69,7 +69,7 @@ to several glyphs.
 
 The CID program is first prepared and embedded in a core
 [`FontFile2`](https://github.com/PDFToolkit/pdf/blob/v0.5.4/src/Document/Fonts/FontFile2.php).
-The [`CharacterMapFactory`](https://github.com/PDFToolkit/pdf-fonts/blob/v0.1.5/src/TrueType/CharacterMapFactory.php)
+The [`CharacterMapFactory`](https://github.com/PDFToolkit/pdf-fonts/blob/v0.1.6/src/TrueType/CharacterMapFactory.php)
 service receives the CID program and produces a core
 [`CharacterMap`](https://github.com/PDFToolkit/pdf/blob/v0.5.4/src/Document/Fonts/CharacterMap.php)
 from the embedded stream and all characters that will be encoded with this instance.
@@ -99,7 +99,7 @@ replacement by `.notdef` or state shared between documents.
 
 ## 3. Assemble the objects defined by PDF
 
-[`CIDFontProgram`](https://github.com/PDFToolkit/pdf-fonts/blob/v0.1.5/src/TrueType/CIDFontProgram.php)
+[`CIDFontProgram`](https://github.com/PDFToolkit/pdf-fonts/blob/v0.1.6/src/TrueType/CIDFontProgram.php)
 prepares the program for a CID font. ISO 32000-1, 9.9 requires removing the `cmap`
 table from a TrueType program embedded through `/FontFile2` for a CID font:
 glyph mapping comes from `/CIDToGIDMap`. All glyphs and other tables are retained,
@@ -162,7 +162,7 @@ in the repertoire, not the Unicode code point or GID.
 new ShowText($encoder->encode($heading));
 ```
 
-[`TextEncoder`](https://github.com/PDFToolkit/pdf-fonts/blob/v0.1.5/src/TrueType/TextEncoder.php)
+[`TextEncoder`](https://github.com/PDFToolkit/pdf-fonts/blob/v0.1.6/src/TrueType/TextEncoder.php)
 returns a `HexadecimalString`. Objects `Tf`, `Td`, `Tj`, `/Resources`, `/Page`,
 `/Pages` and `/Catalog` are then assembled as in the first tutorials. No layout
 engine intervenes in this graph.

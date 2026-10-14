@@ -44,6 +44,9 @@ img { height: auto; }
 .top-nav { display: flex; align-items: center; flex-wrap: wrap; gap: 22px; }
 .top-nav a { color: var(--muted); font-size: 13px; font-weight: 600; text-decoration: none; }
 .top-nav a:hover, .top-nav a.active { color: var(--accent); }
+.language-switch { display: flex; align-items: center; gap: 10px; margin-left: auto; white-space: nowrap; font-size: 12px; }
+.language-switch a, .language-switch span { display: inline-flex; align-items: center; min-height: 44px; padding: 4px 7px; }
+.language-switch [aria-current] { color: var(--ink); font-weight: 650; }
 .menu-button { display: none; min-width: 44px; min-height: 44px; padding: 7px 12px; border: 1px solid var(--line); border-radius: 8px; color: var(--ink); background: var(--paper); font-size: 13px; }
 .site-shell { display: grid; grid-template-columns: 240px minmax(0, 1fr); max-width: 1600px; margin: 0 auto; }
 .sidebar { position: sticky; top: 76px; align-self: start; height: calc(100vh - 76px); overflow-y: auto; padding: 30px 18px 40px 26px; border-right: 1px solid var(--line); scrollbar-width: thin; }
@@ -64,6 +67,7 @@ main { min-width: 0; padding: 42px clamp(24px, 4.2vw, 68px) 60px; }
 .toc a { color: var(--muted); text-decoration: none; }
 .toc a:hover { color: var(--accent); }
 .toc .toc-level-3 { padding-left: 12px; }
+.legacy-anchor { display: block; height: 0; }
 .breadcrumbs { margin: 0 0 22px; color: var(--muted); font-size: 12px; }
 .breadcrumbs a { color: inherit; text-decoration: none; }
 .breadcrumbs span { margin: 0 7px; }
@@ -213,9 +217,11 @@ a.card { color: var(--ink); text-decoration: none; }
     .brand { font-size: 17px; gap: 8px; }
     .brand-mark { width: 33px; height: 33px; }
     .brand small, .brand-version { display: none; }
-    .top-nav { margin-left: auto; gap: 12px; }
+    .top-nav { display: none; }
     .top-nav a { font-size: 11px; }
     .top-nav a:not(:last-child) { display: none; }
+    .language-switch { gap: 3px; font-size: 11px; }
+    .language-switch span { display: none; }
     .menu-button { padding: 7px 10px; font-size: 12px; }
     main { padding: 27px 18px 40px; }
     h1 { font-size: 31px; }
