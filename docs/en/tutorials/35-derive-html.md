@@ -5,7 +5,7 @@ content means and in which order to read it. The optional `pdftoolkit/pdf-to-htm
 module uses that second description to derive HTML according to **Deriving HTML
 from PDF 1.2**, the PDF Association publication retained with its source code.
 
-The [PDFToolkit/pdf-to-html repository](https://github.com/PDFToolkit/pdf-to-html)
+The [PDFToolkit/pdf-to-html repository](https://github.com/PDFToolkit/pdf-to-html/tree/v0.1.2)
 was created specifically to implement the rules in this
 [reference document](https://github.com/PDFToolkit/pdf-to-html/blob/v0.1.2/resources/reference-documents/Deriving_HTML_from_PDF_1-2.pdf).
 The current implementation is **partial**: the

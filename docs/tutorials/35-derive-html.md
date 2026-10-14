@@ -5,7 +5,7 @@ et l'ordre de lecture. Le module optionnel `pdftoolkit/pdf-to-html` utilise cett
 seconde description pour dériver du HTML selon **Deriving HTML from PDF 1.2**,
 publication PDF Association conservée avec son code source.
 
-Le dépôt [PDFToolkit/pdf-to-html](https://github.com/PDFToolkit/pdf-to-html) a été
+Le dépôt [PDFToolkit/pdf-to-html](https://github.com/PDFToolkit/pdf-to-html/tree/v0.1.2) a été
 créé spécialement pour implémenter les règles de ce
 [document de référence](https://github.com/PDFToolkit/pdf-to-html/blob/v0.1.2/resources/reference-documents/Deriving_HTML_from_PDF_1-2.pdf).
 L'implémentation actuelle est **partielle** : le
