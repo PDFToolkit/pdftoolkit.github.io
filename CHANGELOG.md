@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [0.1.3] - 2026-10-14
+
+- Add responsive inner spacing to the PDF, reader output and source-code panel
+  introductions across the tutorials and examples. Keep titles and descriptive
+  text away from the borders while preserving preview, toolbar and code layouts.
+
 ## [0.1.2] - 2026-10-14
 
 - Keep the component search input at its normal control height on desktop and
