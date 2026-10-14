@@ -5,6 +5,13 @@ content means and in which order to read it. The optional `pdftoolkit/pdf-to-htm
 module uses that second description to derive HTML according to **Deriving HTML
 from PDF 1.2**, the PDF Association publication retained with its source code.
 
+The [PDFToolkit/pdf-to-html repository](https://github.com/PDFToolkit/pdf-to-html)
+was created specifically to implement the rules in this
+[reference document](https://github.com/PDFToolkit/pdf-to-html/blob/v0.1.2/resources/reference-documents/Deriving_HTML_from_PDF_1-2.pdf).
+The current implementation is **partial**: the
+[module coverage guide](https://github.com/PDFToolkit/pdf-to-html/blob/v0.1.2/docs/coverage.md) distinguishes tested
+mechanisms from the remaining technical gaps.
+
 This tutorial runs the real `examples/01-derive-tagged-pdf.php` example from the
 selected module release. The input PDF, every rendered page, actual HTML output,
 JSON diagnostics and complete PHP source appear below. The HTML is produced
@@ -13,7 +20,7 @@ during the documentation build; it is not a handwritten substitute for a result.
 ## Install the optional module
 
 ```sh
-composer require "pdftoolkit/pdf-to-html:^0.1.0"
+composer require "pdftoolkit/pdf-to-html:^0.1.2"
 ```
 
 This installs the core and reader dependencies. Core-only applications acquire
@@ -74,8 +81,8 @@ Presentation and Content MathML. Preserved Content/elementary markup does not
 guarantee native browser rendering; extended vocabulary produces a diagnostic,
 and the package supplies no rendering polyfill or mathematical evaluator.
 
-See the [module architecture](https://github.com/PDFToolkit/pdf-to-html/blob/v0.1.0/docs/architecture.md),
-[coverage](https://github.com/PDFToolkit/pdf-to-html/blob/v0.1.0/docs/coverage.md) and
-[security guide](https://github.com/PDFToolkit/pdf-to-html/blob/v0.1.0/docs/security.md)
+See the [module architecture](https://github.com/PDFToolkit/pdf-to-html/blob/v0.1.2/docs/architecture.md),
+[coverage](https://github.com/PDFToolkit/pdf-to-html/blob/v0.1.2/docs/coverage.md) and
+[security guide](https://github.com/PDFToolkit/pdf-to-html/blob/v0.1.2/docs/security.md)
 for the model/file/runtime boundaries. Semantic HTML does not automatically
 certify accessibility or PDF/UA.

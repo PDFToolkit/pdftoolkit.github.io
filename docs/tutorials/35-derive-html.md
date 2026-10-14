@@ -5,6 +5,13 @@ et l'ordre de lecture. Le module optionnel `pdftoolkit/pdf-to-html` utilise cett
 seconde description pour dériver du HTML selon **Deriving HTML from PDF 1.2**,
 publication PDF Association conservée avec son code source.
 
+Le dépôt [PDFToolkit/pdf-to-html](https://github.com/PDFToolkit/pdf-to-html) a été
+créé spécialement pour implémenter les règles de ce
+[document de référence](https://github.com/PDFToolkit/pdf-to-html/blob/v0.1.2/resources/reference-documents/Deriving_HTML_from_PDF_1-2.pdf).
+L'implémentation actuelle est **partielle** : le
+[guide de couverture du module](https://github.com/PDFToolkit/pdf-to-html/blob/v0.1.2/docs/fr/coverage.md) distingue
+les mécanismes testés et les lacunes techniques restantes.
+
 Ce tutoriel exécute réellement `examples/01-derive-tagged-pdf.php` depuis la
 version retenue du module. Le PDF d'entrée, toutes ses pages rendues, le HTML
 obtenu, les diagnostics JSON et le PHP complet apparaissent ci-dessous. Le HTML
@@ -14,7 +21,7 @@ une illustration écrite à la main.
 ## Installer le module optionnel
 
 ```sh
-composer require "pdftoolkit/pdf-to-html:^0.1.0"
+composer require "pdftoolkit/pdf-to-html:^0.1.2"
 ```
 
 Cette commande installe le core et le lecteur comme dépendances. Une application
@@ -79,8 +86,8 @@ ou élémentaire ne garantit pas son rendu natif par le navigateur ; le vocabula
 étendu produit un diagnostic et le package ne fournit ni polyfill de rendu ni
 évaluateur mathématique.
 
-Lire l'[architecture du module](https://github.com/PDFToolkit/pdf-to-html/blob/v0.1.0/docs/fr/architecture.md),
-sa [couverture](https://github.com/PDFToolkit/pdf-to-html/blob/v0.1.0/docs/fr/coverage.md)
-et son [guide de sécurité](https://github.com/PDFToolkit/pdf-to-html/blob/v0.1.0/docs/fr/security.md)
+Lire l'[architecture du module](https://github.com/PDFToolkit/pdf-to-html/blob/v0.1.2/docs/fr/architecture.md),
+sa [couverture](https://github.com/PDFToolkit/pdf-to-html/blob/v0.1.2/docs/fr/coverage.md)
+et son [guide de sécurité](https://github.com/PDFToolkit/pdf-to-html/blob/v0.1.2/docs/fr/security.md)
 pour distinguer modèle, fichier et runtime. Un HTML sémantique ne certifie pas
 automatiquement l'accessibilité ou PDF/UA.
