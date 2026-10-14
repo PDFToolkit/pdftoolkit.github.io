@@ -15,6 +15,9 @@ Depuis un checkout du core **0.7.0**, avec ses dépendances installées :
 php examples/pdf20-metadata-declarations.php metadata.pdf
 ```
 
+L’exemple fournit Courier avec des [métriques explicites](https://github.com/PDFToolkit/pdf/blob/v0.7.0/examples/fixtures/pdf20-courier-font.php) : FirstChar/LastChar, largeurs ASCII et FontDescriptor. PDF 2.0 ne permet plus d’omettre ces entrées pour les quatorze polices standard. Cette construction n’incorpore pas de programme de fonte ; un profil exigeant l’incorporation demande une fonte explicitement incorporée.
+
+
 PHP 8.3 ou supérieur suffit. Ce script utilise les objets natifs du core ; aucun
 convertisseur d'images ou de fontes n'est nécessaire. L'aperçu et le téléchargement
 ci-dessous proviennent du fichier réellement généré.

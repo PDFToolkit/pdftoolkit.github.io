@@ -15,6 +15,9 @@ From a core **0.7.0** checkout with its dependencies installed:
 php examples/pdf20-metadata-declarations.php metadata.pdf
 ```
 
+The example supplies Courier through [explicit metrics](https://github.com/PDFToolkit/pdf/blob/v0.7.0/examples/fixtures/pdf20-courier-font.php): FirstChar/LastChar, ASCII widths and a FontDescriptor. PDF 2.0 no longer permits omitting these entries for the fourteen standard fonts. This construction does not embed a font program; profiles requiring embedding need an explicitly embedded font.
+
+
 PHP 8.3 or later is sufficient. This script uses native core objects and needs
 no image or font converter. The preview and download below come from the
 actual generated file.

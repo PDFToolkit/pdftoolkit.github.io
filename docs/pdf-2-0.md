@@ -118,6 +118,20 @@ prouvent pas ces faits de permissions. Le chiffrement natif AES-256 à clé publ
 est disponible en PDF 2.0 sans déclaration d’extension Adobe historique ; il
 reste distinct du gestionnaire par mot de passe R=6. AES-GCM authentifie les valeurs chiffrées ; PDF MAC authentifie une révision sérialisée. Aucun de ces mécanismes n’établit la confiance envers les certificats.
 
+## Métriques explicites des polices standard
+
+Le tableau 109 de PDF 2.0, pages physiques 328–329, exige `FirstChar`, `LastChar`,
+`Widths` et `FontDescriptor` pour les fontes simples. L’omission historique pour
+les quatorze polices standard ne concerne que PDF 1.0–1.7. Un en-tête PDF 2.0
+ne rend pas complet un simple `Type1Font(StandardFont::Helvetica)`.
+
+Construire `SimpleFontMetrics` avec des objets `SimpleWidths` et `FontDescriptor`
+explicites, ou choisir un programme incorporé avec ses véritables métriques.
+Le helper Courier des exemples fournit largeurs ASCII et valeurs du descripteur
+déclarées, sans ajouter de parseur de fonte ni de registre au core. L’incorporation
+reste un choix distinct. Les contrôles du graphe effectif couvrent aussi les
+dictionnaires génériques et les remplacements figés de fontes et ressources.
+
 ## Implémentations restantes
 
 Le catalogue des dictionnaires comprend l’inventaire des tableaux de base,

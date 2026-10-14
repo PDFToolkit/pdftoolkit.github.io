@@ -14,6 +14,9 @@ From a core **0.7.0** checkout, with PHP 8.3 or later and OpenSSL:
 php examples/pdf20-encrypted-payload.php wrapper.pdf
 ```
 
+The example supplies Courier through [explicit metrics](https://github.com/PDFToolkit/pdf/blob/v0.7.0/examples/fixtures/pdf20-courier-font.php): FirstChar/LastChar, ASCII widths and a FontDescriptor. PDF 2.0 no longer permits omitting these entries for the fourteen standard fonts. This construction does not embed a font program; profiles requiring embedding need an explicitly embedded font.
+
+
 The demonstration reader password is **`demo-reader`**. It appears on the page
 and in the source so the downloaded PDF can be inspected. It is unsuitable for
 a confidential document. `SystemRandomSource` supplies keys, salts and

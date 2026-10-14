@@ -12,6 +12,9 @@ Depuis une copie du core 0.7.0 avec ses dépendances de développement verrouill
 php examples/pdf20-modern-signature.php modern-signature.pdf
 ```
 
+L’exemple fournit Courier avec des [métriques explicites](https://github.com/PDFToolkit/pdf/blob/v0.7.0/examples/fixtures/pdf20-courier-font.php) : FirstChar/LastChar, largeurs ASCII et FontDescriptor. PDF 2.0 ne permet plus d’omettre ces entrées pour les quatorze polices standard. Cette construction n’incorpore pas de programme de fonte ; un profil exigeant l’incorporation demande une fonte explicitement incorporée.
+
+
 Cet exemple utilise l’extension OpenSSL de PHP pour ECDSA. Ed25519 et Ed448 utilisent un fournisseur distinct dont l’exécutable est choisi explicitement ; charger la bibliothèque ne démarre aucun processus. Le PDF reste non chiffré pour permettre son aperçu dans le navigateur.
 
 ## Choisir l’identité et le condensat

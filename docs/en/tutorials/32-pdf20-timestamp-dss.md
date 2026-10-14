@@ -12,6 +12,9 @@ From a core 0.7.0 checkout with locked development dependencies, supply the Open
 php examples/pdf20-timestamp-dss.php timestamps.pdf /usr/bin/openssl
 ```
 
+The example supplies Courier through [explicit metrics](https://github.com/PDFToolkit/pdf/blob/v0.7.0/examples/fixtures/pdf20-courier-font.php): FirstChar/LastChar, ASCII widths and a FontDescriptor. PDF 2.0 no longer permits omitting these entries for the fourteen standard fonts. This construction does not embed a font program; profiles requiring embedding need an explicitly embedded font.
+
+
 On Windows, quote a path containing spaces. The example also accepts `PDFTOOLKIT_OPENSSL` instead of its second argument. It does not fetch a certificate, private key, revocation response or timestamp over the network.
 
 ## Prepare the first document timestamp

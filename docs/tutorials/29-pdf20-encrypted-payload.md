@@ -14,6 +14,9 @@ Depuis un checkout du core **0.7.0**, avec PHP 8.3 ou supérieur et OpenSSL :
 php examples/pdf20-encrypted-payload.php wrapper.pdf
 ```
 
+L’exemple fournit Courier avec des [métriques explicites](https://github.com/PDFToolkit/pdf/blob/v0.7.0/examples/fixtures/pdf20-courier-font.php) : FirstChar/LastChar, largeurs ASCII et FontDescriptor. PDF 2.0 ne permet plus d’omettre ces entrées pour les quatorze polices standard. Cette construction n’incorpore pas de programme de fonte ; un profil exigeant l’incorporation demande une fonte explicitement incorporée.
+
+
 Le mot de passe de lecture de démonstration est **`demo-reader`**. Il est écrit
 sur la page et dans le code afin que le PDF téléchargé puisse être inspecté.
 Il ne convient pas à un document confidentiel. Les clés, sels et vecteurs

@@ -12,6 +12,9 @@ From a core 0.7.0 checkout:
 php examples/pdf20-geospatial.php geospatial.pdf
 ```
 
+The example supplies Courier through [explicit metrics](https://github.com/PDFToolkit/pdf/blob/v0.7.0/examples/fixtures/pdf20-courier-font.php): FirstChar/LastChar, ASCII widths and a FontDescriptor. PDF 2.0 no longer permits omitting these entries for the fourteen standard fonts. This construction does not embed a font program; profiles requiring embedding need an explicitly embedded font.
+
+
 The example uses native PDF objects only. It needs no external image converter, font converter, GIS database or projection executable. A viewer may display the page without offering geographic measurement tools; the preview still shows the actual drawing.
 
 ## Declare coordinate systems explicitly

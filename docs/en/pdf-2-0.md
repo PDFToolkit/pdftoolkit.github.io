@@ -112,6 +112,20 @@ encryption can be selected for PDF 2.0 without the earlier Adobe extension
 declaration; the R=6 password-security handler remains a distinct selection.
 AES-GCM authenticates encrypted values; PDF MAC authenticates a serialized revision. Neither establishes certificate trust.
 
+## Explicit metrics for standard fonts
+
+PDF 2.0 table 109, physical pages 328–329, requires `FirstChar`, `LastChar`,
+`Widths` and `FontDescriptor` for simple fonts. The historical omission allowed
+for the fourteen standard fonts applies only to PDF 1.0–1.7. A PDF 2.0 header
+does not make a minimal `Type1Font(StandardFont::Helvetica)` complete.
+
+Construct `SimpleFontMetrics` from explicit `SimpleWidths` and `FontDescriptor`
+objects, or select an explicitly embedded program with its actual metrics.
+The examples' Courier helper supplies declared ASCII widths and descriptor
+values without adding a font parser or a registry to the core. Embedding remains
+a distinct choice. The effective-graph checks also cover generic dictionaries
+and frozen font/resource replacements in later revisions.
+
 ## Remaining implementation
 
 The dictionary catalogue includes the base table inventory, continuation pages,

@@ -12,6 +12,9 @@ From a core 0.7.0 checkout with the locked development dependencies, on 64-bit P
 php examples/pdf20-modern-signature.php modern-signature.pdf
 ```
 
+The example supplies Courier through [explicit metrics](https://github.com/PDFToolkit/pdf/blob/v0.7.0/examples/fixtures/pdf20-courier-font.php): FirstChar/LastChar, ASCII widths and a FontDescriptor. PDF 2.0 no longer permits omitting these entries for the fourteen standard fonts. This construction does not embed a font program; profiles requiring embedding need an explicitly embedded font.
+
+
 This example uses PHP's OpenSSL extension for ECDSA. Ed25519 and Ed448 use a separate, explicitly selected executable provider; merely loading the library starts no process. The PDF remains unencrypted so that its page can be previewed in the browser.
 
 ## Select the credential and digest
