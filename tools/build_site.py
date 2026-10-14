@@ -152,7 +152,15 @@ MODULES = {
     'pdftoolkit/pdf-images': ('images', 'Convertir des images', [('docs/architecture.md', 'architecture', 'Contrats des convertisseurs d’images')]),
     'pdftoolkit/pdf-fonts': ('fonts', 'Analyser des fontes', [('docs/true-type-to-pdf.md', 'true-type-to-pdf', 'Du programme TrueType aux objets PDF')]),
     'pdftoolkit/opentype': ('opentype', 'Modèle objet OpenType indépendant', [('docs/architecture.md', 'architecture', 'Architecture OpenType'), ('docs/coverage.md', 'coverage', 'Couverture OpenType'), ('docs/substitutions.md', 'substitutions', 'Substitutions de glyphes')]),
-    'pdftoolkit/pdf-to-html': ('to-html', 'Dériver du HTML depuis un PDF', [('docs/architecture.md', 'architecture', 'Architecture de la dérivation HTML'), ('docs/coverage.md', 'coverage', 'Couverture de la dérivation HTML'), ('docs/security.md', 'security', 'Sécurité du HTML dérivé'), ('docs/reference.md', 'reference', 'Référence Deriving HTML from PDF')]),
+    'pdftoolkit/pdf-to-html': ('to-html', 'Dériver du HTML depuis un PDF', [
+        ('docs/architecture.md', 'architecture', 'Architecture de la dérivation HTML'),
+        ('docs/coverage.md', 'coverage', 'Couverture de la dérivation HTML'),
+        ('docs/requirements.md', 'requirements', 'Exigences de la dérivation HTML'),
+        ('docs/policies.md', 'policies', 'Politiques de dérivation HTML'),
+        ('docs/graphics.md', 'graphics', 'Graphiques PDF et rendu de figures'),
+        ('docs/security.md', 'security', 'Sécurité du HTML dérivé'),
+        ('docs/reference.md', 'reference', 'Référence Deriving HTML from PDF'),
+    ]),
 }
 
 
@@ -518,8 +526,8 @@ class Site:
         canonical = canonical_source(package_name, target)
         route = self.markdown_routes.get((package_name, canonical))
         if route:
-            fragment = self.fragment_for(route, fragment)
-            return self.url(route) + ('?' + query if query else '') + ('#' + fragment if fragment else '')
+            fragment = self.fragment_for(route, fragment, language)
+            return self.url(route, language) + ('?' + query if query else '') + ('#' + fragment if fragment else '')
         item = self.by_package_source.get((package_name, target))
         if item and not fragment:
             return self.url(self.routes[item['name']]) + suffix

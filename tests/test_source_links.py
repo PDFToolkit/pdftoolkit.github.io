@@ -6,7 +6,7 @@ import unittest
 from urllib.parse import quote
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'tools'))
-from build_site import CORE_PACKAGE, Site
+from build_site import CORE_PACKAGE, MODULES, Site
 
 
 class SourceLinksTest(unittest.TestCase):
@@ -128,6 +128,40 @@ class SourceLinksTest(unittest.TestCase):
     def test_source_link_with_an_unknown_file_still_fails_the_build(self):
         with self.assertRaisesRegex(ValueError, 'Unresolved package source link'):
             self.site.rewrite_link('README.md', self.upstream_url('resources/missing(1).pdf'))
+
+    def register_html_guides(self):
+        owner = 'pdftoolkit/pdf-to-html'
+        slug, _, guides = MODULES[owner]
+        for source, route, _ in guides:
+            self.site.markdown_routes[(owner, source)] = f'modules/{slug}/{route}.html'
+        return owner, guides
+
+    def test_new_and_historic_html_guides_resolve_to_the_central_site(self):
+        _, guides = self.register_html_guides()
+        self.assertEqual({'architecture', 'coverage', 'requirements', 'policies', 'graphics', 'security', 'reference'}, {route for _, route, _ in guides})
+        for language in ('en', 'fr'):
+            self.site.language = language
+            for base in ('/', '/pdf/'):
+                self.site.base = base
+                for source, route, _ in guides:
+                    with self.subTest(language=language, base=base, source=source):
+                        localized = source.replace('docs/', 'docs/fr/', 1) if language == 'fr' else source
+                        upstream = 'https://github.com/PDFToolkit/pdf-to-html/blob/v0.2.0/' + localized
+                        expected = base + ('fr/' if language == 'fr' else '') + f'modules/to-html/{route}.html?view=compact'
+                        self.assertEqual(expected, self.site.rewrite_link('docs/tutorials/35-derive-html.md', upstream + '?view=compact'))
+
+    def test_html_guide_translation_switch_uses_the_target_language_and_heading(self):
+        owner, _ = self.register_html_guides()
+        route = 'modules/to-html/requirements.html'
+        self.site.anchor_maps[route] = {'en': {'requirements': 'exigences'}, 'fr': {'exigences': 'requirements'}}
+        for language, source, target, fragment, expected in [
+            ('en', 'docs/requirements.md', 'docs/fr/requirements.md', 'exigences', '/fr/' + route + '#exigences'),
+            ('fr', 'docs/fr/requirements.md', 'docs/requirements.md', 'requirements', '/' + route + '#requirements'),
+        ]:
+            with self.subTest(language=language):
+                self.site.language = language
+                upstream = 'https://github.com/PDFToolkit/pdf-to-html/blob/v0.2.0/' + target + '#' + fragment
+                self.assertEqual(expected, self.site.rewrite_link(source, upstream, owner=owner))
 
 
 if __name__ == '__main__':

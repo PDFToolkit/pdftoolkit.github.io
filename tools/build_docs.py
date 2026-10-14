@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 from pathlib import Path
 import shutil
 import subprocess
@@ -11,12 +12,43 @@ import sys
 from check_sources import check
 
 
-def run(command: list, cwd: Path, output: Path | None = None) -> None:
+def run(command: list, cwd: Path, output: Path | None = None, env: dict[str, str] | None = None) -> None:
     if output:
         with output.open("wb") as stream:
-            subprocess.run(list(map(str, command)), cwd=cwd, check=True, stdout=stream)
+            subprocess.run(list(map(str, command)), cwd=cwd, check=True, stdout=stream, env=env)
     else:
-        subprocess.run(list(map(str, command)), cwd=cwd, check=True)
+        subprocess.run(list(map(str, command)), cwd=cwd, check=True, env=env)
+
+
+def validate_html_module(args, html: Path, work: Path, pdfs: Path) -> None:
+    """Exercise released module behavior without adding validation outputs to site assets."""
+    for command in (
+        [sys.executable, "tools/validate_reference.py"],
+        [sys.executable, "tools/build_reading_fixture.py", "--check"],
+        [sys.executable, "tools/build_glyph_list.py", "--check"],
+        [sys.executable, "tools/build_inline_fixture.py", "--check"],
+        [sys.executable, "tools/build_inline_fax_fixture.py", "--check"],
+        [sys.executable, "tools/validate_inline_derivation.py", "--php", args.php],
+        [sys.executable, "tools/validate_graphics.py", "--php", args.php, "--pdftoppm", args.pdftoppm],
+        [sys.executable, "tools/validate_graphics_context.py", "--php", args.php, "--pdftoppm", args.pdftoppm],
+        [sys.executable, "tools/validate_inline_fax.py", "--php", args.php, "--pdftoppm", args.pdftoppm],
+        [sys.executable, "tools/validate_derivation.py", "--php", args.php],
+    ):
+        run(command, html)
+    runtime = work / "pdf-html-runtime.js"
+    run([args.php, html / "tests/Script/runtime-fixture.php"], html, runtime)
+    run([args.node, "--check", runtime], html)
+    run([args.node, html / "tests/Script/runtime.cjs", runtime], html,
+        env={**os.environ, "PDF_RUNTIME_TEST_PHP": str(args.php)})
+    identifiers = work / "page-identifiers.json"
+    run([args.php, html / "tests/export-page-identifiers.php"], html, identifiers)
+    run([sys.executable, "tools/validate_page_identifiers.py", identifiers], html)
+    examples = pdfs / "html-validation"
+    examples.mkdir(exist_ok=True)
+    figure = examples / "figure.pdf"
+    run([args.php, html / "examples/02-export-figure.php", html / "tests/Fixtures/tagged.pdf", figure], html)
+    run([args.qpdf, "--check", figure], html)
+    run([args.php, html / "examples/03-safe-form-reset.php", examples / "safe-reset.html"], html)
 
 
 def build(args) -> None:
@@ -45,12 +77,7 @@ def build(args) -> None:
         [sys.executable, "-m", "unittest", "discover", "-s", "tests", "-p", "test_wtpdf_requirements.py"],
     ):
         run(command, source)
-    for command in (
-        [sys.executable, "tools/validate_reference.py"],
-        [sys.executable, "tools/build_reading_fixture.py", "--check"],
-        [sys.executable, "tools/validate_derivation.py", "--php", args.php],
-    ):
-        run(command, html)
+    validate_html_module(args, html, work, pdfs)
     api = work / "api.json"
     run([args.php, content / "tools/export_api.php", api, source, manifest, opentype, html], source)
     for example in sorted((source / "examples").glob("*.php")):
@@ -98,6 +125,7 @@ if __name__ == "__main__":
     parser.add_argument("--output", type=Path, default=Path("_site"))
     parser.add_argument("--docs-revision", required=True)
     parser.add_argument("--php", default="php")
+    parser.add_argument("--node", default="node", help="Node executable for the released HTML module's runtime oracle")
     parser.add_argument("--qpdf", default="qpdf")
     parser.add_argument("--openssl", default=shutil.which("openssl"), help="Explicit OpenSSL executable for offline signature/timestamp examples and oracles")
     parser.add_argument("--pdftoppm", default="pdftoppm")

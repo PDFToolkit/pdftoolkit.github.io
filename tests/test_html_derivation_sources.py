@@ -41,6 +41,28 @@ class HtmlDerivationSourcesTest(unittest.TestCase):
         self.assertEqual('modules/to-html/reporting.html', route_for('modules/to-html/signalements.html', 'en'))
         self.assertIn('HTML derivation', translate_interface('<h2>Architecture de la dérivation HTML</h2>'))
 
+    def test_html_module_navigation_exposes_the_three_new_bilingual_guides(self):
+        owner = 'pdftoolkit/pdf-to-html'
+        guides = {route: (source, title) for source, route, title in MODULES[owner][2]}
+        expected_titles = {
+            'requirements': 'HTML derivation requirements',
+            'policies': 'HTML derivation policies',
+            'graphics': 'PDF graphics and figure rendering',
+        }
+        site = Site.__new__(Site)
+        site.base = '/'
+        for language in ('en', 'fr'):
+            site.language = language
+            navigation = site.module_navigation(owner)
+            for route, english_title in expected_titles.items():
+                with self.subTest(language=language, route=route):
+                    source, title = guides[route]
+                    self.assertEqual('docs/fr/' + route + '.md', localized_source(owner, source, 'fr'))
+                    expected_url = '/' + ('fr/' if language == 'fr' else '') + f'modules/to-html/{route}.html'
+                    self.assertIn('href="' + expected_url + '"', navigation)
+                    self.assertIn(english_title, translate_interface(navigation))
+                    self.assertIn(title, navigation)
+
     def test_generated_html_downloads_and_frames_share_the_same_url_in_both_languages(self):
         site = Site.__new__(Site)
         for language in ('en', 'fr'):
