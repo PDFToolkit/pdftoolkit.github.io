@@ -2,6 +2,17 @@
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-10-14
+
+- Document Composer installation of all four PHP libraries from Packagist,
+  including optional modules and the core's independent installation.
+- Link the published Packagist packages from package cards, module entry points
+  and API package indexes.
+- Distinguish application installation from the locked development checkout
+  used to execute tutorials and build their actual PDF results.
+- Select core 0.5.4 and module 0.1.5 source releases for the documented package
+  versions and installation commands.
+
 ## [0.1.0] - 2026-10-14
 
 - Centralize PDFToolkit documentation at https://pdftoolkit.github.io/ in a
