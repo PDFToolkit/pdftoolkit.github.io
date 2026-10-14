@@ -467,10 +467,10 @@ class Site:
 
     def sidebar(self, current: str) -> str:
         groups = [
-            ('Découvrir', [('index.html', 'Accueil'), ('guides/demarrer.html', 'Démarrer'), ('guides/modules.html', 'Core et modules'), ('guides/composants.html', 'Les composants'), ('guides/architecture.html', 'Architecture')]),
+            ('Découvrir', [('index.html', 'Accueil'), ('guides/demarrer.html', 'Démarrer'), ('guides/modules.html', 'Core et modules'), ('guides/pdf-2-0.html', 'PDF 2.0'), ('guides/composants.html', 'Les composants'), ('guides/architecture.html', 'Architecture')]),
             ('Packages', [('modules/core/index.html', 'Core : objets et écriture'), *[(f'modules/{slug}/index.html', title) for slug, title, _ in MODULES.values()]]),
+            ('Explorer', [('reference/index.html', 'Référence des composants'), ('guides/couverture.html', 'Couverture de la norme'), ('guides/mecanismes.html', 'Couverture des éditions PDF'), ('guides/pdf-2-0-bundle.html', 'Spécifications complémentaires PDF 2.0'), ('guides/supplement-adobe.html', 'Supplément Adobe'), ('guides/references-adobe.html', 'Références Adobe conservées'), ('guides/securite.html', 'Sécurité'), ('guides/versions.html', 'Versions')]),
             ('Apprendre', [('tutorials/index.html', 'Tous les tutoriels'), *[(f'tutorials/{slug}.html', f'{i:02d}. {title}') for i, (_, slug, title, _, _) in enumerate(LESSONS, 1)], ('recipes/table.html', 'Recette : tableau')]),
-            ('Explorer', [('reference/index.html', 'Référence des composants'), ('guides/couverture.html', 'Couverture de la norme'), ('guides/supplement-adobe.html', 'Supplément Adobe'), ('guides/securite.html', 'Sécurité'), ('guides/versions.html', 'Versions')]),
         ]
         html = ''
         for label, links in groups:
@@ -505,7 +505,7 @@ class Site:
 <link rel="stylesheet" href="{e(self.url('assets/site.css') + '?v=' + self.stylesheet_revision)}"><script defer src="{e(self.url('assets/site.js') + '?v=' + self.script_revision)}"></script></head>
 <body><a class="skip-link" href="#main">Aller au contenu</a>
 <header class="site-header"><a class="brand" href="{e(self.url('index.html'))}"><span class="brand-mark" aria-hidden="true">◈</span> PDFToolkit <small>objet par objet</small></a>
-<nav class="top-nav" aria-label="Navigation principale"><a href="{e(self.url('guides/modules.html'))}">Packages</a><a href="{e(self.url('tutorials/index.html'))}">Tutoriels</a><a href="{e(self.url('reference/index.html'))}">Référence</a><a href="{DOCUMENTATION_REPOSITORY}">GitHub ↗</a></nav>
+<nav class="top-nav" aria-label="Navigation principale"><a href="{e(self.url('guides/modules.html'))}">Packages</a><a href="{e(self.url('guides/pdf-2-0.html'))}">PDF 2.0</a><a href="{e(self.url('tutorials/index.html'))}">Tutoriels</a><a href="{e(self.url('reference/index.html'))}">Référence</a><a href="{DOCUMENTATION_REPOSITORY}">GitHub ↗</a></nav>
 {switch}
 <button id="menu-button" class="menu-button" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button></header>
 <div class="site-shell"><aside id="site-nav" class="sidebar" aria-label="Documentation">{self.sidebar(route)}<p class="sidebar-version">Core <strong>{e(self.release)}</strong> · modules {e(self.module_versions)}<br>PHP 8.3+ 64 bits · PDF 1.7 et 2.0</p></aside>

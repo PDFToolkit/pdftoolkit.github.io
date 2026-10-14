@@ -214,6 +214,7 @@ TEXT = {
     'Ce PDF balisé est l’entrée de la conversion. Le résultat HTML est produit par le script exécuté pendant la construction du site ; l’aperçu conserve la structure sémantique plutôt que la mise en page du PDF.': 'This tagged PDF is the conversion input. The HTML result is produced by the script run during the site build; its preview preserves semantic structure rather than the PDF layout.',
     'Sortie réelle de la dérivation, isolée dans une frame sans autorisation de script, de formulaire ou de navigation de la page principale.': 'Actual derivation output, isolated in a frame without permission to run scripts, submit forms or navigate the parent page.',
     'Bundle PDF 2.0 : mécanismes et vérifications': 'PDF 2.0 bundle: mechanisms and validation',
+    'Spécifications complémentaires PDF 2.0': 'PDF 2.0 companion specifications',
     'Métadonnées, déclarations et parties documentaires': 'Metadata, declarations and document parts',
     'XMP, portée des déclarations, compensation du point noir et DPart.': 'XMP, declaration scope, black point compensation and DPart.',
     'Une enveloppe pour un PDF chiffré': 'A wrapper for an encrypted PDF',
