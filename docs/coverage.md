@@ -1,9 +1,33 @@
-# Couverture des deux références PDF
+# Couverture par édition PDF
 
-Le modèle couvre les tableaux de dictionnaires des deux références. Cela ne suffit
+Les corpus ISO1 et Adobe couvrent leurs tableaux de dictionnaires ; ISO2 a
+actuellement un pilote vérifié séparément. Ces périmètres ne doivent pas devenir
+une affirmation de support PDF 2.0 complet. Couvrir les tableaux ne suffit
 pas à déclarer toute leur implémentation terminée : un tableau décrit des objets,
 alors que certains chapitres imposent aussi un algorithme, des liens entre objets
 ou un comportement de lecteur.
+
+## Premier support ISO 32000-2:2020 EC3 dans 0.6.0
+
+Le [guide PDF 2.0](pdf-2-0.md) conserve une édition et un profil de corrections
+distincts. Son pilote contient quatre tableaux et 53 entrées : 29 (catalogue,
+pp.113–117), 43 (fichier, pp.149–152), 356 (espace de noms, p.744) et 409a
+(MCAF, p.1015). L'[inventaire ISO2](https://github.com/PDFToolkit/pdf/blob/v0.6.1/resources/iso32000-2-2020/coverage.json)
+laisse explicitement le catalogue complet en attente. Aucun pourcentage ne
+mélange ce pilote aux inventaires de tableaux ISO1/Adobe complets.
+
+Les ajouts exécutables couvrent en-tête/catalogue 2.0, stratégies de chaînes
+textuelles dont UTF-8 avec BOM, relations AF et ressources MCAF nommées corrigées,
+contrôles du graphe et des révisions effectifs, applicabilité, interdiction R=5
+et règles PDF 2.0 des permissions à clé publique. Le
+[PDF réel du tutoriel](tutorials/27-pdf20-associated-files.md) exerce métadonnées
+Unicode, texte visible CID et CSV associé au document, à la page et au contenu marqué.
+
+R=6, graphes natifs d'espaces de noms/rôles, DSS/horodatages, arbres de parties
+documentaires, enveloppes chiffrées, géospatial et conformité complète restent
+à construire. La norme personnalisée fournie est conservée en privé avec
+métadonnées et pages physiques ; aucun téléchargement public de ce PDF n'est
+proposé. Les références Adobe ci-dessous restent téléchargeables sans modification.
 
 ## Références conservées
 

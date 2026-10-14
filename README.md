@@ -27,7 +27,7 @@ The module guides are published here from their released package sources.
 The PHP libraries are available on Packagist. Install the core with Composer:
 
 ```sh
-composer require "roukmoute/pdf:^0.5.4"
+composer require "roukmoute/pdf:^0.6.1"
 ```
 
 Choose the optional modules according to the files your application handles:

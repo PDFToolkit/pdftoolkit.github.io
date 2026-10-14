@@ -4,6 +4,26 @@
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-10-14
+
+- Document core 0.6.1 and optional modules 0.1.7 from their published versions;
+  preserve separate package commits and documentation provenance.
+- Add complete English/French PDF 2.0 guidance and tutorial 27, including the
+  actual PDF, embedded-font rendering, Unicode F/UF names and CSV bytes.
+- Explain AF owner associations, corrected named MCAF content, frozen native
+  emission facts, PDF 2.0 Form resources and bounded source-date validation.
+  Keep dictionary UTF-8 text distinct from font/CID content encoding.
+- Add edition-specific ISO 32000-2 pilot API panels and search records; table
+  numbers no longer attach an ISO1 source to ISO2 definitions or native MCAF.
+- Record the private supplied EC3 source through metadata and physical pages,
+  without publishing its personalised PDF or generating a broken download URL.
+- Distinguish ISO-approved Completed from TWG-approved Accepted corrections,
+  introduced/deprecated/prohibited features, R5 rejection and PDF 2.0 CMS
+  permissions; keep the complete catalogue, R6 and remaining mechanisms pending.
+- Preserve all 26 existing lessons, reference PDFs, shared downloads, locale
+  routes and legacy aliases. Validate bilingual structure, provenance regression
+  cases and the actual example through the independent PDF 2.0 oracle.
+
 ## [0.2.0] - 2026-10-14
 
 - Publish complete English and French guides, all 26 tutorials, recipes and

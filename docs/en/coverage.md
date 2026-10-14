@@ -1,9 +1,33 @@
-# Coverage of the two PDF references
+# Coverage by PDF edition
 
-The model covers the dictionary tables of both references. That is not enough
+The ISO1 and Adobe corpora cover their dictionary tables; ISO2 currently has
+a separately reviewed pilot. These scopes must not be combined into a claim
+of complete PDF 2.0 support. Dictionary coverage is not enough
 to declare their entire implementation complete: a table describes objects,
 while some chapters also require an algorithm, relationships between objects
 or reader behavior.
+
+## First ISO 32000-2:2020 EC3 support in 0.6.0
+
+The [PDF 2.0 guide](pdf-2-0.md) records a distinct edition and correction profile.
+Its pilot has four tables and 53 entries: 29 (catalog, pp.113–117), 43
+(file specification, pp.149–152), 356 (namespace, p.744) and 409a (MCAF, p.1015).
+The [ISO2 inventory](https://github.com/PDFToolkit/pdf/blob/v0.6.1/resources/iso32000-2-2020/coverage.json)
+explicitly leaves the complete dictionary catalogue pending. No percentage mixes
+this pilot with the complete ISO1/Adobe table inventories.
+
+Executable additions include header/catalog 2.0, explicit text-string encoding
+strategies including UTF-8 with BOM, AF relationships and corrected named MCAF
+property resources, effective graph/revision checks, feature applicability,
+R=5 prohibition and PDF 2.0 public-key permission rules. The
+[generated tutorial PDF](tutorials/27-pdf20-associated-files.md) exercises Unicode
+metadata, visible CID text and a CSV associated with document, page and marked content.
+
+R=6, native namespace/role graphs, DSS/timestamps, document-parts trees,
+encrypted wrappers, geospatial features and complete conformance remain open.
+The supplied personalised standard is retained privately, with metadata and
+physical page provenance; it has no public PDF download. The public Adobe
+reference downloads below remain available unchanged.
 
 ## Retained references
 

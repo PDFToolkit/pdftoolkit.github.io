@@ -7,7 +7,7 @@ versions selected by the [source manifest](../../../resources/sources.json).
 The build verifies their exact commits and agreement with the core source
 checkout's `composer.lock`.
 
-Lessons 09 and 10 use the optional `pdftoolkit/pdf-fonts` and
+Lessons 09, 10 and 27 use the optional `pdftoolkit/pdf-fonts` and
 `pdftoolkit/pdf-images` modules, installed as development dependencies in the
 core checkout. Their PDF objects remain in the core. The [package guide](../packages.md)
 explains how to install only the mechanisms an application needs and presents
@@ -24,7 +24,7 @@ text is a sequence of operators.
 The core and modules are available on Packagist. From your project:
 
 ```sh
-composer require "roukmoute/pdf:^0.5.5"
+composer require "roukmoute/pdf:^0.6.1"
 ```
 
 Lessons 09, 10 and 12 use `pdftoolkit/pdf-fonts`, `pdftoolkit/pdf-images` and
@@ -42,12 +42,12 @@ see the [build instructions](../site/README.md) to prepare sources at the
 documented versions. From the core checkout:
 
 ```sh
-export COMPOSER_ROOT_VERSION=0.5.x-dev
+export COMPOSER_ROOT_VERSION=0.6.x-dev
 composer install
 php examples/hello-world.php
 ```
 
-Under PowerShell, set `$env:COMPOSER_ROOT_VERSION = '0.5.x-dev'` before
+Under PowerShell, set `$env:COMPOSER_ROOT_VERSION = '0.6.x-dev'` before
 `composer install`. The checkout uses its `composer.lock` to install development
 tools and all three modules at the documented versions.
 
@@ -101,6 +101,7 @@ PDF, all three pages and the objects read.
 | [24. Embedded files](24-embedded-files.md) | EF, RF, metadata and collections. | [embedded-files.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/embedded-files.php) |
 | [25. Object generations](25-object-lifecycle.md) | Deletion, free list and reuse. | [object-lifecycle.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/object-lifecycle.php) |
 | [26. Signature policy](26-signature-field-policy.md) | Field, seeds, lock and an actually signed result. | [signature-field-policy.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/signature-field-policy.php) |
+| [27. PDF 2.0 and associated files](27-pdf20-associated-files.md) | Unicode metadata, AF relationships and corrected named MCAF resources. | [pdf20-associated-files.php](https://github.com/PDFToolkit/pdf/blob/v0.6.1/examples/pdf20-associated-files.php) |
 
 After the first document, lessons 03 to 07 can be read in any order matching
 your interests. Lessons 08 and 11 concern file organization; lessons 09 and 10

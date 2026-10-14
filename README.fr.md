@@ -30,7 +30,7 @@ Les bibliothèques PHP sont disponibles sur Packagist. Installer le core avec
 Composer :
 
 ```sh
-composer require "roukmoute/pdf:^0.5.4"
+composer require "roukmoute/pdf:^0.6.1"
 ```
 
 Choisir les modules optionnels selon les fichiers traités par l'application :

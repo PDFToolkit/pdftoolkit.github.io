@@ -61,6 +61,12 @@ It publishes input-PDF bytes, its three previews and reading console output.
 Their provenance uses the reader commit pinned in the manifest; the core
 retains its generation examples.
 
+The ISO 32000-2:2020 EC3 pilot is read from `resources/iso32000-2-2020/`.
+Its API panels use explicit edition mappings rather than bare table numbers.
+`privateSpecificationSources` records its source identity and published metadata
+URL without a PDF download. The personalised private copy is never copied into
+site output. Lesson 27 uses a real generated PDF and the selected font module.
+
 ## Local build
 
 The workflow uses PHP 8.3 or later, Composer, Python 3.13, Poppler

@@ -2,7 +2,7 @@
 
 Ces tutoriels expliquent comment un fichier PDF relie ses valeurs, dictionnaires, ressources et instructions de dessin. Chaque leçon accompagne un script complet, commenté et exécutable. Les exemples utilisent les versions publiées du core et des modules sélectionnées dans le [manifeste de sources](../../resources/sources.json). La construction vérifie leurs commits exacts et leur accord avec le `composer.lock` du checkout source du core.
 
-Les leçons 09 et 10 utilisent les modules optionnels `pdftoolkit/pdf-fonts` et
+Les leçons 09, 10 et 27 utilisent les modules optionnels `pdftoolkit/pdf-fonts` et
 `pdftoolkit/pdf-images`, installés comme dépendances de développement dans le
 checkout du core. Leurs objets PDF restent dans le core. Le [guide des packages](../packages.md)
 explique comment installer seulement les mécanismes nécessaires à une application
@@ -15,7 +15,7 @@ Le parcours s'inspire de l'organisation des [tutoriels FPDF](https://www.fpdf.or
 Le core et les modules sont disponibles sur Packagist. Depuis votre projet :
 
 ```sh
-composer require "roukmoute/pdf:^0.5.5"
+composer require "roukmoute/pdf:^0.6.1"
 ```
 
 Les leçons 09, 10 et 12 utilisent respectivement `pdftoolkit/pdf-fonts`,
@@ -29,12 +29,12 @@ donne leurs commandes d'installation. L'application charge son propre
 Il faut PHP 8.3 ou supérieur et les extensions `ctype`, `iconv` et `zlib`. Les commandes des leçons s'exécutent depuis la racine d'un checkout du core `PDFToolkit/pdf`. Les fichiers Markdown et la construction du site appartiennent à `PDFToolkit/pdftoolkit.github.io` ; voir les [instructions de construction](../site/README.md) pour préparer les sources aux versions documentées. Depuis le checkout du core :
 
 ```sh
-export COMPOSER_ROOT_VERSION=0.5.x-dev
+export COMPOSER_ROOT_VERSION=0.6.x-dev
 composer install
 php examples/hello-world.php
 ```
 
-Sous PowerShell, définir `$env:COMPOSER_ROOT_VERSION = '0.5.x-dev'` avant
+Sous PowerShell, définir `$env:COMPOSER_ROOT_VERSION = '0.6.x-dev'` avant
 `composer install`. Le checkout utilise son `composer.lock` pour installer
 les outils de développement et les trois modules aux versions documentées.
 
@@ -85,6 +85,7 @@ présente le PDF d'entrée, ses trois pages et les objets lus.
 | [24. Fichiers incorporés](24-embedded-files.md) | EF, RF, métadonnées et collections. | [embedded-files.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/embedded-files.php) |
 | [25. Générations des objets](25-object-lifecycle.md) | Suppression, liste libre et réutilisation. | [object-lifecycle.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/object-lifecycle.php) |
 | [26. Politique de signature](26-signature-field-policy.md) | Champ, seeds, verrou et résultat effectivement signé. | [signature-field-policy.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/signature-field-policy.php) |
+| [27. PDF 2.0 et fichiers associés](27-pdf20-associated-files.md) | Métadonnées Unicode, relations AF et ressources MCAF nommées corrigées. | [pdf20-associated-files.php](https://github.com/PDFToolkit/pdf/blob/v0.6.1/examples/pdf20-associated-files.php) |
 
 Les leçons 03 à 07 peuvent se lire dans l'ordre des sujets qui vous intéressent, après le premier document. Les leçons 08 et 11 concernent l'organisation du fichier ; les leçons 09 et 10 ajoutent des programmes de police et des fichiers image réels au graphe. La leçon 12 consulte les structures d'un PDF existant avec les objets du lecteur.
 

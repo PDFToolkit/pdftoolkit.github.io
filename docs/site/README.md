@@ -62,6 +62,13 @@ les octets du PDF d'entrée, ses trois aperçus et la sortie console de lecture.
 Leur provenance utilise le commit du lecteur fixé dans le manifeste ; le core
 conserve ses exemples de génération.
 
+Le pilote ISO 32000-2:2020 EC3 est lu dans `resources/iso32000-2-2020/`.
+Ses fiches API utilisent une édition explicite au lieu du seul numéro de tableau.
+`privateSpecificationSources` conserve l’identité de source et l’URL de métadonnées
+publiées sans téléchargement PDF. La copie privée personnalisée n’est jamais
+copiée dans la sortie du site. La leçon 27 utilise un PDF réellement généré et
+le module de fontes sélectionné.
+
 ## Construction locale
 
 PHP 8.3 ou supérieur, Composer, Python 3.13, Poppler (`pdftoppm`) et qpdf 12.4.2

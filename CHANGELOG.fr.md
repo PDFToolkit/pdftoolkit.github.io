@@ -4,6 +4,26 @@
 
 ## [Non publié]
 
+## [0.3.0] - 2026-10-14
+
+- Documenter le core 0.6.1 et les modules optionnels 0.1.7 depuis leurs versions
+  publiées ; conserver séparément les commits de packages et la provenance du site.
+- Ajouter le guide PDF 2.0 et le tutoriel 27 intégralement en anglais/français,
+  avec PDF réel, rendu de police incorporée, noms F/UF Unicode et octets CSV.
+- Expliquer les associations AF, le contenu MCAF nommé corrigé, les faits figés
+  lors de l’émission native, les ressources des Form PDF 2.0 et la validation
+  bornée des dates sources. Distinguer le texte UTF-8 et les codes de police/CID.
+- Ajouter des fiches API et recherches propres au pilote ISO 32000-2 ; un numéro
+  de tableau n’associe plus une source ISO1 aux définitions ISO2 ou au MCAF natif.
+- Conserver la provenance de la source EC3 privée par ses métadonnées et pages
+  physiques, sans publier son PDF personnalisé ni créer un téléchargement invalide.
+- Distinguer Completed approuvé par ISO d’Accepted approuvé par le TWG,
+  les fonctionnalités introduites/dépréciées/interdites, le refus R5 et les
+  permissions CMS PDF 2.0 ; garder catalogue complet, R6 et autres mécanismes en attente.
+- Préserver les 26 leçons existantes, PDF de référence, téléchargements, langues
+  et adresses historiques. Vérifier structure bilingue, régressions de provenance
+  et exemple réel avec l’oracle PDF 2.0 indépendant.
+
 ## [0.2.0] - 2026-10-14
 
 - Publier les guides, les 26 tutoriels, les recettes et les documentations des

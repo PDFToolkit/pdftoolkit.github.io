@@ -26,13 +26,152 @@ GROUP_ROUTES = {
     'document': 'document', 'fonctions': 'functions', 'filtres': 'filters',
     'lexique': 'lexical-conventions', 'norme': 'specification',
     'dictionnaires': 'dictionaries', 'entrees': 'entries', 'definitions': 'definitions',
-    'adobe': 'adobe', 'securite': 'security', 'polices-externes': 'external-fonts',
+    'adobe': 'adobe', 'iso2': 'pdf-2-0', 'securite': 'security', 'polices-externes': 'external-fonts',
     'images-externes': 'external-images', 'lecture': 'reader',
 }
 ENGLISH_ROUTES.update({f'reference/groups/{old}.html': f'reference/groups/{new}.html' for old, new in GROUP_ROUTES.items()})
 for module in ('reader', 'images', 'fonts'):
     ENGLISH_ROUTES[f'modules/{module}/signalements.html'] = f'modules/{module}/reporting.html'
     ENGLISH_ROUTES[f'modules/{module}/versions.html'] = f'modules/{module}/changelog.html'
+
+
+# Project-authored pilot summaries, translated independently of original normative prose.
+ISO2_DESCRIPTIONS_FR = {'Identifies the document catalog.': 'Identifie le catalogue du document.',
+ 'A catalog-level PDF version declaration later than the file header.': 'Déclare dans le catalogue une version '
+                                                                        'PDF plus récente que celle de l’en-tête.',
+ 'Developer extension declarations, held in a direct dictionary.': 'Déclarations d’extensions des développeurs, '
+                                                                   'conservées dans un dictionnaire direct.',
+ 'An indirect reference to the root page-tree node.': 'Référence indirecte vers le nœud racine de l’arbre des '
+                                                      'pages.',
+ 'Page-label ranges with an entry for the first page.': 'Plages de libellés de pages, avec une entrée pour la '
+                                                        'première page.',
+ 'Document name trees; the encrypted-wrapper conditions are separate graph rules.': 'Arbres de noms du document ; '
+                                                                                    'les conditions des '
+                                                                                    'enveloppes chiffrées '
+                                                                                    'relèvent de règles de graphe '
+                                                                                    'séparées.',
+ 'An indirect dictionary of named destinations.': 'Dictionnaire indirect de destinations nommées.',
+ 'Preferences controlling document presentation.': 'Préférences de présentation du document.',
+ 'Initial arrangement of displayed pages.': 'Disposition initiale des pages affichées.',
+ 'Initial document viewing mode.': 'Mode initial de consultation du document.',
+ 'An indirect reference to the outline hierarchy root.': 'Référence indirecte vers la racine de la hiérarchie des '
+                                                         'signets.',
+ 'An indirect array of article-thread dictionaries.': 'Tableau indirect de dictionnaires de fils de lecture '
+                                                      'd’articles.',
+ 'Initial action or destination.': 'Action ou destination initiale.',
+ 'Document-wide additional actions.': 'Actions supplémentaires portant sur tout le document.',
+ 'Document-level URI action information.': 'Informations documentaires pour les actions URI.',
+ 'Interactive form root.': 'Racine du formulaire interactif.',
+ 'An indirectly referenced document metadata stream.': 'Flux de métadonnées du document référencé indirectement.',
+ 'An indirect reference to the logical structure tree root.': 'Référence indirecte vers la racine de l’arbre de '
+                                                              'structure logique.',
+ 'Information about tagged-PDF conventions.': 'Informations sur les conventions du PDF balisé.',
+ 'Default natural language for document text.': 'Langue naturelle par défaut du texte documentaire.',
+ 'Historical web-capture information; deprecated in PDF 2.0.': 'Informations historiques de capture web, '
+                                                               'dépréciées en PDF 2.0.',
+ 'Output-intent dictionaries describing rendering conditions.': 'Dictionnaires d’intentions de sortie décrivant '
+                                                                'les conditions de rendu.',
+ 'Document-associated private application data.': 'Données privées d’application associées au document.',
+ 'Optional-content configuration, required when optional content exists.': 'Configuration du contenu optionnel, '
+                                                                           'requise lorsque ce contenu existe.',
+ 'Document access-permission information.': 'Informations sur les permissions d’accès au document.',
+ 'Digital-signature legal-content attestations.': 'Attestations de contenu juridique pour les signatures '
+                                                  'numériques.',
+ 'Document requirement dictionaries.': 'Dictionnaires d’exigences documentaires.',
+ 'Portable-collection presentation; wrapper-specific requirements are separate.': 'Présentation de collection '
+                                                                                  'portable ; les exigences des '
+                                                                                  'enveloppes sont séparées.',
+ 'Historical XFA display-regeneration hint; deprecated in PDF 2.0.': 'Indication historique de régénération de '
+                                                                     'l’affichage XFA, dépréciée en PDF 2.0.',
+ 'Document Security Store; validation-data semantics are not implemented by this schema.': 'Document Security '
+                                                                                           'Store ; ce schéma '
+                                                                                           'n’implémente pas la '
+                                                                                           'sémantique des '
+                                                                                           'données de '
+                                                                                           'validation.',
+ 'Associated file specifications; their relationships are validated by the native mechanism.': 'Spécifications de '
+                                                                                               'fichiers '
+                                                                                               'associés, dont '
+                                                                                               'les relations '
+                                                                                               'sont vérifiées '
+                                                                                               'par le mécanisme '
+                                                                                               'natif.',
+ 'An indirect reference to the document-parts hierarchy root.': 'Référence indirecte vers la racine de la '
+                                                                'hiérarchie des parties documentaires.',
+ 'Filespec identifies a file-specification dictionary; EF, EP and RF trigger the required Type entry.': 'Filespec '
+                                                                                                        'identifie '
+                                                                                                        'une '
+                                                                                                        'spécification '
+                                                                                                        'de '
+                                                                                                        'fichier '
+                                                                                                        '; EF, EP '
+                                                                                                        'et RF '
+                                                                                                        'rendent '
+                                                                                                        'l’entrée '
+                                                                                                        'Type '
+                                                                                                        'obligatoire.',
+ 'File system used to interpret the specification.': 'Système de fichiers utilisé pour interpréter la '
+                                                     'spécification.',
+ 'Fallback file name, required when platform-specific names are absent.': 'Nom de fichier de repli, requis en '
+                                                                          'l’absence de noms propres aux '
+                                                                          'plateformes.',
+ 'Unicode file name preferred over F when present.': 'Nom Unicode préféré à F lorsqu’il est présent.',
+ 'A historical platform-specific file name, deprecated in PDF 2.0.': 'Nom de fichier historique propre à une '
+                                                                     'plateforme, déprécié en PDF 2.0.',
+ 'Two byte-string identifiers of the referenced file.': 'Deux identifiants du fichier référencé, exprimés comme '
+                                                        'chaînes d’octets.',
+ 'Whether the referenced file is volatile.': 'Indique si le fichier référencé est volatil.',
+ 'Embedded-file stream bindings; required with related-file bindings.': 'Liaisons de flux de fichiers incorporés, '
+                                                                        'requises avec des liaisons de fichiers '
+                                                                        'liés.',
+ 'Related-file arrays matching embedded-file bindings.': 'Tableaux de fichiers liés correspondant aux liaisons '
+                                                         'des fichiers incorporés.',
+ 'Description of the file specification.': 'Description de la spécification de fichier.',
+ 'An indirect reference to portable-collection item metadata.': 'Référence indirecte vers les métadonnées d’un '
+                                                                'élément de collection portable.',
+ 'An indirectly referenced file thumbnail image.': 'Image de miniature du fichier référencée indirectement.',
+ 'Encrypted-payload identification; required for encrypted-wrapper payloads.': 'Identification de la charge '
+                                                                               'chiffrée, requise pour les '
+                                                                               'charges des enveloppes chiffrées.',
+ 'Relationship between the referring PDF object or marked content and its associated file.': 'Relation entre '
+                                                                                             'l’objet PDF ou le '
+                                                                                             'contenu marqué '
+                                                                                             'référent et son '
+                                                                                             'fichier associé.',
+ 'Identifies a namespace dictionary when present.': 'Identifie un dictionnaire d’espace de noms lorsque cette '
+                                                    'entrée est présente.',
+ 'Namespace identity, conventionally a URI.': 'Identité de l’espace de noms, généralement une URI.',
+ 'File specification of the namespace schema.': 'Spécification de fichier du schéma de l’espace de noms.',
+ 'Namespace-specific role mappings; cross-namespace graph semantics remain separate.': 'Correspondances de rôles '
+                                                                                       'propres à l’espace de '
+                                                                                       'noms ; la sémantique du '
+                                                                                       'graphe entre espaces '
+                                                                                       'reste séparée.',
+ 'One or more associated file specifications, each carrying AFRelationship; use a named property resource.': 'Une '
+                                                                                                             'ou '
+                                                                                                             'plusieurs '
+                                                                                                             'spécifications '
+                                                                                                             'de '
+                                                                                                             'fichiers '
+                                                                                                             'associés, '
+                                                                                                             'chacune '
+                                                                                                             'avec '
+                                                                                                             'AFRelationship '
+                                                                                                             '; '
+                                                                                                             'utiliser '
+                                                                                                             'une '
+                                                                                                             'ressource '
+                                                                                                             'de '
+                                                                                                             'propriétés '
+                                                                                                             'nommée.'}
+
+
+def iso2_description(value, language):
+    if language == 'fr' and value in ISO2_DESCRIPTIONS_FR:
+        return ISO2_DESCRIPTIONS_FR[value], 'fr'
+    # Unknown input stays honestly labelled English; complete site builds reject
+    # missing pilot translations before rendering either public locale.
+    return value, 'en'
 
 
 def route_for(route, language):
@@ -60,6 +199,22 @@ def canonical_source(owner, source):
 
 
 TEXT = {
+    'Couverture des éditions PDF': 'Coverage by PDF edition',
+    'PDF 2.0 : premiers mécanismes': 'PDF 2.0: first mechanisms',
+    'PDF 2.0 et fichiers associés': 'PDF 2.0 and associated files',
+    'Métadonnées UTF-8, fichiers AF et propriétés MCAF nommées.': 'UTF-8 metadata, AF files and named MCAF properties.',
+    'PDF 2.0 : pilote ISO 32000-2': 'PDF 2.0: ISO 32000-2 pilot',
+    'Premiers mécanismes PDF 2.0': 'First PDF 2.0 mechanisms',
+    'PHP 8.3+ · PDF 1.7 · Premiers mécanismes PDF 2.0': 'PHP 8.3+ · PDF 1.7 · First PDF 2.0 mechanisms',
+    'Requis': 'Required', 'Facultatif': 'Optional',
+    'Définition ISO 32000-2:2020 EC3': 'ISO 32000-2:2020 EC3 definition',
+    'Métadonnées de la source au commit documenté ↗': 'Source metadata at the documented commit ↗',
+    'Errata publics ↗': 'Public errata ↗',
+    'Copie source conservée en privé. Catalogue pilote — couverture complète en attente.': 'Source copy retained privately. Pilot catalogue — complete coverage pending.',
+    'Page PDF physique': 'Physical PDF page',
+    'Correction EC3': 'EC3 correction',
+    'Résumé d’implémentation rédigé pour le projet.': 'Project-authored implementation summary.',
+    'Périmètre et limites PDF 2.0.': 'PDF 2.0 scope and limits.',
     'Guides': 'Guides', 'Tutoriels': 'Tutorials', 'Recettes': 'Recipes',
     'Couverture des deux références': 'Coverage of both references',
     'Supplément Adobe et extensions': 'Adobe supplement and extensions',
@@ -210,6 +365,9 @@ TEXT = {
 
 # Variable interface messages have bounded, explicit sentence templates.
 PATTERNS = [
+    (r'Correction EC3 /(.+)', lambda m: 'EC3 correction /' + m[1]),
+    (r'§(.+) · page PDF (\d+)', lambda m: '§' + m[1] + ' · PDF page ' + m[2]),
+    (r'(Requis|Facultatif); conditionnel', lambda m: translate(m[1]) + '; conditional'),
     (r'(\d{2})\. (.+)', lambda m: m[1] + '. ' + translate(m[2])),
     (r'Tutoriel (\d{2})', lambda m: 'Tutorial ' + m[1]),
     (r'Aperçu : (.+)', lambda m: 'Preview: ' + translate(m[1])),

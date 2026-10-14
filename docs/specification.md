@@ -1,6 +1,6 @@
 # Modèle de spécification et couverture
 
-La source faisant autorité pour cette révision est `PDF32000_2008.pdf`,
+Le corpus ISO 32000-1 utilise `PDF32000_2008.pdf`,
 conservé dans le dépôt du core : ISO 32000-1:2008, PDF 1.7. Le document
 supplémentaire `adobe_supplement_iso32000.pdf` décrit Adobe ExtensionLevel 3 ;
 sa [couverture et son catalogue de sources distincts](adobe-supplement.md)
@@ -11,11 +11,13 @@ distinct, comprenant le portfolio original et les relations de ses documents
 incorporés. Ils servent à la comparaison et aux audits ciblés ; leur
 conservation ne modifie pas les inventaires de définitions actifs et ne prouve
 pas l'implémentation de toutes leurs procédures.
-La série 0.5 du core et les versions 0.1.5 des modules optionnels nécessitent
+La série 0.6 du core et les versions 0.1.7 des modules optionnels nécessitent
 PHP 8.3 ou supérieur ; les anciens tags 0.1 du core conservent leur exigence
 PHP 8.5. Ces versions PHP sont indépendantes de la version du format PDF.
-Implémenter PDF 2.0 demande une spécification distincte et des définitions
-explicites propres à cette version.
+Le core 0.6 introduit les [premiers mécanismes PDF 2.0](pdf-2-0.md) et un
+pilote ISO 32000-2:2020 EC3 distinct. Ses quatre tableaux et 53 classes d’entrée
+ne modifient pas les chiffres ISO1 ci-dessous et ne garantissent pas une
+conformité PDF 2.0 complète.
 
 La source contient 756 pages PDF, 823 entrées de plan, 370 tableaux numérotés
 principaux et 22 tableaux d'annexes. Le catalogue recense les 392 tableaux et

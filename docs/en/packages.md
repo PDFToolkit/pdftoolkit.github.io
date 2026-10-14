@@ -1,7 +1,7 @@
 # Core and optional modules
 
 PDFToolkit separates the PDF model from external-file processing. The
-**0.5-series core** and three **0.1-series modules** use PHP 8.3 or later and CI
+**0.6-series core** and three **0.1-series modules** use PHP 8.3 or later and CI
 on PHP 8.3, 8.4 and 8.5. The core retains its Composer name `roukmoute/pdf`
 after transfer to the organization; new modules use the `pdftoolkit/` prefix.
 
@@ -44,6 +44,8 @@ another. The core knows none of their parsers: an application can directly
 construct its PDF objects or feed them through another converter. The object
 model is shared, without parallel copies of primitives or a global registry.
 
+Core 0.6 adds [initial PDF 2.0 writing](pdf-2-0.md), UTF-8 dictionary text and associated files. This does not expand the optional reader’s PDF 1.0–1.7 scope.
+
 ## Installing what the application needs
 
 All four packages are available on Packagist:
@@ -51,33 +53,33 @@ All four packages are available on Packagist:
 [reader](https://packagist.org/packages/pdftoolkit/pdf-reader),
 [images](https://packagist.org/packages/pdftoolkit/pdf-images) and
 [fonts](https://packagist.org/packages/pdftoolkit/pdf-fonts).
-Stable constraints are `roukmoute/pdf:^0.5.5` for the core and
-`pdftoolkit/pdf-reader:^0.1.6`, `pdftoolkit/pdf-images:^0.1.6` or
-`pdftoolkit/pdf-fonts:^0.1.6` for modules. Older core tags `v0.1.0` and
+Stable constraints are `roukmoute/pdf:^0.6.1` for the core and
+`pdftoolkit/pdf-reader:^0.1.7`, `pdftoolkit/pdf-images:^0.1.7` or
+`pdftoolkit/pdf-fonts:^0.1.7` for modules. Older core tags `v0.1.0` and
 `v0.1.1` retain their PHP 8.5 constraint.
 
 To generate PDFs only:
 
 ```sh
-composer require "roukmoute/pdf:^0.5.5"
+composer require "roukmoute/pdf:^0.6.1"
 ```
 
 To add reading of existing PDFs:
 
 ```sh
-composer require "roukmoute/pdf:^0.5.5" "pdftoolkit/pdf-reader:^0.1.6"
+composer require "roukmoute/pdf:^0.6.1" "pdftoolkit/pdf-reader:^0.1.7"
 ```
 
 To convert images:
 
 ```sh
-composer require "roukmoute/pdf:^0.5.5" "pdftoolkit/pdf-images:^0.1.6"
+composer require "roukmoute/pdf:^0.6.1" "pdftoolkit/pdf-images:^0.1.7"
 ```
 
 To analyze TrueType fonts:
 
 ```sh
-composer require "roukmoute/pdf:^0.5.5" "pdftoolkit/pdf-fonts:^0.1.6"
+composer require "roukmoute/pdf:^0.6.1" "pdftoolkit/pdf-fonts:^0.1.7"
 ```
 
 Composer resolves these packages from Packagist and downloads their published
@@ -89,14 +91,14 @@ Applications that added GitHub repositories under `repositories` can remove
 those entries from `composer.json`. Composer package names remain identical.
 
 Before 1.0, a new minor release may change names and signatures. The
-`^0.5.5` and `^0.1.6` constraints allow patches within their series and
+`^0.6.1` and `^0.1.7` constraints allow patches within their series and
 exclude the next minor release. Consult changelogs before switching series.
 To work with upcoming development, explicitly request `dev-master` for the
 relevant packages.
 
-Module releases 0.1.5 accept core series `^0.2 || ^0.3 || ^0.4 || ^0.5`.
+Module releases 0.1.7 accept core series `^0.2 || ^0.3 || ^0.4 || ^0.5 || ^0.6`.
 An application remaining on 0.2, 0.3 or 0.4 can therefore update them; the
-commands above explicitly select core 0.5 constructions. The core retains
+commands above explicitly select core 0.6 constructions. The core retains
 mandatory PHP extensions `ctype`, `iconv` and `zlib`. AES, CMS and signature
 backends using OpenSSL also require `openssl` when selected by the application.
 

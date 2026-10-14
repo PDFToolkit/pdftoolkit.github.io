@@ -29,9 +29,11 @@ def build(args) -> None:
     previews.mkdir(exist_ok=True)
     manifest = args.sources.resolve() if args.sources else content / "resources/sources.json"
     check(source, manifest, args.remote)
+    run([sys.executable, "-m", "unittest", "discover", "-s", content / "tests", "-p", "test_*.py"], content)
     for command in (
         [sys.executable, "tools/generate_specification.py", "--check"],
         [sys.executable, "tools/generate_adobe_supplement.py", "--check"],
+        [sys.executable, "tools/generate_iso32000_2_pilot.py", "--check"],
         [sys.executable, "tools/build_saslprep_tables.py", "--check"],
         [sys.executable, "tools/validate_adobe_references.py"],
     ):
@@ -51,6 +53,8 @@ def build(args) -> None:
     run([args.pdftoppm, "-r", "96", "-png", output, previews / "reading-pages"], source)
     for validator in ("validate_mechanisms.py", "validate_adobe_supplement.py"):
         run([sys.executable, "tools/" + validator, pdfs], source)
+    run([sys.executable, "tools/validate_pdf20_foundations.py", "--php", args.php, "--qpdf", args.qpdf, "--example", pdfs / "pdf20-associated-files.pdf"], source)
+    run([sys.executable, "tools/validate_public_key_security.py", "--php", args.php, "--pdf-version", "2.0"], source)
     poppler = ["--poppler-glib-bin", args.poppler_glib_bin] if args.poppler_glib_bin else ["--pdftotext", args.pdftotext]
     run([sys.executable, "tools/validate_source_mechanisms.py", pdfs, "--php", args.php, "--qpdf", args.qpdf, *poppler], source)
     run([sys.executable, content / "tools/build_site.py", "--content-root", content, "--source-root", source,

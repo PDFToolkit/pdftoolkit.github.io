@@ -35,6 +35,7 @@ class Document(HTMLParser):
         self.current_languages = []
         self.redirect_targets = []
         self.search_indexes = []
+        self.specification_panels = []
         self.feed(text)
 
     def handle_starttag(self, tag, attributes):
@@ -57,6 +58,8 @@ class Document(HTMLParser):
             self.current_languages.append(attrs['lang'])
         if tag == 'main' and 'data-redirect-to' in attrs:
             self.redirect_targets.append(attrs['data-redirect-to'])
+        if tag == 'section' and 'data-specification-edition' in attrs:
+            self.specification_panels.append((attrs['data-specification-edition'], attrs.get('data-specification-table')))
         if 'data-search-index' in attrs:
             self.search_indexes.append(attrs['data-search-index'])
         for key in ['href', 'src']:
@@ -244,7 +247,7 @@ def check(root):
     for title in english_records.keys() & french_records.keys():
         english = english_records[title]
         french = french_records[title]
-        for key in ('package', 'optional', 'sourceUrl'):
+        for key in ('package', 'optional', 'sourceUrl', 'specificationEdition', 'specificationTable', 'specificationKey'):
             if english.get(key) != french.get(key):
                 errors.append(f'{title}: API provenance differs between locales: {key}')
         if (english['url'], french['url']) not in translated_pairs:
@@ -422,6 +425,33 @@ def check(root):
         target = root / source['download']
         if not target.is_file() or hashlib.sha256(target.read_bytes()).hexdigest() != source['sha256']:
             errors.append('Missing or modified specification source: ' + source['source'])
+    private_sources = manifest.get('privateSpecificationSources', [])
+    if len(private_sources) != 1:
+        errors.append('ISO 32000-2 needs one distinct private-source provenance record')
+    else:
+        source = private_sources[0]
+        core = packages.get('roukmoute/pdf', {})
+        metadata_url = core.get('repository', '') + '/blob/' + core.get('revision', '') + '/resources/iso32000-2-2020/metadata.json'
+        if source.get('source') != 'ISO_32000-2_sponsored_EC3.pdf' or source.get('editionIdentifier') != 'iso32000-2:2020' or source.get('standard') != 'ISO 32000-2:2020' or source.get('specifiedPdfVersion') != '2.0':
+            errors.append('Private-source identity must remain the distinct ISO 32000-2:2020 edition')
+        if source.get('errataCollection') != {'number': 3, 'publication_date': '2026-06-01'} or source.get('pdfPages') != 1023 or source.get('sha256') != '90f4b666d46405dd62630a98d514158b4de5304b749523c4081680ac4fe2e230':
+            errors.append('Private EC3 source provenance differs from the reviewed supplied copy')
+        if source.get('publicCopyIncluded') is not False or 'download' in source or any(Path(name).name == source.get('source') for name in published_files):
+            errors.append('The personalised ISO 32000-2 source must not be a public PDF download')
+        if source.get('catalogueSourceUrl') != metadata_url or source.get('dictionaryTables') != 4 or source.get('entryClasses') != 53 or source.get('completeCatalogue') is not False:
+            errors.append('ISO 32000-2 pilot scope or metadata provenance is inconsistent')
+        for language in ['en', 'fr']:
+            guide = localized('guides/pdf-2-0.html', language)
+            if guide not in documents or metadata_url not in documents[guide].links:
+                errors.append('PDF 2.0 guide must identify its published pilot source metadata: ' + guide)
+            for item in indexes[language]:
+                name = item['title']
+                expected_pilot = name.startswith('PDF\\Specification\\Iso32000_2\\') or name == 'PDF\\Document\\Files\\AssociatedFilesPropertyList'
+                if expected_pilot or item.get('specificationEdition'):
+                    table = item.get('specificationTable')
+                    document = documents.get(item['url'])
+                    if item.get('specificationEdition') != 'iso32000-2:2020' or table not in {'29', '43', '356', '409a'} or document is None or document.specification_panels != [('iso32000-2:2020', table)] or metadata_url not in document.links:
+                        errors.append('ISO 32000-2 component must retain its own edition/table provenance: ' + name + ' / ' + language)
     references = manifest.get('referenceSources', [])
     expected_references = {
         'pdf_17_errata.pdf', 'pdf_reference.pdf',

@@ -10,14 +10,14 @@ La [documentation en ligne](https://pdftoolkit.github.io/) réunit les guides, l
 
 La série `0.x` est destinée aux développeurs qui souhaitent construire et explorer ce modèle. Avant la version `1.0`, une nouvelle version mineure peut modifier les noms et signatures ; les versions correctives conservent l'API de leur série. Le périmètre implémenté et les limites figurent dans [la couverture de la spécification](specification.md).
 
-Les définitions se fondent sur les documents Adobe/ISO `PDF32000_2008.pdf` et `adobe_supplement_iso32000.pdf`, conservés dans le dépôt du core. Le [guide du supplément](adobe-supplement.md) explique les extensions Adobe du PDF 1.7, niveau 3, leur provenance et leurs mécanismes. Le [guide des références Adobe](adobe-references.md) présente aussi la référence de 2006, ses errata, l'addendum de caviardisation et leur portfolio. Les références Adobe archivées dans le core sont conservées avec leur nom et leurs octets d'origine ; les quatre références archivées sont exclues des archives Composer. PDF 2.0 et les profils PDF/A, PDF/X et PDF/UA constituent des spécifications supplémentaires.
+Les définitions se fondent sur les documents Adobe/ISO `PDF32000_2008.pdf` et `adobe_supplement_iso32000.pdf`, conservés dans le dépôt du core. Le [guide du supplément](adobe-supplement.md) explique les extensions Adobe du PDF 1.7, niveau 3, leur provenance et leurs mécanismes. Le [guide des références Adobe](adobe-references.md) présente aussi la référence de 2006, ses errata, l'addendum de caviardisation et leur portfolio. Les références Adobe archivées dans le core sont conservées avec leur nom et leurs octets d'origine ; les quatre références archivées sont exclues des archives Composer. Le core 0.6 ajoute les [premiers mécanismes PDF 2.0](pdf-2-0.md), avec un catalogue pilote ISO 32000-2:2020 EC3 distinct. La conformité PDF 2.0 complète et les profils PDF/A, PDF/X et PDF/UA restent des travaux séparés.
 
 ## Installation
 
-Le core **0.5** nécessite PHP 8.3 ou supérieur et les extensions `ctype`, `iconv` et `zlib`. Les backends AES et CMS sont optionnels et nécessitent `openssl`. Le package [`roukmoute/pdf`](https://packagist.org/packages/roukmoute/pdf) est disponible sur Packagist. Depuis le projet consommateur :
+Le core **0.6** nécessite PHP 8.3 ou supérieur et les extensions `ctype`, `iconv` et `zlib`. Les backends AES et CMS sont optionnels et nécessitent `openssl`. Le package [`roukmoute/pdf`](https://packagist.org/packages/roukmoute/pdf) est disponible sur Packagist. Depuis le projet consommateur :
 
 ```sh
-composer require "roukmoute/pdf:^0.5.5"
+composer require "roukmoute/pdf:^0.6.1"
 ```
 
 Les modifications d'API figurent dans le [changelog](../CHANGELOG.md) et le
@@ -32,10 +32,10 @@ projet consommateur pour fixer les versions installées.
 | [`pdftoolkit/pdf-images`](https://pdftoolkit.github.io/modules/images/index.html) | Inspecter des fichiers JPEG et décoder des fichiers PNG en objets image du core. |
 | [`pdftoolkit/pdf-fonts`](https://pdftoolkit.github.io/modules/fonts/index.html) | Analyser un TrueType statique et préparer ses métriques et correspondances pour les objets de police du core. |
 
-Depuis la version **0.1.3**, les modules sont compatibles avec les séries 0.2, 0.3, 0.4 et 0.5 du core et PHP 8.3 ou supérieur. Les trois packages sont disponibles sur Packagist : [lecteur](https://packagist.org/packages/pdftoolkit/pdf-reader), [images](https://packagist.org/packages/pdftoolkit/pdf-images) et [fontes](https://packagist.org/packages/pdftoolkit/pdf-fonts). Par exemple, pour importer des fichiers image avec le core 0.5 :
+Depuis la version **0.1.7**, les modules sont compatibles avec les séries 0.2, 0.3, 0.4, 0.5 et 0.6 du core et PHP 8.3 ou supérieur. Les trois packages sont disponibles sur Packagist : [lecteur](https://packagist.org/packages/pdftoolkit/pdf-reader), [images](https://packagist.org/packages/pdftoolkit/pdf-images) et [fontes](https://packagist.org/packages/pdftoolkit/pdf-fonts). Par exemple, pour importer des fichiers image avec le core 0.6 :
 
 ```sh
-composer require "roukmoute/pdf:^0.5.5" "pdftoolkit/pdf-images:^0.1.6"
+composer require "roukmoute/pdf:^0.6.1" "pdftoolkit/pdf-images:^0.1.7"
 ```
 
 Le module installe le core avec sa contrainte stable. Le [guide des packages](packages.md) explique leur frontière, les installations et le fonctionnement du lecteur. Conserver le `composer.lock` de l'application pour fixer les versions et les commits utilisés.
@@ -45,7 +45,7 @@ Le module installe le core avec sa contrainte stable. Le [guide des packages](pa
 Depuis un clone du dépôt [PDFToolkit/pdf](https://github.com/PDFToolkit/pdf) :
 
 ```sh
-export COMPOSER_ROOT_VERSION=0.5.x-dev
+export COMPOSER_ROOT_VERSION=0.6.x-dev
 composer install
 composer check
 php examples/hello-world.php hello-world.pdf
@@ -55,8 +55,8 @@ php examples/object-stream.php object-stream.pdf
 Le code de production dépend uniquement de PHP et de ces trois extensions. PHPUnit 12, PHPStan, PHP-CS-Fixer et les modules utilisés par les exemples et la documentation sont des dépendances de développement verrouillées dans `composer.lock`. Leur présence dans ce checkout n'ajoute aucune dépendance de production aux applications utilisant le core. La CI du core exécute les tests et valide les PDF d'exemple sous PHP 8.3, 8.4 et 8.5. Les tests échouent aussi sur les dépréciations et avertissements PHP. Le [changelog](../CHANGELOG.md) décrit chaque version publiée.
 
 Pour valider ce checkout, y compris depuis son tag, définir
-`COMPOSER_ROOT_VERSION=0.5.x-dev` avant `composer install`. Cette variable identifie
-le core courant comme appartenant à la série 0.5 attendue par les modules. Les
+`COMPOSER_ROOT_VERSION=0.6.x-dev` avant `composer install`. Cette variable identifie
+le core courant comme appartenant à la série 0.6 attendue par les modules. Les
 dépendances de développement utilisent les modules stables 0.1, dont les versions
 et les sources exactes sont verrouillées dans `composer.lock`. Les CI définissent
 également cette variable pour les branches, les tags et les pull requests.
