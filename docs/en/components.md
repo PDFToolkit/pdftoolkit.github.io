@@ -2,7 +2,7 @@
 
 This guide explains object families, their responsibilities and their composition. The [complete API reference](https://pdftoolkit.github.io/reference/index.html) then provides the signatures of every class, interface, enum, method and property. [Tutorials](tutorials/README.md) show complete documents, their PDF instructions and visual result; [recipes](recipes/README.md) combine several families for a concrete use case.
 
-This documentation describes the published core and module versions selected in the [source manifest](../../resources/sources.json). The API reference identifies each component's package and connects its declaration to the exact commit of the documented version. Core 0.7.0, PDF modules 0.1.8 and independent OpenType 0.1.0 use 64-bit PHP 8.3 or later. The PDF modules accept core series 0.2 through 0.7; the reader still accepts PDF 1.0–1.7 input. Before 1.0, new minor releases may change names and signatures to improve the model; patch releases preserve their series' API.
+This documentation describes the published core and module versions selected in the [source manifest](../../resources/sources.json). The API reference identifies each component's package and connects its declaration to the exact commit of the documented version. Core 0.7.0, PDF modules 0.1.8 and independent OpenType 0.1.0 require PHP 8.3 or later and are checked on PHP 8.3, 8.4 and 8.5. Core 0.7 additionally requires 64-bit PHP; OpenType remains independent of the PDF core. The PDF modules accept core series 0.2 through 0.7; the reader still accepts PDF 1.0–1.7 input. Before 1.0, new minor releases may change names and signatures to improve the model; patch releases preserve their series' API.
 
 The model covers **PDF 1.7 / ISO 32000-1:2008**, the [Adobe level 3 supplement](adobe-supplement.md), [PDF 2.0 / ISO 32000-2:2020 EC3](pdf-2-0.md) and its [companion specifications](pdf-2-0-bundle.md). Original reference PDFs retain their supplied names and bytes in the core. Large bundle originals are linked from this site and excluded from Composer archives. The PHP runtime version is independent of the PDF format version. [Coverage](coverage.md) distinguishes definitions, native constructions, verified semantic rules and external processing.
 
@@ -379,6 +379,13 @@ The target page is an object, received directly by the constructor or identified
 
 A destination describes a view; an action describes an operation to perform. Generated tables model action dictionaries and link annotations. The [links tutorial](tutorials/05-links.md) connects an annotation to an internal destination and an external URI.
 
+`StructureDestination` and `DestinationView` add PDF 2.0 semantic targets.
+Resolution follows actual content in child order; a target without content
+falls back to the first page. Actions and named destination dictionaries keep
+their page fallback alongside `SD`. `RemoteStructureDestination` represents an
+external ID as bytes without opening another file. The [structure-destination tutorial](tutorials/34-pdf20-structure-destinations.md)
+shows the actual links and the frozen graph checks.
+
 ### Document outline
 
 [`OutlineDictionary`](https://github.com/PDFToolkit/pdf/blob/v0.7.0/src/Document/OutlineDictionary.php) represents the outline root. [`OutlineItem`](https://github.com/PDFToolkit/pdf/blob/v0.7.0/src/Document/OutlineItem.php) receives a `TextString` title, a destination or action dictionary, its expanded or collapsed state and additional entries. [`OutlineParent`](https://github.com/PDFToolkit/pdf/blob/v0.7.0/src/Document/OutlineParent.php) carries the outline-parent contract.
@@ -453,6 +460,16 @@ The `PDF\Specification\Adobe` namespace composes ISO definitions and supplement 
 `PendingDocumentTimestamp` and `Rfc3161TimestampBackend` add RFC 3161 document timestamps through an explicit token provider and authority verifier. `DocumentSecurityStore`, `ValidationDataStream` and `ValidationRelatedInformation` store DSS/VRI evidence without automatically fetching or trusting it. The narrow `DocumentTimestampRevisionPolicy` checks the frozen maintenance delta before applying the DocMDP timestamp/DSS exception; other revision changes and FieldMDP remain constrained. These mechanisms do not establish general long-term validation or PKI trust. The [modern-signature tutorial](tutorials/31-pdf20-modern-signature.md), [timestamp/DSS tutorial](tutorials/32-pdf20-timestamp-dss.md), [bundle guide](pdf-2-0-bundle.md) and [security review](security.md) explain algorithm, provider and evidence boundaries.
 
 An encryption, signature, font descriptor, multimedia or tagged-structure dictionary class describes format entries. Processing belongs to dedicated mechanisms where available, such as the TrueType program and CID embedding. A dictionary's presence does not perform encryption, signing, multimedia playback or tagged-structure compliance. The API reference documents available objects; stated coverage remains that of their actually implemented behaviors.
+
+### Geospatial measurements
+
+`GeographicCoordinateSystem` and `ProjectedCoordinateSystem` declare the reference
+system. `GeospatialControlPoints` owns paired local/world coordinates;
+`GeospatialMeasure`, `Viewport` and `Viewports` associate those values with page,
+Form and image objects. Display units, the twelve-value projected affine matrix
+and typed point clouds have separate objects. Effective-graph validation also
+checks raw dictionaries and retained revisions. The [geospatial tutorial](tutorials/33-pdf20-geospatial.md)
+explains these relationships without implying a GIS projection converter.
 
 ## 12. Choosing a component and continuing
 

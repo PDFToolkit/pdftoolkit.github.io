@@ -18,6 +18,8 @@ exécutables comprennent l’authentification R=6, AES-GCM, SHA-3/SHAKE256, CMS 
 courbes nommées, PDF MAC, horodatages RFC3161, DSS/VRI, espaces de noms structurels,
 inclusion ISO/TS 32005, déclarations XMP, métadonnées d’objets et de contenu marqué,
 compensation du point noir, parties documentaires et enveloppes chiffrées.
+Les mesures géospatiales comprennent systèmes de coordonnées, points de contrôle
+appariés, viewports, matrices affines et nuages de points typés.
 Les sorties initiales, incrémentales et linéarisées sont contrôlées à travers le
 graphe réellement émis et les snapshots immuables des révisions.
 
@@ -25,6 +27,9 @@ Le [relevé de couverture par document](https://github.com/PDFToolkit/pdf/blob/v
 relie fichiers d’implémentation, tests et oracles indépendants à chaque original.
 Le [relevé WTPDF](https://github.com/PDFToolkit/pdf/blob/v0.7.0/resources/wtpdf-1.0/coverage.json)
 distingue échecs mécaniques, revue humaine et validation supplémentaire.
+Son [inventaire d’exigences](https://github.com/PDFToolkit/pdf/blob/v0.7.0/resources/wtpdf-1.0/requirements.json)
+consigne chaque aspect étudié, clause source, frontière d’exécution et chemin de preuve.
+Le vérificateur reproductible rejette clauses omises et fichiers de preuve absents.
 Aucune certification WTPDF/PDF/UA-2 automatique ni conformité complète à la norme
 de base n’est revendiquée. Le lecteur conserve son périmètre d’entrée PDF 1.0–1.7.
 
@@ -122,7 +127,7 @@ La comparaison générale des modifications authentifiées permises par DocMDP,
 FieldMDP et UR reste ouverte : pages, contenu, ressources partagées, annotations,
 valeurs héritées et instanciation de templates demandent une analyse propre.
 Les autres priorités sont les familles d'annotations et leurs relations, les
-mesures 2D/géospatiales, les graphes multimédia/RichMedia, certaines règles de
+autres règles de mesure 2D, les graphes multimédia/RichMedia, certaines règles de
 fonctions et les procédures de préparation des apparences de codes-barres.
 Les conditions, seuils de versions et ressources doivent aussi continuer à être
 audités famille par famille. Les inventaires distinguent ces travaux des

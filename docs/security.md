@@ -11,8 +11,9 @@ invariants restent dans le core. Le module
 pour la lecture de fichiers externes ; cette revue du générateur ne s'y substitue pas.
 
 Les versions documentées sont le core **0.7.0**, les modules PDF **0.1.8** et
-OpenType indépendant **0.1.0**, sous **PHP 8.3 ou supérieur en 64 bits**. La CI
-exerce PHP 8.3, 8.4 et 8.5. La revue inclut les
+OpenType indépendant **0.1.0**. Ces packages nécessitent **PHP 8.3 ou supérieur**
+et sont vérifiés sous PHP 8.3, 8.4 et 8.5. Le core **0.7** exige aussi PHP en
+64 bits ; OpenType reste indépendant du core PDF. La revue inclut les
 [mécanismes complémentaires PDF 2.0](pdf-2-0-bundle.md) ; les définitions de
 source et déclarations de conformité ne sont pas des certificats de sécurité.
 Le parseur OpenType indépendant possède ses propres

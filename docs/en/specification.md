@@ -11,8 +11,9 @@ embedded-document relationships. They support comparison and targeted audits;
 their preservation does not alter the active definition inventories or establish
 implementation of all their procedures.
 Core **0.7.0**, optional PDF modules **0.1.8** and independent OpenType **0.1.0**
-use **64-bit PHP 8.3 or later**, with CI on PHP 8.3, 8.4 and 8.5. The PHP runtime
-version and PDF format version are independent. The [PDF 2.0 guide](pdf-2-0.md)
+require **PHP 8.3 or later** and are checked on PHP 8.3, 8.4 and 8.5. Core **0.7**
+additionally requires 64-bit PHP; OpenType remains independent of the PDF core.
+The PHP runtime version and PDF format version are independent. The [PDF 2.0 guide](pdf-2-0.md)
 tracks ISO 32000-2:2020 EC3 separately from the ISO1 counts below. The
 [companion-specifications guide](pdf-2-0-bundle.md) describes ISO/TS 32001–32005,
 PDF Declarations, WTPDF and Application Notes 001–003. The eleven supplied

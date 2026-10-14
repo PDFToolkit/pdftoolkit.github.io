@@ -2,7 +2,7 @@
 
 Ce guide explique les familles d'objets, leurs responsabilités et leur composition. La [référence API exhaustive](https://pdftoolkit.github.io/reference/index.html) donne ensuite les signatures de chaque classe, interface, enum, méthode et propriété. Les [tutoriels](tutorials/README.md) montrent des documents complets, leurs instructions PDF et leur résultat visuel ; les [recettes](recipes/README.md) combinent plusieurs familles pour un usage concret.
 
-Cette documentation décrit les versions publiées du core et des modules sélectionnées dans le [manifeste de sources](../resources/sources.json). La référence API indique le package de chaque composant et relie sa déclaration au commit exact de la version documentée. Le core 0.7.0, les modules PDF 0.1.8 et OpenType indépendant 0.1.0 utilisent PHP 8.3 ou supérieur en 64 bits. Les modules PDF acceptent les séries 0.2 à 0.7 du core ; le lecteur accepte toujours les PDF 1.0–1.7 en entrée. Avant 1.0, les nouvelles versions mineures peuvent modifier les noms et signatures pour améliorer le modèle ; les versions correctives préservent l'API de leur série.
+Cette documentation décrit les versions publiées du core et des modules sélectionnées dans le [manifeste de sources](../resources/sources.json). La référence API indique le package de chaque composant et relie sa déclaration au commit exact de la version documentée. Le core 0.7.0, les modules PDF 0.1.8 et OpenType indépendant 0.1.0 nécessitent PHP 8.3 ou supérieur et sont vérifiés sous PHP 8.3, 8.4 et 8.5. Le core 0.7 exige aussi PHP en 64 bits ; OpenType reste indépendant du core PDF. Les modules PDF acceptent les séries 0.2 à 0.7 du core ; le lecteur accepte toujours les PDF 1.0–1.7 en entrée. Avant 1.0, les nouvelles versions mineures peuvent modifier les noms et signatures pour améliorer le modèle ; les versions correctives préservent l'API de leur série.
 
 Le modèle couvre **PDF 1.7 / ISO 32000-1:2008**, le [supplément Adobe niveau 3](adobe-supplement.md), [PDF 2.0 / ISO 32000-2:2020 EC3](pdf-2-0.md) et ses [spécifications complémentaires](pdf-2-0-bundle.md). Les PDF de référence originaux gardent leurs noms fournis et leurs octets dans le core. Les grands originaux du bundle sont liés depuis ce site et exclus des archives Composer. La version du runtime PHP est indépendante de celle du format PDF. La [couverture](coverage.md) distingue définitions, constructions natives, règles sémantiques vérifiées et traitements externes.
 
@@ -465,6 +465,14 @@ La page cible est un objet, directement reçu par le constructeur ou désigné p
 
 Une destination décrit une vue ; une action décrit une opération à effectuer. Les tables générées modélisent les dictionnaires d'actions et les annotations de lien. Le [tutoriel liens](tutorials/05-links.md) relie une annotation à une destination interne et à une URI externe.
 
+`StructureDestination` et `DestinationView` ajoutent les cibles sémantiques PDF 2.0.
+La résolution suit le contenu réel dans l’ordre des enfants ; une cible sans
+contenu se replie sur la première page. Actions et dictionnaires de destination
+nommés conservent leur repli de page à côté de `SD`. `RemoteStructureDestination`
+représente un ID externe en octets sans ouvrir un autre fichier.
+Le [tutoriel des destinations de structure](tutorials/34-pdf20-structure-destinations.md)
+montre les vrais liens et les contrôles du graphe figé.
+
 ### Document outline
 
 [`OutlineDictionary`](https://github.com/PDFToolkit/pdf/blob/v0.7.0/src/Document/OutlineDictionary.php) représente la racine du plan. [`OutlineItem`](https://github.com/PDFToolkit/pdf/blob/v0.7.0/src/Document/OutlineItem.php) reçoit un titre `TextString`, une destination ou un dictionnaire d'action, son état ouvert ou fermé et ses entrées supplémentaires. [`OutlineParent`](https://github.com/PDFToolkit/pdf/blob/v0.7.0/src/Document/OutlineParent.php) porte le contrat d'un parent de plan.
@@ -559,6 +567,17 @@ le résultat cryptographique ne certifie pas à lui seul cette confiance.
 `PendingDocumentTimestamp` et `Rfc3161TimestampBackend` ajoutent des horodatages documentaires RFC 3161 avec un fournisseur de jeton et un vérificateur d’autorité explicites. `DocumentSecurityStore`, `ValidationDataStream` et `ValidationRelatedInformation` stockent les preuves DSS/VRI sans les récupérer ni leur faire confiance automatiquement. La politique restreinte `DocumentTimestampRevisionPolicy` vérifie le delta de maintenance figé avant d’appliquer l’exception DocMDP pour horodatage/DSS ; les autres changements de révision et FieldMDP restent contraints. Ces mécanismes n’établissent pas une validation générale à long terme ni la confiance PKI. Le [tutoriel de signature moderne](tutorials/31-pdf20-modern-signature.md), le [tutoriel horodatage/DSS](tutorials/32-pdf20-timestamp-dss.md), le [guide du bundle](pdf-2-0-bundle.md) et la [revue de sécurité](security.md) expliquent les frontières des algorithmes, fournisseurs et preuves.
 
 Une classe de dictionnaire d'encryption, de signature, de font descriptor, de multimédia ou de structure balisée décrit des entrées du format. Les traitements sont portés par leurs mécanismes dédiés lorsqu'ils existent, comme le programme TrueType et l'incorporation CID. La présence d'un dictionnaire ne réalise pas le chiffrement, la signature, la lecture multimédia ou la conformité d'une structure balisée. La référence API documente les objets disponibles ; la couverture annoncée reste celle de leurs comportements effectivement implémentés.
+
+### Mesures géospatiales
+
+`GeographicCoordinateSystem` et `ProjectedCoordinateSystem` déclarent le système
+de référence. `GeospatialControlPoints` possède les coordonnées locales/réelles
+appariées ; `GeospatialMeasure`, `Viewport` et `Viewports` associent ces valeurs
+aux pages, Form et images. Unités d’affichage, matrice affine projetée à douze
+valeurs et nuages de points typés ont leurs objets distincts. La validation du
+graphe effectif contrôle aussi les dictionnaires bruts et les révisions conservées.
+Le [tutoriel géospatial](tutorials/33-pdf20-geospatial.md) explique ces relations
+sans laisser entendre qu’il s’agit d’un convertisseur de projections SIG.
 
 ## 12. Choisir un composant et poursuivre
 

@@ -34,7 +34,7 @@ projet consommateur pour fixer les versions installées.
 | [`pdftoolkit/pdf-images`](https://pdftoolkit.github.io/modules/images/index.html) | Inspecter des fichiers JPEG et décoder des fichiers PNG en objets image du core. |
 | [`pdftoolkit/pdf-fonts`](https://pdftoolkit.github.io/modules/fonts/index.html) | Analyser un TrueType statique et préparer ses métriques et correspondances pour les objets de police du core. |
 
-La version **0.1.8** des modules PDF accepte les séries 0.2, 0.3, 0.4, 0.5, 0.6 et 0.7 du core sous PHP 8.3 ou supérieur en 64 bits. Le lecteur accepte toujours les PDF 1.0–1.7 en entrée ; la conversion d’images reste PNG/JPEG et celle des fontes reste TrueType statique. Les trois packages sont disponibles sur Packagist : [lecteur](https://packagist.org/packages/pdftoolkit/pdf-reader), [images](https://packagist.org/packages/pdftoolkit/pdf-images) et [fontes](https://packagist.org/packages/pdftoolkit/pdf-fonts). Par exemple, pour importer des fichiers image avec le core 0.7 :
+La version **0.1.8** des modules PDF accepte les séries 0.2, 0.3, 0.4, 0.5, 0.6 et 0.7 du core sous PHP 8.3 ou supérieur. Le lecteur accepte toujours les PDF 1.0–1.7 en entrée ; la conversion d’images reste PNG/JPEG et celle des fontes reste TrueType statique. Les trois packages sont disponibles sur Packagist : [lecteur](https://packagist.org/packages/pdftoolkit/pdf-reader), [images](https://packagist.org/packages/pdftoolkit/pdf-images) et [fontes](https://packagist.org/packages/pdftoolkit/pdf-fonts). Par exemple, pour importer des fichiers image avec le core 0.7 :
 
 ```sh
 composer require "roukmoute/pdf:^0.7.0" "pdftoolkit/pdf-images:^0.1.8"
@@ -101,7 +101,7 @@ L'exemple complet, avec les imports et les métadonnées, se trouve dans [`examp
 
 ## Tutoriels et recettes
 
-Les [32 tutoriels](tutorials/README.md) accompagnent chaque script d’une explication, d'un aperçu et de variantes à essayer. Les commentaires du code relient les objets aux instructions et structures du PDF.
+Les [34 tutoriels](tutorials/README.md) accompagnent chaque script d’une explication, d'un aperçu et de variantes à essayer. Les commentaires du code relient les objets aux instructions et structures du PDF.
 
 | Sujet | Ce que l'exemple explique |
 | --- | --- |
@@ -117,7 +117,7 @@ Les [32 tutoriels](tutorials/README.md) accompagnent chaque script d’une expli
 | [Images JPEG et PNG](tutorials/10-image-files.md) | Couleurs, décodage PNG, JPEG conservé et masque de transparence. |
 | [Révisions incrémentales](tutorials/11-incremental-update.md) | Remplacements explicites, octets historiques conservés et chaînage des xref. |
 
-La séquence PDF 2.0 ajoute [UTF-8 et les fichiers associés](tutorials/27-pdf20-associated-files.md), [les métadonnées, déclarations et parties de document](tutorials/28-pdf20-metadata-declarations.md), [les enveloppes de contenus chiffrés](tutorials/29-pdf20-encrypted-payload.md), [les rôles de structure qualifiés et rapports WTPDF](tutorials/30-pdf20-tagged-namespaces.md), [les signatures modernes et l’intégrité](tutorials/31-pdf20-modern-signature.md) et [les horodatages et preuves DSS/VRI](tutorials/32-pdf20-timestamp-dss.md). Le [guide du bundle](pdf-2-0-bundle.md) les relie aux spécifications conservées et aux contrôles indépendants.
+La séquence PDF 2.0 ajoute [UTF-8 et les fichiers associés](tutorials/27-pdf20-associated-files.md), [les métadonnées, déclarations et parties de document](tutorials/28-pdf20-metadata-declarations.md), [les enveloppes de contenus chiffrés](tutorials/29-pdf20-encrypted-payload.md), [les rôles de structure qualifiés et rapports WTPDF](tutorials/30-pdf20-tagged-namespaces.md), [les signatures modernes et l’intégrité](tutorials/31-pdf20-modern-signature.md) et [les horodatages et preuves DSS/VRI](tutorials/32-pdf20-timestamp-dss.md). Les [mesures géospatiales](tutorials/33-pdf20-geospatial.md) et [destinations de structure](tutorials/34-pdf20-structure-destinations.md) complètent le parcours. Le [guide du bundle](pdf-2-0-bundle.md) les relie aux spécifications conservées et aux contrôles indépendants.
 
 La [recette de tableau](recipes/table.md) assemble ces notions dans une présentation concrète. La [collection de recettes](recipes/README.md) explique aussi comment proposer de nouveaux exemples.
 

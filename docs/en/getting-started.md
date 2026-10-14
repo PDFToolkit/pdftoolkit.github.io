@@ -34,7 +34,7 @@ API changes appear in the [changelog](../../CHANGELOG.md) and the
 | [`pdftoolkit/pdf-images`](https://pdftoolkit.github.io/modules/images/index.html) | Inspect JPEG files and decode PNG files into core image objects. |
 | [`pdftoolkit/pdf-fonts`](https://pdftoolkit.github.io/modules/fonts/index.html) | Analyze a static TrueType font and prepare its metrics and mappings for core font objects. |
 
-Version **0.1.8** of the PDF modules accepts core series 0.2, 0.3, 0.4, 0.5, 0.6 and 0.7 on 64-bit PHP 8.3 or later. The reader still accepts PDF 1.0–1.7 input; image conversion remains PNG/JPEG and font conversion remains static TrueType. All three packages are available on Packagist: [reader](https://packagist.org/packages/pdftoolkit/pdf-reader), [images](https://packagist.org/packages/pdftoolkit/pdf-images) and [fonts](https://packagist.org/packages/pdftoolkit/pdf-fonts). For example, to import image files with core 0.7:
+Version **0.1.8** of the PDF modules accepts core series 0.2, 0.3, 0.4, 0.5, 0.6 and 0.7 on PHP 8.3 or later. The reader still accepts PDF 1.0–1.7 input; image conversion remains PNG/JPEG and font conversion remains static TrueType. All three packages are available on Packagist: [reader](https://packagist.org/packages/pdftoolkit/pdf-reader), [images](https://packagist.org/packages/pdftoolkit/pdf-images) and [fonts](https://packagist.org/packages/pdftoolkit/pdf-fonts). For example, to import image files with core 0.7:
 
 ```sh
 composer require "roukmoute/pdf:^0.7.0" "pdftoolkit/pdf-images:^0.1.8"
@@ -101,7 +101,7 @@ The complete example, with imports and metadata, is in [`examples/hello-world.ph
 
 ## Tutorials and recipes
 
-The [32 tutorials](tutorials/README.md) accompany each script with an explanation, a preview and variants to try. Code comments connect the objects to PDF instructions and structures.
+The [34 tutorials](tutorials/README.md) accompany each script with an explanation, a preview and variants to try. Code comments connect the objects to PDF instructions and structures.
 
 | Topic | What the example explains |
 | --- | --- |
@@ -117,7 +117,7 @@ The [32 tutorials](tutorials/README.md) accompany each script with an explanatio
 | [JPEG and PNG images](tutorials/10-image-files.md) | Colors, PNG decoding, preserved JPEG and transparency mask. |
 | [Incremental revisions](tutorials/11-incremental-update.md) | Explicit replacements, preserved historical bytes and xref chaining. |
 
-The PDF 2.0 sequence adds [UTF-8 and associated files](tutorials/27-pdf20-associated-files.md), [metadata, declarations and document parts](tutorials/28-pdf20-metadata-declarations.md), [encrypted payload wrappers](tutorials/29-pdf20-encrypted-payload.md), [qualified structure roles and WTPDF reports](tutorials/30-pdf20-tagged-namespaces.md), [modern signatures and integrity](tutorials/31-pdf20-modern-signature.md), and [timestamps and DSS/VRI evidence](tutorials/32-pdf20-timestamp-dss.md). The [bundle guide](pdf-2-0-bundle.md) connects them to their retained specifications and independent checks.
+The PDF 2.0 sequence adds [UTF-8 and associated files](tutorials/27-pdf20-associated-files.md), [metadata, declarations and document parts](tutorials/28-pdf20-metadata-declarations.md), [encrypted payload wrappers](tutorials/29-pdf20-encrypted-payload.md), [qualified structure roles and WTPDF reports](tutorials/30-pdf20-tagged-namespaces.md), [modern signatures and integrity](tutorials/31-pdf20-modern-signature.md), and [timestamps and DSS/VRI evidence](tutorials/32-pdf20-timestamp-dss.md). [Geospatial measurements](tutorials/33-pdf20-geospatial.md) and [structure destinations](tutorials/34-pdf20-structure-destinations.md) complete the path. The [bundle guide](pdf-2-0-bundle.md) connects them to their retained specifications and independent checks.
 
 The [table recipe](recipes/table.md) assembles these concepts into a concrete presentation. The [recipe collection](recipes/README.md) also explains how to contribute new examples.
 

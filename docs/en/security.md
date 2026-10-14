@@ -11,8 +11,9 @@ and their invariants remain in the core. The
 for reading external files; this generator review does not replace it.
 
 The documented versions are core **0.7.0**, PDF modules **0.1.8** and independent
-OpenType **0.1.0**, on **64-bit PHP 8.3 or later**. CI exercises PHP 8.3, 8.4 and
-8.5. The review includes the [PDF 2.0 companion mechanisms](pdf-2-0-bundle.md);
+OpenType **0.1.0**. These packages require **PHP 8.3 or later** and are checked on
+PHP 8.3, 8.4 and 8.5. Core **0.7** additionally requires 64-bit PHP; OpenType
+remains independent of the PDF core. The review includes the [PDF 2.0 companion mechanisms](pdf-2-0-bundle.md);
 individual source definitions and conformance declarations are not security
 certificates. OpenType's independent parser has its own
 [security boundaries](https://github.com/PDFToolkit/opentype/blob/v0.1.0/SECURITY.md).

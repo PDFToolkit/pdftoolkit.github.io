@@ -18,6 +18,8 @@ mechanisms include R=6 credentials, AES-GCM, SHA-3/SHAKE256, named-curve CMS,
 PDF MAC, RFC3161 document timestamps, DSS/VRI, qualified structure namespaces,
 ISO/TS 32005 inclusion, XMP declarations, object and marked-content metadata,
 black point compensation, document parts and encrypted-payload wrappers.
+Geospatial measurements include coordinate systems, paired control points,
+viewports, affine matrices and typed point clouds.
 Initial, incremental and linearized output are checked through the actual
 emitted graph and immutable revision snapshots.
 
@@ -25,6 +27,9 @@ The [per-document coverage record](https://github.com/PDFToolkit/pdf/blob/v0.7.0
 links implementation files, tests and independent oracles to each original.
 The [WTPDF record](https://github.com/PDFToolkit/pdf/blob/v0.7.0/resources/wtpdf-1.0/coverage.json)
 distinguishes mechanical failures from human review and additional validation.
+Its [requirement inventory](https://github.com/PDFToolkit/pdf/blob/v0.7.0/resources/wtpdf-1.0/requirements.json)
+records each assessed aspect, source clause, execution boundary and evidence path.
+The reproducible checker rejects omitted clauses and missing evidence files.
 No automatic WTPDF/PDF/UA-2 certification or complete base-standard conformance
 is claimed. The reader retains its PDF 1.0–1.7 input scope.
 
@@ -121,7 +126,7 @@ These additions are not yet a declaration of complete coverage. General
 comparison of authenticated changes permitted by DocMDP, FieldMDP and UR
 remains open: pages, content, shared resources, annotations, inherited values
 and template instantiation need their own analysis. Other priorities include
-annotation families and their relationships, 2D/geospatial measurements,
+annotation families and their relationships, other 2D measurement rules,
 multimedia/RichMedia graphs, some function rules and barcode appearance
 preparation procedures. Conditions, version thresholds and resources must
 also continue to be audited family by family. The inventories distinguish

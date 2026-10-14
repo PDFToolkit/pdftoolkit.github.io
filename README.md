@@ -32,8 +32,9 @@ composer require "roukmoute/pdf:^0.7.0"
 ```
 
 The documented releases are core **0.7.0**, PDF reader/images/fonts **0.1.8**
-and independent OpenType **0.1.0**. They use **64-bit PHP 8.3 or later** and are
-checked on PHP 8.3, 8.4 and 8.5.
+and independent OpenType **0.1.0**. They require **PHP 8.3 or later** and are
+checked on PHP 8.3, 8.4 and 8.5. Core **0.7** additionally requires 64-bit PHP;
+OpenType remains independent of the PDF core.
 
 Choose the optional modules according to the files your application handles:
 
@@ -52,7 +53,8 @@ The [PDF 2.0 guide](https://pdftoolkit.github.io/guides/pdf-2-0.html) and
 [companion-specifications guide](https://pdftoolkit.github.io/guides/pdf-2-0-bundle.html)
 explain ISO 32000-2:2020 EC3, modern encryption and signatures, PDF MAC,
 metadata/declarations, associated files, document parts and qualified structure
-roles, document timestamps and DSS/VRI evidence. The [32 tutorials](https://pdftoolkit.github.io/tutorials/) include
+roles, document timestamps, DSS/VRI evidence, geospatial measurements and
+structure destinations. The [34 tutorials](https://pdftoolkit.github.io/tutorials/) include
 executable examples and actual PDF previews. WTPDF auditing reports mechanical
 checks and pending evidence; it does not certify accessibility or PDF/UA.
 
