@@ -16,6 +16,24 @@ workflow. PHP code, executable examples, fixtures and original specification
 documents remain in [their package repositories](https://github.com/orgs/PDFToolkit/repositories).
 The module guides are published here from their released package sources.
 
+## Install the libraries
+
+The PHP libraries are available on Packagist. Install the core with Composer:
+
+```sh
+composer require "roukmoute/pdf:^0.5.4"
+```
+
+Choose the optional modules according to the files your application handles:
+
+- [Core: roukmoute/pdf](https://packagist.org/packages/roukmoute/pdf)
+- [PDF reader: pdftoolkit/pdf-reader](https://packagist.org/packages/pdftoolkit/pdf-reader)
+- [Images: pdftoolkit/pdf-images](https://packagist.org/packages/pdftoolkit/pdf-images)
+- [Fonts: pdftoolkit/pdf-fonts](https://packagist.org/packages/pdftoolkit/pdf-fonts)
+
+Each module installs the core as a dependency. The package guide explains
+their Composer commands and supported versions.
+
 ## Reproducible sources
 
 [resources/sources.json](resources/sources.json) records the selected stable

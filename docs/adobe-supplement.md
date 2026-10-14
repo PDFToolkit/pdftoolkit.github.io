@@ -2,8 +2,8 @@
 
 Le dépôt du core conserve deux documents de référence distincts :
 
-- [ISO 32000-1:2008, PDF 1.7](https://github.com/PDFToolkit/pdf/blob/v0.5.3/PDF32000_2008.pdf), 756 pages ;
-- [Adobe Supplement to the ISO 32000](https://github.com/PDFToolkit/pdf/blob/v0.5.3/adobe_supplement_iso32000.pdf), édition 1.0,
+- [ISO 32000-1:2008, PDF 1.7](https://github.com/PDFToolkit/pdf/blob/v0.5.4/PDF32000_2008.pdf), 756 pages ;
+- [Adobe Supplement to the ISO 32000](https://github.com/PDFToolkit/pdf/blob/v0.5.4/adobe_supplement_iso32000.pdf), édition 1.0,
   juin 2008, 140 pages, `BaseVersion 1.7`, `ExtensionLevel 3`.
 
 Tous les PDF Adobe fournis par le propriétaire du projet sont conservés avec leur

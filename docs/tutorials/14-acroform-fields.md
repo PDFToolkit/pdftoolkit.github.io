@@ -1,6 +1,6 @@
 # 14. Champs et apparences AcroForm
 
-Le [script complet](https://github.com/PDFToolkit/pdf/blob/v0.5.3/examples/acroform-fields.php) produit une page avec un
+Le [script complet](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/acroform-fields.php) produit une page avec un
 nom, une liste de pays, une case à cocher, des boutons radio, un bouton de
 réinitialisation et un champ de signature vide.
 
@@ -54,4 +54,4 @@ notes 118–119 : sans `/MK`, Acrobat conserve le contenu hors de la séquence
 `/Tx`. La présence de `/MK` demande une régénération complète de l'apparence ;
 elle n'est pas nécessaire pour les apparences personnalisées de ce script.
 
-[Index](README.md) · [Code complet](https://github.com/PDFToolkit/pdf/blob/v0.5.3/examples/acroform-fields.php)
+[Index](README.md) · [Code complet](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/acroform-fields.php)

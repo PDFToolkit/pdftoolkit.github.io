@@ -4,7 +4,7 @@ Un objet indirect est identifié par son **numéro et sa génération**. Une mis
 à jour peut libérer son numéro puis l'affecter à une nouvelle identité. L'ancienne
 référence ne doit pas désigner cette nouvelle valeur.
 
-Exécuter [object-lifecycle.php](https://github.com/PDFToolkit/pdf/blob/v0.5.3/examples/object-lifecycle.php) :
+Exécuter [object-lifecycle.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/object-lifecycle.php) :
 
 ```bash
 php examples/object-lifecycle.php /tmp/object-lifecycle.pdf
@@ -100,9 +100,9 @@ vérifiés sans exception générale.
 Les révisions après linéarisation ont un corpus distinct de 90 historiques,
 soit 270 PDF, avec contrôle exact des préfixes, des références et des indices.
 
-Sources conservées : [objets indirects et null, page 29](https://github.com/PDFToolkit/pdf/blob/v0.5.3/PDF32000_2008.pdf#page=29),
-[xref, pages 48–50](https://github.com/PDFToolkit/pdf/blob/v0.5.3/PDF32000_2008.pdf#page=48),
-[mises à jour et ObjStm, pages 52–55](https://github.com/PDFToolkit/pdf/blob/v0.5.3/PDF32000_2008.pdf#page=52),
-[annexe F, page 683](https://github.com/PDFToolkit/pdf/blob/v0.5.3/PDF32000_2008.pdf#page=683).
+Sources conservées : [objets indirects et null, page 29](https://github.com/PDFToolkit/pdf/blob/v0.5.4/PDF32000_2008.pdf#page=29),
+[xref, pages 48–50](https://github.com/PDFToolkit/pdf/blob/v0.5.4/PDF32000_2008.pdf#page=48),
+[mises à jour et ObjStm, pages 52–55](https://github.com/PDFToolkit/pdf/blob/v0.5.4/PDF32000_2008.pdf#page=52),
+[annexe F, page 683](https://github.com/PDFToolkit/pdf/blob/v0.5.4/PDF32000_2008.pdf#page=683).
 
 [Parcours des tutoriels](README.md) · [Révisions incrémentales](11-incremental-update.md)

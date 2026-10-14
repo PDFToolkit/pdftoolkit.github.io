@@ -12,7 +12,7 @@ Ce dépôt conserve les guides, tutoriels, assets partagés, outils de construct
 et workflow de publication. Les sources PHP, exemples, tests, ressources de la
 spécification et PDF Adobe restent dans leurs dépôts de packages. La construction
 les lit dans un checkout complet du core préparé sous `_sources/pdf`, avec ses
-modules installés depuis leurs sources Git.
+modules installés par Composer depuis leurs distributions publiées.
 
 Le manifeste `resources/sources.json` utilise `schemaVersion: 1`. Sa liste
 `packages` décrit chaque package avec `name`, `repository`, `version`, `revision`
@@ -25,6 +25,9 @@ Le checkout du core doit conserver ses PDF originaux, `resources/`, `examples/`,
 références Adobe ni toutes les fixtures nécessaires. Installer les dépendances
 de développement depuis ce checkout en conservant son lock ; l'exporteur vérifie
 que les versions et révisions des modules installés correspondent au manifeste.
+Le core sélectionné utilise Packagist pour résoudre ses modules ; une application
+qui utilise ces bibliothèques les installe avec les commandes du
+[guide des packages](../packages.md), sans construire le site.
 
 `tools/export_api.php` charge l'autoloading du core préparé et découvre les
 classes, interfaces, enums et traits de son `src/` et des modules installés.
@@ -74,7 +77,7 @@ core_revision=$(python -c "import json; print(next(p for p in json.load(open('re
 core_alias=$(python -c "import json; print(next(p for p in json.load(open('resources/sources.json'))['packages'] if p['name']=='roukmoute/pdf')['version'].rsplit('.', 1)[0]+'.x-dev')")
 git clone "$core_repository" _sources/pdf
 git -C _sources/pdf checkout --detach "$core_revision"
-COMPOSER_ROOT_VERSION="$core_alias" composer install --working-dir=_sources/pdf --no-interaction --prefer-source
+COMPOSER_ROOT_VERSION="$core_alias" composer install --working-dir=_sources/pdf --no-interaction --prefer-dist
 python -m pip install --require-hashes -r tools/site-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf/tools/public-key-validation-requirements.txt
 python tools/build_docs.py --source-root _sources/pdf --docs-revision "$(git rev-parse HEAD)" --remote
@@ -88,7 +91,7 @@ $coreSource = $sourceManifest.packages | Where-Object name -eq 'roukmoute/pdf'
 git clone $coreSource.repository _sources/pdf
 git -C _sources/pdf checkout --detach $coreSource.revision
 $env:COMPOSER_ROOT_VERSION = ($coreSource.version -replace '\.\d+$', '.x-dev')
-composer install --working-dir=_sources/pdf --no-interaction --prefer-source
+composer install --working-dir=_sources/pdf --no-interaction --prefer-dist
 python -m pip install --require-hashes -r tools/site-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf/tools/public-key-validation-requirements.txt
 $docsRevision = git rev-parse HEAD

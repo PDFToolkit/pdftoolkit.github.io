@@ -8,11 +8,14 @@ La lecture de ces fichiers appartient au module optionnel
 [`pdftoolkit/pdf-images`](https://github.com/PDFToolkit/pdf-images). Les
 échantillons, les images DCT et les flux XObject appartiennent au core.
 `composer install` dans le checkout du core installe le module pour les exemples ;
-une application doit le [demander explicitement](../packages.md).
+une application l'installe depuis Packagist avec
+`composer require "pdftoolkit/pdf-images:^0.1.5"`. Le
+[guide des packages](../packages.md) explique comment sélectionner aussi
+la série du core.
 
-- **Exemple complet :** [image-files.php](https://github.com/PDFToolkit/pdf/blob/v0.5.3/examples/image-files.php).
+- **Exemple complet :** [image-files.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/image-files.php).
 - **Résultat :** quatre images sur une page Letter, avec un damier révélant la transparence.
-- **Données :** [motifs synthétiques MIT](https://github.com/PDFToolkit/pdf-images/blob/v0.1.4/examples/assets/images/README.md), distribués avec le module dans `vendor/pdftoolkit/pdf-images/examples/assets/images/`.
+- **Données :** [motifs synthétiques MIT](https://github.com/PDFToolkit/pdf-images/blob/v0.1.5/examples/assets/images/README.md), distribués avec le module dans `vendor/pdftoolkit/pdf-images/examples/assets/images/`.
 - **Prérequis :** [premier document](01-first-document.md), [dessin](03-graphics.md) et [images](06-images.md).
 
 ## 1. Donner des octets, sans déléguer l'accès au fichier

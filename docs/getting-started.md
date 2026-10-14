@@ -10,15 +10,14 @@ La [documentation en ligne](https://pdftoolkit.github.io/) réunit les guides, l
 
 La série `0.x` est destinée aux développeurs qui souhaitent construire et explorer ce modèle. Avant la version `1.0`, une nouvelle version mineure peut modifier les noms et signatures ; les versions correctives conservent l'API de leur série. Le périmètre implémenté et les limites figurent dans [la couverture de la spécification](specification.md).
 
-Les définitions se fondent sur les documents Adobe/ISO `PDF32000_2008.pdf` et `adobe_supplement_iso32000.pdf`, conservés dans le dépôt du core. Le [guide du supplément](adobe-supplement.md) explique les extensions Adobe du PDF 1.7, niveau 3, leur provenance et leurs mécanismes. Le [guide des références Adobe](adobe-references.md) présente aussi la référence de 2006, ses errata, l'addendum de caviardisation et leur portfolio. Tous les PDF Adobe fournis au projet sont conservés avec leur nom et leurs octets d'origine ; les quatre références archivées sont exclues des archives Composer. PDF 2.0 et les profils PDF/A, PDF/X et PDF/UA constituent des spécifications supplémentaires.
+Les définitions se fondent sur les documents Adobe/ISO `PDF32000_2008.pdf` et `adobe_supplement_iso32000.pdf`, conservés dans le dépôt du core. Le [guide du supplément](adobe-supplement.md) explique les extensions Adobe du PDF 1.7, niveau 3, leur provenance et leurs mécanismes. Le [guide des références Adobe](adobe-references.md) présente aussi la référence de 2006, ses errata, l'addendum de caviardisation et leur portfolio. Les références Adobe archivées dans le core sont conservées avec leur nom et leurs octets d'origine ; les quatre références archivées sont exclues des archives Composer. PDF 2.0 et les profils PDF/A, PDF/X et PDF/UA constituent des spécifications supplémentaires.
 
 ## Installation
 
-Le core **0.5** nécessite PHP 8.3 ou supérieur et les extensions `ctype`, `iconv` et `zlib`. Les backends AES et CMS sont optionnels et nécessitent `openssl`. Les packages sont distribués depuis GitHub ; déclarer leur dépôt VCS dans le projet consommateur :
+Le core **0.5** nécessite PHP 8.3 ou supérieur et les extensions `ctype`, `iconv` et `zlib`. Les backends AES et CMS sont optionnels et nécessitent `openssl`. Le package [`roukmoute/pdf`](https://packagist.org/packages/roukmoute/pdf) est disponible sur Packagist. Depuis le projet consommateur :
 
 ```sh
-composer config repositories.roukmoute-pdf vcs https://github.com/PDFToolkit/pdf
-composer require 'roukmoute/pdf:^0.5'
+composer require "roukmoute/pdf:^0.5.4"
 ```
 
 Les modifications d'API figurent dans le [changelog](../CHANGELOG.md) et le
@@ -33,12 +32,10 @@ projet consommateur pour fixer les versions installées.
 | [`pdftoolkit/pdf-images`](https://pdftoolkit.github.io/modules/images/index.html) | Inspecter des fichiers JPEG et décoder des fichiers PNG en objets image du core. |
 | [`pdftoolkit/pdf-fonts`](https://pdftoolkit.github.io/modules/fonts/index.html) | Analyser un TrueType statique et préparer ses métriques et correspondances pour les objets de police du core. |
 
-Depuis la version **0.1.3**, les modules sont compatibles avec les séries 0.2, 0.3, 0.4 et 0.5 du core et PHP 8.3 ou supérieur. Déclarer le dépôt du core et celui du module choisi dans le projet consommateur. Par exemple, pour importer des fichiers image :
+Depuis la version **0.1.3**, les modules sont compatibles avec les séries 0.2, 0.3, 0.4 et 0.5 du core et PHP 8.3 ou supérieur. Les trois packages sont disponibles sur Packagist : [lecteur](https://packagist.org/packages/pdftoolkit/pdf-reader), [images](https://packagist.org/packages/pdftoolkit/pdf-images) et [fontes](https://packagist.org/packages/pdftoolkit/pdf-fonts). Par exemple, pour importer des fichiers image avec le core 0.5 :
 
 ```sh
-composer config repositories.pdf vcs https://github.com/PDFToolkit/pdf
-composer config repositories.pdf-images vcs https://github.com/PDFToolkit/pdf-images
-composer require 'pdftoolkit/pdf-images:^0.1'
+composer require "roukmoute/pdf:^0.5.4" "pdftoolkit/pdf-images:^0.1.5"
 ```
 
 Le module installe le core avec sa contrainte stable. Le [guide des packages](packages.md) explique leur frontière, les installations et le fonctionnement du lecteur. Conserver le `composer.lock` de l'application pour fixer les versions et les commits utilisés.
@@ -48,6 +45,7 @@ Le module installe le core avec sa contrainte stable. Le [guide des packages](pa
 Depuis un clone du dépôt [PDFToolkit/pdf](https://github.com/PDFToolkit/pdf) :
 
 ```sh
+export COMPOSER_ROOT_VERSION=0.5.x-dev
 composer install
 composer check
 php examples/hello-world.php hello-world.pdf
@@ -90,7 +88,7 @@ $file = new FileStructure(new FileHeader('1.7'), new FileBody($catalog));
 $file->writeTo('hello-world.pdf');
 ```
 
-L'exemple complet, avec les imports et les métadonnées, se trouve dans [`examples/hello-world.php`](https://github.com/PDFToolkit/pdf/blob/v0.5.3/examples/hello-world.php).
+L'exemple complet, avec les imports et les métadonnées, se trouve dans [`examples/hello-world.php`](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/hello-world.php).
 
 ## Tutoriels et recettes
 
@@ -139,7 +137,7 @@ Le writer assemble actuellement le fichier en mémoire. Le lecteur est fourni pa
 
 ## Sécurité
 
-La [politique de sécurité](https://github.com/PDFToolkit/pdf/blob/v0.5.3/SECURITY.md) décrit les signalements privés et les frontières de confiance. La [revue de sécurité](security.md) explique les protections de sérialisation et les responsabilités de l'application pour les chemins, les actions PDF et les limites de ressources.
+La [politique de sécurité](https://github.com/PDFToolkit/pdf/blob/v0.5.4/SECURITY.md) décrit les signalements privés et les frontières de confiance. La [revue de sécurité](security.md) explique les protections de sérialisation et les responsabilités de l'application pour les chemins, les actions PDF et les limites de ressources.
 
 ## Génération des définitions
 

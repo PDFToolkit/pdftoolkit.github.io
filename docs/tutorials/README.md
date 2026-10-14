@@ -10,14 +10,33 @@ et présente le lecteur externe `pdftoolkit/pdf-reader`, utilisé par la leçon 
 
 Le parcours s'inspire de l'organisation des [tutoriels FPDF](https://www.fpdf.org/en/tutorial/index.php) et de sa [collection de scripts](https://www.fpdf.org/en/script/index.php). Ici, les objets du format restent visibles : une police est une ressource, une page appartient à un arbre et une ligne de texte est une séquence d'opérateurs.
 
+## Installer les bibliothèques dans une application
+
+Le core et les modules sont disponibles sur Packagist. Depuis votre projet :
+
+```sh
+composer require "roukmoute/pdf:^0.5.4"
+```
+
+Les leçons 09, 10 et 12 utilisent respectivement `pdftoolkit/pdf-fonts`,
+`pdftoolkit/pdf-images` et `pdftoolkit/pdf-reader`. Le
+[guide des packages](../packages.md#installer-ce-dont-lapplication-a-besoin)
+donne leurs commandes d'installation. L'application charge son propre
+`vendor/autoload.php` et assemble les objets présentés dans les leçons.
+
 ## Préparer le dépôt
 
 Il faut PHP 8.3 ou supérieur et les extensions `ctype`, `iconv` et `zlib`. Les commandes des leçons s'exécutent depuis la racine d'un checkout du core `PDFToolkit/pdf`. Les fichiers Markdown et la construction du site appartiennent à `PDFToolkit/pdftoolkit.github.io` ; voir les [instructions de construction](../site/README.md) pour préparer les sources aux versions documentées. Depuis le checkout du core :
 
 ```sh
+export COMPOSER_ROOT_VERSION=0.5.x-dev
 composer install
 php examples/hello-world.php
 ```
+
+Sous PowerShell, définir `$env:COMPOSER_ROOT_VERSION = '0.5.x-dev'` avant
+`composer install`. Le checkout utilise son `composer.lock` pour installer
+les outils de développement et les trois modules aux versions documentées.
 
 Les leçons 20 et 26 demandent aussi l'extension `openssl`, utilisée par son backend de
 signature. Le certificat et la clé de démonstration sont des fixtures publiques
@@ -40,32 +59,32 @@ présente le PDF d'entrée, ses trois pages et les objets lus.
 
 | Étape | Résultat et notions | Code complet |
 | --- | --- | --- |
-| [01. Premier document](01-first-document.md) | Une phrase, une police, une page, un catalogue et un titre documentaire. | [hello-world.php](https://github.com/PDFToolkit/pdf/blob/v0.5.3/examples/hello-world.php) |
-| [02. Pages et texte](02-pages-and-text.md) | Plusieurs pages, ressources partagées, héritage, positions et interligne. | [pages-and-text.php](https://github.com/PDFToolkit/pdf/blob/v0.5.3/examples/pages-and-text.php) |
-| [03. Dessin et transformations](03-graphics.md) | Couleurs, chemins, courbes, état graphique et matrices. | [graphics.php](https://github.com/PDFToolkit/pdf/blob/v0.5.3/examples/graphics.php) |
-| [04. Signets et destinations](04-navigation.md) | Un plan hiérarchique et des destinations vers les pages. | [navigation.php](https://github.com/PDFToolkit/pdf/blob/v0.5.3/examples/navigation.php) |
-| [05. Liens cliquables](05-links.md) | Annotations avec destination interne et action URI. | [links.php](https://github.com/PDFToolkit/pdf/blob/v0.5.3/examples/links.php) |
-| [06. Images](06-images.md) | Le même motif en image XObject et en image incorporée au contenu. | [images.php](https://github.com/PDFToolkit/pdf/blob/v0.5.3/examples/images.php) |
-| [07. Dégradé et fonction](07-gradient.md) | Une fonction de type 2 alimente un shading axial. | [gradient.php](https://github.com/PDFToolkit/pdf/blob/v0.5.3/examples/gradient.php) |
-| [08. Objets compressés](08-object-stream.md) | Filtres, flux d'objets et flux de références croisées. | [object-stream.php](https://github.com/PDFToolkit/pdf/blob/v0.5.3/examples/object-stream.php) |
-| [09. Police TrueType et Unicode](09-embedded-font.md) | Programme incorporé, CID, largeurs et correspondance ToUnicode. | [embedded-font.php](https://github.com/PDFToolkit/pdf/blob/v0.5.3/examples/embedded-font.php) |
-| [10. Images JPEG et PNG](10-image-files.md) | Inspection JPEG, décodage PNG, échantillons et transparence. | [image-files.php](https://github.com/PDFToolkit/pdf/blob/v0.5.3/examples/image-files.php) |
-| [11. Révisions incrémentales](11-incremental-update.md) | Conservation des octets, remplacements et chaînage des xref. | [incremental-update.php](https://github.com/PDFToolkit/pdf/blob/v0.5.3/examples/incremental-update.php) |
-| [12. Lire un PDF externe](12-reading-pages.md) | Arbre vérifié, valeurs héritées et flux de contenu inspectés puis décodés. | [pages.php du module lecteur](https://github.com/PDFToolkit/pdf-reader/blob/v0.1.4/examples/pages.php) |
-| [13. Extensions Adobe et numérotation Bates](13-adobe-extensions.md) | Déclaration des extensions, propriétés d'artefact et pied de page Bates. | [adobe-extensions.php](https://github.com/PDFToolkit/pdf/blob/v0.5.3/examples/adobe-extensions.php) |
-| [14. Champs AcroForm](14-acroform-fields.md) | Arbre, valeurs, widgets et apparences. | [acroform-fields.php](https://github.com/PDFToolkit/pdf/blob/v0.5.3/examples/acroform-fields.php) |
-| [15. Structure logique](15-tagged-structure.md) | Contenu marqué, ParentTree, IDTree et annotations. | [tagged-structure.php](https://github.com/PDFToolkit/pdf/blob/v0.5.3/examples/tagged-structure.php) |
-| [16. Linéarisation](16-linearization.md) | Dépendances, ordre physique et indices binaires. | [linearized.php](https://github.com/PDFToolkit/pdf/blob/v0.5.3/examples/linearized.php) |
-| [17. Couleurs et motifs](17-colours-patterns.md) | Espaces, cellules répétées et sept dégradés. | [colours-patterns.php](https://github.com/PDFToolkit/pdf/blob/v0.5.3/examples/colours-patterns.php) |
-| [18. CMaps](18-cmaps.md) | UseCMap, CID et correspondances Unicode. | [cmap-font.php](https://github.com/PDFToolkit/pdf/blob/v0.5.3/examples/cmap-font.php) |
-| [19. Filtres et prédicteurs](19-filters-predictors.md) | Compression LZW, prédiction TIFF et PNG. | [filters-predictors.php](https://github.com/PDFToolkit/pdf/blob/v0.5.3/examples/filters-predictors.php) |
-| [20. Signatures](20-signed-document.md) | ByteRange, réservation et CMS détaché. | [signed-document.php](https://github.com/PDFToolkit/pdf/blob/v0.5.3/examples/signed-document.php) |
-| [21. Images, transparence et calques](21-native-graphics.md) | Échantillons, masques, groupes et visibilité. | [native-graphics.php](https://github.com/PDFToolkit/pdf/blob/v0.5.3/examples/native-graphics.php) |
-| [22. Fontes natives](22-native-fonts.md) | Type3, fontes simples et métriques verticales. | [native-fonts.php](https://github.com/PDFToolkit/pdf/blob/v0.5.3/examples/native-fonts.php) |
-| [23. Navigation native](23-native-navigation.md) | Labels, articles, cadrages et présentation. | [native-navigation.php](https://github.com/PDFToolkit/pdf/blob/v0.5.3/examples/native-navigation.php) |
-| [24. Fichiers incorporés](24-embedded-files.md) | EF, RF, métadonnées et collections. | [embedded-files.php](https://github.com/PDFToolkit/pdf/blob/v0.5.3/examples/embedded-files.php) |
-| [25. Générations des objets](25-object-lifecycle.md) | Suppression, liste libre et réutilisation. | [object-lifecycle.php](https://github.com/PDFToolkit/pdf/blob/v0.5.3/examples/object-lifecycle.php) |
-| [26. Politique de signature](26-signature-field-policy.md) | Champ, seeds, verrou et résultat effectivement signé. | [signature-field-policy.php](https://github.com/PDFToolkit/pdf/blob/v0.5.3/examples/signature-field-policy.php) |
+| [01. Premier document](01-first-document.md) | Une phrase, une police, une page, un catalogue et un titre documentaire. | [hello-world.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/hello-world.php) |
+| [02. Pages et texte](02-pages-and-text.md) | Plusieurs pages, ressources partagées, héritage, positions et interligne. | [pages-and-text.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/pages-and-text.php) |
+| [03. Dessin et transformations](03-graphics.md) | Couleurs, chemins, courbes, état graphique et matrices. | [graphics.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/graphics.php) |
+| [04. Signets et destinations](04-navigation.md) | Un plan hiérarchique et des destinations vers les pages. | [navigation.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/navigation.php) |
+| [05. Liens cliquables](05-links.md) | Annotations avec destination interne et action URI. | [links.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/links.php) |
+| [06. Images](06-images.md) | Le même motif en image XObject et en image incorporée au contenu. | [images.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/images.php) |
+| [07. Dégradé et fonction](07-gradient.md) | Une fonction de type 2 alimente un shading axial. | [gradient.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/gradient.php) |
+| [08. Objets compressés](08-object-stream.md) | Filtres, flux d'objets et flux de références croisées. | [object-stream.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/object-stream.php) |
+| [09. Police TrueType et Unicode](09-embedded-font.md) | Programme incorporé, CID, largeurs et correspondance ToUnicode. | [embedded-font.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/embedded-font.php) |
+| [10. Images JPEG et PNG](10-image-files.md) | Inspection JPEG, décodage PNG, échantillons et transparence. | [image-files.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/image-files.php) |
+| [11. Révisions incrémentales](11-incremental-update.md) | Conservation des octets, remplacements et chaînage des xref. | [incremental-update.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/incremental-update.php) |
+| [12. Lire un PDF externe](12-reading-pages.md) | Arbre vérifié, valeurs héritées et flux de contenu inspectés puis décodés. | [pages.php du module lecteur](https://github.com/PDFToolkit/pdf-reader/blob/v0.1.5/examples/pages.php) |
+| [13. Extensions Adobe et numérotation Bates](13-adobe-extensions.md) | Déclaration des extensions, propriétés d'artefact et pied de page Bates. | [adobe-extensions.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/adobe-extensions.php) |
+| [14. Champs AcroForm](14-acroform-fields.md) | Arbre, valeurs, widgets et apparences. | [acroform-fields.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/acroform-fields.php) |
+| [15. Structure logique](15-tagged-structure.md) | Contenu marqué, ParentTree, IDTree et annotations. | [tagged-structure.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/tagged-structure.php) |
+| [16. Linéarisation](16-linearization.md) | Dépendances, ordre physique et indices binaires. | [linearized.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/linearized.php) |
+| [17. Couleurs et motifs](17-colours-patterns.md) | Espaces, cellules répétées et sept dégradés. | [colours-patterns.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/colours-patterns.php) |
+| [18. CMaps](18-cmaps.md) | UseCMap, CID et correspondances Unicode. | [cmap-font.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/cmap-font.php) |
+| [19. Filtres et prédicteurs](19-filters-predictors.md) | Compression LZW, prédiction TIFF et PNG. | [filters-predictors.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/filters-predictors.php) |
+| [20. Signatures](20-signed-document.md) | ByteRange, réservation et CMS détaché. | [signed-document.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/signed-document.php) |
+| [21. Images, transparence et calques](21-native-graphics.md) | Échantillons, masques, groupes et visibilité. | [native-graphics.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/native-graphics.php) |
+| [22. Fontes natives](22-native-fonts.md) | Type3, fontes simples et métriques verticales. | [native-fonts.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/native-fonts.php) |
+| [23. Navigation native](23-native-navigation.md) | Labels, articles, cadrages et présentation. | [native-navigation.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/native-navigation.php) |
+| [24. Fichiers incorporés](24-embedded-files.md) | EF, RF, métadonnées et collections. | [embedded-files.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/embedded-files.php) |
+| [25. Générations des objets](25-object-lifecycle.md) | Suppression, liste libre et réutilisation. | [object-lifecycle.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/object-lifecycle.php) |
+| [26. Politique de signature](26-signature-field-policy.md) | Champ, seeds, verrou et résultat effectivement signé. | [signature-field-policy.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/signature-field-policy.php) |
 
 Les leçons 03 à 07 peuvent se lire dans l'ordre des sujets qui vous intéressent, après le premier document. Les leçons 08 et 11 concernent l'organisation du fichier ; les leçons 09 et 10 ajoutent des programmes de police et des fichiers image réels au graphe. La leçon 12 consulte les structures d'un PDF existant avec les objets du lecteur.
 
@@ -112,8 +131,8 @@ La seconde commande réécrit le PDF dans une forme utile pour examiner ses obje
 
 ## Aller vers la norme
 
-Les guides citent les sections de [PDF 1.7 / ISO 32000-1:2008](https://github.com/PDFToolkit/pdf/blob/v0.5.3/PDF32000_2008.pdf)
-et du [supplément Adobe](https://github.com/PDFToolkit/pdf/blob/v0.5.3/adobe_supplement_iso32000.pdf). La
+Les guides citent les sections de [PDF 1.7 / ISO 32000-1:2008](https://github.com/PDFToolkit/pdf/blob/v0.5.4/PDF32000_2008.pdf)
+et du [supplément Adobe](https://github.com/PDFToolkit/pdf/blob/v0.5.4/adobe_supplement_iso32000.pdf). La
 [couverture](../coverage.md) distingue les définitions, constructions et règles
 effectivement vérifiées. Les signatures font partie du parcours ; les objets de
 [chiffrement](../components.md) disposent de leur propre

@@ -2,7 +2,7 @@
 
 [Index des tutoriels](README.md) · [Précédent : premier document](01-first-document.md) · [Suivant : tracés et couleurs](03-graphics.md)
 
-Cette leçon construit trois pages A4 qui partagent leurs ressources. Elle montre comment placer du texte, choisir un interligne et composer un pied de page. Le script complet est [pages-and-text.php](https://github.com/PDFToolkit/pdf/blob/v0.5.3/examples/pages-and-text.php).
+Cette leçon construit trois pages A4 qui partagent leurs ressources. Elle montre comment placer du texte, choisir un interligne et composer un pied de page. Le script complet est [pages-and-text.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/pages-and-text.php).
 
 ## Exécuter l'exemple
 

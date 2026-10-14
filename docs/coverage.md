@@ -9,8 +9,8 @@ ou un comportement de lecteur.
 
 | Document | Inventaire | Source |
 | --- | --- | --- |
-| ISO 32000-1:2008, PDF 1.7 | 756 pages ; 392 tableaux ; 263 tableaux de dictionnaires ; 1 405 classes d'entrée ; 73 opérateurs de contenu | [PDF32000_2008.pdf](https://github.com/PDFToolkit/pdf/blob/v0.5.3/PDF32000_2008.pdf) |
-| Supplément Adobe, niveau d'extension 3 | 140 pages ; 66 tableaux, dont 61 tableaux de dictionnaires | [adobe_supplement_iso32000.pdf](https://github.com/PDFToolkit/pdf/blob/v0.5.3/adobe_supplement_iso32000.pdf) |
+| ISO 32000-1:2008, PDF 1.7 | 756 pages ; 392 tableaux ; 263 tableaux de dictionnaires ; 1 405 classes d'entrée ; 73 opérateurs de contenu | [PDF32000_2008.pdf](https://github.com/PDFToolkit/pdf/blob/v0.5.4/PDF32000_2008.pdf) |
+| Supplément Adobe, niveau d'extension 3 | 140 pages ; 66 tableaux, dont 61 tableaux de dictionnaires | [adobe_supplement_iso32000.pdf](https://github.com/PDFToolkit/pdf/blob/v0.5.4/adobe_supplement_iso32000.pdf) |
 
 Les fichiers originaux restent dans le dépôt du core. Les catalogues enregistrent leur
 SHA-256 et les numéros de pages physiques ; les corrections d'interprétation
@@ -33,8 +33,8 @@ différences de contrats entre les éditions pour les digests de signature.
 
 ## Comment lire la couverture
 
-L'[inventaire ISO](https://github.com/PDFToolkit/pdf/blob/v0.5.3/resources/iso32000-1/coverage.json) examine 98 familles de
-mécanismes. L'[inventaire Adobe](https://github.com/PDFToolkit/pdf/blob/v0.5.3/resources/adobe-supplement-iso32000/coverage.json)
+L'[inventaire ISO](https://github.com/PDFToolkit/pdf/blob/v0.5.4/resources/iso32000-1/coverage.json) examine 98 familles de
+mécanismes. L'[inventaire Adobe](https://github.com/PDFToolkit/pdf/blob/v0.5.4/resources/adobe-supplement-iso32000/coverage.json)
 distingue ses tableaux, algorithmes, prescriptions, notes de produit et standards
 externes. Leur référence initiale est la version 0.3.0 ; les ajouts ultérieurs
 doivent être accompagnés de fichiers d'implémentation et de preuves de validation.
@@ -106,7 +106,7 @@ le texte, le clipping et les sélections de liste restent dans la partie
 remplaçable. Sans ce marqueur, la procédure ISO autorise l'ajout du nouveau texte
 à l'ancien flux, ce qui explique la superposition observée dans Acrobat Reader.
 
-L'[oracle de régression](https://github.com/PDFToolkit/pdf/blob/v0.5.3/tools/validate_variable_text_appearances.py) analyse
+L'[oracle de régression](https://github.com/PDFToolkit/pdf/blob/v0.5.4/tools/validate_variable_text_appearances.py) analyse
 les vrais opérateurs avec pypdf et exerce deux remplacements successifs pour
 chaque apparence. Il vérifie la disparition des anciens textes, la conservation
 des cadres et le cas négatif sans marqueur. Ces contrôles passent sous les trois

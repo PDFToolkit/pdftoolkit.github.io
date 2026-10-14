@@ -8,7 +8,7 @@ Une mise à jour incrémentale ajoute des objets et une nouvelle section de réf
 php examples/incremental-update.php incremental-update.pdf
 ```
 
-Le [script complet](https://github.com/PDFToolkit/pdf/blob/v0.5.3/examples/incremental-update.php) produit une page affichant « Revision 2 : contenu mis a jour. ». Le fichier contient aussi les octets des révisions 0 et 1, mais le lecteur utilise les derniers enregistrements xref pour résoudre le flux de la page.
+Le [script complet](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/incremental-update.php) produit une page affichant « Revision 2 : contenu mis a jour. ». Le fichier contient aussi les octets des révisions 0 et 1, mais le lecteur utilise les derniers enregistrements xref pour résoudre le flux de la page.
 
 ![Aperçu de la dernière révision](previews/incremental-update.png)
 

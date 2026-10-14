@@ -7,7 +7,7 @@ dans les modules optionnels [pdf-fonts](https://github.com/PDFToolkit/pdf-fonts)
 et [pdf-images](https://github.com/PDFToolkit/pdf-images). Les objets PDF et leurs
 invariants restent dans le core. Le module
 [pdf-reader](https://github.com/PDFToolkit/pdf-reader) a sa propre
-[documentation de sécurité](https://github.com/PDFToolkit/pdf-reader/blob/v0.1.4/docs/security.md)
+[documentation de sécurité](https://github.com/PDFToolkit/pdf-reader/blob/v0.1.5/docs/security.md)
 pour la lecture de fichiers externes ; cette revue du générateur ne s'y substitue pas.
 
 ## Résultats et protections
@@ -62,19 +62,19 @@ Le nom de téléchargement est ici fixe. Des données de requête ne doivent pas
 
 Les contrôles numériques évitent les débordements identifiés ; la validation des opérandes évite les revisites inutiles. Ils ne remplacent pas les quotas du service. Un graphe direct partagé peut représenter une très grande sortie lorsqu'il est développé en syntaxe PDF. Une chaîne de filtres peut aussi augmenter fortement le nombre d'octets. Une limite sur la taille des données d'entrée seule ne borne donc pas toute la sérialisation.
 
-Les tests [SecuritySerializationTest](https://github.com/PDFToolkit/pdf/blob/v0.5.3/tests/SecuritySerializationTest.php), [SecurityLimitsTest](https://github.com/PDFToolkit/pdf/blob/v0.5.3/tests/SecurityLimitsTest.php) et [FileOutputTest](https://github.com/PDFToolkit/pdf/blob/v0.5.3/tests/FileOutputTest.php) couvrent les charges d'injection, les 256 valeurs d'octet, les terminateurs inline, les bornes numériques, les graphes partagés et les sorties. [ImageObjectsTest](https://github.com/PDFToolkit/pdf/blob/v0.5.3/tests/ImageObjectsTest.php), [CrossReferenceSectionTest](https://github.com/PDFToolkit/pdf/blob/v0.5.3/tests/CrossReferenceSectionTest.php) et [IncrementalUpdateTest](https://github.com/PDFToolkit/pdf/blob/v0.5.3/tests/IncrementalUpdateTest.php) couvrent les invariants PDF du core. Les régressions de décodage des images sont dans [ImageImportTest du module](https://github.com/PDFToolkit/pdf-images/blob/v0.1.4/tests/ImageImportTest.php). Les validations TrueType restent dans [les tests du module de fontes](https://github.com/PDFToolkit/pdf-fonts/tree/v0.1.4/tests). Des lectures indépendantes avec pypdf ont confirmé les vecteurs binaires et la reproduction de l'ambiguïté inline. qpdf contrôle tous les exemples en CI.
+Les tests [SecuritySerializationTest](https://github.com/PDFToolkit/pdf/blob/v0.5.4/tests/SecuritySerializationTest.php), [SecurityLimitsTest](https://github.com/PDFToolkit/pdf/blob/v0.5.4/tests/SecurityLimitsTest.php) et [FileOutputTest](https://github.com/PDFToolkit/pdf/blob/v0.5.4/tests/FileOutputTest.php) couvrent les charges d'injection, les 256 valeurs d'octet, les terminateurs inline, les bornes numériques, les graphes partagés et les sorties. [ImageObjectsTest](https://github.com/PDFToolkit/pdf/blob/v0.5.4/tests/ImageObjectsTest.php), [CrossReferenceSectionTest](https://github.com/PDFToolkit/pdf/blob/v0.5.4/tests/CrossReferenceSectionTest.php) et [IncrementalUpdateTest](https://github.com/PDFToolkit/pdf/blob/v0.5.4/tests/IncrementalUpdateTest.php) couvrent les invariants PDF du core. Les régressions de décodage des images sont dans [ImageImportTest du module](https://github.com/PDFToolkit/pdf-images/blob/v0.1.5/tests/ImageImportTest.php). Les validations TrueType restent dans [les tests du module de fontes](https://github.com/PDFToolkit/pdf-fonts/tree/v0.1.5/tests). Des lectures indépendantes avec pypdf ont confirmé les vecteurs binaires et la reproduction de l'ambiguïté inline. qpdf contrôle tous les exemples en CI.
 
 Cette revue n'est pas un audit des lecteurs PDF, de PHP, du serveur HTTP ou d'une future bibliothèque de mise en page. Les fichiers de définition générés expriment les contraintes de la norme ; ils ne forment pas une politique générale d'assainissement des documents.
 
 La revue croisée des nouveaux mécanismes a identifié deux défauts dans les versions
 de développement : une exemption de métadonnées attachée à une ancienne identité
 et un remplacement de Encrypt par un membre de flux d'objets. Les tests
-[EncryptedRevisionInvariantTest](https://github.com/PDFToolkit/pdf/blob/v0.5.3/tests/EncryptedRevisionInvariantTest.php)
+[EncryptedRevisionInvariantTest](https://github.com/PDFToolkit/pdf/blob/v0.5.4/tests/EncryptedRevisionInvariantTest.php)
 vérifient leurs corrections, y compris le contenu XML effectivement écrit.
 
-Les validateurs [ISO](https://github.com/PDFToolkit/pdf/blob/v0.5.3/tools/validate_iso_security.py),
-[certificats](https://github.com/PDFToolkit/pdf/blob/v0.5.3/tools/validate_public_key_security.py) et
-[signatures](https://github.com/PDFToolkit/pdf/blob/v0.5.3/tools/validate_pdf_signatures.py) sont des dépendances de
+Les validateurs [ISO](https://github.com/PDFToolkit/pdf/blob/v0.5.4/tools/validate_iso_security.py),
+[certificats](https://github.com/PDFToolkit/pdf/blob/v0.5.4/tools/validate_public_key_security.py) et
+[signatures](https://github.com/PDFToolkit/pdf/blob/v0.5.4/tools/validate_pdf_signatures.py) sont des dépendances de
 développement, avec versions et empreintes verrouillées. Chaque oracle précise
 les limites de son lecteur : qpdf 12.4.2 dérive aussi une clé par objet pour un
 Crypt explicite ; pyHanko vérifie la règle ISO sans modifier ses algorithmes.
@@ -96,20 +96,20 @@ La signature simple refuse les politiques qui demandent ce contrat dédié.
 Une chaîne de certificats déclarée pour une signature PKCS#1 doit commencer par
 le certificat effectivement utilisé par ce backend.
 
-Les tests de [vérification des résultats](https://github.com/PDFToolkit/pdf/blob/v0.5.3/tests/SignatureOutputVerificationTest.php),
-de [politique de champ](https://github.com/PDFToolkit/pdf/blob/v0.5.3/tests/SignatureFieldPolicySigningTest.php) et de
-[permissions historiques](https://github.com/PDFToolkit/pdf/blob/v0.5.3/tests/SignaturePermissionHistoryTest.php) couvrent
+Les tests de [vérification des résultats](https://github.com/PDFToolkit/pdf/blob/v0.5.4/tests/SignatureOutputVerificationTest.php),
+de [politique de champ](https://github.com/PDFToolkit/pdf/blob/v0.5.4/tests/SignatureFieldPolicySigningTest.php) et de
+[permissions historiques](https://github.com/PDFToolkit/pdf/blob/v0.5.4/tests/SignaturePermissionHistoryTest.php) couvrent
 les sorties altérées, les certificats divergents, les faits rejoués, les verrous
-et les permissions. L'[oracle de politiques](https://github.com/PDFToolkit/pdf/blob/v0.5.3/tools/validate_signature_field_policies.py)
+et les permissions. L'[oracle de politiques](https://github.com/PDFToolkit/pdf/blob/v0.5.4/tools/validate_signature_field_policies.py)
 vérifie huit PDF et neuf signatures RSA/DSA sans modifier les lecteurs.
 La comparaison générale des modifications autorisées par MDP/UR demeure distincte.
 
-Les tests [AdobeEncryptionTest](https://github.com/PDFToolkit/pdf/blob/v0.5.3/tests/AdobeEncryptionTest.php) et le validateur
-[validate_adobe_encryption.py](https://github.com/PDFToolkit/pdf/blob/v0.5.3/tools/validate_adobe_encryption.py) couvrent le
+Les tests [AdobeEncryptionTest](https://github.com/PDFToolkit/pdf/blob/v0.5.4/tests/AdobeEncryptionTest.php) et le validateur
+[validate_adobe_encryption.py](https://github.com/PDFToolkit/pdf/blob/v0.5.4/tools/validate_adobe_encryption.py) couvrent le
 protocole historique R=5. Ce protocole est sélectionné explicitement pour
 l'interopérabilité : sa dérivation de mot de passe est ancienne et AES-CBC
 n'authentifie pas le contenu. La préparation SASLprep ne renforce pas un mot de
 passe faible. Le [guide Adobe](adobe-supplement.md) précise les mécanismes
 effectivement disponibles et leurs limites.
 
-[Politique et signalements privés](https://github.com/PDFToolkit/pdf/blob/v0.5.3/SECURITY.md) · [Architecture](architecture.md) · [Couverture de la norme](specification.md)
+[Politique et signalements privés](https://github.com/PDFToolkit/pdf/blob/v0.5.4/SECURITY.md) · [Architecture](architecture.md) · [Couverture de la norme](specification.md)

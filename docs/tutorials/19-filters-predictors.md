@@ -1,6 +1,6 @@
 # 19. Prédire les lignes avant la compression
 
-Le [script complet](https://github.com/PDFToolkit/pdf/blob/v0.5.3/examples/filters-predictors.php) dessine trois fois les
+Le [script complet](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/filters-predictors.php) dessine trois fois les
 mêmes pixels RGB : Flate/Paeth, LZW/TIFF et LZW/PNG adaptatif.
 
 ```sh
@@ -29,4 +29,4 @@ de largeur, resets, profondeurs et lignes partielles.
 
 Référence : ISO 7.4.4, pages physiques 28–33.
 
-[Index](README.md) · [Code complet](https://github.com/PDFToolkit/pdf/blob/v0.5.3/examples/filters-predictors.php)
+[Index](README.md) · [Code complet](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/filters-predictors.php)

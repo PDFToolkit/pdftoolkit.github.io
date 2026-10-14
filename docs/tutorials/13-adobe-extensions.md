@@ -1,6 +1,6 @@
 # Extensions Adobe et numérotation Bates
 
-Le [supplément Adobe de juin 2008](https://github.com/PDFToolkit/pdf/blob/v0.5.3/adobe_supplement_iso32000.pdf)
+Le [supplément Adobe de juin 2008](https://github.com/PDFToolkit/pdf/blob/v0.5.4/adobe_supplement_iso32000.pdf)
 étend PDF 1.7 au niveau Adobe 3. Une extension conserve le format PDF de base
 et déclare les propriétés supplémentaires que le lecteur peut rencontrer.
 
@@ -15,7 +15,7 @@ numéros des pages du fichier.
 php examples/adobe-extensions.php adobe-extensions.pdf
 ```
 
-Le [script complet](https://github.com/PDFToolkit/pdf/blob/v0.5.3/examples/adobe-extensions.php) est commenté étape par
+Le [script complet](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/adobe-extensions.php) est commenté étape par
 étape. Le résultat contient une page et deux identifiants affichés en pied de page.
 Ce tutoriel dépend uniquement du core.
 
@@ -82,6 +82,6 @@ classification `/BatesN`, l'ordre des deux chaînes et leur présence visible.
 
 Le mécanisme de déclaration figure aux pages 23–25 du supplément et dans
 ISO 32000-1, §7.12. L'artefact Bates figure au tableau 10.17, page 100 du
-[supplément conservé dans le core](https://github.com/PDFToolkit/pdf/blob/v0.5.3/adobe_supplement_iso32000.pdf#page=100).
+[supplément conservé dans le core](https://github.com/PDFToolkit/pdf/blob/v0.5.4/adobe_supplement_iso32000.pdf#page=100).
 Le [guide du supplément](../adobe-supplement.md) détaille la couverture des autres
 extensions et les règles de provenance.
