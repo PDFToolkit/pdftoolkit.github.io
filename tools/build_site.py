@@ -490,7 +490,9 @@ class Site:
             match = re.fullmatch(r'/PDFToolkit/(pdf|pdf-fonts|pdf-images|pdf-reader|opentype)/(?:blob|tree)/[^/]+/(.+)', parsed.path)
             if match:
                 package_name = CORE_PACKAGE if match.group(1) == 'pdf' else 'pdftoolkit/' + match.group(1)
-                target = match.group(2)
+                target = posixpath.normpath(unquote(match.group(2), errors='strict'))
+                if target.startswith('../') or target in {'..', '.'} or target.startswith('/') or '\\' in target or ':' in target:
+                    raise ValueError(f'GitHub source link escapes its source package: {source} -> {href}')
                 language = 'fr' if target.endswith('.fr.md') or target.startswith('docs/fr/') else self.language
                 if owner == package_name and canonical_source(owner, source) == canonical_source(owner, target) and source != target:
                     language = 'fr' if self.language == 'en' else 'en'
@@ -513,8 +515,8 @@ class Site:
             return href
         if parsed.path.startswith('/'):
             return self.url(parsed.path.lstrip('/')) + ('?' + parsed.query if parsed.query else '') + ('#' + parsed.fragment if parsed.fragment else '')
-        target = posixpath.normpath(posixpath.join(posixpath.dirname(source), parsed.path))
-        if target.startswith('../') or target == '..' or target.startswith('/'):
+        target = posixpath.normpath(posixpath.join(posixpath.dirname(source), unquote(parsed.path, errors='strict')))
+        if target.startswith('../') or target == '..' or target.startswith('/') or '\\' in target or ':' in target:
             raise ValueError(f'Markdown link escapes its source package: {source} -> {href}')
         suffix = ('?' + parsed.query if parsed.query else '') + ('#' + parsed.fragment if parsed.fragment else '')
         canonical = canonical_source(owner, target)
