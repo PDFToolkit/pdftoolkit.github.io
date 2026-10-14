@@ -1,18 +1,18 @@
 # 32. Horodatages de document et preuves de validation
 
-Le [script complet](https://github.com/PDFToolkit/pdf/blob/v0.7.0/examples/pdf20-timestamp-dss.php) écrit un PDF lisible contenant deux véritables horodatages RFC3161. Entre eux, il ajoute des certificats dans un Document Security Store (DSS) et des Validation Related Information (VRI) propres à la signature. La page visible énumère ces étapes ; les preuves se trouvent dans les objets PDF et les plages d’octets historiques signées.
+Le [script complet](https://github.com/PDFToolkit/pdf/blob/v0.7.1/examples/pdf20-timestamp-dss.php) écrit un PDF lisible contenant deux véritables horodatages RFC3161. Entre eux, il ajoute des certificats dans un Document Security Store (DSS) et des Validation Related Information (VRI) propres à la signature. La page visible énumère ces étapes ; les preuves se trouvent dans les objets PDF et les plages d’octets historiques signées.
 
 L’autorité de démonstration fonctionne hors ligne avec une **clé publique de test**. Ses signatures mathématiques sont réelles, mais son identité et son horloge locale ne constituent pas un service d’horodatage de confiance. L’application choisit explicitement son fournisseur et sa politique concernant les certificats, le temps et la révocation.
 
 ## Exécuter l’exemple
 
-Depuis une copie du core 0.7.0 avec ses dépendances de développement verrouillées, fournissez explicitement l’exécutable OpenSSL :
+Depuis une copie du core 0.7.1 avec ses dépendances de développement verrouillées, fournissez explicitement l’exécutable OpenSSL :
 
 ```bash
 php examples/pdf20-timestamp-dss.php timestamps.pdf /usr/bin/openssl
 ```
 
-L’exemple fournit Courier avec des [métriques explicites](https://github.com/PDFToolkit/pdf/blob/v0.7.0/examples/fixtures/pdf20-courier-font.php) : FirstChar/LastChar, largeurs ASCII et FontDescriptor. PDF 2.0 ne permet plus d’omettre ces entrées pour les quatorze polices standard. Cette construction n’incorpore pas de programme de fonte ; un profil exigeant l’incorporation demande une fonte explicitement incorporée.
+L’exemple fournit Courier avec des [métriques explicites](https://github.com/PDFToolkit/pdf/blob/v0.7.1/examples/fixtures/pdf20-courier-font.php) : FirstChar/LastChar, largeurs ASCII et FontDescriptor. PDF 2.0 ne permet plus d’omettre ces entrées pour les quatorze polices standard. Cette construction n’incorpore pas de programme de fonte ; un profil exigeant l’incorporation demande une fonte explicitement incorporée.
 
 
 Sous Windows, placez entre guillemets un chemin contenant des espaces. L’exemple accepte aussi `PDFTOOLKIT_OPENSSL` à la place du second argument. Il ne télécharge aucun certificat, clé privée, réponse de révocation ou horodatage sur le réseau.
@@ -75,6 +75,6 @@ Les dépendances de validation verrouillées appartiennent aux outils de dévelo
 
 ## Références
 
-Les paragraphes 12.8.4 et 12.8.5 d’ISO 32000-2:2020 décrivent DSS/VRI et les horodatages ; la page physique 606 précise leur traitement DocMDP. La [norme principale conservée](https://github.com/PDFToolkit/pdf/blob/v0.7.0/ISO_32000-2_sponsored_EC3.pdf) et le [catalogue du bundle](https://github.com/PDFToolkit/pdf/blob/v0.7.0/resources/iso32000-2-bundle/sources.json) identifient la source fournie par la PDF Association et sa collection de corrections. `TimestampRequest`, `TimestampResponse` et `TimestampToken` représentent explicitement les données RFC3161.
+Les paragraphes 12.8.4 et 12.8.5 d’ISO 32000-2:2020 décrivent DSS/VRI et les horodatages ; la page physique 606 précise leur traitement DocMDP. La [norme principale conservée](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf) et le [catalogue du bundle](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/iso32000-2-bundle/sources.json) identifient la source fournie par la PDF Association et sa collection de corrections. `TimestampRequest`, `TimestampResponse` et `TimestampToken` représentent explicitement les données RFC3161.
 
 [Parcours des tutoriels](README.md) · [Signatures modernes](31-pdf20-modern-signature.md) · [Guide du bundle](../pdf-2-0-bundle.md)

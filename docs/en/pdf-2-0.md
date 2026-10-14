@@ -1,6 +1,6 @@
 # PDF 2.0: objects, writing and companion specifications
 
-Core **0.7.0** implements ISO 32000-2:2020 objects and mechanisms, with reviewed
+Core **0.7.1** implements ISO 32000-2:2020 objects and mechanisms, with reviewed
 corrections from Errata Collection 3 (EC3, 2026-06-01). It requires 64-bit PHP 8.3
 or later and keeps explicit construction, document-scoped objects and no global
 registry. Table coverage does not establish complete conditional, algorithmic or
@@ -142,11 +142,11 @@ retains its [documented PDF 1.0–1.7 input scope](packages.md).
 
 ## Source and checks
 
-The [original `ISO_32000-2_sponsored_EC3.pdf`](https://github.com/PDFToolkit/pdf/blob/v0.7.0/ISO_32000-2_sponsored_EC3.pdf)
+The [original `ISO_32000-2_sponsored_EC3.pdf`](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf)
 is preserved in the public core repository with its original filename and bytes,
 following the project owner's confirmed redistribution authorization.
-[Catalogue metadata](https://github.com/PDFToolkit/pdf/blob/v0.7.0/resources/iso32000-2-2020/metadata.json)
-and the [coverage inventory](https://github.com/PDFToolkit/pdf/blob/v0.7.0/resources/iso32000-2-2020/coverage.json)
+[Catalogue metadata](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/iso32000-2-2020/metadata.json)
+and the [coverage inventory](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/iso32000-2-2020/coverage.json)
 record its identity, physical pages and hash. The supplied file comes from the
 **PDF Association**, through its [official sponsored access](https://www.pdfa.org/sponsored-standards/).
 Both supplied main-standard copies and all companion originals remain in the repository.

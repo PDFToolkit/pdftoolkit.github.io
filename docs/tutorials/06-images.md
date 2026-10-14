@@ -80,6 +80,6 @@ Cet exemple couvre des images opaques en `/DeviceRGB`, sans masque ni gestion de
 
 Une image inline ne peut pas contenir une séquence binaire qui serait interprétée comme un terminateur `EI` ambigu. `InlineImage` refuse cette situation. La palette de ce tutoriel est choisie pour l'éviter ; un XObject image convient aux données arbitraires et aux images réutilisées.
 
-Repères dans [ISO 32000-1:2008](https://github.com/PDFToolkit/pdf/blob/v0.5.4/PDF32000_2008.pdf) : **7.3.8** (flux), **7.4.4** (FlateDecode), **8.3.3** (transformations), **8.8** (XObjects), **8.9.5 et table 89** (dictionnaire image), **8.9.7** (images inline).
+Repères dans [ISO 32000-1:2008](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/PDF32000_2008.pdf) : **7.3.8** (flux), **7.4.4** (FlateDecode), **8.3.3** (transformations), **8.8** (XObjects), **8.9.5 et table 89** (dictionnaire image), **8.9.7** (images inline).
 
 [← 5. Liens](05-links.md) · [Tous les tutoriels](README.md) · [7. Dégradé axial →](07-gradient.md)

@@ -55,7 +55,7 @@ Pour les cellules, `y` diminue lorsqu'on descend dans la table. Le décalage hor
 | Polices Type 1 et polices standard | §9.6.2 |
 | États et positionnement du texte | §9.3 et §9.4 |
 
-Le mot « tableau » désigne ici le résultat visuel. Un tableau sémantique et accessible implique une structure logique PDF supplémentaire (§14.7), que cette recette ne construit pas. La [norme conservée dans le core](https://github.com/PDFToolkit/pdf/blob/v0.5.4/PDF32000_2008.pdf) et le [guide d'architecture](../architecture.md) donnent le cadre de ces objets.
+Le mot « tableau » désigne ici le résultat visuel. Un tableau sémantique et accessible implique une structure logique PDF supplémentaire (§14.7), que cette recette ne construit pas. La [norme conservée dans le core](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/PDF32000_2008.pdf) et le [guide d'architecture](../architecture.md) donnent le cadre de ces objets.
 
 ## Adapter la recette
 

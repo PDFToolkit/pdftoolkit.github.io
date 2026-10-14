@@ -1,18 +1,18 @@
 # 33. Objets géospatiaux PDF 2.0
 
-Le [script complet](https://github.com/PDFToolkit/pdf/blob/v0.7.0/examples/pdf20-geospatial.php) dessine deux panneaux illustratifs et associe des données de mesure géospatiales à la page, à un Form XObject et à une image. Une région déclare un système géographique ; l’autre un système projeté. Ce sont deux régions de démonstration indépendantes, pas la conversion d’une même carte topographique.
+Le [script complet](https://github.com/PDFToolkit/pdf/blob/v0.7.1/examples/pdf20-geospatial.php) dessine deux panneaux illustratifs et associe des données de mesure géospatiales à la page, à un Form XObject et à une image. Une région déclare un système géographique ; l’autre un système projeté. Ce sont deux régions de démonstration indépendantes, pas la conversion d’une même carte topographique.
 
 Dessiner une grille ne crée pas une sémantique géographique. Le script construit séparément les systèmes de coordonnées, couples de points de contrôle, viewports de mesure, unités préférées et nuage de points qui décrivent les objets PDF.
 
 ## Exécuter l’exemple
 
-Depuis une copie du core 0.7.0 :
+Depuis une copie du core 0.7.1 :
 
 ```bash
 php examples/pdf20-geospatial.php geospatial.pdf
 ```
 
-L’exemple fournit Courier avec des [métriques explicites](https://github.com/PDFToolkit/pdf/blob/v0.7.0/examples/fixtures/pdf20-courier-font.php) : FirstChar/LastChar, largeurs ASCII et FontDescriptor. PDF 2.0 ne permet plus d’omettre ces entrées pour les quatorze polices standard. Cette construction n’incorpore pas de programme de fonte ; un profil exigeant l’incorporation demande une fonte explicitement incorporée.
+L’exemple fournit Courier avec des [métriques explicites](https://github.com/PDFToolkit/pdf/blob/v0.7.1/examples/fixtures/pdf20-courier-font.php) : FirstChar/LastChar, largeurs ASCII et FontDescriptor. PDF 2.0 ne permet plus d’omettre ces entrées pour les quatorze polices standard. Cette construction n’incorpore pas de programme de fonte ; un profil exigeant l’incorporation demande une fonte explicitement incorporée.
 
 
 L’exemple utilise uniquement des objets PDF natifs. Il ne nécessite ni convertisseur d’images, ni convertisseur de fontes, ni base SIG, ni exécutable de projection. Un lecteur peut afficher la page sans proposer d’outils de mesure géographique ; l’aperçu montre bien le dessin réel.
@@ -70,6 +70,6 @@ Pour explorer le modèle, déplacez un viewport, changez ses unités préférée
 
 ## Références
 
-Les paragraphes 12.9 et 12.10 d’ISO 32000-2:2020, tableaux 265–272, pages physiques 611–622, décrivent ces objets. L’[original conservé](https://github.com/PDFToolkit/pdf/blob/v0.7.0/ISO_32000-2_sponsored_EC3.pdf) contient les annotations EC3. Le profil natif consigne explicitement l’issue 358 comme `Completed` et les issues 533, 534 et 284 comme `Accepted` ; leurs autorités d’approbation distinctes restent visibles dans le catalogue.
+Les paragraphes 12.9 et 12.10 d’ISO 32000-2:2020, tableaux 265–272, pages physiques 611–622, décrivent ces objets. L’[original conservé](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf) contient les annotations EC3. Le profil natif consigne explicitement l’issue 358 comme `Completed` et les issues 533, 534 et 284 comme `Accepted` ; leurs autorités d’approbation distinctes restent visibles dans le catalogue.
 
 [Parcours des tutoriels](README.md) · [Guide du bundle](../pdf-2-0-bundle.md) · [Couverture](../coverage.md)

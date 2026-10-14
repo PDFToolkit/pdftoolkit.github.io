@@ -29,6 +29,12 @@ Packagist to resolve modules; an application using these libraries installs
 them with the [package guide](../packages.md) commands without building
 the site.
 
+All eighteen original Adobe, ISO and companion reference PDFs live in the core’s
+`resources/reference-documents/` directory. Source metadata records each path
+separately from the original filename and fingerprint. The generator reads these
+paths while retaining the existing public reference-download URLs. Test fixtures
+and generated examples remain beside their owning tests and scripts.
+
 `tools/export_api.php` loads the prepared core's autoloader and discovers
 classes, interfaces, enums and traits in its `src/`, installed PDF modules and the OpenType checkout. It also loads OpenType’s own autoloader.
 It exports their signatures, properties, constants and package provenance.

@@ -12,14 +12,14 @@ La série `0.x` est destinée aux développeurs qui souhaitent construire et exp
 
 Les définitions se fondent sur les documents Adobe/ISO `PDF32000_2008.pdf` et `adobe_supplement_iso32000.pdf`, conservés dans le dépôt du core. Le [guide du supplément](adobe-supplement.md) explique les extensions Adobe du PDF 1.7, niveau 3, leur provenance et leurs mécanismes. Le [guide des références Adobe](adobe-references.md) présente aussi la référence de 2006, ses errata, l'addendum de caviardisation et leur portfolio. Les références Adobe archivées dans le core sont conservées avec leur nom et leurs octets d'origine ; les quatre références archivées sont exclues des archives Composer.
 
-Le core 0.7.0 étend l'[écriture PDF 2.0](pdf-2-0.md) avec les [spécifications complémentaires](pdf-2-0-bundle.md) : AES-CBC R=6, AES-GCM R=7, condensats/signatures modernes, PDF MAC, XMP/déclarations, propriété des métadonnées, fichiers associés, parties de document et rôles de structure qualifiés. Les onze originaux du bundle gardent leurs noms fournis, octets et empreintes de source dans le core ; ils sont exclus des archives Composer. La PDF Association fournit les [normes sponsorisées](https://www.pdfa.org/sponsored-standards/). WTPDF propose un audit partiel, sans certification ; un catalogue de définitions ne permet pas de déduire une conformité complète PDF 2.0 ou PDF/A, PDF/X et PDF/UA.
+Le core 0.7.1 étend l'[écriture PDF 2.0](pdf-2-0.md) avec les [spécifications complémentaires](pdf-2-0-bundle.md) : AES-CBC R=6, AES-GCM R=7, condensats/signatures modernes, PDF MAC, XMP/déclarations, propriété des métadonnées, fichiers associés, parties de document et rôles de structure qualifiés. Les onze originaux du bundle gardent leurs noms fournis, octets et empreintes de source dans le core ; ils sont exclus des archives Composer. La PDF Association fournit les [normes sponsorisées](https://www.pdfa.org/sponsored-standards/). WTPDF propose un audit partiel, sans certification ; un catalogue de définitions ne permet pas de déduire une conformité complète PDF 2.0 ou PDF/A, PDF/X et PDF/UA.
 
 ## Installation
 
-Le core **0.7.0** nécessite PHP 8.3 ou supérieur en 64 bits et les extensions `ctype`, `iconv` et `zlib`. Les backends AES et CMS sont optionnels et nécessitent `openssl`. Le package [`roukmoute/pdf`](https://packagist.org/packages/roukmoute/pdf) est disponible sur Packagist. Depuis le projet consommateur :
+Le core **0.7.1** nécessite PHP 8.3 ou supérieur en 64 bits et les extensions `ctype`, `iconv` et `zlib`. Les backends AES et CMS sont optionnels et nécessitent `openssl`. Le package [`roukmoute/pdf`](https://packagist.org/packages/roukmoute/pdf) est disponible sur Packagist. Depuis le projet consommateur :
 
 ```sh
-composer require "roukmoute/pdf:^0.7.0"
+composer require "roukmoute/pdf:^0.7.1"
 ```
 
 Les modifications d'API figurent dans le [changelog](../CHANGELOG.md) et le
@@ -34,10 +34,10 @@ projet consommateur pour fixer les versions installées.
 | [`pdftoolkit/pdf-images`](https://pdftoolkit.github.io/modules/images/index.html) | Inspecter des fichiers JPEG et décoder des fichiers PNG en objets image du core. |
 | [`pdftoolkit/pdf-fonts`](https://pdftoolkit.github.io/modules/fonts/index.html) | Analyser un TrueType statique et préparer ses métriques et correspondances pour les objets de police du core. |
 
-La version **0.1.8** des modules PDF accepte les séries 0.2, 0.3, 0.4, 0.5, 0.6 et 0.7 du core sous PHP 8.3 ou supérieur. Le lecteur accepte toujours les PDF 1.0–1.7 en entrée ; la conversion d’images reste PNG/JPEG et celle des fontes reste TrueType statique. Les trois packages sont disponibles sur Packagist : [lecteur](https://packagist.org/packages/pdftoolkit/pdf-reader), [images](https://packagist.org/packages/pdftoolkit/pdf-images) et [fontes](https://packagist.org/packages/pdftoolkit/pdf-fonts). Par exemple, pour importer des fichiers image avec le core 0.7 :
+Le lecteur PDF **0.1.9** et les modules images/fontes **0.1.8** acceptent les séries 0.2, 0.3, 0.4, 0.5, 0.6 et 0.7 du core sous PHP 8.3 ou supérieur. Le lecteur accepte toujours les PDF 1.0–1.7 en entrée ; la conversion d’images reste PNG/JPEG et celle des fontes reste TrueType statique. Les trois packages sont disponibles sur Packagist : [lecteur](https://packagist.org/packages/pdftoolkit/pdf-reader), [images](https://packagist.org/packages/pdftoolkit/pdf-images) et [fontes](https://packagist.org/packages/pdftoolkit/pdf-fonts). Par exemple, pour importer des fichiers image avec le core 0.7 :
 
 ```sh
-composer require "roukmoute/pdf:^0.7.0" "pdftoolkit/pdf-images:^0.1.8"
+composer require "roukmoute/pdf:^0.7.1" "pdftoolkit/pdf-images:^0.1.8"
 ```
 
 Le module installe le core avec sa contrainte stable. Le [guide des packages](packages.md) explique leur frontière, les installations et le fonctionnement du lecteur. Conserver le `composer.lock` de l'application pour fixer les versions et les commits utilisés.
@@ -97,7 +97,7 @@ $file = new FileStructure(new FileHeader('1.7'), new FileBody($catalog));
 $file->writeTo('hello-world.pdf');
 ```
 
-L'exemple complet, avec les imports et les métadonnées, se trouve dans [`examples/hello-world.php`](https://github.com/PDFToolkit/pdf/blob/v0.7.0/examples/hello-world.php).
+L'exemple complet, avec les imports et les métadonnées, se trouve dans [`examples/hello-world.php`](https://github.com/PDFToolkit/pdf/blob/v0.7.1/examples/hello-world.php).
 
 ## Tutoriels et recettes
 
@@ -148,7 +148,7 @@ Le writer assemble actuellement le fichier en mémoire. Le lecteur est fourni pa
 
 ## Sécurité
 
-La [politique de sécurité](https://github.com/PDFToolkit/pdf/blob/v0.7.0/SECURITY.md) décrit les signalements privés et les frontières de confiance. La [revue de sécurité](security.md) explique les protections de sérialisation et les responsabilités de l'application pour les chemins, les actions PDF et les limites de ressources.
+La [politique de sécurité](https://github.com/PDFToolkit/pdf/blob/v0.7.1/SECURITY.md) décrit les signalements privés et les frontières de confiance. La [revue de sécurité](security.md) explique les protections de sérialisation et les responsabilités de l'application pour les chemins, les actions PDF et les limites de ressources.
 
 ## Génération des définitions
 

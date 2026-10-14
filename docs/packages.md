@@ -1,7 +1,7 @@
 # Core et modules optionnels
 
 PDFToolkit sépare le modèle PDF des traitements de fichiers externes. Le core
-**0.7.0**, les trois modules PDF **0.1.8** et le modèle OpenType indépendant **0.1.0**
+**0.7.1**, le lecteur PDF **0.1.9**, les modules images/fontes **0.1.8** et le modèle OpenType indépendant **0.1.0**
 nécessitent PHP 8.3 ou supérieur et sont vérifiés sous PHP 8.3, 8.4 et 8.5.
 Le core **0.7** exige aussi PHP en 64 bits ; OpenType reste indépendant du core PDF.
 Le core conserve son nom Composer `roukmoute/pdf` après son transfert dans
@@ -47,7 +47,7 @@ Le modèle objet PDF est commun, sans copie parallèle des primitives ni registr
 
 Le [modèle OpenType](https://github.com/PDFToolkit/opentype) est indépendant : il ne dépend ni du core ni de `pdf-fonts`. Il analyse une fonte pour produire ses propres objets, sans construire de dictionnaires PDF. Le convertisseur `pdf-fonts` reste le point d’entrée pour l’incorporation actuelle de fontes TrueType dans un PDF. La première version OpenType ne fournit pas encore de composition complète des scripts, de GPOS, de GDEF, de fontes variables ou de CFF. Consulter sa [couverture](https://github.com/PDFToolkit/opentype/blob/v0.1.0/docs/coverage.md).
 
-Le core 0.7.0 étend l’écriture PDF 2.0 avec la cryptographie moderne et PDF MAC, XMP/déclarations et les métadonnées d’objets, les parties de document, les enveloppes de contenus chiffrés et la structure qualifiée par namespace. L’audit WTPDF rapporte des contrôles mécaniques partiels et les preuves encore nécessaires, sans certification. Ces mécanismes du writer n’étendent ni le périmètre d’entrée PDF 1.0–1.7 du lecteur optionnel, ni la conversion PNG/JPEG ou TrueType statique.
+Le core 0.7.1 étend l’écriture PDF 2.0 avec la cryptographie moderne et PDF MAC, XMP/déclarations et les métadonnées d’objets, les parties de document, les enveloppes de contenus chiffrés et la structure qualifiée par namespace. L’audit WTPDF rapporte des contrôles mécaniques partiels et les preuves encore nécessaires, sans certification. Ces mécanismes du writer n’étendent ni le périmètre d’entrée PDF 1.0–1.7 du lecteur optionnel, ni la conversion PNG/JPEG ou TrueType statique.
 
 ## Installer ce dont l'application a besoin
 
@@ -57,33 +57,33 @@ Les cinq packages sont disponibles sur Packagist :
 [images](https://packagist.org/packages/pdftoolkit/pdf-images),
 [fontes PDF](https://packagist.org/packages/pdftoolkit/pdf-fonts) et
 [OpenType](https://packagist.org/packages/pdftoolkit/opentype).
-Les contraintes stables sont `roukmoute/pdf:^0.7.0` pour le core et
-`pdftoolkit/pdf-reader:^0.1.8`, `pdftoolkit/pdf-images:^0.1.8` ou
+Les contraintes stables sont `roukmoute/pdf:^0.7.1` pour le core et
+`pdftoolkit/pdf-reader:^0.1.9`, `pdftoolkit/pdf-images:^0.1.8` ou
 `pdftoolkit/pdf-fonts:^0.1.8` pour les modules PDF, et `pdftoolkit/opentype:^0.1.0` pour le modèle de fonte indépendant. Les anciens tags du core `v0.1.0`
 et `v0.1.1` conservent leur contrainte PHP 8.5.
 
 Pour générer seulement des PDF :
 
 ```sh
-composer require "roukmoute/pdf:^0.7.0"
+composer require "roukmoute/pdf:^0.7.1"
 ```
 
 Pour ajouter la lecture de PDF existants :
 
 ```sh
-composer require "roukmoute/pdf:^0.7.0" "pdftoolkit/pdf-reader:^0.1.8"
+composer require "roukmoute/pdf:^0.7.1" "pdftoolkit/pdf-reader:^0.1.9"
 ```
 
 Pour convertir des images :
 
 ```sh
-composer require "roukmoute/pdf:^0.7.0" "pdftoolkit/pdf-images:^0.1.8"
+composer require "roukmoute/pdf:^0.7.1" "pdftoolkit/pdf-images:^0.1.8"
 ```
 
 Pour analyser des fontes TrueType :
 
 ```sh
-composer require "roukmoute/pdf:^0.7.0" "pdftoolkit/pdf-fonts:^0.1.8"
+composer require "roukmoute/pdf:^0.7.1" "pdftoolkit/pdf-fonts:^0.1.8"
 ```
 
 Pour analyser une fonte indépendamment du PDF :
@@ -104,12 +104,12 @@ peuvent retirer ces entrées de leur `composer.json`. Les noms Composer des
 packages restent identiques.
 
 Avant 1.0, une nouvelle version mineure peut changer les noms et signatures.
-Les contraintes `^0.7.0` et `^0.1.8` autorisent les correctifs de leur série et
+Les contraintes `^0.7.1`, `^0.1.9` et `^0.1.8` autorisent les correctifs de leur série et
 écartent la version mineure suivante. Consulter les changelogs avant de changer
 de série. Pour travailler sur les développements à venir, demander explicitement
 `dev-master` pour les packages concernés.
 
-Les modules 0.1.8 acceptent les séries `^0.2 || ^0.3 || ^0.4 || ^0.5 || ^0.6 || ^0.7` du core. Une
+Le lecteur 0.1.9 et les modules images/fontes 0.1.8 acceptent les séries `^0.2 || ^0.3 || ^0.4 || ^0.5 || ^0.6 || ^0.7` du core. Une
 application qui reste sur une ancienne série acceptée du core peut donc les mettre à jour ; les commandes
 ci-dessus sélectionnent explicitement les constructions du core 0.7. Le core
 conserve ses extensions PHP obligatoires `ctype`, `iconv` et `zlib`. Les backends
@@ -166,7 +166,7 @@ concaténation ni décodage. Les limites de parcours et de nombre de flux sont d
 objets explicites ; les budgets cumulatifs de `ReadDocument` continuent de
 s'appliquer. Pour obtenir les octets décodés, demander séparément
 `$document->streamData($stream)`. Le
-[guide de lecture des pages](https://github.com/PDFToolkit/pdf-reader/blob/v0.1.8/docs/pages.md)
+[guide de lecture des pages](https://github.com/PDFToolkit/pdf-reader/blob/v0.1.9/docs/pages.md)
 explique chaque étape et fournit un exemple exécutable avec trois pages héritées.
 
 Les valeurs PDF restent des objets : `get()` conserve une référence comme
@@ -185,7 +185,7 @@ Les valeurs lues ne sont pas directement réinjectables dans le writer : leurs
 références appartiennent au fichier d'origine. L'import et le remappage du graphe,
 la réécriture, la fusion et la réparation restent à construire. Consulter
 [la documentation du lecteur](https://github.com/PDFToolkit/pdf-reader#readme)
-et [ses contrôles de sécurité](https://github.com/PDFToolkit/pdf-reader/blob/v0.1.8/docs/security.md)
+et [ses contrôles de sécurité](https://github.com/PDFToolkit/pdf-reader/blob/v0.1.9/docs/security.md)
 pour choisir ses budgets. Par défaut, les octets binaires conservés et le total
 des flux décodés sont chacun bornés à 128 MiB, en plus des autres limites.
 

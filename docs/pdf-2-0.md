@@ -1,6 +1,6 @@
 # PDF 2.0 : objets, écriture et spécifications complémentaires
 
-Le core **0.7.0** implémente des objets et mécanismes ISO 32000-2:2020, avec des
+Le core **0.7.1** implémente des objets et mécanismes ISO 32000-2:2020, avec des
 corrections vérifiées d’Errata Collection 3 (EC3, 2026-06-01). Il nécessite PHP 8.3
 ou ultérieur en 64 bits et conserve une construction explicite, des objets propres
 au document et aucun registre global. La couverture des tableaux n’établit pas
@@ -150,11 +150,11 @@ et travaux restants. Le lecteur optionnel conserve son
 
 ## Source et vérifications
 
-L’[original `ISO_32000-2_sponsored_EC3.pdf`](https://github.com/PDFToolkit/pdf/blob/v0.7.0/ISO_32000-2_sponsored_EC3.pdf)
+L’[original `ISO_32000-2_sponsored_EC3.pdf`](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf)
 est conservé dans le dépôt public du core avec son nom et ses octets d’origine,
 après autorisation de redistribution confirmée par le propriétaire du projet.
-Les [métadonnées du catalogue](https://github.com/PDFToolkit/pdf/blob/v0.7.0/resources/iso32000-2-2020/metadata.json)
-et l’[inventaire de couverture](https://github.com/PDFToolkit/pdf/blob/v0.7.0/resources/iso32000-2-2020/coverage.json)
+Les [métadonnées du catalogue](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/iso32000-2-2020/metadata.json)
+et l’[inventaire de couverture](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/iso32000-2-2020/coverage.json)
 consignent son identité, ses pages physiques et son empreinte. Le fichier fourni
 provient de la **PDF Association**, via son [accès sponsorisé officiel](https://www.pdfa.org/sponsored-standards/).
 Les deux copies fournies de la norme principale et tous les originaux complémentaires restent dans le dépôt.

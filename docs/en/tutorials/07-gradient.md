@@ -86,6 +86,6 @@ The script handles an axial `/DeviceRGB` shading with a function having one inpu
 
 Entry classes check the types described by their tables. The example's construction also respects semantic relationships: four coordinates, three function outputs for RGB, a compatible domain and two extension booleans. Generated classes alone do not guarantee all these relationships in an arbitrary assembly.
 
-References in [ISO 32000-1:2008](https://github.com/PDFToolkit/pdf/blob/v0.5.4/PDF32000_2008.pdf): **7.10.3 and Table 40** (type 2 function), **8.4.2** (graphics state), **8.5.4** (clipping), **8.7.4.3 and Table 78** (shading and `sh`), **8.7.4.5.3 and Table 80** (axial shading).
+References in [ISO 32000-1:2008](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/PDF32000_2008.pdf): **7.10.3 and Table 40** (type 2 function), **8.4.2** (graphics state), **8.5.4** (clipping), **8.7.4.3 and Table 78** (shading and `sh`), **8.7.4.5.3 and Table 80** (axial shading).
 
 [← 6. Images](06-images.md) · [All tutorials](README.md) · [8. Object streams →](08-object-stream.md)

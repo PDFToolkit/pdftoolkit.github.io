@@ -4,6 +4,15 @@
 
 ## [Unreleased]
 
+## [0.5.1] - 2026-10-14
+
+- Document core 0.7.1 and PDF reader 0.1.9 from their published sources;
+  retain image/font modules 0.1.8 and independent OpenType 0.1.0.
+- Follow the core's `resources/reference-documents/` directory for all eighteen
+  original reference PDFs, preserving supplied filenames and verified bytes.
+- Update English/French guides, tutorials, API provenance and repository links
+  while retaining every existing public PDF download URL and physical-page anchor.
+
 ## [0.5.0] - 2026-10-14
 
 - Document core 0.7.0 and optional PDF modules 0.1.8 from their published tags;

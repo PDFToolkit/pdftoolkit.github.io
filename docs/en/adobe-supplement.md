@@ -2,8 +2,8 @@
 
 The core repository retains two distinct reference documents:
 
-- [ISO 32000-1:2008, PDF 1.7](https://github.com/PDFToolkit/pdf/blob/v0.5.4/PDF32000_2008.pdf), 756 pages;
-- [Adobe Supplement to the ISO 32000](https://github.com/PDFToolkit/pdf/blob/v0.5.4/adobe_supplement_iso32000.pdf), edition 1.0,
+- [ISO 32000-1:2008, PDF 1.7](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/PDF32000_2008.pdf), 756 pages;
+- [Adobe Supplement to the ISO 32000](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/adobe_supplement_iso32000.pdf), edition 1.0,
   June 2008, 140 pages, `BaseVersion 1.7`, `ExtensionLevel 3`.
 
 All Adobe PDFs supplied by the project owner are retained with their original

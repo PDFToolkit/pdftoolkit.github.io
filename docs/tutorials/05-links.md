@@ -56,7 +56,7 @@ Les définitions exposent aussi les règles conditionnelles dans leurs descripti
 | Destination explicite `/Fit` | §12.3.2.2, tableau 151 |
 | Action `/URI` | §12.6.4.7, tableau 206 |
 
-Voir la [norme conservée dans le core](https://github.com/PDFToolkit/pdf/blob/v0.5.4/PDF32000_2008.pdf) et le [guide des définitions](../specification.md).
+Voir la [norme conservée dans le core](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/PDF32000_2008.pdf) et le [guide des définitions](../specification.md).
 
 ## Variantes et limites
 

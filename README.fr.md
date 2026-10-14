@@ -24,6 +24,9 @@ workflow de déploiement. Le code PHP, les exemples exécutables, les fixtures
 et les documents de spécification originaux restent dans
 [leurs dépôts de packages](https://github.com/orgs/PDFToolkit/repositories).
 Les guides des modules sont publiés ici à partir de leurs sources versionnées.
+Le core regroupe ses dix-huit PDF de référence originaux dans
+`resources/reference-documents/`, avec leurs noms et octets d’origine.
+Les téléchargements publics des références conservent leurs URL existantes.
 
 ## Installer les bibliothèques
 
@@ -31,11 +34,11 @@ Les bibliothèques PHP sont disponibles sur Packagist. Installer le core avec
 Composer :
 
 ```sh
-composer require "roukmoute/pdf:^0.7.0"
+composer require "roukmoute/pdf:^0.7.1"
 ```
 
-Les versions documentées sont le core **0.7.0**, les modules lecteur/images/fontes
-**0.1.8** et OpenType indépendant **0.1.0**. Elles nécessitent **PHP 8.3 ou supérieur**
+Les versions documentées sont le core **0.7.1**, le lecteur **0.1.9**, les modules
+images/fontes **0.1.8** et OpenType indépendant **0.1.0**. Elles nécessitent **PHP 8.3 ou supérieur**
 et sont vérifiées sous PHP 8.3, 8.4 et 8.5. Le core **0.7** exige aussi PHP en
 64 bits ; OpenType reste indépendant du core PDF.
 

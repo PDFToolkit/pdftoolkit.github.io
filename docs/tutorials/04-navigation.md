@@ -47,7 +47,7 @@ Le script publie les destinations nommées pour montrer leur construction. Ses s
 | `OutlineDictionary`, `OutlineItem` | Plan du document | §12.3.3, tableaux 152 et 153 |
 | `/PageMode`, `/OpenAction`, `/Outlines` | Préférences et accès depuis le catalogue | §7.7.2, tableau 28 |
 
-Ces références désignent la [norme conservée dans le core](https://github.com/PDFToolkit/pdf/blob/v0.5.4/PDF32000_2008.pdf), également utilisée par les définitions générées.
+Ces références désignent la [norme conservée dans le core](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/PDF32000_2008.pdf), également utilisée par les définitions générées.
 
 ## Variantes et limites
 

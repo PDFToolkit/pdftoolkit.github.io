@@ -165,9 +165,9 @@ PHP 8.3, 8.4 et 8.5. Il couvre les conditions réellement écrites, une certific
 avec et sans `Perms`, deux révisions signées, `FieldMDP.Data`, un verrou Adobe et
 une apparence attachée. Le rendu et le formulaire de ce script sont aussi inspectés.
 
-Sources conservées : [conditions et certificats, pages455–459](https://github.com/PDFToolkit/pdf/blob/v0.5.4/PDF32000_2008.pdf#page=455),
-[transformations et signatures, pages474–487](https://github.com/PDFToolkit/pdf/blob/v0.5.4/PDF32000_2008.pdf#page=474),
-[verrous Adobe et apparences, pages43–45](https://github.com/PDFToolkit/pdf/blob/v0.5.4/adobe_supplement_iso32000.pdf#page=43).
+Sources conservées : [conditions et certificats, pages455–459](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/PDF32000_2008.pdf#page=455),
+[transformations et signatures, pages474–487](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/PDF32000_2008.pdf#page=474),
+[verrous Adobe et apparences, pages43–45](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/adobe_supplement_iso32000.pdf#page=43).
 La clause DSA/SHA1 de `DigestMethod` est appliquée lorsque cette entrée du seed
 existe ; un seed vide ou `Reasons` seul ne crée pas une restriction supplémentaire
 à la capacité générale DSA/SHA256 de la table257. Cette interprétation est située

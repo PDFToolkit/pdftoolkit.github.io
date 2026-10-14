@@ -5,11 +5,11 @@ sources distinctes. Définitions, algorithmes natifs, relations documentaires et
 conformité sont des dimensions différentes. L’inventaire complet des tableaux
 n’établit pas toutes les conditions, opérations de rendu ou exigences de profils externes.
 
-## ISO 32000-2:2020 EC3 et bundle complémentaire dans 0.7.0
+## ISO 32000-2:2020 EC3 et bundle complémentaire dans 0.7.1
 
 Le [guide PDF 2.0](pdf-2-0.md) documente les objets propres à l’édition : tableaux
 sur plusieurs pages, entrées fixes et variables, définitions communes et corrections
-vérifiées. L’[inventaire ISO2](https://github.com/PDFToolkit/pdf/blob/v0.7.0/resources/iso32000-2-2020/coverage.json)
+vérifiées. L’[inventaire ISO2](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/iso32000-2-2020/coverage.json)
 consigne les compteurs exacts et la revue sémantique/EC3 restante. Il ne fusionne
 pas ISO1 et Adobe dans un pourcentage unique de conformité.
 
@@ -23,17 +23,17 @@ appariés, viewports, matrices affines et nuages de points typés.
 Les sorties initiales, incrémentales et linéarisées sont contrôlées à travers le
 graphe réellement émis et les snapshots immuables des révisions.
 
-Le [relevé de couverture par document](https://github.com/PDFToolkit/pdf/blob/v0.7.0/resources/iso32000-2-bundle/coverage.json)
+Le [relevé de couverture par document](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/iso32000-2-bundle/coverage.json)
 relie fichiers d’implémentation, tests et oracles indépendants à chaque original.
-Le [relevé WTPDF](https://github.com/PDFToolkit/pdf/blob/v0.7.0/resources/wtpdf-1.0/coverage.json)
+Le [relevé WTPDF](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/wtpdf-1.0/coverage.json)
 distingue échecs mécaniques, revue humaine et validation supplémentaire.
-Son [inventaire d’exigences](https://github.com/PDFToolkit/pdf/blob/v0.7.0/resources/wtpdf-1.0/requirements.json)
+Son [inventaire d’exigences](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/wtpdf-1.0/requirements.json)
 consigne chaque aspect étudié, clause source, frontière d’exécution et chemin de preuve.
 Le vérificateur reproductible rejette clauses omises et fichiers de preuve absents.
 Aucune certification WTPDF/PDF/UA-2 automatique ni conformité complète à la norme
 de base n’est revendiquée. Le lecteur conserve son périmètre d’entrée PDF 1.0–1.7.
 
-L’[original de la norme principale](https://github.com/PDFToolkit/pdf/blob/v0.7.0/ISO_32000-2_sponsored_EC3.pdf)
+L’[original de la norme principale](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf)
 et les onze nouveaux originaux restent inchangés dans le dépôt public du core,
 avec identités de sources et pages physiques. Le fournisseur est la
 [PDF Association](https://www.pdfa.org/sponsored-standards/). Les téléchargements
@@ -43,9 +43,9 @@ Adobe ci-dessous restent disponibles sans modification.
 
 | Document | Inventaire | Source |
 | --- | --- | --- |
-| ISO 32000-1:2008, PDF 1.7 | 756 pages ; 392 tableaux ; 263 tableaux de dictionnaires ; 1 405 classes d'entrée ; 73 opérateurs de contenu | [PDF32000_2008.pdf](https://github.com/PDFToolkit/pdf/blob/v0.5.4/PDF32000_2008.pdf) |
-| Supplément Adobe, niveau d'extension 3 | 140 pages ; 66 tableaux, dont 61 tableaux de dictionnaires | [adobe_supplement_iso32000.pdf](https://github.com/PDFToolkit/pdf/blob/v0.5.4/adobe_supplement_iso32000.pdf) |
-| ISO 32000-2:2020 EC3, PDF 2.0 | 1 023 pages physiques ; inventaire des dictionnaires de base propre à l’édition et corrections EC3 vérifiées | [ISO_32000-2_sponsored_EC3.pdf](https://github.com/PDFToolkit/pdf/blob/v0.7.0/ISO_32000-2_sponsored_EC3.pdf) |
+| ISO 32000-1:2008, PDF 1.7 | 756 pages ; 392 tableaux ; 263 tableaux de dictionnaires ; 1 405 classes d'entrée ; 73 opérateurs de contenu | [PDF32000_2008.pdf](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/PDF32000_2008.pdf) |
+| Supplément Adobe, niveau d'extension 3 | 140 pages ; 66 tableaux, dont 61 tableaux de dictionnaires | [adobe_supplement_iso32000.pdf](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/adobe_supplement_iso32000.pdf) |
+| ISO 32000-2:2020 EC3, PDF 2.0 | 1 023 pages physiques ; inventaire des dictionnaires de base propre à l’édition et corrections EC3 vérifiées | [ISO_32000-2_sponsored_EC3.pdf](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf) |
 
 Les fichiers originaux restent dans le dépôt du core. Les catalogues enregistrent leur
 SHA-256 et les numéros de pages physiques ; les corrections d'interprétation

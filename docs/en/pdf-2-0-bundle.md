@@ -175,20 +175,20 @@ application input is safe or that an author-supplied conformance claim is true.
 
 ## Retained originals and provenance
 
-All eleven originals retain their supplied names and bytes in the core
-repository. The [source manifest](https://github.com/PDFToolkit/pdf/blob/v0.7.0/resources/iso32000-2-bundle/sources.json)
+All eleven originals retain their supplied names and bytes under
+`resources/reference-documents/` in the core repository. The [source manifest](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/iso32000-2-bundle/sources.json)
 records fingerprints, byte counts, physical pages and correction collections.
 They are linked from the site rather than copied into Composer installations
 or duplicated as large documentation assets.
 
-- [ISO 32000-2:2020 EC3, newly supplied copy](https://github.com/PDFToolkit/pdf/blob/v0.7.0/resources/iso32000-2-bundle/documents/ISO_32000-2_sponsored_EC3%281%29.pdf)
-- [ISO/TS 32001:2022 EC3](https://github.com/PDFToolkit/pdf/blob/v0.7.0/resources/iso32000-2-bundle/documents/ISO_TS_32001-2022_sponsored_EC3.pdf)
-- [ISO/TS 32002:2022 EC3](https://github.com/PDFToolkit/pdf/blob/v0.7.0/resources/iso32000-2-bundle/documents/ISO_TS_32002-2022_sponsored_EC3.pdf)
-- [ISO/TS 32003:2023](https://github.com/PDFToolkit/pdf/blob/v0.7.0/resources/iso32000-2-bundle/documents/ISO_TS_32003-2023_sponsored.pdf)
-- [ISO/TS 32004:2024](https://github.com/PDFToolkit/pdf/blob/v0.7.0/resources/iso32000-2-bundle/documents/ISO-TS-32004-2024_sponsored.pdf)
-- [ISO/TS 32005:2023](https://github.com/PDFToolkit/pdf/blob/v0.7.0/resources/iso32000-2-bundle/documents/ISO-TS-32005-2023-sponsored.pdf)
-- [PDF Declarations](https://github.com/PDFToolkit/pdf/blob/v0.7.0/resources/iso32000-2-bundle/documents/PDF-Declarations.pdf)
-- [Well-Tagged PDF 1.0](https://github.com/PDFToolkit/pdf/blob/v0.7.0/resources/iso32000-2-bundle/documents/Well-Tagged-PDF-WTPDF-1.0.pdf)
-- [Application Note 001: black point compensation](https://github.com/PDFToolkit/pdf/blob/v0.7.0/resources/iso32000-2-bundle/documents/PDF20_AN001-BPC.pdf)
-- [Application Note 002: associated files](https://github.com/PDFToolkit/pdf/blob/v0.7.0/resources/iso32000-2-bundle/documents/PDF20_AN002-AF.pdf)
-- [Application Note 003: metadata locations](https://github.com/PDFToolkit/pdf/blob/v0.7.0/resources/iso32000-2-bundle/documents/PDF20_AN003-ObjectMetadataLocations.pdf)
+- [ISO 32000-2:2020 EC3, newly supplied copy](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/ISO_32000-2_sponsored_EC3%281%29.pdf)
+- [ISO/TS 32001:2022 EC3](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/ISO_TS_32001-2022_sponsored_EC3.pdf)
+- [ISO/TS 32002:2022 EC3](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/ISO_TS_32002-2022_sponsored_EC3.pdf)
+- [ISO/TS 32003:2023](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/ISO_TS_32003-2023_sponsored.pdf)
+- [ISO/TS 32004:2024](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/ISO-TS-32004-2024_sponsored.pdf)
+- [ISO/TS 32005:2023](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/ISO-TS-32005-2023-sponsored.pdf)
+- [PDF Declarations](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/PDF-Declarations.pdf)
+- [Well-Tagged PDF 1.0](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/Well-Tagged-PDF-WTPDF-1.0.pdf)
+- [Application Note 001: black point compensation](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/PDF20_AN001-BPC.pdf)
+- [Application Note 002: associated files](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/PDF20_AN002-AF.pdf)
+- [Application Note 003: metadata locations](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/PDF20_AN003-ObjectMetadataLocations.pdf)

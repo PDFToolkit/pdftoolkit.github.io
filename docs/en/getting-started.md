@@ -12,14 +12,14 @@ The `0.x` series is intended for developers who want to construct and explore th
 
 Definitions are based on the Adobe/ISO documents `PDF32000_2008.pdf` and `adobe_supplement_iso32000.pdf`, retained in the core repository. The [supplement guide](adobe-supplement.md) explains Adobe PDF 1.7 level 3 extensions, their provenance and mechanisms. The [Adobe reference guide](adobe-references.md) also introduces the 2006 reference, its errata, the redaction addendum and their portfolio. Adobe references archived in the core retain their original names and bytes; the four archived references are excluded from Composer archives.
 
-Core 0.7.0 extends [PDF 2.0 writing](pdf-2-0.md) with the [companion specifications](pdf-2-0-bundle.md): R=6 AES-CBC, R=7 AES-GCM, modern digests/signatures, PDF MAC, XMP/declarations, metadata ownership, associated files, document parts and qualified structure roles. The eleven bundle originals retain their supplied names, bytes and source fingerprints in the core; they are excluded from Composer archives. The PDF Association supplies the [sponsored standards](https://www.pdfa.org/sponsored-standards/). WTPDF offers a partial audit, not certification; complete PDF 2.0 or PDF/A, PDF/X and PDF/UA conformance is not inferred from a definition catalogue.
+Core 0.7.1 extends [PDF 2.0 writing](pdf-2-0.md) with the [companion specifications](pdf-2-0-bundle.md): R=6 AES-CBC, R=7 AES-GCM, modern digests/signatures, PDF MAC, XMP/declarations, metadata ownership, associated files, document parts and qualified structure roles. The eleven bundle originals retain their supplied names, bytes and source fingerprints in the core; they are excluded from Composer archives. The PDF Association supplies the [sponsored standards](https://www.pdfa.org/sponsored-standards/). WTPDF offers a partial audit, not certification; complete PDF 2.0 or PDF/A, PDF/X and PDF/UA conformance is not inferred from a definition catalogue.
 
 ## Installation
 
-Core **0.7.0** requires 64-bit PHP 8.3 or later and the `ctype`, `iconv` and `zlib` extensions. AES and CMS backends are optional and require `openssl`. The [`roukmoute/pdf`](https://packagist.org/packages/roukmoute/pdf) package is available on Packagist. From the consuming project:
+Core **0.7.1** requires 64-bit PHP 8.3 or later and the `ctype`, `iconv` and `zlib` extensions. AES and CMS backends are optional and require `openssl`. The [`roukmoute/pdf`](https://packagist.org/packages/roukmoute/pdf) package is available on Packagist. From the consuming project:
 
 ```sh
-composer require "roukmoute/pdf:^0.7.0"
+composer require "roukmoute/pdf:^0.7.1"
 ```
 
 API changes appear in the [changelog](../../CHANGELOG.md) and the
@@ -34,10 +34,10 @@ API changes appear in the [changelog](../../CHANGELOG.md) and the
 | [`pdftoolkit/pdf-images`](https://pdftoolkit.github.io/modules/images/index.html) | Inspect JPEG files and decode PNG files into core image objects. |
 | [`pdftoolkit/pdf-fonts`](https://pdftoolkit.github.io/modules/fonts/index.html) | Analyze a static TrueType font and prepare its metrics and mappings for core font objects. |
 
-Version **0.1.8** of the PDF modules accepts core series 0.2, 0.3, 0.4, 0.5, 0.6 and 0.7 on PHP 8.3 or later. The reader still accepts PDF 1.0–1.7 input; image conversion remains PNG/JPEG and font conversion remains static TrueType. All three packages are available on Packagist: [reader](https://packagist.org/packages/pdftoolkit/pdf-reader), [images](https://packagist.org/packages/pdftoolkit/pdf-images) and [fonts](https://packagist.org/packages/pdftoolkit/pdf-fonts). For example, to import image files with core 0.7:
+The PDF reader **0.1.9** and image/font modules **0.1.8** accept core series 0.2, 0.3, 0.4, 0.5, 0.6 and 0.7 on PHP 8.3 or later. The reader still accepts PDF 1.0–1.7 input; image conversion remains PNG/JPEG and font conversion remains static TrueType. All three packages are available on Packagist: [reader](https://packagist.org/packages/pdftoolkit/pdf-reader), [images](https://packagist.org/packages/pdftoolkit/pdf-images) and [fonts](https://packagist.org/packages/pdftoolkit/pdf-fonts). For example, to import image files with core 0.7:
 
 ```sh
-composer require "roukmoute/pdf:^0.7.0" "pdftoolkit/pdf-images:^0.1.8"
+composer require "roukmoute/pdf:^0.7.1" "pdftoolkit/pdf-images:^0.1.8"
 ```
 
 The module installs the core with its stable constraint. The [package guide](packages.md) explains boundaries, installation and reader behavior. Keep the application's `composer.lock` to pin the versions and commits used.
@@ -97,7 +97,7 @@ $file = new FileStructure(new FileHeader('1.7'), new FileBody($catalog));
 $file->writeTo('hello-world.pdf');
 ```
 
-The complete example, with imports and metadata, is in [`examples/hello-world.php`](https://github.com/PDFToolkit/pdf/blob/v0.7.0/examples/hello-world.php).
+The complete example, with imports and metadata, is in [`examples/hello-world.php`](https://github.com/PDFToolkit/pdf/blob/v0.7.1/examples/hello-world.php).
 
 ## Tutorials and recipes
 
@@ -148,7 +148,7 @@ The writer currently assembles the file in memory. The reader is supplied by `pd
 
 ## Security
 
-The [security policy](https://github.com/PDFToolkit/pdf/blob/v0.7.0/SECURITY.md) describes private reporting and trust boundaries. The [security review](security.md) explains serialization protections and application responsibilities for paths, PDF actions and resource limits.
+The [security policy](https://github.com/PDFToolkit/pdf/blob/v0.7.1/SECURITY.md) describes private reporting and trust boundaries. The [security review](security.md) explains serialization protections and application responsibilities for paths, PDF actions and resource limits.
 
 ## Generating definitions
 

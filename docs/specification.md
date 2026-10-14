@@ -11,7 +11,7 @@ distinct, comprenant le portfolio original et les relations de ses documents
 incorporés. Ils servent à la comparaison et aux audits ciblés ; leur
 conservation ne modifie pas les inventaires de définitions actifs et ne prouve
 pas l'implémentation de toutes leurs procédures.
-Le core **0.7.0**, les modules PDF optionnels **0.1.8** et OpenType indépendant
+Le core **0.7.1**, le lecteur PDF **0.1.9**, les modules images/fontes **0.1.8** et OpenType indépendant
 **0.1.0** nécessitent **PHP 8.3 ou supérieur** et sont vérifiés sous PHP 8.3,
 8.4 et 8.5. Le core **0.7** exige aussi PHP en 64 bits ; OpenType reste indépendant
 du core PDF. La version du runtime PHP et celle du format PDF sont indépendantes.

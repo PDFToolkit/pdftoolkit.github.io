@@ -470,12 +470,13 @@ class Site:
                 if record.get('input') == target:
                     return self.url(f'examples/{name}.pdf') + suffix
         if package_name == CORE_PACKAGE:
-            if target == 'adobe_supplement_iso32000.pdf':
+            if target == self.adobe_metadata['path']:
                 return self.url('downloads/adobe-supplement-iso32000.pdf') + suffix
-            if target == 'PDF32000_2008.pdf':
+            if target == self.metadata['source_path']:
                 return self.url('downloads/iso-32000-1.pdf') + suffix
-            if target in self.reference_sources:
-                return self.url('downloads/adobe-references/' + quote(target, safe='')) + suffix
+            for filename, original in self.reference_sources.items():
+                if target == original['path']:
+                    return self.url('downloads/adobe-references/' + quote(filename, safe='')) + suffix
         root = self.package_roots[package_name]
         package = self.packages[package_name]
         if (root / target).is_file():
@@ -778,9 +779,7 @@ class Site:
             html += '</tbody></table></div>'
         for correction in self.corrections:
             if correction['table'] == table and (key is None or correction['entry'] == key):
-                evidence = correction['evidence_url']
-                if evidence.startswith('PDF32000_2008.pdf'):
-                    evidence = norm + evidence.removeprefix('PDF32000_2008.pdf')
+                evidence = self.rewrite_link('README.md', correction['evidence_url'], owner=CORE_PACKAGE)
                 html += f'<aside class="callout"><strong>Correction d’implémentation /{e(correction["entry"])}.</strong><p>{e(correction["rationale"])}</p><a href="{e(evidence)}">{e(correction["evidence_locator"])}</a></aside>'
         html += f'<p class="search-hint">Les descriptions conditionnelles restent traçables. La présence d’une définition ne réalise pas à elle seule un codec, une signature ou tous les traitements du format. <a href="{e(self.url("guides/couverture.html"))}">Lire la couverture.</a></p></section>'
         return html
@@ -790,7 +789,7 @@ class Site:
         entries = [entry for entry in [*record['entries'], *record.get('variable_entries', [])] if key is None or entry['name'] == key]
         page = entries[0]['pdf_page'] if key is not None and entries else record['pdf_pages'][0]
         source = self.source_url('resources/iso32000-2-2020/metadata.json')
-        original = self.source_url(self.iso2_metadata['source']['document']) + f'#page={page}'
+        original = self.source_url(self.iso2_metadata['source']['path']) + f'#page={page}'
         errata = self.iso2_metadata['official_references']['public_errata']
         html = f'<section id="norme" data-specification-edition="iso32000-2:2020" data-specification-table="{e(table)}"><h2>Définition ISO 32000-2:2020 EC3</h2><p><strong>Tableau {e(table)}</strong> · {e(record["title"])}<br>§{e(record["section"])} · page PDF {page}</p>'
         html += f'<p><a href="{e(original)}">Original PDF au commit documenté ↗</a> · <a href="{e(source)}">Métadonnées de la source au commit documenté ↗</a> · <a href="{e(errata)}">Errata publics ↗</a></p><p>Original conservé dans le dépôt du core. Inventaire des tableaux et contrôles sémantiques restent distincts.</p>'
@@ -902,11 +901,7 @@ class Site:
             html += '</tbody></table></div>'
         for correction in self.adobe_corrections:
             if correction['table'] == table and (key is None or correction['entry'] == key):
-                evidence = correction['evidence_url']
-                if evidence.startswith('adobe_supplement_iso32000.pdf'):
-                    evidence = url + evidence.removeprefix('adobe_supplement_iso32000.pdf')
-                elif evidence.startswith('PDF32000_2008.pdf'):
-                    evidence = self.url('downloads/iso-32000-1.pdf') + evidence.removeprefix('PDF32000_2008.pdf')
+                evidence = self.rewrite_link('README.md', correction['evidence_url'], owner=CORE_PACKAGE)
                 html += f'<aside class="callout"><strong>Correction /{e(correction["entry"])}.</strong><p>{e(correction["rationale"])}</p><a href="{e(evidence)}">{e(correction["evidence_locator"])}</a></aside>'
         html += f'<p>Chaque entrée conserve sa source ISO ou Adobe. Les règles et traitements associés figurent dans <a href="{e(self.url("guides/supplement-adobe.html"))}">la couverture du supplément</a>.</p></section>'
         return html
@@ -1018,12 +1013,12 @@ class Site:
             shutil.copyfile(image, previews / image.name)
         downloads = self.output / 'downloads'
         downloads.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(self.root / 'PDF32000_2008.pdf', downloads / 'iso-32000-1.pdf')
-        shutil.copyfile(self.root / 'adobe_supplement_iso32000.pdf', downloads / 'adobe-supplement-iso32000.pdf')
+        shutil.copyfile(self.root / self.metadata['source_path'], downloads / 'iso-32000-1.pdf')
+        shutil.copyfile(self.root / self.adobe_metadata['path'], downloads / 'adobe-supplement-iso32000.pdf')
         archival_downloads = downloads / 'adobe-references'
         archival_downloads.mkdir(exist_ok=True)
-        for source in self.reference_sources:
-            shutil.copyfile(self.root / source, archival_downloads / source)
+        for filename, original in self.reference_sources.items():
+            shutil.copyfile(self.root / original['path'], archival_downloads / filename)
         examples = self.output / 'examples'
         examples.mkdir(parents=True, exist_ok=True)
         expected = set(self.examples)
@@ -1096,7 +1091,7 @@ class Site:
             {'source': self.adobe_metadata['document'], 'download': 'downloads/adobe-supplement-iso32000.pdf', 'sha256': self.adobe_metadata['document_sha256'], 'pdfPages': self.adobe_metadata['pdf_pages']},
         ]
         original = self.iso2_metadata['source']
-        source_file = self.root / original['document']
+        source_file = self.root / original['path']
         if not original['public_copy_included'] or not source_file.is_file() or hashlib.sha256(source_file.read_bytes()).hexdigest() != original['sha256']:
             raise ValueError('The public ISO 32000-2 reference must preserve its supplied original bytes')
         manifest['repositorySpecificationSources'] = [{
@@ -1108,7 +1103,7 @@ class Site:
             'bytes': source_file.stat().st_size,
             'repository': self.packages[CORE_PACKAGE]['repository'],
             'revision': self.revision,
-            'sourceUrl': self.source_url(original['document']),
+            'sourceUrl': self.source_url(original['path']),
             'publicCopyIncluded': original['public_copy_included'],
             'provider': original['provider'], 'providerUrl': original['provider_url'],
             'catalogueSourceUrl': self.source_url('resources/iso32000-2-2020/metadata.json'),

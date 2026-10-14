@@ -93,7 +93,7 @@ full ISO 32000-2 conformance.
 The [PDF 2.0 guide](../pdf-2-0.md) explains editions, applicability and remaining
 mechanisms. Physical source pages: text strings 131–132; catalog 113–117;
 file specifications 149–152; associated files 853–856; corrected MCAF table 409a
-1015. The [original](https://github.com/PDFToolkit/pdf/blob/v0.6.2/ISO_32000-2_sponsored_EC3.pdf) is preserved unchanged in the public core repository. See also [official sponsored access](https://pdfa.org/sponsored-standards/)
+1015. The [original](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf) is preserved unchanged in the public core repository. See also [official sponsored access](https://pdfa.org/sponsored-standards/)
 and the [public erratum 374](https://github.com/pdf-association/pdf-issues/issues/374).
 
 [Tutorial path](README.md) · [Coverage](../coverage.md)

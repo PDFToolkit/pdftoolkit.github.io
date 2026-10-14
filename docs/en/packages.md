@@ -1,7 +1,7 @@
 # Core and optional modules
 
 PDFToolkit separates the PDF model from external-file processing. The
-**0.7.0 core**, three **0.1.8 PDF modules** and the independent **0.1.0 OpenType model**
+**0.7.1 core**, **0.1.9 PDF reader**, **0.1.8 image/font modules** and the independent **0.1.0 OpenType model**
 require PHP 8.3 or later and are checked on PHP 8.3, 8.4 and 8.5.
 Core **0.7** additionally requires 64-bit PHP; OpenType remains independent of the
 PDF core. The core retains its Composer name `roukmoute/pdf`
@@ -49,7 +49,7 @@ model is shared, without parallel copies of primitives or a global registry.
 
 The [OpenType model](https://github.com/PDFToolkit/opentype) is independent: it depends on neither the core nor `pdf-fonts`. It analyzes a font into its own objects without constructing PDF dictionaries. The `pdf-fonts` converter remains the entry point for current TrueType embedding in PDF. The first OpenType release does not yet provide full script shaping, GPOS, GDEF, variable fonts or CFF. See its [coverage](https://github.com/PDFToolkit/opentype/blob/v0.1.0/docs/coverage.md).
 
-Core 0.7.0 extends PDF 2.0 writing with modern cryptography and PDF MAC, XMP/declarations and object metadata, document parts, encrypted payload wrappers and namespace-qualified structure. WTPDF auditing reports partial mechanical checks and pending evidence, without certification. These writer mechanisms do not expand the optional reader’s PDF 1.0–1.7 input scope, PNG/JPEG conversion or static TrueType conversion.
+Core 0.7.1 extends PDF 2.0 writing with modern cryptography and PDF MAC, XMP/declarations and object metadata, document parts, encrypted payload wrappers and namespace-qualified structure. WTPDF auditing reports partial mechanical checks and pending evidence, without certification. These writer mechanisms do not expand the optional reader’s PDF 1.0–1.7 input scope, PNG/JPEG conversion or static TrueType conversion.
 
 ## Installing what the application needs
 
@@ -59,33 +59,33 @@ All five packages are available on Packagist:
 [images](https://packagist.org/packages/pdftoolkit/pdf-images),
 [PDF fonts](https://packagist.org/packages/pdftoolkit/pdf-fonts) and
 [OpenType](https://packagist.org/packages/pdftoolkit/opentype).
-Stable constraints are `roukmoute/pdf:^0.7.0` for the core and
-`pdftoolkit/pdf-reader:^0.1.8`, `pdftoolkit/pdf-images:^0.1.8` or
+Stable constraints are `roukmoute/pdf:^0.7.1` for the core and
+`pdftoolkit/pdf-reader:^0.1.9`, `pdftoolkit/pdf-images:^0.1.8` or
 `pdftoolkit/pdf-fonts:^0.1.8` for PDF modules, and `pdftoolkit/opentype:^0.1.0` for the independent font model. Older core tags `v0.1.0` and
 `v0.1.1` retain their PHP 8.5 constraint.
 
 To generate PDFs only:
 
 ```sh
-composer require "roukmoute/pdf:^0.7.0"
+composer require "roukmoute/pdf:^0.7.1"
 ```
 
 To add reading of existing PDFs:
 
 ```sh
-composer require "roukmoute/pdf:^0.7.0" "pdftoolkit/pdf-reader:^0.1.8"
+composer require "roukmoute/pdf:^0.7.1" "pdftoolkit/pdf-reader:^0.1.9"
 ```
 
 To convert images:
 
 ```sh
-composer require "roukmoute/pdf:^0.7.0" "pdftoolkit/pdf-images:^0.1.8"
+composer require "roukmoute/pdf:^0.7.1" "pdftoolkit/pdf-images:^0.1.8"
 ```
 
 To analyze TrueType fonts:
 
 ```sh
-composer require "roukmoute/pdf:^0.7.0" "pdftoolkit/pdf-fonts:^0.1.8"
+composer require "roukmoute/pdf:^0.7.1" "pdftoolkit/pdf-fonts:^0.1.8"
 ```
 
 To analyze a font independently of PDF:
@@ -105,12 +105,12 @@ Applications that added GitHub repositories under `repositories` can remove
 those entries from `composer.json`. Composer package names remain identical.
 
 Before 1.0, a new minor release may change names and signatures. The
-`^0.7.0` and `^0.1.8` constraints allow patches within their series and
+`^0.7.1`, `^0.1.9` and `^0.1.8` constraints allow patches within their series and
 exclude the next minor release. Consult changelogs before switching series.
 To work with upcoming development, explicitly request `dev-master` for the
 relevant packages.
 
-Module releases 0.1.8 accept core series `^0.2 || ^0.3 || ^0.4 || ^0.5 || ^0.6 || ^0.7`.
+Reader 0.1.9 and image/font modules 0.1.8 accept core series `^0.2 || ^0.3 || ^0.4 || ^0.5 || ^0.6 || ^0.7`.
 An application remaining on an accepted older core series can therefore update them; the
 commands above explicitly select core 0.7 constructions. The core retains
 mandatory PHP extensions `ctype`, `iconv` and `zlib`. AES, CMS and signature
@@ -167,7 +167,7 @@ without concatenation or decoding. Traversal and stream-count limits are
 explicit objects; cumulative `ReadDocument` budgets continue to apply.
 To obtain decoded bytes, separately request
 `$document->streamData($stream)`. The
-[page-reading guide](https://github.com/PDFToolkit/pdf-reader/blob/v0.1.8/docs/pages.md)
+[page-reading guide](https://github.com/PDFToolkit/pdf-reader/blob/v0.1.9/docs/pages.md)
 explains every step and supplies an executable example with three inherited
 pages.
 
@@ -187,7 +187,7 @@ Read values cannot be directly passed back to the writer: their references
 belong to the original file. Graph import and remapping, rewriting, merging
 and repair remain to be built. Consult the
 [reader documentation](https://github.com/PDFToolkit/pdf-reader#readme)
-and [its security checks](https://github.com/PDFToolkit/pdf-reader/blob/v0.1.8/docs/security.md)
+and [its security checks](https://github.com/PDFToolkit/pdf-reader/blob/v0.1.9/docs/security.md)
 when choosing budgets. By default, retained binary bytes and total decoded
 stream bytes are each bounded to 128 MiB, in addition to other limits.
 

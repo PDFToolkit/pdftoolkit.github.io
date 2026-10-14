@@ -4,6 +4,15 @@
 
 ## [Non publié]
 
+## [0.5.1] - 2026-10-14
+
+- Documenter le core 0.7.1 et le lecteur PDF 0.1.9 depuis leurs sources publiées ;
+  conserver les modules images/fontes 0.1.8 et OpenType indépendant 0.1.0.
+- Lire les dix-huit PDF de référence originaux depuis le dossier
+  `resources/reference-documents/` du core, avec leurs noms et octets vérifiés.
+- Actualiser guides anglais/français, tutoriels, provenance API et liens vers
+  le dépôt en préservant chaque URL publique de téléchargement et ancre de page.
+
 ## [0.5.0] - 2026-10-14
 
 - Documenter le core 0.7.0 et les modules PDF 0.1.8 à partir de leurs tags publiés ;

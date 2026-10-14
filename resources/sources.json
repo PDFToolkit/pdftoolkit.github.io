@@ -4,15 +4,15 @@
     {
       "name": "roukmoute/pdf",
       "repository": "https://github.com/PDFToolkit/pdf",
-      "version": "0.7.0",
-      "revision": "39bed6ad24efb7bb481785a44ec23580893fca6d",
+      "version": "0.7.1",
+      "revision": "f27dc57dfb69553d180153ae81209b2f1e8cb418",
       "optional": false
     },
     {
       "name": "pdftoolkit/pdf-reader",
       "repository": "https://github.com/PDFToolkit/pdf-reader",
-      "version": "0.1.8",
-      "revision": "9aef54d7cb575ba4cb6d9db75bc31e649c10fd53",
+      "version": "0.1.9",
+      "revision": "81267233e03d8f8ed488ed155d4ecd26d0df0f39",
       "optional": true
     },
     {

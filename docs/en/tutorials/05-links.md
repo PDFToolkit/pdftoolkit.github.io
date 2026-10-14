@@ -56,7 +56,7 @@ Definitions also expose conditional rules in their descriptions. They do not aut
 | Explicit `/Fit` destination | §12.3.2.2, Table 151 |
 | `/URI` action | §12.6.4.7, Table 206 |
 
-See the [specification preserved in the core](https://github.com/PDFToolkit/pdf/blob/v0.5.4/PDF32000_2008.pdf) and the [definitions guide](../specification.md).
+See the [specification preserved in the core](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/PDF32000_2008.pdf) and the [definitions guide](../specification.md).
 
 ## Variations and limitations
 

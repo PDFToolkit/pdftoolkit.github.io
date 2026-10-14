@@ -1,18 +1,18 @@
 # 31. PDF 2.0: modern signatures and integrity
 
-The [complete script](https://github.com/PDFToolkit/pdf/blob/v0.7.0/examples/pdf20-modern-signature.php) produces a readable PDF 2.0 page and a real CMS signature using P-256 and SHA3-256. The page explains the selected algorithms. Its signature field has no widget: the visible text describes the operation, while the cryptographic signature covers the actual file bytes.
+The [complete script](https://github.com/PDFToolkit/pdf/blob/v0.7.1/examples/pdf20-modern-signature.php) produces a readable PDF 2.0 page and a real CMS signature using P-256 and SHA3-256. The page explains the selected algorithms. Its signature field has no widget: the visible text describes the operation, while the cryptographic signature covers the actual file bytes.
 
 The certificate and private key are **public test credentials**, committed for reproducible examples. Their signature demonstrates the mathematical operation and does not establish a trusted identity. Applications supply their own credentials and trust policy explicitly.
 
 ## Run the example
 
-From a core 0.7.0 checkout with the locked development dependencies, on 64-bit PHP 8.3 or later:
+From a core 0.7.1 checkout with the locked development dependencies, on 64-bit PHP 8.3 or later:
 
 ```bash
 php examples/pdf20-modern-signature.php modern-signature.pdf
 ```
 
-The example supplies Courier through [explicit metrics](https://github.com/PDFToolkit/pdf/blob/v0.7.0/examples/fixtures/pdf20-courier-font.php): FirstChar/LastChar, ASCII widths and a FontDescriptor. PDF 2.0 no longer permits omitting these entries for the fourteen standard fonts. This construction does not embed a font program; profiles requiring embedding need an explicitly embedded font.
+The example supplies Courier through [explicit metrics](https://github.com/PDFToolkit/pdf/blob/v0.7.1/examples/fixtures/pdf20-courier-font.php): FirstChar/LastChar, ASCII widths and a FontDescriptor. PDF 2.0 no longer permits omitting these entries for the fourteen standard fonts. This construction does not embed a font program; profiles requiring embedding need an explicitly embedded font.
 
 
 This example uses PHP's OpenSSL extension for ECDSA. Ed25519 and Ed448 use a separate, explicitly selected executable provider; merely loading the library starts no process. The PDF remains unencrypted so that its page can be previewed in the browser.
@@ -92,6 +92,6 @@ Install the validation dependencies pinned by the repository before running that
 
 ## References
 
-The retained [ISO/TS 32001 EC3](https://github.com/PDFToolkit/pdf/blob/v0.7.0/resources/iso32000-2-bundle/documents/ISO_TS_32001-2022_sponsored_EC3.pdf), [ISO/TS 32002 EC3](https://github.com/PDFToolkit/pdf/blob/v0.7.0/resources/iso32000-2-bundle/documents/ISO_TS_32002-2022_sponsored_EC3.pdf), [ISO/TS 32003](https://github.com/PDFToolkit/pdf/blob/v0.7.0/resources/iso32000-2-bundle/documents/ISO_TS_32003-2023_sponsored.pdf) and [ISO/TS 32004](https://github.com/PDFToolkit/pdf/blob/v0.7.0/resources/iso32000-2-bundle/documents/ISO-TS-32004-2024_sponsored.pdf) come from the [PDF Association](https://www.pdfa.org/sponsored-standards/). Their source identities, physical pages and correction annotations are recorded in the [bundle catalogue](https://github.com/PDFToolkit/pdf/blob/v0.7.0/resources/iso32000-2-bundle/sources.json).
+The retained [ISO/TS 32001 EC3](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/ISO_TS_32001-2022_sponsored_EC3.pdf), [ISO/TS 32002 EC3](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/ISO_TS_32002-2022_sponsored_EC3.pdf), [ISO/TS 32003](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/ISO_TS_32003-2023_sponsored.pdf) and [ISO/TS 32004](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/ISO-TS-32004-2024_sponsored.pdf) come from the [PDF Association](https://www.pdfa.org/sponsored-standards/). Their source identities, physical pages and correction annotations are recorded in the [bundle catalogue](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/iso32000-2-bundle/sources.json).
 
 [Tutorial path](README.md) · [Bundle guide](../pdf-2-0-bundle.md) · [Security](../security.md)

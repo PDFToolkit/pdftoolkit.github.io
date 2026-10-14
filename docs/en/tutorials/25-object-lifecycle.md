@@ -97,9 +97,9 @@ without a blanket exception.
 Revisions after linearization have a separate corpus of 90 histories, or 270
 PDFs, with exact checks of prefixes, references and hints.
 
-Preserved sources: [indirect objects and null, page 29](https://github.com/PDFToolkit/pdf/blob/v0.5.4/PDF32000_2008.pdf#page=29),
-[xref, pages 48–50](https://github.com/PDFToolkit/pdf/blob/v0.5.4/PDF32000_2008.pdf#page=48),
-[updates and ObjStm, pages 52–55](https://github.com/PDFToolkit/pdf/blob/v0.5.4/PDF32000_2008.pdf#page=52),
-[Annex F, page 683](https://github.com/PDFToolkit/pdf/blob/v0.5.4/PDF32000_2008.pdf#page=683).
+Preserved sources: [indirect objects and null, page 29](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/PDF32000_2008.pdf#page=29),
+[xref, pages 48–50](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/PDF32000_2008.pdf#page=48),
+[updates and ObjStm, pages 52–55](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/PDF32000_2008.pdf#page=52),
+[Annex F, page 683](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/PDF32000_2008.pdf#page=683).
 
 [Tutorial path](README.md) · [Incremental revisions](11-incremental-update.md)

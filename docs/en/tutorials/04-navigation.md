@@ -47,7 +47,7 @@ The script publishes named destinations to show their construction. Its bookmark
 | `OutlineDictionary`, `OutlineItem` | Document outline | §12.3.3, Tables 152 and 153 |
 | `/PageMode`, `/OpenAction`, `/Outlines` | Preferences and access from the catalog | §7.7.2, Table 28 |
 
-These references point to the [specification preserved in the core](https://github.com/PDFToolkit/pdf/blob/v0.5.4/PDF32000_2008.pdf), also used by the generated definitions.
+These references point to the [specification preserved in the core](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/PDF32000_2008.pdf), also used by the generated definitions.
 
 ## Variations and limitations
 

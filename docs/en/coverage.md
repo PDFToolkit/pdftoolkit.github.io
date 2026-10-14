@@ -5,11 +5,11 @@ Dictionary definitions, native algorithms, document relationships and conformanc
 are different dimensions. A complete table inventory does not establish every
 conditional rule, rendering operation or external profile requirement.
 
-## ISO 32000-2:2020 EC3 and companion bundle in 0.7.0
+## ISO 32000-2:2020 EC3 and companion bundle in 0.7.1
 
 The [PDF 2.0 guide](pdf-2-0.md) documents edition-specific dictionary objects,
 including continued tables, fixed and variable entries, common definitions and
-reviewed corrections. The [ISO2 inventory](https://github.com/PDFToolkit/pdf/blob/v0.7.0/resources/iso32000-2-2020/coverage.json)
+reviewed corrections. The [ISO2 inventory](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/iso32000-2-2020/coverage.json)
 records exact counts and the remaining semantic/EC3 review. It is not merged
 with ISO1 or Adobe into a single conformance percentage.
 
@@ -23,17 +23,17 @@ viewports, affine matrices and typed point clouds.
 Initial, incremental and linearized output are checked through the actual
 emitted graph and immutable revision snapshots.
 
-The [per-document coverage record](https://github.com/PDFToolkit/pdf/blob/v0.7.0/resources/iso32000-2-bundle/coverage.json)
+The [per-document coverage record](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/iso32000-2-bundle/coverage.json)
 links implementation files, tests and independent oracles to each original.
-The [WTPDF record](https://github.com/PDFToolkit/pdf/blob/v0.7.0/resources/wtpdf-1.0/coverage.json)
+The [WTPDF record](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/wtpdf-1.0/coverage.json)
 distinguishes mechanical failures from human review and additional validation.
-Its [requirement inventory](https://github.com/PDFToolkit/pdf/blob/v0.7.0/resources/wtpdf-1.0/requirements.json)
+Its [requirement inventory](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/wtpdf-1.0/requirements.json)
 records each assessed aspect, source clause, execution boundary and evidence path.
 The reproducible checker rejects omitted clauses and missing evidence files.
 No automatic WTPDF/PDF/UA-2 certification or complete base-standard conformance
 is claimed. The reader retains its PDF 1.0–1.7 input scope.
 
-The [original main standard](https://github.com/PDFToolkit/pdf/blob/v0.7.0/ISO_32000-2_sponsored_EC3.pdf)
+The [original main standard](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf)
 and all eleven newly supplied originals remain unchanged in the public core
 repository, with source identities and physical pages. The provider is the
 [PDF Association](https://www.pdfa.org/sponsored-standards/). The Adobe downloads
@@ -43,9 +43,9 @@ below remain available unchanged.
 
 | Document | Inventory | Source |
 | --- | --- | --- |
-| ISO 32000-1:2008, PDF 1.7 | 756 pages; 392 tables; 263 dictionary tables; 1,405 entry classes; 73 content operators | [PDF32000_2008.pdf](https://github.com/PDFToolkit/pdf/blob/v0.5.4/PDF32000_2008.pdf) |
-| Adobe supplement, extension level 3 | 140 pages; 66 tables, including 61 dictionary tables | [adobe_supplement_iso32000.pdf](https://github.com/PDFToolkit/pdf/blob/v0.5.4/adobe_supplement_iso32000.pdf) |
-| ISO 32000-2:2020 EC3, PDF 2.0 | 1,023 physical pages; edition-specific base dictionary inventory and reviewed EC3 overlays | [ISO_32000-2_sponsored_EC3.pdf](https://github.com/PDFToolkit/pdf/blob/v0.7.0/ISO_32000-2_sponsored_EC3.pdf) |
+| ISO 32000-1:2008, PDF 1.7 | 756 pages; 392 tables; 263 dictionary tables; 1,405 entry classes; 73 content operators | [PDF32000_2008.pdf](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/PDF32000_2008.pdf) |
+| Adobe supplement, extension level 3 | 140 pages; 66 tables, including 61 dictionary tables | [adobe_supplement_iso32000.pdf](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/adobe_supplement_iso32000.pdf) |
+| ISO 32000-2:2020 EC3, PDF 2.0 | 1,023 physical pages; edition-specific base dictionary inventory and reviewed EC3 overlays | [ISO_32000-2_sponsored_EC3.pdf](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf) |
 
 Original files remain in the core repository. Catalogues record their SHA-256
 hashes and physical page numbers; interpretation corrections retain the

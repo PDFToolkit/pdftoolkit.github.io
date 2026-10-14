@@ -29,6 +29,12 @@ Le core sélectionné utilise Packagist pour résoudre ses modules ; une applica
 qui utilise ces bibliothèques les installe avec les commandes du
 [guide des packages](../packages.md), sans construire le site.
 
+Les dix-huit PDF de référence Adobe, ISO et complémentaires originaux sont rangés
+dans `resources/reference-documents/` du core. Les métadonnées enregistrent chaque
+chemin séparément du nom et de l’empreinte du fichier original. Le générateur lit
+ces chemins en conservant les URL publiques de téléchargement existantes. Les
+fixtures de tests et exemples générés restent auprès de leurs tests et scripts.
+
 `tools/export_api.php` charge l'autoloading du core préparé et découvre les
 classes, interfaces, enums et traits de son `src/`, des modules PDF installés et du checkout OpenType. Il charge aussi l’autoloading propre à OpenType.
 Il exporte leurs signatures, propriétés, constantes et provenance par package.

@@ -86,13 +86,13 @@ présente le PDF d'entrée, ses trois pages et les objets lus.
 | [25. Générations des objets](25-object-lifecycle.md) | Suppression, liste libre et réutilisation. | [object-lifecycle.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/object-lifecycle.php) |
 | [26. Politique de signature](26-signature-field-policy.md) | Champ, seeds, verrou et résultat effectivement signé. | [signature-field-policy.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/signature-field-policy.php) |
 | [27. PDF 2.0 et fichiers associés](27-pdf20-associated-files.md) | Métadonnées Unicode, relations AF et ressources MCAF nommées corrigées. | [pdf20-associated-files.php](https://github.com/PDFToolkit/pdf/blob/v0.6.2/examples/pdf20-associated-files.php) |
-| [28. Métadonnées, déclarations et parties documentaires](28-pdf20-metadata-declarations.md) | Portée XMP, AF, compensation du point noir et relations DPart. | [pdf20-metadata-declarations.php](https://github.com/PDFToolkit/pdf/blob/v0.7.0/examples/pdf20-metadata-declarations.php) |
-| [29. Une enveloppe de contenu chiffré](29-pdf20-encrypted-payload.md) | Document extérieur lisible, collection masquée et PDF intérieur chiffré séparément. | [pdf20-encrypted-payload.php](https://github.com/PDFToolkit/pdf/blob/v0.7.0/examples/pdf20-encrypted-payload.php) |
-| [30. Espaces de noms et vérification WTPDF](30-pdf20-tagged-namespaces.md) | Rôles qualifiés, types PDF 1.7 et 2.0, ParentTree réciproque et limites d’un audit mécanique. | [pdf20-tagged-namespaces.php](https://github.com/PDFToolkit/pdf/blob/v0.7.0/examples/pdf20-tagged-namespaces.php) |
-| [31. Signatures modernes et intégrité](31-pdf20-modern-signature.md) | Courbes nommées, SHA-3, plages d’octets exactes et PDF MAC. | [pdf20-modern-signature.php](https://github.com/PDFToolkit/pdf/blob/v0.7.0/examples/pdf20-modern-signature.php) |
-| [32. Horodatages de document et DSS](32-pdf20-timestamp-dss.md) | RFC3161, politique de validation explicite, VRI et signatures historiques conservées. | [pdf20-timestamp-dss.php](https://github.com/PDFToolkit/pdf/blob/v0.7.0/examples/pdf20-timestamp-dss.php) |
-| [33. Objets géospatiaux et mesures](33-pdf20-geospatial.md) | Systèmes de coordonnées, points de contrôle appariés, viewports, matrices et nuages de points. | [pdf20-geospatial.php](https://github.com/PDFToolkit/pdf/blob/v0.7.0/examples/pdf20-geospatial.php) |
-| [34. Destinations de structure](34-pdf20-structure-destinations.md) | Cibles sémantiques, parcours du contenu, entrées SD nommées et replis de page explicites. | [pdf20-structure-destinations.php](https://github.com/PDFToolkit/pdf/blob/v0.7.0/examples/pdf20-structure-destinations.php) |
+| [28. Métadonnées, déclarations et parties documentaires](28-pdf20-metadata-declarations.md) | Portée XMP, AF, compensation du point noir et relations DPart. | [pdf20-metadata-declarations.php](https://github.com/PDFToolkit/pdf/blob/v0.7.1/examples/pdf20-metadata-declarations.php) |
+| [29. Une enveloppe de contenu chiffré](29-pdf20-encrypted-payload.md) | Document extérieur lisible, collection masquée et PDF intérieur chiffré séparément. | [pdf20-encrypted-payload.php](https://github.com/PDFToolkit/pdf/blob/v0.7.1/examples/pdf20-encrypted-payload.php) |
+| [30. Espaces de noms et vérification WTPDF](30-pdf20-tagged-namespaces.md) | Rôles qualifiés, types PDF 1.7 et 2.0, ParentTree réciproque et limites d’un audit mécanique. | [pdf20-tagged-namespaces.php](https://github.com/PDFToolkit/pdf/blob/v0.7.1/examples/pdf20-tagged-namespaces.php) |
+| [31. Signatures modernes et intégrité](31-pdf20-modern-signature.md) | Courbes nommées, SHA-3, plages d’octets exactes et PDF MAC. | [pdf20-modern-signature.php](https://github.com/PDFToolkit/pdf/blob/v0.7.1/examples/pdf20-modern-signature.php) |
+| [32. Horodatages de document et DSS](32-pdf20-timestamp-dss.md) | RFC3161, politique de validation explicite, VRI et signatures historiques conservées. | [pdf20-timestamp-dss.php](https://github.com/PDFToolkit/pdf/blob/v0.7.1/examples/pdf20-timestamp-dss.php) |
+| [33. Objets géospatiaux et mesures](33-pdf20-geospatial.md) | Systèmes de coordonnées, points de contrôle appariés, viewports, matrices et nuages de points. | [pdf20-geospatial.php](https://github.com/PDFToolkit/pdf/blob/v0.7.1/examples/pdf20-geospatial.php) |
+| [34. Destinations de structure](34-pdf20-structure-destinations.md) | Cibles sémantiques, parcours du contenu, entrées SD nommées et replis de page explicites. | [pdf20-structure-destinations.php](https://github.com/PDFToolkit/pdf/blob/v0.7.1/examples/pdf20-structure-destinations.php) |
 
 Les leçons 03 à 07 peuvent se lire dans l'ordre des sujets qui vous intéressent, après le premier document. Les leçons 08 et 11 concernent l'organisation du fichier ; les leçons 09 et 10 ajoutent des programmes de police et des fichiers image réels au graphe. La leçon 12 consulte les structures d'un PDF existant avec les objets du lecteur.
 
@@ -139,8 +139,8 @@ La seconde commande réécrit le PDF dans une forme utile pour examiner ses obje
 
 ## Aller vers la norme
 
-Les guides citent les sections de [PDF 1.7 / ISO 32000-1:2008](https://github.com/PDFToolkit/pdf/blob/v0.5.4/PDF32000_2008.pdf)
-et du [supplément Adobe](https://github.com/PDFToolkit/pdf/blob/v0.5.4/adobe_supplement_iso32000.pdf). La
+Les guides citent les sections de [PDF 1.7 / ISO 32000-1:2008](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/PDF32000_2008.pdf)
+et du [supplément Adobe](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/adobe_supplement_iso32000.pdf). La
 [couverture](../coverage.md) distingue les définitions, constructions et règles
 effectivement vérifiées. Les signatures font partie du parcours ; les objets de
 [chiffrement](../components.md) disposent de leur propre

@@ -437,7 +437,7 @@ def check(root):
             errors.append('Repository-source identity must remain the distinct ISO 32000-2:2020 edition')
         if source.get('errataCollection') != {'number': 3, 'publication_date': '2026-06-01'} or source.get('pdfPages') != 1023 or source.get('sha256') != '90f4b666d46405dd62630a98d514158b4de5304b749523c4081680ac4fe2e230':
             errors.append('Public EC3 source provenance differs from the reviewed supplied copy')
-        source_url = core.get('repository', '') + '/blob/' + core.get('revision', '') + '/ISO_32000-2_sponsored_EC3.pdf'
+        source_url = core.get('repository', '') + '/blob/' + core.get('revision', '') + '/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf'
         if source.get('publicCopyIncluded') is not True or source.get('sourceUrl') != source_url or source.get('repository') != core.get('repository') or source.get('revision') != core.get('revision') or source.get('bytes') != 19205142:
             errors.append('ISO 32000-2 must link the unchanged original in the pinned public core repository')
         if 'download' in source or any(Path(name).name == source.get('source') for name in published_files):
@@ -473,7 +473,7 @@ def check(root):
     core = packages.get('roukmoute/pdf', {})
     bundle_metadata_url = core.get('repository', '') + '/blob/' + core.get('revision', '') + '/resources/iso32000-2-bundle/sources.json'
     for source in bundle_sources:
-        path = 'resources/iso32000-2-bundle/documents/' + source['source']
+        path = 'resources/reference-documents/' + source['source']
         expected_url = core.get('repository', '') + '/blob/' + core.get('revision', '') + '/' + quote(path, safe='/')
         if source.get('sourceUrl') != expected_url or source.get('catalogueSourceUrl') != bundle_metadata_url or source.get('repository') != core.get('repository') or source.get('revision') != core.get('revision'):
             errors.append('Bundle original must identify the exact selected package revision: ' + source['source'])

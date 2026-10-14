@@ -86,6 +86,6 @@ Le script traite un shading axial en `/DeviceRGB`, avec une fonction à une entr
 
 Les classes d'entrées vérifient les types décrits par les tables. La construction de l'exemple respecte aussi les liens sémantiques : quatre coordonnées, trois sorties de fonction pour RGB, domaine compatible et deux booléens d'extension. Les classes générées ne garantissent pas à elles seules toutes ces relations pour un assemblage arbitraire.
 
-Repères dans [ISO 32000-1:2008](https://github.com/PDFToolkit/pdf/blob/v0.5.4/PDF32000_2008.pdf) : **7.10.3 et table 40** (fonction type 2), **8.4.2** (état graphique), **8.5.4** (clipping), **8.7.4.3 et table 78** (shading et `sh`), **8.7.4.5.3 et table 80** (shading axial).
+Repères dans [ISO 32000-1:2008](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/PDF32000_2008.pdf) : **7.10.3 et table 40** (fonction type 2), **8.4.2** (état graphique), **8.5.4** (clipping), **8.7.4.3 et table 78** (shading et `sh`), **8.7.4.5.3 et table 80** (shading axial).
 
 [← 6. Images](06-images.md) · [Tous les tutoriels](README.md) · [8. Flux d'objets →](08-object-stream.md)

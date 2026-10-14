@@ -5,7 +5,7 @@ l'origine des définitions, de vérifier les corrections et de distinguer le
 format PDF du comportement d'une version d'Acrobat. Ils concernent PDF 1.7 et
 appartiennent au dépôt `PDFToolkit/pdf`.
 
-La référence active des définitions reste [ISO 32000-1:2008](https://github.com/PDFToolkit/pdf/blob/v0.5.4/PDF32000_2008.pdf),
+La référence active des définitions reste [ISO 32000-1:2008](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/PDF32000_2008.pdf),
 avec les extensions du [supplément Adobe](adobe-supplement.md). L'archivage des
 documents ci-dessous ne modifie ni les classes générées, ni les règles de version,
 ni le statut d'implémentation des mécanismes. La [couverture](coverage.md)
@@ -22,10 +22,10 @@ pour que l'installation de la bibliothèque n'ajoute pas ces volumes documentair
 
 | Document | Édition et pages | Utilité |
 | --- | --- | --- |
-| [PDF Reference, version 1.7](https://github.com/PDFToolkit/pdf/blob/v0.5.4/pdf_reference_1-7.pdf) | Sixième édition, novembre 2006 ; 1 310 pages | Référence Adobe antérieure à ISO 32000-1, avec exemples, notes historiques et notes d'implémentation. |
-| [Errata for the PDF Reference](https://github.com/PDFToolkit/pdf/blob/v0.5.4/pdf_17_errata.pdf) | Octobre 2007 ; 18 pages | Corrections de la sixième édition, à comparer aux règles ISO et aux contrôles exécutables. |
-| [PDF Redaction: Addendum](https://github.com/PDFToolkit/pdf/blob/v0.5.4/pdf_reference1-7_addendum_redaction.pdf) | Novembre 2006 ; 4 pages | Introduction des annotations `Redact` et distinction entre désignation d'une zone et destruction du contenu. |
-| [PDF Reference and Related Documentation](https://github.com/PDFToolkit/pdf/blob/v0.5.4/pdf_reference.pdf) | Portfolio Acrobat SDK 8.1, couverture d'avril 2007 ; 1 page et 4 PDF embarqués | Conteneur original regroupant les trois documents précédents et les notes d'implémentation Acrobat 8.1. |
+| [PDF Reference, version 1.7](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/pdf_reference_1-7.pdf) | Sixième édition, novembre 2006 ; 1 310 pages | Référence Adobe antérieure à ISO 32000-1, avec exemples, notes historiques et notes d'implémentation. |
+| [Errata for the PDF Reference](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/pdf_17_errata.pdf) | Octobre 2007 ; 18 pages | Corrections de la sixième édition, à comparer aux règles ISO et aux contrôles exécutables. |
+| [PDF Redaction: Addendum](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/pdf_reference1-7_addendum_redaction.pdf) | Novembre 2006 ; 4 pages | Introduction des annotations `Redact` et distinction entre désignation d'une zone et destruction du contenu. |
+| [PDF Reference and Related Documentation](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/pdf_reference.pdf) | Portfolio Acrobat SDK 8.1, couverture d'avril 2007 ; 1 page et 4 PDF embarqués | Conteneur original regroupant les trois documents précédents et les notes d'implémentation Acrobat 8.1. |
 
 L'[archive historique de la PDF Association](https://pdfa.org/resource/pdf-specification-archive/)
 situe la référence Adobe de 2006 et ses errata avant la normalisation de PDF 1.7

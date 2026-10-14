@@ -89,8 +89,8 @@ content, `Size`, MD5, Mac forks, `EF`/`RF`/`CI` links, tree limits and value
 updates are checked using pypdf, `hashlib` and qpdf. The example's pages and
 rendering are inspected too.
 
-Preserved sources: [Table 5, page 28](https://github.com/PDFToolkit/pdf/blob/v0.5.4/PDF32000_2008.pdf#page=28),
-[file specifications and streams, pages 107–115](https://github.com/PDFToolkit/pdf/blob/v0.5.4/PDF32000_2008.pdf#page=107),
-[collections, pages 378–381](https://github.com/PDFToolkit/pdf/blob/v0.5.4/PDF32000_2008.pdf#page=378).
+Preserved sources: [Table 5, page 28](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/PDF32000_2008.pdf#page=28),
+[file specifications and streams, pages 107–115](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/PDF32000_2008.pdf#page=107),
+[collections, pages 378–381](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/PDF32000_2008.pdf#page=378).
 
 [Tutorial path](README.md) · [Verified coverage](../coverage.md)

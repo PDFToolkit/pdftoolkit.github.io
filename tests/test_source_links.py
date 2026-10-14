@@ -23,6 +23,8 @@ class SourceLinksTest(unittest.TestCase):
         self.site.by_package_source = {}
         self.site.example_sources = {}
         self.site.reference_sources = {}
+        self.site.metadata = {'source_path': 'resources/reference-documents/PDF32000_2008.pdf'}
+        self.site.adobe_metadata = {'path': 'resources/reference-documents/adobe_supplement_iso32000.pdf'}
         self.site.routes = {}
         self.site.anchor_maps = {}
         self.site.package_roots = {CORE_PACKAGE: self.core}
@@ -36,13 +38,13 @@ class SourceLinksTest(unittest.TestCase):
         path.write_bytes(b'%PDF-2.0\n% source-link unit fixture\n')
 
     def upstream_url(self, relative):
-        return 'https://github.com/PDFToolkit/pdf/blob/v0.7.0/' + quote(relative, safe='/')
+        return 'https://github.com/PDFToolkit/pdf/blob/v0.7.1/' + quote(relative, safe='/')
 
     def pinned_url(self, relative):
         return 'https://github.com/PDFToolkit/pdf/blob/' + 'a' * 40 + '/' + quote(relative, safe='/')
 
     def test_supplied_iso_filename_with_encoded_parentheses_resolves_in_both_languages(self):
-        relative = 'resources/iso32000-2-bundle/documents/ISO_32000-2_sponsored_EC3(1).pdf'
+        relative = 'resources/reference-documents/ISO_32000-2_sponsored_EC3(1).pdf'
         self.source_file(relative)
         for language in ['en', 'fr']:
             with self.subTest(language=language):
@@ -53,6 +55,54 @@ class SourceLinksTest(unittest.TestCase):
         relative = 'resources/guide é (review) #1.pdf'
         self.source_file(relative)
         self.assertEqual(self.pinned_url(relative), self.site.rewrite_link('README.md', self.upstream_url(relative)))
+
+    def test_relocated_reference_documents_preserve_public_downloads_in_both_languages(self):
+        downloads = {
+            'PDF32000_2008.pdf': 'downloads/iso-32000-1.pdf',
+            'adobe_supplement_iso32000.pdf': 'downloads/adobe-supplement-iso32000.pdf',
+        }
+        for filename in ['pdf_17_errata.pdf', 'pdf_reference.pdf', 'pdf_reference1-7_addendum_redaction.pdf', 'pdf_reference_1-7.pdf']:
+            path = 'resources/reference-documents/' + filename
+            self.site.reference_sources[filename] = {'path': path}
+            downloads[filename] = 'downloads/adobe-references/' + filename
+        for language in ['en', 'fr']:
+            self.site.language = language
+            for filename, download in downloads.items():
+                with self.subTest(language=language, filename=filename):
+                    relative = 'resources/reference-documents/' + filename
+                    self.assertEqual('/' + download + '?raw=1#page=4', self.site.rewrite_link('README.md', self.upstream_url(relative) + '?raw=1#page=4'))
+
+    def test_unrelated_source_with_matching_reference_filename_is_not_a_download(self):
+        relative = 'examples/fixtures/PDF32000_2008.pdf'
+        self.source_file(relative)
+        self.assertEqual(self.pinned_url(relative), self.site.rewrite_link('README.md', self.upstream_url(relative)))
+
+    def test_correction_evidence_resolves_relocated_files_in_iso_and_adobe_panels(self):
+        self.site.iso2_spec_by_name = {}
+        self.site.adobe_spec_by_name = {}
+        self.site.spec_by_name = {}
+        self.site.tables = {'1': {'title': 'Unit source table', 'pdf_pages': [2], 'section': '1'}}
+        self.site.adobe_tables = {}
+        self.site.spec_entries = lambda table: []
+        self.site.adobe_spec_entries = lambda table: []
+        component = {'name': 'UnitSourceTable', 'source': 'src/UnitSourceTable.php', 'constants': [{'name': 'TABLE', 'value': "'1'"}]}
+        for language in ['en', 'fr']:
+            self.site.language = language
+            for path, download in [
+                (self.site.metadata['source_path'], '/downloads/iso-32000-1.pdf'),
+                (self.site.adobe_metadata['path'], '/downloads/adobe-supplement-iso32000.pdf'),
+                ('https://example.invalid/official-errata', 'https://example.invalid/official-errata'),
+            ]:
+                with self.subTest(language=language, path=path):
+                    correction = {'table': '1', 'entry': 'Value', 'rationale': 'Unit correction evidence', 'evidence_url': path + '#page=4', 'evidence_locator': 'Page 4'}
+                    self.site.corrections = [correction]
+                    iso_panel = self.site.spec_panel(component)
+                    self.site.adobe_corrections = [correction]
+                    self.site.adobe_tables = self.site.tables
+                    adobe_panel = self.site.adobe_spec_panel('1', None)
+                    self.site.adobe_tables = {}
+                    self.assertIn('href="' + download + '#page=4"', iso_panel)
+                    self.assertIn('href="' + download + '#page=4"', adobe_panel)
 
     def test_percent_escapes_in_the_actual_filename_are_decoded_once(self):
         relative = 'resources/ISO%28original%29.pdf'
@@ -68,7 +118,7 @@ class SourceLinksTest(unittest.TestCase):
         (self.root / 'outside.pdf').write_bytes(b'outside the source package')
         for path in ['%2e%2e/outside.pdf', '..%5Coutside.pdf', '%2FC%3A/outside.pdf']:
             with self.subTest(path=path), self.assertRaisesRegex(ValueError, 'escapes its source package'):
-                self.site.rewrite_link('README.md', 'https://github.com/PDFToolkit/pdf/blob/v0.7.0/' + path)
+                self.site.rewrite_link('README.md', 'https://github.com/PDFToolkit/pdf/blob/v0.7.1/' + path)
 
     def test_encoded_relative_escape_is_rejected_after_decoding(self):
         (self.root / 'outside.pdf').write_bytes(b'outside the source package')

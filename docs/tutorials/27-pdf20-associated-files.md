@@ -98,7 +98,7 @@ DSS/horodatages, parties documentaires ni la conformité ISO 32000-2 complète.
 Le [guide PDF 2.0](../pdf-2-0.md) explique les éditions, l'applicabilité et les
 mécanismes restants. Pages physiques de source : chaînes textuelles 131–132 ;
 catalogue 113–117 ; fichiers 149–152 ; fichiers associés 853–856 ; tableau MCAF
-409a corrigé 1015. L'[original](https://github.com/PDFToolkit/pdf/blob/v0.6.2/ISO_32000-2_sponsored_EC3.pdf) est conservé sans modification dans le dépôt public du core. Consulter aussi l'[accès sponsorisé officiel](https://pdfa.org/sponsored-standards/)
+409a corrigé 1015. L'[original](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf) est conservé sans modification dans le dépôt public du core. Consulter aussi l'[accès sponsorisé officiel](https://pdfa.org/sponsored-standards/)
 et l'[erratum public 374](https://github.com/pdf-association/pdf-issues/issues/374).
 
 [Parcours des tutoriels](README.md) · [Couverture](../coverage.md)
