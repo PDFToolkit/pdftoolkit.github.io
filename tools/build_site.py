@@ -504,19 +504,19 @@ class Site:
         console = ''
         if is_input:
             result = (self.pdfs / (example + '.txt')).read_text(encoding='utf-8')
-            console = f'''<section class="source-panel" id="resultat-lecture"><h2>Résultat de la lecture</h2>
+            console = f'''<section class="source-panel" id="resultat-lecture"><div class="panel-intro"><h2>Résultat de la lecture</h2>
 <p>Sortie réelle du script exécuté sur le PDF d’entrée pendant la construction de cette documentation.
-<a href="{e(self.url(f"examples/{example}.txt"))}" download>Télécharger la sortie console</a>.</p>
+<a href="{e(self.url(f"examples/{example}.txt"))}" download>Télécharger la sortie console</a>.</p></div>
 <pre><code class="language-text">{e(result)}</code></pre></section>'''
-        return f'''<section class="pdf-panel" id="resultat-pdf"><h2>{heading}</h2>
-<p>{description}</p>
+        return f'''<section class="pdf-panel" id="resultat-pdf"><div class="panel-intro"><h2>{heading}</h2>
+<p>{description}</p></div>
 <div class="pdf-actions"><a class="button" href="{e(pdf)}" target="_blank" rel="noopener">Ouvrir le PDF ↗</a><a class="button secondary" href="{e(pdf)}" download>Télécharger</a><a class="button secondary" href="{e(source)}" download="{e(source_name)}">Télécharger le code PHP</a></div>
 <div class="pdf-pages" role="region" aria-label="Aperçu des {len(pages)} pages du PDF {e(example)}" tabindex="0">{page_images}</div>
 <details class="pdf-native"><summary>Utiliser le lecteur PDF du navigateur</summary>
 <p class="search-hint">Ce lecteur dépend du navigateur. Si le document ne s’affiche pas, utiliser « Ouvrir le PDF » ou « Télécharger ».</p>
 <iframe class="pdf-viewer" src="{e(pdf)}#view=FitH" title="{pdf_label} : {e(example)}" loading="lazy"></iframe>
 </details></section>
-{console}<section class="source-panel" id="code-source"><h2>Code source complet</h2>{provenance}<details><summary>Lire le script commenté : {e(source_name)}</summary><pre><code class="language-php">{e(code)}</code></pre></details></section>'''
+{console}<section class="source-panel" id="code-source"><div class="panel-intro"><h2>Code source complet</h2>{provenance}</div><details><summary>Lire le script commenté : {e(source_name)}</summary><pre><code class="language-php">{e(code)}</code></pre></details></section>'''
 
     def tutorial_cards(self) -> str:
         html = '<div class="cards">'
