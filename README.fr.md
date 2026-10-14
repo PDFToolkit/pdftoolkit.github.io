@@ -31,8 +31,12 @@ Les bibliothèques PHP sont disponibles sur Packagist. Installer le core avec
 Composer :
 
 ```sh
-composer require "roukmoute/pdf:^0.6.2"
+composer require "roukmoute/pdf:^0.7.0"
 ```
+
+Les versions documentées sont le core **0.7.0**, les modules lecteur/images/fontes
+**0.1.8** et OpenType indépendant **0.1.0**. Elles utilisent **PHP 8.3 ou supérieur
+en 64 bits** et sont vérifiées sous PHP 8.3, 8.4 et 8.5.
 
 Choisir les modules optionnels selon les fichiers traités par l'application :
 
@@ -44,6 +48,18 @@ Choisir les modules optionnels selon les fichiers traités par l'application :
 
 Les trois modules PDF installent le core comme dépendance. OpenType possède son propre modèle objet et s’installe sans dépendance PDF. Le guide des packages explique
 leurs commandes Composer et les versions prises en charge.
+
+## Guides et exemples PDF 2.0
+
+Le [guide PDF 2.0](https://pdftoolkit.github.io/fr/guides/pdf-2-0.html) et
+le [guide des spécifications complémentaires](https://pdftoolkit.github.io/fr/guides/pdf-2-0-bundle.html)
+expliquent ISO 32000-2:2020 EC3, les chiffrements et signatures modernes, PDF MAC,
+les métadonnées/déclarations, les fichiers associés, les parties de document et
+les rôles de structure qualifiés, les horodatages documentaires et les preuves
+DSS/VRI. Les [32 tutoriels](https://pdftoolkit.github.io/fr/tutorials/)
+comprennent des exemples exécutables et leurs véritables aperçus PDF. L'audit
+WTPDF distingue les contrôles mécaniques et les preuves encore nécessaires ;
+il ne certifie ni l'accessibilité ni PDF/UA.
 
 ## Sources reproductibles
 

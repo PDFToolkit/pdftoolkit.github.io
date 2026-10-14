@@ -10,11 +10,22 @@ have a separate archival catalogue, including the original portfolio and its
 embedded-document relationships. They support comparison and targeted audits;
 their preservation does not alter the active definition inventories or establish
 implementation of all their procedures.
-Core series 0.6 and optional module releases 0.1.7 require PHP 8.3 or later; the older core 0.1 tags
-retain their PHP 8.5 requirement. These PHP versions are independent of the PDF
-format version. Core 0.6 introduces [first PDF 2.0 mechanisms](pdf-2-0.md)
-and a separate ISO 32000-2:2020 EC3 pilot. Its four tables and 53 entry classes
-do not change the ISO1 counts below or establish full PDF 2.0 conformance.
+Core **0.7.0**, optional PDF modules **0.1.8** and independent OpenType **0.1.0**
+use **64-bit PHP 8.3 or later**, with CI on PHP 8.3, 8.4 and 8.5. The PHP runtime
+version and PDF format version are independent. The [PDF 2.0 guide](pdf-2-0.md)
+tracks ISO 32000-2:2020 EC3 separately from the ISO1 counts below. The
+[companion-specifications guide](pdf-2-0-bundle.md) describes ISO/TS 32001–32005,
+PDF Declarations, WTPDF and Application Notes 001–003. The eleven supplied
+originals retain their names, bytes, physical page references and fingerprints
+in the core's bundle catalogue; they are excluded from Composer archives.
+Their provenance is the [PDF Association](https://www.pdfa.org/sponsored-standards/).
+Neither a definition inventory nor a successful partial WTPDF audit establishes
+complete PDF 2.0, accessibility or PDF/UA conformance.
+
+The ISO 32000-2 catalogue inventories **440 tables**, including **306 dictionary
+models** and **1,709 entries**: 1,702 fixed and seven variable. Its source
+references, continuation pages and EC3 corrections are tracked separately from
+the ISO 32000-1 corpus described below.
 
 The source contains 756 PDF pages, 823 outline entries, 370 main numbered tables
 and 22 annex tables. The catalogue inventories all 392 tables and all 73 content
@@ -93,7 +104,10 @@ the core, which has no production dependency on them. See the
 | Incremental revisions | Exact frozen FileRevision snapshots and timeline, additions/replacements, linked free lists, release/reuse, retired generations and aliases, offsets and Prev, ordinary/stream/hybrid xrefs, encrypted variants and updates after initial linearization. | Generated revisions only. Replacing a live value retains its object family and dictionary Type; a new identity reusing a free number may have a different type. Old bytes remain, so updates cannot erase confidential content. |
 | Navigation | Page labels, explicit and named destinations, viewport calculations, article rings and page drawing order, transitions and presentation sequences. | Native graph and arithmetic are checked against the effective catalog; a viewer renders and animates their presentation. |
 | Files and collections | Supplied embedded bytes, Size/MD5 metadata, Mac information, EF/RF/CI, attachment name trees and typed collection schemas/items/sorts; external-stream declarations. | No implicit filesystem/URL loading, platform conversion or collection UI execution. |
-| Signature field policies | Written seeds/locks, actual certificate/digest/backend/appearance choices, verified output before finalization and intrinsic historical signing permissions. | Full authenticated revision-difference analysis and UR authority/intersection remain open; timestamp, revocation and PKI trust need explicit external components. |
+| Signature field policies | Written seeds/locks, actual certificate/digest/backend/appearance choices, verified output before finalization and intrinsic historical signing permissions. | General authenticated revision-difference analysis and UR authority/intersection remain open. Native RFC 3161 timestamps and DSS/VRI storage use explicit providers and evidence; fetching and trusting revocation/PKI data remain caller policies. |
+| PDF 2.0 metadata and associations | Escaped native XMP, declarations with explicit scope, named marked-content resource validation, associated-file discovery, document parts/DPM and encrypted payload wrappers. | Opaque caller XML/content needs separate validation. An author assertion does not prove conformance; an outer wrapper does not decrypt its payload. |
+| Qualified structure and WTPDF | Namespace objects, qualified role maps, TS 32005 inclusion rules and bounded mechanical audit findings for structure, metadata, annotations and actual typed text use. | Human reading order, meaningful descriptions, faithful Unicode semantics and external font-program evidence remain pending; no automatic certification. |
+| Modern PDF security | R=6 AES-CBC, R=7 AES-GCM, SHA-3/SHAKE, supported modern curves/EdDSA, PDF MAC over actual initial/incremental/linearized bytes and signature-attached MAC. | Explicit algorithm/provider/extension selection. AES-CBC alone is unauthenticated; signature mathematics does not establish PKI trust. |
 | External PDF reading — pdf-reader | PDF 1.0–1.7 object syntax, traditional and stream xrefs, Prev revisions, object streams, explicit reference resolution, encoded stream retention and bounded Flate/ASCIIHex/ASCII85/RunLength decoding with eight-bit TIFF/PNG predictors. Ordered page-tree traversal checks counts, parents and unique identities; effective Resources, MediaBox, CropBox and Rotate preserve PDF objects. Page-local Contents streams are resolved separately in order. | No PDF 2.0, encrypted documents, hybrid XRefStm, repair, content interpretation, rendering or text extraction. Unknown codecs can be retained encoded but cannot be decoded. Page traversal does not inspect all resource contents. Contents inspection does not concatenate or decode streams. Reading does not implement import or remapping into the writer. |
 
 The initial writer emits free records for every unused object number below Size.

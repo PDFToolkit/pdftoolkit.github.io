@@ -1,6 +1,6 @@
 # PDF
 
-An explicit object model of **PDF 1.7 / ISO 32000-1:2008**, for PHP 8.3 or later.
+An explicit object model of **PDF 1.7 and PDF 2.0**, including ISO 32000-2:2020 EC3 and its companion specifications, for **64-bit PHP 8.3 or later**.
 
 This library represents the format's syntax and structures, down to its names, numbers, references, dictionary entries and operators. It does not aim to provide a layout API. A higher-level library can construct these objects while retaining control of their composition.
 
@@ -10,14 +10,16 @@ The [online documentation](https://pdftoolkit.github.io/) brings together guides
 
 The `0.x` series is intended for developers who want to construct and explore this model. Before `1.0`, a new minor version may change names and signatures; patch releases preserve their series' API. The implemented scope and limits appear in [specification coverage](specification.md).
 
-Definitions are based on the Adobe/ISO documents `PDF32000_2008.pdf` and `adobe_supplement_iso32000.pdf`, retained in the core repository. The [supplement guide](adobe-supplement.md) explains Adobe PDF 1.7 level 3 extensions, their provenance and mechanisms. The [Adobe reference guide](adobe-references.md) also introduces the 2006 reference, its errata, the redaction addendum and their portfolio. Adobe references archived in the core retain their original names and bytes; the four archived references are excluded from Composer archives. Core 0.6 adds the [first PDF 2.0 mechanisms](pdf-2-0.md), with a distinct ISO 32000-2:2020 EC3 pilot catalogue. Full PDF 2.0 conformance and PDF/A, PDF/X and PDF/UA profiles remain separate work.
+Definitions are based on the Adobe/ISO documents `PDF32000_2008.pdf` and `adobe_supplement_iso32000.pdf`, retained in the core repository. The [supplement guide](adobe-supplement.md) explains Adobe PDF 1.7 level 3 extensions, their provenance and mechanisms. The [Adobe reference guide](adobe-references.md) also introduces the 2006 reference, its errata, the redaction addendum and their portfolio. Adobe references archived in the core retain their original names and bytes; the four archived references are excluded from Composer archives.
+
+Core 0.7.0 extends [PDF 2.0 writing](pdf-2-0.md) with the [companion specifications](pdf-2-0-bundle.md): R=6 AES-CBC, R=7 AES-GCM, modern digests/signatures, PDF MAC, XMP/declarations, metadata ownership, associated files, document parts and qualified structure roles. The eleven bundle originals retain their supplied names, bytes and source fingerprints in the core; they are excluded from Composer archives. The PDF Association supplies the [sponsored standards](https://www.pdfa.org/sponsored-standards/). WTPDF offers a partial audit, not certification; complete PDF 2.0 or PDF/A, PDF/X and PDF/UA conformance is not inferred from a definition catalogue.
 
 ## Installation
 
-Core **0.6** requires PHP 8.3 or later and the `ctype`, `iconv` and `zlib` extensions. AES and CMS backends are optional and require `openssl`. The [`roukmoute/pdf`](https://packagist.org/packages/roukmoute/pdf) package is available on Packagist. From the consuming project:
+Core **0.7.0** requires 64-bit PHP 8.3 or later and the `ctype`, `iconv` and `zlib` extensions. AES and CMS backends are optional and require `openssl`. The [`roukmoute/pdf`](https://packagist.org/packages/roukmoute/pdf) package is available on Packagist. From the consuming project:
 
 ```sh
-composer require "roukmoute/pdf:^0.6.2"
+composer require "roukmoute/pdf:^0.7.0"
 ```
 
 API changes appear in the [changelog](../../CHANGELOG.md) and the
@@ -32,10 +34,10 @@ API changes appear in the [changelog](../../CHANGELOG.md) and the
 | [`pdftoolkit/pdf-images`](https://pdftoolkit.github.io/modules/images/index.html) | Inspect JPEG files and decode PNG files into core image objects. |
 | [`pdftoolkit/pdf-fonts`](https://pdftoolkit.github.io/modules/fonts/index.html) | Analyze a static TrueType font and prepare its metrics and mappings for core font objects. |
 
-Since version **0.1.7**, modules are compatible with core series 0.2, 0.3, 0.4, 0.5 and 0.6 and PHP 8.3 or later. All three packages are available on Packagist: [reader](https://packagist.org/packages/pdftoolkit/pdf-reader), [images](https://packagist.org/packages/pdftoolkit/pdf-images) and [fonts](https://packagist.org/packages/pdftoolkit/pdf-fonts). For example, to import image files with core 0.6:
+Version **0.1.8** of the PDF modules accepts core series 0.2, 0.3, 0.4, 0.5, 0.6 and 0.7 on 64-bit PHP 8.3 or later. The reader still accepts PDF 1.0–1.7 input; image conversion remains PNG/JPEG and font conversion remains static TrueType. All three packages are available on Packagist: [reader](https://packagist.org/packages/pdftoolkit/pdf-reader), [images](https://packagist.org/packages/pdftoolkit/pdf-images) and [fonts](https://packagist.org/packages/pdftoolkit/pdf-fonts). For example, to import image files with core 0.7:
 
 ```sh
-composer require "roukmoute/pdf:^0.6.2" "pdftoolkit/pdf-images:^0.1.7"
+composer require "roukmoute/pdf:^0.7.0" "pdftoolkit/pdf-images:^0.1.8"
 ```
 
 The module installs the core with its stable constraint. The [package guide](packages.md) explains boundaries, installation and reader behavior. Keep the application's `composer.lock` to pin the versions and commits used.
@@ -52,7 +54,7 @@ composer require "pdftoolkit/opentype:^0.1.0"
 From a clone of the [PDFToolkit/pdf](https://github.com/PDFToolkit/pdf) repository:
 
 ```sh
-export COMPOSER_ROOT_VERSION=0.6.x-dev
+export COMPOSER_ROOT_VERSION=0.7.x-dev
 composer install
 composer check
 php examples/hello-world.php hello-world.pdf
@@ -62,8 +64,8 @@ php examples/object-stream.php object-stream.pdf
 Production code depends only on PHP and these three extensions. PHPUnit 12, PHPStan, PHP-CS-Fixer and the modules used by examples and documentation are development dependencies locked in `composer.lock`. Their presence in this checkout adds no production dependency to applications using the core. Core CI runs tests and validates example PDFs on PHP 8.3, 8.4 and 8.5. Tests also fail on PHP deprecations and warnings. The [changelog](../../CHANGELOG.md) describes every published release.
 
 To validate this checkout, including from its tag, set
-`COMPOSER_ROOT_VERSION=0.6.x-dev` before `composer install`. This variable
-identifies the current core as belonging to the 0.6 series expected by the
+`COMPOSER_ROOT_VERSION=0.7.x-dev` before `composer install`. This variable
+identifies the current core as belonging to the 0.7 series expected by the
 modules. Development dependencies use stable 0.1 modules, whose exact versions
 and sources are locked in `composer.lock`. CI also defines this variable for
 branches, tags and pull requests.
@@ -95,11 +97,11 @@ $file = new FileStructure(new FileHeader('1.7'), new FileBody($catalog));
 $file->writeTo('hello-world.pdf');
 ```
 
-The complete example, with imports and metadata, is in [`examples/hello-world.php`](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/hello-world.php).
+The complete example, with imports and metadata, is in [`examples/hello-world.php`](https://github.com/PDFToolkit/pdf/blob/v0.7.0/examples/hello-world.php).
 
 ## Tutorials and recipes
 
-The [tutorial series](tutorials/README.md) accompanies each script with an explanation, a preview and variants to try. Code comments connect the objects to PDF instructions and structures.
+The [32 tutorials](tutorials/README.md) accompany each script with an explanation, a preview and variants to try. Code comments connect the objects to PDF instructions and structures.
 
 | Topic | What the example explains |
 | --- | --- |
@@ -114,6 +116,8 @@ The [tutorial series](tutorials/README.md) accompanies each script with an expla
 | [TrueType font and Unicode](tutorials/09-embedded-font.md) | Embedded program, CID, widths and ToUnicode mapping. |
 | [JPEG and PNG images](tutorials/10-image-files.md) | Colors, PNG decoding, preserved JPEG and transparency mask. |
 | [Incremental revisions](tutorials/11-incremental-update.md) | Explicit replacements, preserved historical bytes and xref chaining. |
+
+The PDF 2.0 sequence adds [UTF-8 and associated files](tutorials/27-pdf20-associated-files.md), [metadata, declarations and document parts](tutorials/28-pdf20-metadata-declarations.md), [encrypted payload wrappers](tutorials/29-pdf20-encrypted-payload.md), [qualified structure roles and WTPDF reports](tutorials/30-pdf20-tagged-namespaces.md), [modern signatures and integrity](tutorials/31-pdf20-modern-signature.md), and [timestamps and DSS/VRI evidence](tutorials/32-pdf20-timestamp-dss.md). The [bundle guide](pdf-2-0-bundle.md) connects them to their retained specifications and independent checks.
 
 The [table recipe](recipes/table.md) assembles these concepts into a concrete presentation. The [recipe collection](recipes/README.md) also explains how to contribute new examples.
 
@@ -132,7 +136,7 @@ The [component guide](components.md) explains every object family. The [API refe
 
 ## Coverage and limits
 
-The catalogue inventories the reference's **392 tables**, **823 indexed sections** and **73 operator tokens**. Dictionary tables produce named classes for dictionaries, entries and immutable definitions. PDF names retain their exact case, which is significant in the format.
+The ISO 32000-1 catalogue inventories the reference's **392 tables**, **823 indexed sections** and **73 operator tokens**. Dictionary tables produce named classes for dictionaries, entries and immutable definitions. PDF names retain their exact case, which is significant in the format.
 
 Executable implementations cover fundamental objects, file writing, cross-reference tables and streams, compressed objects, content operators, page/name/number trees, destinations and outlines, standard fonts and all four PDF function representations.
 
@@ -144,7 +148,7 @@ The writer currently assembles the file in memory. The reader is supplied by `pd
 
 ## Security
 
-The [security policy](https://github.com/PDFToolkit/pdf/blob/v0.5.4/SECURITY.md) describes private reporting and trust boundaries. The [security review](security.md) explains serialization protections and application responsibilities for paths, PDF actions and resource limits.
+The [security policy](https://github.com/PDFToolkit/pdf/blob/v0.7.0/SECURITY.md) describes private reporting and trust boundaries. The [security review](security.md) explains serialization protections and application responsibilities for paths, PDF actions and resource limits.
 
 ## Generating definitions
 

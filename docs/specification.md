@@ -11,13 +11,23 @@ distinct, comprenant le portfolio original et les relations de ses documents
 incorporés. Ils servent à la comparaison et aux audits ciblés ; leur
 conservation ne modifie pas les inventaires de définitions actifs et ne prouve
 pas l'implémentation de toutes leurs procédures.
-La série 0.6 du core et les versions 0.1.7 des modules optionnels nécessitent
-PHP 8.3 ou supérieur ; les anciens tags 0.1 du core conservent leur exigence
-PHP 8.5. Ces versions PHP sont indépendantes de la version du format PDF.
-Le core 0.6 introduit les [premiers mécanismes PDF 2.0](pdf-2-0.md) et un
-pilote ISO 32000-2:2020 EC3 distinct. Ses quatre tableaux et 53 classes d’entrée
-ne modifient pas les chiffres ISO1 ci-dessous et ne garantissent pas une
-conformité PDF 2.0 complète.
+Le core **0.7.0**, les modules PDF optionnels **0.1.8** et OpenType indépendant
+**0.1.0** utilisent **PHP 8.3 ou supérieur en 64 bits**, avec une CI sous PHP 8.3,
+8.4 et 8.5. La version du runtime PHP et celle du format PDF sont indépendantes.
+Le [guide PDF 2.0](pdf-2-0.md) suit ISO 32000-2:2020 EC3 séparément des chiffres
+ISO1 ci-dessous. Le [guide des spécifications complémentaires](pdf-2-0-bundle.md)
+décrit ISO/TS 32001–32005, PDF Declarations, WTPDF et les Application Notes 001–003.
+Les onze originaux fournis gardent leurs noms, octets, références aux pages
+physiques et empreintes dans le catalogue du bundle du core ; ils sont exclus
+des archives Composer. Leur provenance est la
+[PDF Association](https://www.pdfa.org/sponsored-standards/). Ni un inventaire de
+définitions ni un audit WTPDF partiel réussi ne garantissent une conformité
+complète PDF 2.0, d’accessibilité ou PDF/UA.
+
+Le catalogue ISO 32000-2 recense **440 tableaux**, dont **306 dictionnaires**
+représentés par des classes et **1 709 entrées** : 1 702 fixes et sept variables.
+Ses références de source, pages de continuation et corrections EC3 sont suivies
+séparément du corpus ISO 32000-1 décrit ci-dessous.
 
 La source contient 756 pages PDF, 823 entrées de plan, 370 tableaux numérotés
 principaux et 22 tableaux d'annexes. Le catalogue recense les 392 tableaux et
@@ -106,7 +116,10 @@ Voir le [guide des frontières de packages et d'installation](packages.md).
 | Révisions incrémentales | Snapshots et historique FileRevision exactement figés, ajouts/remplacements, listes libres chaînées, suppression/réutilisation, générations retirées et alias, offsets et Prev, xref classiques/stream/hybrides, variantes chiffrées et mises à jour après linéarisation initiale. | Révisions générées seulement. Le remplacement d'une valeur vivante conserve sa famille d'objet et son Type de dictionnaire ; une nouvelle identité réutilisant un numéro libre peut avoir un autre type. Les anciens octets demeurent, donc une update ne peut effacer un contenu confidentiel. |
 | Navigation | Labels de pages, destinations explicites et nommées, calculs de cadrage, anneaux d'articles et ordre de dessin des pages, transitions et séquences de présentation. | Le graphe natif et l'arithmétique sont contrôlés contre le catalogue effectif ; un lecteur rend et anime leur présentation. |
 | Fichiers et collections | Octets incorporés fournis, métadonnées Size/MD5, informations Mac, EF/RF/CI, arbres de noms de pièces jointes et schémas/items/tris typés de collections ; déclarations de flux externes. | Aucun chargement implicite du système de fichiers/URL, conversion de plateforme ou exécution d'interface de collection. |
-| Politiques de champs de signature | Seeds/verrous écrits, choix réels de certificat/digest/backend/apparence, sortie vérifiée avant finalisation et permissions intrinsèques historiques de signature. | L'analyse complète et authentifiée des différences de révisions et l'autorité/intersection UR restent ouvertes ; horodatage, révocation et confiance PKI demandent des composants externes explicites. |
+| Politiques de champs de signature | Seeds/verrous écrits, choix réels de certificat/digest/backend/apparence, sortie vérifiée avant finalisation et permissions intrinsèques historiques de signature. | L’analyse générale et authentifiée des différences de révisions et l’autorité/intersection UR restent ouvertes. Les horodatages RFC 3161 natifs et le stockage DSS/VRI utilisent des fournisseurs et preuves explicites ; la récupération et la confiance des données de révocation/PKI restent des politiques de l’appelant. |
+| Métadonnées et associations PDF 2.0 | XMP natif échappé, déclarations à portée explicite, validation des ressources nommées du contenu marqué, découverte des fichiers associés, parties de document/DPM et enveloppes de contenus chiffrés. | Le XML/contenu opaque de l’appelant demande une validation distincte. Une déclaration d’auteur ne prouve pas la conformité ; une enveloppe externe ne déchiffre pas son contenu. |
+| Structure qualifiée et WTPDF | Objets namespace, role maps qualifiées, règles d’inclusion TS 32005 et constats mécaniques bornés sur la structure, les métadonnées, annotations et le texte typé réellement utilisé. | Ordre de lecture humain, pertinence des descriptions, fidélité Unicode et preuves sur les programmes de fonte externes restent à établir ; aucune certification automatique. |
+| Sécurité PDF moderne | AES-CBC R=6, AES-GCM R=7, SHA-3/SHAKE, courbes modernes/EdDSA pris en charge, PDF MAC sur les octets réels initiaux/incrémentaux/linéarisés et MAC attaché à la signature. | Choix explicite des algorithmes/fournisseurs/extensions. AES-CBC seul n’authentifie pas le contenu ; la signature mathématique n’établit pas la confiance PKI. |
 | Lecture de PDF externes — pdf-reader | Syntaxe des objets PDF 1.0–1.7, xref classiques et stream, révisions Prev, flux d'objets, résolution explicite des références, conservation des flux encodés et décodage borné Flate/ASCIIHex/ASCII85/RunLength avec prédicteurs TIFF/PNG huit bits. Le parcours ordonné de l'arbre de pages contrôle comptes, parents et identités uniques ; Resources, MediaBox, CropBox et Rotate effectifs conservent les objets PDF. Les flux Contents locaux à la page sont résolus séparément dans l'ordre. | Pas de PDF 2.0, documents chiffrés, XRefStm hybrides, réparation, interprétation du contenu, rendu ou extraction de texte. Les codecs inconnus peuvent être conservés encodés mais pas décodés. Le parcours des pages n'inspecte pas tous les contenus de ressources. L'inspection de Contents ne concatène ni ne décode les flux. La lecture n'implémente pas l'import ou le remappage dans le writer. |
 
 Le writer initial émet des enregistrements libres pour chaque numéro d'objet
