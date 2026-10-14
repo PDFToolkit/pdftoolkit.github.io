@@ -65,7 +65,7 @@ jobs:
       - name: Verify bilingual navigation and search behavior
         run: node tests/site_locales.cjs
       - name: Build real examples and verify every documentation page
-        run: python tools/build_docs.py --source-root _sources/pdf --opentype-root _sources/opentype --docs-revision "$GITHUB_SHA" --remote
+        run: python tools/build_docs.py --source-root _sources/pdf --opentype-root _sources/opentype --docs-revision "$GITHUB_SHA" --openssl /usr/bin/openssl --remote
       - name: Verify the old project-site compatibility output
         run: |
           python tools/build_legacy_site.py --site-url https://pdftoolkit.github.io/ --site-dir _site --legacy-base /pdf --legacy-manifest resources/legacy-site-manifest.json --output _legacy

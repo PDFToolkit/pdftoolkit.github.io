@@ -444,20 +444,47 @@ def check(root):
             errors.append('The large ISO 32000-2 original is linked from its source repository without a duplicate site asset')
         if source.get('provider') != 'PDF Association' or source.get('providerUrl') != 'https://www.pdfa.org/sponsored-standards/':
             errors.append('ISO source provider must identify PDF Association sponsored access')
-        if source.get('catalogueSourceUrl') != metadata_url or source.get('dictionaryTables') != 4 or source.get('entryClasses') != 53 or source.get('completeCatalogue') is not False:
-            errors.append('ISO 32000-2 pilot scope or metadata provenance is inconsistent')
+        table_ids = source.get('dictionaryTableIdentifiers', [])
+        entry_keys = {(item.get('specificationTable'), item.get('specificationKey')) for item in indexes['en'] if item.get('specificationEdition') == 'iso32000-2:2020' and item.get('specificationKey') is not None}
+        if source.get('catalogueSourceUrl') != metadata_url or source.get('dictionaryTables') != len(set(table_ids)) or len(table_ids) < 299 or source.get('entryClasses') != len(entry_keys) or len(entry_keys) < 1600 or source.get('completeCatalogue') is not True or source.get('completeConformance') is not False:
+            errors.append('ISO 32000-2 base table inventory or metadata provenance is inconsistent')
         for language in ['en', 'fr']:
             guide = localized('guides/pdf-2-0.html', language)
             if guide not in documents or metadata_url not in documents[guide].links or source_url not in documents[guide].links:
-                errors.append('PDF 2.0 guide must identify its published pilot source metadata: ' + guide)
+                errors.append('PDF 2.0 guide must identify its published source metadata: ' + guide)
             for item in indexes[language]:
                 name = item['title']
-                expected_pilot = name.startswith('PDF\\Specification\\Iso32000_2\\') or name == 'PDF\\Document\\Files\\AssociatedFilesPropertyList'
-                if expected_pilot or item.get('specificationEdition'):
+                expected_definition = (name.startswith('PDF\\Specification\\Iso32000_2\\') and name != 'PDF\\Specification\\Iso32000_2\\Catalogue') or name == 'PDF\\Document\\Files\\AssociatedFilesPropertyList'
+                if expected_definition or item.get('specificationEdition'):
                     table = item.get('specificationTable')
                     document = documents.get(item['url'])
-                    if item.get('specificationEdition') != 'iso32000-2:2020' or table not in {'29', '43', '356', '409a'} or document is None or document.specification_panels != [('iso32000-2:2020', table)] or metadata_url not in document.links or not any(link.startswith(source_url + '#page=') for link in document.links):
+                    if item.get('specificationEdition') != 'iso32000-2:2020' or table not in table_ids or document is None or document.specification_panels != [('iso32000-2:2020', table)] or metadata_url not in document.links or not any(link.startswith(source_url + '#page=') for link in document.links):
                         errors.append('ISO 32000-2 component must retain its own edition/table provenance: ' + name + ' / ' + language)
+    bundle_sources = manifest.get('bundleSpecificationSources', [])
+    expected_bundle = {
+        'PDF-Declarations.pdf', 'Well-Tagged-PDF-WTPDF-1.0.pdf',
+        'PDF20_AN003-ObjectMetadataLocations.pdf', 'PDF20_AN002-AF.pdf', 'PDF20_AN001-BPC.pdf',
+        'ISO-TS-32005-2023-sponsored.pdf', 'ISO-TS-32004-2024_sponsored.pdf',
+        'ISO_TS_32003-2023_sponsored.pdf', 'ISO_TS_32002-2022_sponsored_EC3.pdf',
+        'ISO_TS_32001-2022_sponsored_EC3.pdf', 'ISO_32000-2_sponsored_EC3(1).pdf',
+    }
+    if len(bundle_sources) != 11 or {item.get('source') for item in bundle_sources} != expected_bundle or sum(item.get('pdfPages', 0) for item in bundle_sources) != 1234:
+        errors.append('The supplied PDF 2.0 bundle must retain eleven distinct originals and 1234 physical pages')
+    core = packages.get('roukmoute/pdf', {})
+    bundle_metadata_url = core.get('repository', '') + '/blob/' + core.get('revision', '') + '/resources/iso32000-2-bundle/sources.json'
+    for source in bundle_sources:
+        path = 'resources/iso32000-2-bundle/documents/' + source['source']
+        expected_url = core.get('repository', '') + '/blob/' + core.get('revision', '') + '/' + quote(path, safe='/')
+        if source.get('sourceUrl') != expected_url or source.get('catalogueSourceUrl') != bundle_metadata_url or source.get('repository') != core.get('repository') or source.get('revision') != core.get('revision'):
+            errors.append('Bundle original must identify the exact selected package revision: ' + source['source'])
+        if source.get('provider') != 'PDF Association' or source.get('providerUrl') != 'https://www.pdfa.org/sponsored-standards/' or not re.fullmatch('[0-9a-f]{64}', source.get('sha256', '')) or source.get('bytes', 0) < 1:
+            errors.append('Missing bundle fingerprint or PDF Association provenance: ' + source['source'])
+        if 'download' in source or any(Path(name).name == source['source'] for name in published_files):
+            errors.append('Bundle originals must be linked from their repository without duplicate site binaries')
+        for language in ['en', 'fr']:
+            guide = documents.get(localized('guides/pdf-2-0-bundle.html', language))
+            if guide is None or expected_url not in guide.links or bundle_metadata_url not in guide.links:
+                errors.append('Bundle guide must link each retained source and its exact metadata: ' + source['source'] + ' / ' + language)
     references = manifest.get('referenceSources', [])
     expected_references = {
         'pdf_17_errata.pdf', 'pdf_reference.pdf',

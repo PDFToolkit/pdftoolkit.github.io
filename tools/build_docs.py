@@ -34,16 +34,19 @@ def build(args) -> None:
     for command in (
         [sys.executable, "tools/generate_specification.py", "--check"],
         [sys.executable, "tools/generate_adobe_supplement.py", "--check"],
-        [sys.executable, "tools/generate_iso32000_2_pilot.py", "--check"],
+        [sys.executable, "tools/generate_iso32000_2.py", "--check"],
+        [sys.executable, "tools/compile_iso32000_2_catalogue.py", "--check"],
         [sys.executable, "tools/build_saslprep_tables.py", "--check"],
         [sys.executable, "tools/validate_adobe_references.py"],
+        [sys.executable, "tools/validate_iso32000_bundle.py"],
+        [sys.executable, "tools/generate_structure_inclusion.py", "--check"],
     ):
         run(command, source)
     api = work / "api.json"
     run([args.php, content / "tools/export_api.php", api, source, manifest, opentype], source)
     for example in sorted((source / "examples").glob("*.php")):
         output = pdfs / (example.stem + ".pdf")
-        run([args.php, example, output], source)
+        run([args.php, example, output, *([args.openssl] if example.stem == 'pdf20-timestamp-dss' else [])], source)
         run([args.qpdf, "--check", output], source)
         run([args.pdftoppm, "-r", "96", "-png", output, previews / example.stem], source)
     module = source / "vendor/pdftoolkit/pdf-reader"
@@ -55,8 +58,12 @@ def build(args) -> None:
     for validator in ("validate_mechanisms.py", "validate_adobe_supplement.py"):
         run([sys.executable, "tools/" + validator, pdfs], source)
     run([sys.executable, "tools/validate_pdf20_foundations.py", "--php", args.php, "--qpdf", args.qpdf, "--example", pdfs / "pdf20-associated-files.pdf"], source)
+    run([sys.executable, "tools/validate_pdf20_metadata.py", "--php", args.php, "--qpdf", args.qpdf, "--work-dir", work / "pdf20-metadata"], source)
+    run([sys.executable, "tools/validate_iso32000_crypto.py", "--php", args.php, "--qpdf", args.qpdf, "--openssl", args.openssl, "--work-dir", work / "pdf20-crypto"], source)
+    run([sys.executable, "tools/validate_pdf20_timestamps.py", "--php", args.php, "--qpdf", args.qpdf, "--openssl", args.openssl, "--work-dir", work / "pdf20-timestamps"], source)
     run([sys.executable, "tools/validate_public_key_security.py", "--php", args.php, "--pdf-version", "2.0"], source)
     poppler = ["--poppler-glib-bin", args.poppler_glib_bin] if args.poppler_glib_bin else ["--pdftotext", args.pdftotext]
+    run([sys.executable, "tools/validate_pdf20_tagging.py", "--php", args.php, "--qpdf", args.qpdf, "--example", pdfs / "pdf20-tagged-namespaces.pdf", *poppler], source)
     run([sys.executable, "tools/validate_source_mechanisms.py", pdfs, "--php", args.php, "--qpdf", args.qpdf, *poppler], source)
     run([sys.executable, content / "tools/build_site.py", "--content-root", content, "--source-root", source,
          "--opentype-root", opentype, "--sources", manifest, "--api", api, "--pdf-dir", pdfs, "--pdf-preview-dir", previews,
@@ -75,8 +82,12 @@ if __name__ == "__main__":
     parser.add_argument("--docs-revision", required=True)
     parser.add_argument("--php", default="php")
     parser.add_argument("--qpdf", default="qpdf")
+    parser.add_argument("--openssl", default=shutil.which("openssl"), help="Explicit OpenSSL executable for offline signature/timestamp examples and oracles")
     parser.add_argument("--pdftoppm", default="pdftoppm")
     parser.add_argument("--pdftotext", default="pdftotext")
     parser.add_argument("--poppler-glib-bin", type=Path)
     parser.add_argument("--remote", action="store_true")
-    build(parser.parse_args())
+    options = parser.parse_args()
+    if options.openssl is None:
+        parser.error("Select the offline OpenSSL executable with --openssl.")
+    build(options)

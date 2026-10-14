@@ -16,6 +16,7 @@ class Iso2ReferenceTest(unittest.TestCase):
         site.language = 'fr'
         site.base = '/'
         site.routes = {}
+        site.iso2_classes = {}
         site.iso2_entry_classes = {('29', 'Type'): 'PDF\\Specification\\Iso32000_2\\Dictionary\\CatalogDictionaryTable29\\TypeEntry', ('409a', 'MCAF'): 'PDF\\Specification\\Iso32000_2\\Dictionary\\AssociatedFilesPropertyListTable409a\\MCAFEntry'}
         type_entry = {'name': 'Type', 'type': 'name', 'description': 'Identifies the document catalog.', 'required': True, 'conditional': False, 'pdf_page': 113, 'indirect': False, 'direct': False, 'fixed_name': 'Catalog', 'errata': None}
         mcaf = {'name': 'MCAF', 'type': 'array', 'description': 'Associated file specifications.', 'required': False, 'conditional': False, 'pdf_page': 1015, 'indirect': False, 'direct': False, 'fixed_name': None, 'errata': {'review_status': 'Completed', 'pdf_page': 1015, 'issue_number': 374}}
@@ -48,9 +49,37 @@ class Iso2ReferenceTest(unittest.TestCase):
         self.assertIn('ISO TC 171 SC 2 WG 8', panel)
         self.assertIn('issues/374', panel)
 
-    def test_unmapped_pilot_class_cannot_receive_a_plausible_iso1_panel(self):
-        with self.assertRaisesRegex(ValueError, 'Missing edition-specific pilot provenance'):
+    def test_unmapped_catalogue_class_cannot_receive_a_plausible_iso1_panel(self):
+        with self.assertRaisesRegex(ValueError, 'Missing edition-specific catalogue provenance'):
             self.site().spec_panel({'name': 'PDF\\Specification\\Iso32000_2\\Unknown', 'source': 'src/Specification/Iso32000_2/Unknown.php', 'constants': [{'name': 'TABLE', 'value': "'29'"}]})
+
+    def test_normative_excerpt_keeps_original_language_and_source_label(self):
+        site = self.site()
+        entry = site.iso2_tables['29']['entries'][0]
+        entry.update(description_origin='normative-source', description_language='en')
+        panel = site.iso2_spec_panel('29', 'Type')
+        self.assertIn('<p lang="en">Identifies the document catalog.</p>', panel)
+        self.assertIn('Extrait normatif original en anglais.', panel)
+
+    def test_common_definition_link_stays_in_the_iso2_family(self):
+        site = self.site()
+        name = 'PDF\\Specification\\Iso32000_2\\Dictionary\\StreamDictionaryTable5'
+        site.iso2_classes = {'29': {'common_tables': ['5']}, '5': {'class': name}}
+        site.routes[name] = 'reference/components/iso2-stream-fixture.html'
+        panel = site.iso2_spec_panel('29', None)
+        self.assertIn('/fr/reference/components/iso2-stream-fixture.html', panel)
+        self.assertNotIn('downloads/iso-32000-1.pdf', panel)
+
+    def test_exact_array_and_closed_name_domains_are_presented_in_both_languages(self):
+        site = self.site()
+        entry = site.iso2_tables['29']['entries'][0]
+        entry.update(allowed_names=['Sig', 'DocTimeStamp'], array_length=12)
+        panel = site.iso2_spec_panel('29', 'Type')
+        self.assertIn('Noms permis : /Sig, /DocTimeStamp', panel)
+        self.assertIn('Longueur exacte du tableau : 12', panel)
+        translated = translate_interface(panel)
+        self.assertIn('Allowed names: /Sig, /DocTimeStamp', translated)
+        self.assertIn('Exact array length: 12', translated)
 
     def test_public_original_keeps_source_metadata_errata_and_physical_page(self):
         panel = self.site().iso2_spec_panel('29', None)

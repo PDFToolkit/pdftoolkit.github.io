@@ -24,7 +24,8 @@ SITE_ORIGIN = 'https://pdftoolkit.github.io'
 CORE_PACKAGE = 'roukmoute/pdf'
 GUIDES = [
     ('docs/coverage.md', 'guides/mecanismes.html', 'Couverture des éditions PDF', 'Guides'),
-    ('docs/pdf-2-0.md', 'guides/pdf-2-0.html', 'PDF 2.0 : premiers mécanismes', 'Guides'),
+    ('docs/pdf-2-0.md', 'guides/pdf-2-0.html', 'PDF 2.0 : objets et mécanismes', 'Guides'),
+    ('docs/pdf-2-0-bundle.md', 'guides/pdf-2-0-bundle.html', 'Bundle PDF 2.0 : mécanismes et vérifications', 'Guides'),
     ('docs/adobe-supplement.md', 'guides/supplement-adobe.html', 'Supplément Adobe et extensions', 'Guides'),
     ('docs/adobe-references.md', 'guides/references-adobe.html', 'Références Adobe conservées', 'Guides'),
     ('docs/getting-started.md', 'guides/demarrer.html', 'Démarrer', 'Guides'),
@@ -69,6 +70,11 @@ LESSONS = [
     ('25-object-lifecycle', '25-generations-objets', 'Suppression et générations', 'object-lifecycle', 'Liste libre, réutilisation et identités historiques.'),
     ('26-signature-field-policy', '26-politique-signature', 'Politique du champ signé', 'signature-field-policy', 'Seeds, verrou, apparence et preuve du résultat effectivement signé.'),
     ('27-pdf20-associated-files', '27-pdf20-fichiers-associes', 'PDF 2.0 et fichiers associés', 'pdf20-associated-files', 'Métadonnées UTF-8, fichiers AF et propriétés MCAF nommées.'),
+    ('28-pdf20-metadata-declarations', '28-pdf20-metadonnees-declarations', 'Métadonnées, déclarations et parties documentaires', 'pdf20-metadata-declarations', 'XMP, portée des déclarations, compensation du point noir et DPart.'),
+    ('29-pdf20-encrypted-payload', '29-pdf20-enveloppe-chiffree', 'Une enveloppe pour un PDF chiffré', 'pdf20-encrypted-payload', 'Collection masquée, fichier associé EncryptedPayload et protection du contenu.'),
+    ('30-pdf20-tagged-namespaces', '30-pdf20-structure-espaces-noms', 'Espaces de noms et PDF bien balisé', 'pdf20-tagged-namespaces', 'Rôles qualifiés, règles d’inclusion et rapport de vérification WTPDF.'),
+    ('31-pdf20-modern-signature', '31-pdf20-signatures-modernes', 'Algorithmes modernes et intégrité PDF', 'pdf20-modern-signature', 'Signature SHA-3, AES-GCM et MAC vérifiés indépendamment.'),
+    ('32-pdf20-timestamp-dss', '32-pdf20-horodatages-dss', 'Horodatages et preuves de validation', 'pdf20-timestamp-dss', 'RFC3161, révisions signées, DSS et VRI explicites.'),
 ]
 EXTERNAL_EXAMPLES = {
     'reading-pages': {
@@ -85,7 +91,7 @@ GROUPS = [
     ('norme', 'Modèle de norme'), ('dictionnaires', 'Dictionnaires normalisés'),
     ('entrees', 'Entrées normalisées'), ('definitions', 'Définitions normalisées'),
     ('adobe', 'Extensions Adobe : dictionnaires, entrées et définitions'),
-    ('iso2', 'PDF 2.0 : pilote ISO 32000-2'),
+    ('iso2', 'PDF 2.0 : ISO 32000-2'),
     ('securite', 'Chiffrement, certificats et signatures'),
     ('polices-externes', 'Module optionnel : fontes externes'),
     ('images-externes', 'Module optionnel : images externes'),
@@ -298,9 +304,15 @@ class Site:
                 self.adobe_entry_classes[(item['table'], entry['name'])] = entry['class']
         iso2 = root / 'resources' / 'iso32000-2-2020'
         self.iso2_metadata = json.loads((iso2 / 'metadata.json').read_text(encoding='utf-8'))
+        bundle = json.loads((root / 'resources/iso32000-2-bundle/sources.json').read_text(encoding='utf-8'))
+        self.bundle_sources = bundle['documents']
+        for original in self.bundle_sources:
+            path = root / original['path']
+            if path.name != original['filename'] or not path.resolve().is_relative_to(root.resolve()) or path.stat().st_size != original['bytes'] or hashlib.sha256(path.read_bytes()).hexdigest() != original['sha256']:
+                raise ValueError('Modified ISO 32000-2 bundle original: ' + original['filename'])
         self.iso2_tables = {item['id']: item for item in json.loads((iso2 / 'dictionaries.json').read_text(encoding='utf-8'))}
         self.iso2_classes = {item['table']: item for item in json.loads((iso2 / 'classes.json').read_text(encoding='utf-8'))}
-        missing_summaries = sorted({entry['description'] for table in self.iso2_tables.values() for entry in table['entries']} - set(ISO2_DESCRIPTIONS_FR))
+        missing_summaries = sorted({entry['description'] for table in self.iso2_tables.values() for entry in [*table['entries'], *table.get('variable_entries', [])] if entry.get('description_origin', 'project-authored') == 'project-authored'} - set(ISO2_DESCRIPTIONS_FR))
         if missing_summaries:
             raise ValueError('Missing authored French ISO2 summaries: ' + repr(missing_summaries))
         self.iso2_spec_by_name = {}
@@ -314,6 +326,23 @@ class Site:
         # Native implementations declare their reviewed table explicitly. A
         # bare TABLE number cannot identify an edition (ISO1/ISO2 both use 29).
         self.iso2_spec_by_name['PDF\\Document\\Files\\AssociatedFilesPropertyList'] = ('409a', None)
+        self.iso2_spec_by_name.update({
+            'PDF\\Document\\Files\\EncryptedPayload': ('28', None),
+            'PDF\\Document\\Parts\\DocumentPartRoot': ('408', None),
+            'PDF\\Document\\Parts\\DocumentPart': ('409', None),
+            'PDF\\Document\\Parts\\DocumentPartMetadata': ('409', 'DPM'),
+            'PDF\\Document\\Signatures\\PendingDocumentTimestamp': ('255', None),
+            'PDF\\Document\\Signatures\\DocumentSecurityStore': ('261', None),
+            'PDF\\Document\\Signatures\\ValidationRelatedInformation': ('262', None),
+            'PDF\\Document\\Structure\\StructureNamespace': ('356', None),
+            'PDF\\Document\\Structure\\NamespaceRoleMap': ('356', 'RoleMapNS'),
+            'PDF\\Graphics\\GraphicsState\\UseBlackPointCompensation': ('57', 'UseBlackPtComp'),
+            'PDF\\Document\\Geospatial\\Viewport': ('265', None),
+            'PDF\\Document\\Geospatial\\GeospatialMeasure': ('269', None),
+            'PDF\\Document\\Geospatial\\GeographicCoordinateSystem': ('270', None),
+            'PDF\\Document\\Geospatial\\ProjectedCoordinateSystem': ('271', None),
+            'PDF\\Document\\Geospatial\\PointData': ('272', None),
+        })
         self.children = defaultdict(list)
         for item in self.components:
             if item['parent']:
@@ -417,9 +446,9 @@ class Site:
 <nav class="top-nav" aria-label="Navigation principale"><a href="{e(self.url('guides/modules.html'))}">Packages</a><a href="{e(self.url('tutorials/index.html'))}">Tutoriels</a><a href="{e(self.url('reference/index.html'))}">Référence</a><a href="{DOCUMENTATION_REPOSITORY}">GitHub ↗</a></nav>
 {switch}
 <button id="menu-button" class="menu-button" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button></header>
-<div class="site-shell"><aside id="site-nav" class="sidebar" aria-label="Documentation">{self.sidebar(route)}<p class="sidebar-version">Core <strong>{e(self.release)}</strong> · modules {e(self.module_versions)}<br>PHP 8.3+ · PDF 1.7</p></aside>
+<div class="site-shell"><aside id="site-nav" class="sidebar" aria-label="Documentation">{self.sidebar(route)}<p class="sidebar-version">Core <strong>{e(self.release)}</strong> · modules {e(self.module_versions)}<br>PHP 8.3+ 64 bits · PDF 1.7 et 2.0</p></aside>
 <main id="main" data-root="{e(self.base)}">{header}<div class="content-grid"><article class="prose">{body}</article>{toc_html}</div>
-<footer class="site-footer"><span>PDFToolkit · ISO 32000-1:2008 · Adobe ExtensionLevel 3 · MIT</span><span><a href="{REPOSITORY}/releases/tag/v{e(self.release)}">Core {e(self.release)}</a> · <a href="{DOCUMENTATION_REPOSITORY}/commit/{e(self.docs_revision)}">Documentation {e(self.docs_revision[:7])}</a></span></footer></main></div></body></html>'''
+<footer class="site-footer"><span>PDFToolkit · ISO 32000-1:2008 · ISO 32000-2:2020 · MIT</span><span><a href="{REPOSITORY}/releases/tag/v{e(self.release)}">Core {e(self.release)}</a> · <a href="{DOCUMENTATION_REPOSITORY}/commit/{e(self.docs_revision)}">Documentation {e(self.docs_revision[:7])}</a></span></footer></main></div></body></html>'''
         self.write(route, translate_interface(html) if self.language == 'en' else html)
 
     def package_link(self, package_name: str, target: str, fragment: str = '', query: str = '', language: str | None = None) -> str | None:
@@ -654,7 +683,7 @@ class Site:
 
     def core_hub(self) -> None:
         package = self.packages[CORE_PACKAGE]
-        body = f'<p><span class="badge">Core · <code>{CORE_PACKAGE}</code> {e(package["version"])}</span></p><p>Le core représente les objets et mécanismes de PDF 1.7 et les compose en fichiers PDF. Il fournit la syntaxe, les dictionnaires, les flux, les pages, les images et les polices PDF, ainsi que l’écriture et les révisions. Les lecteurs de PDF externes, PNG/JPEG et TrueType sont des modules optionnels.</p>'
+        body = f'<p><span class="badge">Core · <code>{CORE_PACKAGE}</code> {e(package["version"])}</span></p><p>Le core représente les objets et mécanismes de PDF 1.7 et PDF 2.0 et les compose en fichiers PDF. Il fournit la syntaxe, les dictionnaires, les flux, les pages, les images et les polices PDF, ainsi que l’écriture et les révisions. Les lecteurs de PDF externes, PNG/JPEG et TrueType sont des modules optionnels.</p>'
         install_command = f'composer require "{CORE_PACKAGE}:^{package["version"]}"'
         body += f'<h2>Installer le core</h2><p>{self.packagist_link(CORE_PACKAGE)}</p><pre><code class="language-sh">{e(install_command)}</code></pre><p>Composer installe uniquement le core et vérifie ses extensions PHP requises. Les modules optionnels sont choisis par l’application.</p>'
         body += '<h2>Commencer et construire</h2><ul>'
@@ -667,7 +696,7 @@ class Site:
         self.page('modules/core/index.html', 'Core : objets PDF et écriture', 'Packages', body)
 
     def home(self) -> None:
-        body = f'''<section class="hero"><div class="hero-copy"><p class="eyebrow">PHP 8.3+ · PDF 1.7 · Premiers mécanismes PDF 2.0</p><h1>Le format PDF.<br>Objet par objet.</h1><p class="hero-description">Comprendre les structures, composer les objets, maîtriser les octets. Une documentation pour explorer le format et construire vos propres fichiers PDF.</p><div class="pdf-actions"><a class="button" href="{e(self.url('tutorials/01-premier-document.html'))}">Créer mon premier PDF →</a><a class="button secondary" href="{e(self.url('reference/index.html'))}">Explorer les composants</a></div></div><div class="hero-visual" aria-label="Du catalogue à la page"><div class="graph-card"><span class="badge">01 / point d’entrée</span><code>DocumentCatalog</code></div><div class="graph-connector" aria-hidden="true">↓</div><div class="graph-card"><span class="badge">02 / arbre du document</span><code>PageTreeNode</code></div><div class="graph-connector" aria-hidden="true">↓</div><div class="graph-card"><span class="badge">03 / contenu & ressources</span><code>PageObject</code><span class="graph-leaves">StreamObject · ResourceDictionary</span></div></div></section>
+        body = f'''<section class="hero"><div class="hero-copy"><p class="eyebrow">PHP 8.3+ 64 bits · PDF 1.7 et 2.0</p><h1>Le format PDF.<br>Objet par objet.</h1><p class="hero-description">Comprendre les structures, composer les objets, maîtriser les octets. Une documentation pour explorer le format et construire vos propres fichiers PDF.</p><div class="pdf-actions"><a class="button" href="{e(self.url('tutorials/01-premier-document.html'))}">Créer mon premier PDF →</a><a class="button secondary" href="{e(self.url('reference/index.html'))}">Explorer les composants</a></div></div><div class="hero-visual" aria-label="Du catalogue à la page"><div class="graph-card"><span class="badge">01 / point d’entrée</span><code>DocumentCatalog</code></div><div class="graph-connector" aria-hidden="true">↓</div><div class="graph-card"><span class="badge">02 / arbre du document</span><code>PageTreeNode</code></div><div class="graph-connector" aria-hidden="true">↓</div><div class="graph-card"><span class="badge">03 / contenu & ressources</span><code>PageObject</code><span class="graph-leaves">StreamObject · ResourceDictionary</span></div></div></section>
 <div class="stats"><div class="stat"><strong>{number(len(self.components))}</strong><span>composants documentés</span></div><div class="stat"><strong>{self.metadata['dictionary_table_count'] + self.adobe_metadata['dictionary_tables'] + len(self.iso2_tables)}</strong><span>dictionnaires ISO et Adobe</span></div><div class="stat"><strong>{len(self.examples)}</strong><span>exemples PDF à explorer</span></div><div class="stat"><strong>{self.metadata['operator_count']}</strong><span>tokens d’opérateurs PDF</span></div></div>
 <section><p class="eyebrow">Apprendre avec les objets</p><h2>Construire un document et explorer ses pages</h2><p>Chaque tutoriel relie les explications aux objets PHP et au PDF créé ou lu. Consultez ses pages, le script et le résultat de son exécution.</p>{self.tutorial_cards()}</section>
 <section><h2>Un core PDF, des modules au choix</h2><p>Le core représente les objets et les mécanismes de la norme Adobe. Les modules de lecture PDF et de conversion d’images ou de fontes dépendent du core. Le modèle OpenType est indépendant et s’installe sans aucun package PDF.</p><p><a href="{e(self.url('guides/modules.html'))}">Choisir les packages et comprendre leur frontière →</a></p>{self.package_cards()}</section>
@@ -693,8 +722,8 @@ class Site:
         iso2_spec = self.iso2_spec_by_name.get(component['name'])
         if iso2_spec is not None:
             return self.iso2_spec_panel(*iso2_spec)
-        if component['source'].startswith('src/Specification/Iso32000_2/'):
-            raise ValueError('Missing edition-specific pilot provenance: ' + component['name'])
+        if component['source'].startswith('src/Specification/Iso32000_2/') and any(item['name'] == 'TABLE' for item in component['constants']):
+            raise ValueError('Missing edition-specific catalogue provenance: ' + component['name'])
         adobe_spec = self.adobe_spec_by_name.get(component['name'])
         if adobe_spec is None:
             for constant in component['constants']:
@@ -754,16 +783,22 @@ class Site:
 
     def iso2_spec_panel(self, table: str, key: str | None) -> str:
         record = self.iso2_tables[table]
-        entries = [entry for entry in record['entries'] if key is None or entry['name'] == key]
+        entries = [entry for entry in [*record['entries'], *record.get('variable_entries', [])] if key is None or entry['name'] == key]
         page = entries[0]['pdf_page'] if key is not None and entries else record['pdf_pages'][0]
         source = self.source_url('resources/iso32000-2-2020/metadata.json')
         original = self.source_url(self.iso2_metadata['source']['document']) + f'#page={page}'
         errata = self.iso2_metadata['official_references']['public_errata']
         html = f'<section id="norme" data-specification-edition="iso32000-2:2020" data-specification-table="{e(table)}"><h2>Définition ISO 32000-2:2020 EC3</h2><p><strong>Tableau {e(table)}</strong> · {e(record["title"])}<br>§{e(record["section"])} · page PDF {page}</p>'
-        html += f'<p><a href="{e(original)}">Original PDF au commit documenté ↗</a> · <a href="{e(source)}">Métadonnées de la source au commit documenté ↗</a> · <a href="{e(errata)}">Errata publics ↗</a></p><p>Original conservé dans le dépôt du core. Catalogue pilote — couverture complète en attente.</p>'
+        html += f'<p><a href="{e(original)}">Original PDF au commit documenté ↗</a> · <a href="{e(source)}">Métadonnées de la source au commit documenté ↗</a> · <a href="{e(errata)}">Errata publics ↗</a></p><p>Original conservé dans le dépôt du core. Inventaire des tableaux et contrôles sémantiques restent distincts.</p>'
+        common = self.iso2_classes.get(table, {}).get('common_tables', [])
+        if common:
+            html += '<p>Définitions communes : ' + ' · '.join(f'<a href="{e(self.url(self.routes[self.iso2_classes[identifier]["class"]]))}">Table {e(identifier)}</a>' for identifier in common) + '</p>'
         if key is not None:
             for entry in entries:
-                summary, summary_language = iso2_description(entry['description'], self.language)
+                normative = entry.get('description_origin') == 'normative-source'
+                summary, summary_language = (entry['description'], 'en') if normative else iso2_description(entry['description'], self.language)
+                if normative:
+                    html += '<p class="search-hint">Extrait normatif original en anglais.</p>'
                 html += f'<p><span class="badge">/{e(entry["name"])}</span> <span class="badge">{e(entry["type"])}</span></p><p lang="{summary_language}">{e(summary)}</p>'
                 constraints = []
                 if entry['indirect']:
@@ -772,6 +807,16 @@ class Site:
                     constraints.append('Objet direct exigé')
                 if entry['fixed_name']:
                     constraints.append('Nom fixe /' + entry['fixed_name'])
+                if entry.get('allowed_names'):
+                    constraints.append('Noms permis : ' + ', '.join('/' + name for name in entry['allowed_names']))
+                if entry.get('array_length') is not None:
+                    constraints.append('Longueur exacte du tableau : ' + str(entry['array_length']))
+                if entry.get('array_elements_direct'):
+                    constraints.append('Éléments directs dans le tableau')
+                if entry.get('array_elements_indirect'):
+                    constraints.append('Éléments indirects dans le tableau')
+                if entry.get('variable') or entry in record.get('variable_entries', []):
+                    constraints.append('Clé fournie explicitement')
                 if constraints:
                     html += '<ul>' + ''.join(f'<li>{e(item)}</li>' for item in constraints) + '</ul>'
         else:
@@ -792,7 +837,7 @@ class Site:
                 issue = correction.get('issue_number')
                 link = f' · <a href="https://github.com/pdf-association/pdf-issues/issues/{issue}">Issue #{issue}</a>' if issue else ''
                 html += f'<p><strong>Correction EC3 /{e(entry["name"])}</strong> · {e(correction["review_status"])} · {e(authority)} · page PDF {correction["pdf_page"]}{link}</p>'
-        html += f'<p class="search-hint">Résumé d’implémentation rédigé pour le projet. <a href="{e(self.url("guides/pdf-2-0.html"))}">Périmètre et limites PDF 2.0.</a></p></section>'
+        html += f'<p class="search-hint"><a href="{e(self.url("guides/pdf-2-0.html"))}">Périmètre et limites PDF 2.0.</a></p></section>'
         return html
 
     def adobe_spec_entries(self, table: str, seen: set | None = None) -> list[dict]:
@@ -1065,12 +1110,23 @@ class Site:
             'catalogueSourceUrl': self.source_url('resources/iso32000-2-2020/metadata.json'),
             'dictionaryTables': len(self.iso2_tables),
             'entryClasses': sum(len(item['entries']) for item in self.iso2_classes.values()),
-            'completeCatalogue': False,
+            'completeCatalogue': self.iso2_metadata.get('dictionary_catalogue', {}).get('status') == 'complete-base-table-inventory-with-explicit-reviewed-overrides',
+            'completeConformance': False,
+            'dictionaryTableIdentifiers': list(self.iso2_tables),
+            'variableEntryClasses': sum(len(item.get('variable_entries', [])) for item in self.iso2_tables.values()),
         }]
         manifest['referenceSources'] = [
             {'source': item['document'], 'role': item['role'], 'download': 'downloads/adobe-references/' + item['document'], 'sha256': item['document_sha256'], 'bytes': item['bytes'], 'pdfPages': item['pdf_pages']}
             for item in self.reference_sources.values()
         ]
+        manifest['bundleSpecificationSources'] = [{
+            'source': item['filename'], 'identifier': item['identifier'], 'title': item['title'],
+            'sha256': item['sha256'], 'bytes': item['bytes'], 'pdfPages': item['physical_pdf_pages'],
+            'provider': item['provider'], 'providerUrl': item['provider_url'],
+            'repository': self.packages[CORE_PACKAGE]['repository'], 'revision': self.revision,
+            'sourceUrl': self.source_url(item['path']),
+            'catalogueSourceUrl': self.source_url('resources/iso32000-2-bundle/sources.json'),
+        } for item in self.bundle_sources]
         manifest['staticAssets'] = [{'path': path.relative_to(self.output).as_posix(), 'bytes': path.stat().st_size, 'sha256': hashlib.sha256(path.read_bytes()).hexdigest()} for path in sorted(self.output.rglob('*')) if path.is_file() and path.suffix != '.html' and path.name not in {'site-manifest.json', '.nojekyll'}]
         (self.output / 'site-manifest.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
         print(f'Built {len(manifest["pages"])} pages, {len(self.components)} API components and {len(expected)} PDF examples into {self.output}')

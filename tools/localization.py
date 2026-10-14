@@ -169,8 +169,8 @@ ISO2_DESCRIPTIONS_FR = {'Identifies the document catalog.': 'Identifie le catalo
 def iso2_description(value, language):
     if language == 'fr' and value in ISO2_DESCRIPTIONS_FR:
         return ISO2_DESCRIPTIONS_FR[value], 'fr'
-    # Unknown input stays honestly labelled English; complete site builds reject
-    # missing pilot translations before rendering either public locale.
+    # Original normative excerpts remain English. Complete site builds require
+    # French translations for every project-authored summary.
     return value, 'en'
 
 
@@ -199,11 +199,28 @@ def canonical_source(owner, source):
 
 
 TEXT = {
+    'Bundle PDF 2.0 : mécanismes et vérifications': 'PDF 2.0 bundle: mechanisms and validation',
+    'Métadonnées, déclarations et parties documentaires': 'Metadata, declarations and document parts',
+    'XMP, portée des déclarations, compensation du point noir et DPart.': 'XMP, declaration scope, black point compensation and DPart.',
+    'Une enveloppe pour un PDF chiffré': 'A wrapper for an encrypted PDF',
+    'Collection masquée, fichier associé EncryptedPayload et protection du contenu.': 'Hidden collection, EncryptedPayload associated file and content protection.',
+    'Espaces de noms et PDF bien balisé': 'Namespaces and well-tagged PDF',
+    'Rôles qualifiés, règles d’inclusion et rapport de vérification WTPDF.': 'Qualified roles, inclusion rules and WTPDF audit report.',
+    'Algorithmes modernes et intégrité PDF': 'Modern algorithms and PDF integrity',
+    'Signature SHA-3, AES-GCM et MAC vérifiés indépendamment.': 'Independently verified SHA-3 signatures, AES-GCM and PDF MAC.',
     'Couverture des éditions PDF': 'Coverage by PDF edition',
-    'PDF 2.0 : premiers mécanismes': 'PDF 2.0: first mechanisms',
+    'PDF 2.0 : objets et mécanismes': 'PDF 2.0: objects and mechanisms',
+    'Horodatages et preuves de validation': 'Timestamps and validation evidence',
+    'RFC3161, révisions signées, DSS et VRI explicites.': 'RFC3161, signed revisions, explicit DSS and VRI.',
+    'PHP 8.3+ 64 bits · PDF 1.7 et 2.0': '64-bit PHP 8.3+ · PDF 1.7 and 2.0',
     'PDF 2.0 et fichiers associés': 'PDF 2.0 and associated files',
     'Métadonnées UTF-8, fichiers AF et propriétés MCAF nommées.': 'UTF-8 metadata, AF files and named MCAF properties.',
-    'PDF 2.0 : pilote ISO 32000-2': 'PDF 2.0: ISO 32000-2 pilot',
+    'PDF 2.0 : ISO 32000-2': 'PDF 2.0: ISO 32000-2',
+    'Original conservé dans le dépôt du core. Inventaire des tableaux et contrôles sémantiques restent distincts.': 'Original retained in the core repository. Table inventory and semantic validation remain distinct.',
+    'Extrait normatif original en anglais.': 'Original normative excerpt in English.',
+    'Définitions communes :': 'Common definitions:',
+    'Clé fournie explicitement': 'Explicitly supplied key',
+    'Éléments indirects dans le tableau': 'Indirect array elements required',
     'Premiers mécanismes PDF 2.0': 'First PDF 2.0 mechanisms',
     'PHP 8.3+ · PDF 1.7 · Premiers mécanismes PDF 2.0': 'PHP 8.3+ · PDF 1.7 · First PDF 2.0 mechanisms',
     'Requis': 'Required', 'Facultatif': 'Optional',
@@ -313,7 +330,7 @@ TEXT = {
     'Guide du package →': 'Package guide →', 'Référence API →': 'API reference →',
     'Présentation': 'Overview', 'Référence API': 'API reference', 'Signalements privés': 'Private reports',
     'Guides du module': 'Module guides', 'Installer le core': 'Install the core',
-    'Le core représente les objets et mécanismes de PDF 1.7 et les compose en fichiers PDF. Il fournit la syntaxe, les dictionnaires, les flux, les pages, les images et les polices PDF, ainsi que l’écriture et les révisions. Les lecteurs de PDF externes, PNG/JPEG et TrueType sont des modules optionnels.': 'The core represents PDF 1.7 objects and mechanisms and assembles them into PDF files. It provides syntax, dictionaries, streams, pages, PDF images and fonts, writing and revisions. External PDF, PNG/JPEG and TrueType readers are optional modules.',
+    'Le core représente les objets et mécanismes de PDF 1.7 et PDF 2.0 et les compose en fichiers PDF. Il fournit la syntaxe, les dictionnaires, les flux, les pages, les images et les polices PDF, ainsi que l’écriture et les révisions. Les lecteurs de PDF externes, PNG/JPEG et TrueType sont des modules optionnels.': 'The core represents PDF 1.7 and PDF 2.0 objects and mechanisms and assembles them into PDF files. It provides syntax, dictionaries, streams, pages, PDF images and fonts, writing and revisions. External PDF, PNG/JPEG and TrueType readers are optional modules.',
     'Composer installe uniquement le core et vérifie ses extensions PHP requises. Les modules optionnels sont choisis par l’application.': 'Composer installs the core and checks its required PHP extensions. The application chooses which optional modules to install.',
     'Commencer et construire': 'Get started and build', 'Installation et premier document': 'Installation and first document',
     'Tutoriels avec code et PDF': 'Tutorials with code and PDFs', 'Responsabilités des composants': 'Component responsibilities',
@@ -383,6 +400,8 @@ PATTERNS = [
     (r'Version publiée (.+)', lambda m: 'Published release ' + m[1]),
     (r'API de (.+)', lambda m: 'API for ' + m[1]),
     (r'Nom fixe /(.+)', lambda m: 'Fixed name /' + m[1]),
+    (r'Noms permis : (.+)', lambda m: 'Allowed names: ' + m[1]),
+    (r'Longueur exacte du tableau : (\d+)', lambda m: 'Exact array length: ' + m[1]),
     (r'Tableau (.+)', lambda m: 'Table ' + m[1]),
     (r'page PDF (\d+) ↗', lambda m: 'PDF page ' + m[1] + ' ↗'),
     (r'Correction d’implémentation /(.+)', lambda m: 'Implementation correction /' + m[1]),
