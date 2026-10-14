@@ -177,7 +177,6 @@ a.card { color: var(--ink); text-decoration: none; }
 .search-field label { display: flex; flex-direction: column; flex: 1 1 230px; gap: 7px; color: var(--muted); font-size: 12px; font-weight: 600; }
 .search-field label:has(select) { flex: 0 1 180px; }
 .search-field input, .search-field select { min-width: 0; min-height: 44px; padding: 10px 13px; border: 1px solid #c8d3cb; border-radius: 7px; color: var(--ink); background: white; font-size: 14px; }
-.search-field input { flex: 1 1 230px; }
 .search-field select { max-width: 100%; }
 .search-hint, #search-status { margin: 8px 0 16px; color: var(--muted); font-size: 12px; }
 .empty-state { margin: 24px 0; padding: 28px; border: 1px dashed #bfd0c3; border-radius: 9px; color: var(--muted); text-align: center; }
