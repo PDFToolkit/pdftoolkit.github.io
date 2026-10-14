@@ -75,6 +75,7 @@ LESSONS = [
     ('30-pdf20-tagged-namespaces', '30-pdf20-structure-espaces-noms', 'Espaces de noms et PDF bien balisé', 'pdf20-tagged-namespaces', 'Rôles qualifiés, règles d’inclusion et rapport de vérification WTPDF.'),
     ('31-pdf20-modern-signature', '31-pdf20-signatures-modernes', 'Algorithmes modernes et intégrité PDF', 'pdf20-modern-signature', 'Signature SHA-3, AES-GCM et MAC vérifiés indépendamment.'),
     ('32-pdf20-timestamp-dss', '32-pdf20-horodatages-dss', 'Horodatages et preuves de validation', 'pdf20-timestamp-dss', 'RFC3161, révisions signées, DSS et VRI explicites.'),
+    ('33-pdf20-geospatial', '33-pdf20-geospatial', 'Objets géospatiaux et mesures', 'pdf20-geospatial', 'Systèmes de coordonnées, points appariés, viewports et nuages de points.'),
 ]
 EXTERNAL_EXAMPLES = {
     'reading-pages': {

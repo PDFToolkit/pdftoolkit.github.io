@@ -142,6 +142,22 @@ Le [tutoriel d’horodatage](tutorials/32-pdf20-timestamp-dss.md) explique trois
 révisions réelles ; l’oracle indépendant vérifie aussi les historiques certifiés,
 chiffrés et linéarisés.
 
+## Les mesures géospatiales conservent leur système de coordonnées
+
+`GeographicCoordinateSystem` et `ProjectedCoordinateSystem` identifient un code
+EPSG ou une chaîne WKT explicites. `GeospatialControlPoints` apparie les positions
+locales et réelles pour construire les tableaux LPTS/GPTS correspondants.
+`GeospatialMeasure`, `Viewport` et `Viewports` relient ces mesures à leur véritable
+page, Form ou image. `PreferredDisplayUnits`, `ProjectedCoordinateSystemMatrix`
+et `PointDataCollection` complètent les préférences d’affichage, le calcul affine
+et les objets de nuage de points.
+
+La validation native et celle du graphe effectif contrôlent les contextes, valeurs
+finies, dimensions appariées, limites normalisées et exigences de version. Elles
+ne consultent pas de registre SIG et ne convertissent pas de projections.
+Le [tutoriel géospatial](tutorials/33-pdf20-geospatial.md) explique deux zones
+d’exemple déclarées indépendamment et leurs données sérialisées.
+
 ## Vérifications indépendantes
 
 La suite PHP est exécutée sous PHP 8.3, 8.4 et 8.5. Les contrôles complémentaires

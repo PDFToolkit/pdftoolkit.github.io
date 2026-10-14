@@ -91,6 +91,7 @@ présente le PDF d'entrée, ses trois pages et les objets lus.
 | [30. Espaces de noms et vérification WTPDF](30-pdf20-tagged-namespaces.md) | Rôles qualifiés, types PDF 1.7 et 2.0, ParentTree réciproque et limites d’un audit mécanique. | [pdf20-tagged-namespaces.php](https://github.com/PDFToolkit/pdf/blob/v0.7.0/examples/pdf20-tagged-namespaces.php) |
 | [31. Signatures modernes et intégrité](31-pdf20-modern-signature.md) | Courbes nommées, SHA-3, plages d’octets exactes et PDF MAC. | [pdf20-modern-signature.php](https://github.com/PDFToolkit/pdf/blob/v0.7.0/examples/pdf20-modern-signature.php) |
 | [32. Horodatages de document et DSS](32-pdf20-timestamp-dss.md) | RFC3161, politique de validation explicite, VRI et signatures historiques conservées. | [pdf20-timestamp-dss.php](https://github.com/PDFToolkit/pdf/blob/v0.7.0/examples/pdf20-timestamp-dss.php) |
+| [33. Objets géospatiaux et mesures](33-pdf20-geospatial.md) | Systèmes de coordonnées, points de contrôle appariés, viewports, matrices et nuages de points. | [pdf20-geospatial.php](https://github.com/PDFToolkit/pdf/blob/v0.7.0/examples/pdf20-geospatial.php) |
 
 Les leçons 03 à 07 peuvent se lire dans l'ordre des sujets qui vous intéressent, après le premier document. Les leçons 08 et 11 concernent l'organisation du fichier ; les leçons 09 et 10 ajoutent des programmes de police et des fichiers image réels au graphe. La leçon 12 consulte les structures d'un PDF existant avec les objets du lecteur.
 

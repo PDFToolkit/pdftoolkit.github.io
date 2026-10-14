@@ -130,6 +130,20 @@ locks remain binding. The [timestamp tutorial](tutorials/32-pdf20-timestamp-dss.
 explains three actual revisions; the independent oracle also checks certified,
 encrypted and linearized histories.
 
+## Geospatial measurements retain their coordinate system
+
+`GeographicCoordinateSystem` and `ProjectedCoordinateSystem` identify an explicit
+EPSG code or WKT string. `GeospatialControlPoints` pairs local and world positions
+and derives the matching LPTS/GPTS arrays. `GeospatialMeasure`, `Viewport` and
+`Viewports` attach those measurements to their actual page, Form or image owner.
+`PreferredDisplayUnits`, `ProjectedCoordinateSystemMatrix` and `PointDataCollection`
+complete the display preferences, affine calculation and point-cloud objects.
+
+Native and effective-graph validation checks contexts, finite values, matching
+dimensions, normalized bounds and version requirements. It does not fetch a GIS
+registry or convert projections. The [geospatial tutorial](tutorials/33-pdf20-geospatial.md)
+explains two independently declared sample regions and their serialized data.
+
 ## Independent checks
 
 The PHP suite runs under PHP 8.3, 8.4 and 8.5. The companion checks use separate
