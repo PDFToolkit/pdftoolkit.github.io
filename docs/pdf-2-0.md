@@ -1,23 +1,26 @@
-# PDF 2.0 : premiers mécanismes et objets propres à l'édition
+# PDF 2.0 : objets, écriture et spécifications complémentaires
 
-Le core **0.6.0** introduit les premiers mécanismes ISO 32000-2:2020, avec des
-corrections vérifiées d'Errata Collection 3 (EC3, 2026-06-01). Il conserve PHP 8.3
-minimum et la construction explicite, avec des objets propres au document et
-sans registre global. Cette version ne prétend pas implémenter tout PDF 2.0
-ni garantir sa conformité complète.
+Le core **0.7.0** implémente des objets et mécanismes ISO 32000-2:2020, avec des
+corrections vérifiées d’Errata Collection 3 (EC3, 2026-06-01). Il nécessite PHP 8.3
+ou ultérieur en 64 bits et conserve une construction explicite, des objets propres
+au document et aucun registre global. La couverture des tableaux n’établit pas
+la conformité conditionnelle, algorithmique ou sémantique complète.
 
 ## Périmètre de cette version
 
 | Domaine | Construction implémentée | Limite |
 | --- | --- | --- |
 | Version du fichier | `PdfVersion::PDF20`, en-tête et version effective du catalogue | Déclarer une version ne garantit pas la conformité. |
-| Texte des dictionnaires | Objets d'encodage PDFDoc/UTF-16BE et UTF-8 avec BOM, décodage explicite et contrôles de version | Le texte des pages utilise toujours les codes de la police choisie. |
-| Fichiers associés | `AFRelationship`, tableaux AF sur les propriétaires pris en charge, ressources MCAF nommées, contrôles de graphe et de révision | Aucun chargement automatique de fichier ou d'URL. |
-| Modèle de spécification | Quatre tableaux ISO 32000-2 EC3 et 53 entrées typées | Le catalogue complet reste à construire. |
-| Applicabilité et sécurité | Distinction introduit/déprécié/interdit, refus de R=5 en PDF 2.0 et contraintes des permissions à clé publique | Le chiffrement par mot de passe R=6 n'est pas implémenté. |
+| Texte des dictionnaires | PDFDoc/UTF-16BE et UTF-8 avec BOM, décodage explicite et contrôles de version | Le texte des pages utilise les codes de la police choisie. |
+| Fichiers associés | AF sur les objets d’information, relations et propriétés MCAF nommées | Aucun chargement automatique de fichier ou d’URL. |
+| Modèle de spécification | Inventaire de dictionnaires propre à l’édition, objets d’entrées fixes et variables, tableaux communs et corrections EC3 vérifiées | Les règles contextuelles et algorithmiques restent distinctes des définitions de tableaux. |
+| Sécurité | Sécurité par mot de passe R=6, AES-GCM R=7, signatures CMS modernes et PDF MAC | La confiance, la politique de révocation et les choix de déploiement restent explicites. |
+| Métadonnées et structure | XMP, déclarations, métadonnées d’objets et de contenu marqué, parties documentaires, enveloppes chiffrées, espaces de noms et règles ISO/TS 32005 | Les déclarations ne prouvent pas la conformité ; les rapports WTPDF conservent des contrôles humains et externes. |
+| Conservation des signatures | Horodatages de document, DSS et VRI avec ordre réel des révisions | Les certificats et réponses de révocation fournis sont des preuves à examiner, pas une validation automatiquement digne de confiance. |
 
-L'[exemple expliqué](tutorials/27-pdf20-associated-files.md) relie ces objets à
-un PDF réel, avec des métadonnées Unicode et un CSV.
+L’[exemple des fichiers associés](tutorials/27-pdf20-associated-files.md) relie
+ces objets à un vrai fichier. Le [guide du bundle complémentaire](pdf-2-0-bundle.md)
+présente les onze sources et les autres tutoriels exécutables.
 
 ## Édition, corrections et version du fichier
 
@@ -108,43 +111,46 @@ version effective après la déclaration du catalogue.
 
 ISO 32000-2 interdit explicitement la révision 5 historique du gestionnaire
 standard de sécurité. Le backend Adobe R=5 reste disponible pour les fichiers
-antérieurs ; PDF 2.0 refuse cette combinaison. R=6 reste à implémenter. Les permissions CMS à clé publique portant sur le document
+antérieurs ; PDF 2.0 refuse cette combinaison. `ModernStandardSecurityHandler` implémente les données d’authentification R=6 et AES-GCM R=7. Les permissions CMS à clé publique portant sur le document
 exigent l’ordre de l’octet le plus significatif en premier, le bit d’accessibilité
 10 et les bits réservés 13–32 à 1. Des octets opaques de destinataire seuls ne
 prouvent pas ces faits de permissions. Le chiffrement natif AES-256 à clé publique
 est disponible en PDF 2.0 sans déclaration d’extension Adobe historique ; il
-est distinct du gestionnaire par mot de passe R=6 restant à implémenter. Le chiffrement n'authentifie pas à lui seul
-le contenu des pages et ne définit pas la confiance envers le document.
+reste distinct du gestionnaire par mot de passe R=6. AES-GCM authentifie les valeurs chiffrées ; PDF MAC authentifie une révision sérialisée. Aucun de ces mécanismes n’établit la confiance envers les certificats.
 
 ## Implémentations restantes
 
-Le pilote couvre le tableau 29 (32 entrées, pages physiques 113–117), le tableau 43
-(16 entrées, pages 149–152), le tableau 356 (quatre entrées, page 744) et le
-tableau 409a (une entrée, page 1015). Les classes générées utilisent
-`PDF\Specification\Iso32000_2`, séparément des classes ISO1 et Adobe.
-Les types, noms Type fixes, entrées requises sans condition et certaines contraintes
-de références vérifiées sont exécutables. Les règles contextuelles demandent
-des mécanismes natifs.
+Le catalogue des dictionnaires comprend l’inventaire des tableaux de base,
+leurs pages de continuation, les clés fixes et variables, les relations entre
+tableaux communs et des corrections EC3 explicitement vérifiées. Ses classes
+utilisent `PDF\Specification\Iso32000_2`, séparément d’ISO1 et d’Adobe. Les types,
+noms fixes, exigences inconditionnelles et contraintes de références vérifiées
+sont exécutables ; les mécanismes natifs réalisent les relations contextuelles.
 
-Le catalogue complet, le chiffrement R=6, les mappings de rôles et graphes natifs
-d'espaces de noms, DSS/informations de validation/horodatages, arbres de parties
-documentaires, sémantique des enveloppes chiffrées, fonctions géospatiales et autres
-mécanismes PDF 2.0 restent à implémenter. Un schéma d'entrée Namespace, DSS ou
-DPartRoot n'implémente pas son mécanisme. Le lecteur optionnel reste limité à
-son [périmètre PDF 1.0–1.7 documenté](packages.md) ; cette étape du writer ne l'étend pas.
+La conformité conditionnelle et sémantique complète, la revue exhaustive EC3,
+le rendu et le traitement des couleurs externes ainsi que la certification
+automatique d’accessibilité ne sont pas établis par cet inventaire. Le
+[relevé de couverture](coverage.md) distingue mécanismes natifs, objets déclaratifs
+et travaux restants. Le lecteur optionnel conserve son
+[périmètre d’entrée PDF 1.0–1.7 documenté](packages.md).
 
 ## Source et vérifications
 
-L'[original fourni `ISO_32000-2_sponsored_EC3.pdf`](https://github.com/PDFToolkit/pdf/blob/v0.6.2/ISO_32000-2_sponsored_EC3.pdf) est conservé dans le dépôt public du core, avec son nom et ses octets d'origine, après autorisation de redistribution confirmée par le propriétaire du projet. Son identité, ses pages physiques et son empreinte figurent dans les
-[métadonnées du pilote](https://github.com/PDFToolkit/pdf/blob/v0.6.2/resources/iso32000-2-2020/metadata.json)
-et l'[inventaire de couverture](https://github.com/PDFToolkit/pdf/blob/v0.6.2/resources/iso32000-2-2020/coverage.json).
-Le fichier fourni provient de la **PDF Association**, via son [accès sponsorisé officiel](https://www.pdfa.org/sponsored-standards/).
+L’[original `ISO_32000-2_sponsored_EC3.pdf`](https://github.com/PDFToolkit/pdf/blob/v0.7.0/ISO_32000-2_sponsored_EC3.pdf)
+est conservé dans le dépôt public du core avec son nom et ses octets d’origine,
+après autorisation de redistribution confirmée par le propriétaire du projet.
+Les [métadonnées du catalogue](https://github.com/PDFToolkit/pdf/blob/v0.7.0/resources/iso32000-2-2020/metadata.json)
+et l’[inventaire de couverture](https://github.com/PDFToolkit/pdf/blob/v0.7.0/resources/iso32000-2-2020/coverage.json)
+consignent son identité, ses pages physiques et son empreinte. Le fichier fourni
+provient de la **PDF Association**, via son [accès sponsorisé officiel](https://www.pdfa.org/sponsored-standards/).
+Les deux copies fournies de la norme principale et tous les originaux complémentaires restent dans le dépôt.
 
 Les [errata publics](https://pdf-issues.pdfa.org/32000-2-2020/) présentent les
 [règles corrigées des fichiers associés](https://pdf-issues.pdfa.org/32000-2-2020/clause14.html#14135-associated-files-linked-to-graphics-objects).
-Les descriptions du pilote sont des résumés concis rédigés pour le projet,
-sans recopier les paragraphes normatifs. Le générateur compare les fichiers
-reproductibles ; les tests exercent les types invalides, collisions d'éditions
-et provenance des corrections. La validation PDF indépendante contrôle les
-objets émis et les octets incorporés. Voir la [couverture des mécanismes](coverage.md)
-pour les autres corpus et leurs limites.
+Les résumés existants rédigés pour le projet possèdent une traduction française.
+Les extraits supplémentaires de la source conservent leur anglais d’origine
+et sont signalés comme texte normatif. Les générateurs vérifient la reproductibilité ;
+les tests exercent les domaines invalides, collisions d’éditions et provenances
+de corrections. Des implémentations indépendantes examinent les octets PDF réels,
+la cryptographie, les métadonnées et la structure. La [couverture](coverage.md) et
+le [guide du bundle](pdf-2-0-bundle.md) précisent les domaines vérifiés et leurs limites.

@@ -1,31 +1,38 @@
 # Couverture par édition PDF
 
-Les corpus ISO1 et Adobe couvrent leurs tableaux de dictionnaires ; ISO2 a
-actuellement un pilote vérifié séparément. Ces périmètres ne doivent pas devenir
-une affirmation de support PDF 2.0 complet. Couvrir les tableaux ne suffit
-pas à déclarer toute leur implémentation terminée : un tableau décrit des objets,
-alors que certains chapitres imposent aussi un algorithme, des liens entre objets
-ou un comportement de lecteur.
+Les inventaires de dictionnaires ISO1, Adobe et ISO2 conservent des identités de
+sources distinctes. Définitions, algorithmes natifs, relations documentaires et
+conformité sont des dimensions différentes. L’inventaire complet des tableaux
+n’établit pas toutes les conditions, opérations de rendu ou exigences de profils externes.
 
-## Premier support ISO 32000-2:2020 EC3 dans 0.6.0
+## ISO 32000-2:2020 EC3 et bundle complémentaire dans 0.7.0
 
-Le [guide PDF 2.0](pdf-2-0.md) conserve une édition et un profil de corrections
-distincts. Son pilote contient quatre tableaux et 53 entrées : 29 (catalogue,
-pp.113–117), 43 (fichier, pp.149–152), 356 (espace de noms, p.744) et 409a
-(MCAF, p.1015). L'[inventaire ISO2](https://github.com/PDFToolkit/pdf/blob/v0.6.2/resources/iso32000-2-2020/coverage.json)
-laisse explicitement le catalogue complet en attente. Aucun pourcentage ne
-mélange ce pilote aux inventaires de tableaux ISO1/Adobe complets.
+Le [guide PDF 2.0](pdf-2-0.md) documente les objets propres à l’édition : tableaux
+sur plusieurs pages, entrées fixes et variables, définitions communes et corrections
+vérifiées. L’[inventaire ISO2](https://github.com/PDFToolkit/pdf/blob/v0.7.0/resources/iso32000-2-2020/coverage.json)
+consigne les compteurs exacts et la revue sémantique/EC3 restante. Il ne fusionne
+pas ISO1 et Adobe dans un pourcentage unique de conformité.
 
-Les ajouts exécutables couvrent en-tête/catalogue 2.0, stratégies de chaînes
-textuelles dont UTF-8 avec BOM, relations AF et ressources MCAF nommées corrigées,
-contrôles du graphe et des révisions effectifs, applicabilité, interdiction R=5
-et règles PDF 2.0 des permissions à clé publique. Le
-[PDF réel du tutoriel](tutorials/27-pdf20-associated-files.md) exerce métadonnées
-Unicode, texte visible CID et CSV associé au document, à la page et au contenu marqué.
+Le [guide du bundle](pdf-2-0-bundle.md) couvre onze sources conservées. Les mécanismes
+exécutables comprennent l’authentification R=6, AES-GCM, SHA-3/SHAKE256, CMS avec
+courbes nommées, PDF MAC, horodatages RFC3161, DSS/VRI, espaces de noms structurels,
+inclusion ISO/TS 32005, déclarations XMP, métadonnées d’objets et de contenu marqué,
+compensation du point noir, parties documentaires et enveloppes chiffrées.
+Les sorties initiales, incrémentales et linéarisées sont contrôlées à travers le
+graphe réellement émis et les snapshots immuables des révisions.
 
-R=6, graphes natifs d'espaces de noms/rôles, DSS/horodatages, arbres de parties
-documentaires, enveloppes chiffrées, géospatial et conformité complète restent
-à construire. La [norme fournie](https://github.com/PDFToolkit/pdf/blob/v0.6.2/ISO_32000-2_sponsored_EC3.pdf) est conservée dans le dépôt public du core avec son nom et ses octets d'origine, après autorisation de redistribution confirmée. Ses métadonnées identifient les pages physiques et son empreinte. Les références Adobe ci-dessous restent téléchargeables sans modification.
+Le [relevé de couverture par document](https://github.com/PDFToolkit/pdf/blob/v0.7.0/resources/iso32000-2-bundle/coverage.json)
+relie fichiers d’implémentation, tests et oracles indépendants à chaque original.
+Le [relevé WTPDF](https://github.com/PDFToolkit/pdf/blob/v0.7.0/resources/wtpdf-1.0/coverage.json)
+distingue échecs mécaniques, revue humaine et validation supplémentaire.
+Aucune certification WTPDF/PDF/UA-2 automatique ni conformité complète à la norme
+de base n’est revendiquée. Le lecteur conserve son périmètre d’entrée PDF 1.0–1.7.
+
+L’[original de la norme principale](https://github.com/PDFToolkit/pdf/blob/v0.7.0/ISO_32000-2_sponsored_EC3.pdf)
+et les onze nouveaux originaux restent inchangés dans le dépôt public du core,
+avec identités de sources et pages physiques. Le fournisseur est la
+[PDF Association](https://www.pdfa.org/sponsored-standards/). Les téléchargements
+Adobe ci-dessous restent disponibles sans modification.
 
 ## Références conservées
 
@@ -33,7 +40,7 @@ documentaires, enveloppes chiffrées, géospatial et conformité complète reste
 | --- | --- | --- |
 | ISO 32000-1:2008, PDF 1.7 | 756 pages ; 392 tableaux ; 263 tableaux de dictionnaires ; 1 405 classes d'entrée ; 73 opérateurs de contenu | [PDF32000_2008.pdf](https://github.com/PDFToolkit/pdf/blob/v0.5.4/PDF32000_2008.pdf) |
 | Supplément Adobe, niveau d'extension 3 | 140 pages ; 66 tableaux, dont 61 tableaux de dictionnaires | [adobe_supplement_iso32000.pdf](https://github.com/PDFToolkit/pdf/blob/v0.5.4/adobe_supplement_iso32000.pdf) |
-| ISO 32000-2:2020 EC3, PDF 2.0 | 1 023 pages physiques ; catalogue pilote de 4 tableaux et 53 entrées | [ISO_32000-2_sponsored_EC3.pdf](https://github.com/PDFToolkit/pdf/blob/v0.6.2/ISO_32000-2_sponsored_EC3.pdf) |
+| ISO 32000-2:2020 EC3, PDF 2.0 | 1 023 pages physiques ; inventaire des dictionnaires de base propre à l’édition et corrections EC3 vérifiées | [ISO_32000-2_sponsored_EC3.pdf](https://github.com/PDFToolkit/pdf/blob/v0.7.0/ISO_32000-2_sponsored_EC3.pdf) |
 
 Les fichiers originaux restent dans le dépôt du core. Les catalogues enregistrent leur
 SHA-256 et les numéros de pages physiques ; les corrections d'interprétation

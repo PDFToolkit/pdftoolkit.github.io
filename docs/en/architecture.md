@@ -4,7 +4,7 @@ This architecture describes the core and optional modules at the published versi
 selected in the [source manifest](../../resources/sources.json).
 The [component guide](components.md) introduces their concrete objects; the
 [coverage guide](coverage.md) distinguishes native constructions, verified rules
-and remaining work in the two retained references.
+and remaining work across the retained Adobe/ISO references and companion bundle.
 
 ## PDF domain
 
@@ -25,6 +25,12 @@ Names, values, references and structures are shared through composition. In part
 `PDF\Specification` separates a standard definition from a PDF object. `SourceReference`, `Requirement`, `ObjectTypeConstraint`, `EntryDefinition` and `TableDefinition` are immutable values. Generated definitions are constructed through instances, without runtime JSON reading or a global registry.
 
 Generated dictionaries and entries carry the terms of their original table. Table numbers stabilize class names when several tables have similar titles. PHP class names are unique without regard to case; PDF names remain case-sensitive. Tests verify this distinction.
+
+ISO 32000-1, Adobe extensions and ISO 32000-2 have separate catalogue namespaces
+and source editions. `NameAlternatives` represents an explicitly reviewed set
+of allowed names; a sentence mentioning several names cannot be reduced to its
+first apparent fixed name. Variable-key entries retain their source pattern and
+receive an explicit `NameType` key. Corrections preserve their authority and page.
 
 An “additional entries” table can compose its type's common definitions. Unknown entries remain accessible through an explicit `Entry` object to allow format extensions. This mechanism does not allow a known entry's constraints to be bypassed.
 
@@ -79,6 +85,12 @@ String and stream encryption uses a `FileEncryption` and explicitly selected
 backends. Offsets refer to the written bytes, including the applicable filters,
 reservations and security parameters.
 
+`PendingSignature` and `PendingDocumentTimestamp` share the reservation mechanism
+through `PendingSignatureDictionary`, while retaining distinct dictionary types
+and backend contracts. `PdfMacTokenComposer` binds the actual encryption key and
+serialized revision. It does not replace the signature provider or its trust
+policy. Immutable revision snapshots preserve historical bytes and ownership.
+
 ## Validation
 
 Constructors reject locally invalid states. Graph validation takes place during serialization, when parents and resources can be established. Conditional requirements in the standard are not presented as automatically covered until dedicated validation and tests handle them.
@@ -98,7 +110,7 @@ a valid signature does not replace a certificate trust policy. The
 
 PHPUnit tests check behaviors and counterexamples; independent readers also validate produced files. PHPStan level 8 analysis and PSR-12 formatting are part of `composer check`.
 
-The model requires PHP 8.3 or later, with typed constants, `readonly` classes and enums. CI runs checks on PHP 8.3, 8.4 and 8.5. On PHP 8.5, the native `NoDiscard` attribute flags ignored results from immutable methods that declare it; those methods construct the same objects on all three versions.
+The model requires 64-bit PHP 8.3 or later, with typed constants, `readonly` classes and enums. CI runs checks on PHP 8.3, 8.4 and 8.5. On PHP 8.5, the native `NoDiscard` attribute flags ignored results from immutable methods that declare it; those methods construct the same objects on all three versions.
 
 ## Extension
 

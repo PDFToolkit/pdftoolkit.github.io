@@ -1,22 +1,26 @@
-# PDF 2.0: first mechanisms and edition-specific objects
+# PDF 2.0: objects, writing and companion specifications
 
-Core **0.6.0** introduces the first ISO 32000-2:2020 mechanisms, with reviewed
-corrections from Errata Collection 3 (EC3, 2026-06-01). It retains PHP 8.3 minimum
-and explicit construction, with document-scoped objects and no global registry.
-This release does not claim complete PDF 2.0 implementation or conformance.
+Core **0.7.0** implements ISO 32000-2:2020 objects and mechanisms, with reviewed
+corrections from Errata Collection 3 (EC3, 2026-06-01). It requires 64-bit PHP 8.3
+or later and keeps explicit construction, document-scoped objects and no global
+registry. Table coverage does not establish complete conditional, algorithmic or
+semantic conformance.
 
 ## Scope of this release
 
 | Area | Implemented construction | Limit |
 | --- | --- | --- |
 | File version | `PdfVersion::PDF20`, header and effective catalog version | A version declaration alone does not establish conformance. |
-| Dictionary text | Encoding objects for PDFDoc/UTF-16BE and UTF-8 with BOM, explicit decoding and version checks | Page text still uses the selected font's character codes. |
-| Associated files | `AFRelationship`, AF arrays on supported owners, named MCAF property resources, graph and revision checks | No automatic file or URL loading. |
-| Specification model | Four ISO 32000-2 EC3 dictionary tables and 53 typed entries | The complete catalogue remains pending. |
-| Applicability and security | Introduced/deprecated/prohibited distinctions, PDF 2.0 rejection of R=5 and public-key permission constraints | R=6 password encryption is not implemented. |
+| Dictionary text | PDFDoc/UTF-16BE and UTF-8 with BOM, explicit decoding and version checks | Page text uses the selected font's character codes. |
+| Associated files | AF on information objects, relationships and named MCAF properties | No automatic loading of a file or URL. |
+| Specification model | Edition-specific dictionary inventory, fixed and variable entry objects, common tables and reviewed EC3 overlays | Contextual and algorithmic rules remain distinct from table definitions. |
+| Security | R=6 password security, R=7 AES-GCM, modern CMS signatures and PDF MAC | Trust, revocation policy and deployment choices remain explicit. |
+| Metadata and structure | XMP, declarations, object/marked-content metadata, document parts, encrypted wrappers, qualified namespaces and ISO/TS 32005 rules | Declarations do not prove conformance; WTPDF reports retain human and external checks. |
+| Signature preservation | Document timestamps, DSS and VRI with actual revision ordering | Supplied certificates and revocation responses are evidence, not automatically trusted validation. |
 
-The [worked example](tutorials/27-pdf20-associated-files.md) connects these
-objects to a real generated PDF, including Unicode metadata and a CSV.
+The [associated-files example](tutorials/27-pdf20-associated-files.md) connects
+these objects to a real file. The [companion bundle guide](pdf-2-0-bundle.md)
+describes all eleven sources and the additional executable tutorials.
 
 ## Edition, corrections and file version
 
@@ -101,40 +105,43 @@ The graph and writer use the effective version after the catalog override.
 
 ISO 32000-2 explicitly prohibits the historical standard-security revision 5.
 The Adobe R=5 backend remains available for earlier files; PDF 2.0 rejects that
-combination. Revision 6 support is pending. Document-wide CMS public-key permission payloads require most-significant-byte-first
+combination. `ModernStandardSecurityHandler` implements R=6 credentials and R=7 AES-GCM. Document-wide CMS public-key permission payloads require most-significant-byte-first
 order, the accessibility bit 10 and reserved bits 13–32 set to 1. Opaque recipient
 bytes alone cannot establish those permission facts. Native AES-256 public-key
 encryption can be selected for PDF 2.0 without the earlier Adobe extension
-declaration; it is distinct from the pending R=6 password-security handler.
-Encryption does not itself authenticate page contents or establish document trust.
+declaration; the R=6 password-security handler remains a distinct selection.
+AES-GCM authenticates encrypted values; PDF MAC authenticates a serialized revision. Neither establishes certificate trust.
 
 ## Remaining implementation
 
-The pilot covers table 29 (32 entries, physical pages 113–117), table 43
-(16 entries, pages 149–152), table 356 (four entries, page 744) and table 409a
-(one entry, page 1015). Their generated classes use
-`PDF\Specification\Iso32000_2`, separately from ISO1 and Adobe classes.
-Types, fixed Type names, unconditional required entries and selected reviewed
-reference constraints are executable. Contextual rules need native mechanisms.
+The dictionary catalogue includes the base table inventory, continuation pages,
+fixed and variable keys, common-table relationships and selected reviewed EC3
+overlays. Its classes use `PDF\Specification\Iso32000_2`, separately from ISO1
+and Adobe. Types, fixed names, unconditional requirements and reviewed reference
+constraints are executable; native mechanisms implement contextual relationships.
 
-The complete dictionary inventory, R=6 encryption, native namespace role maps
-and structure graphs, DSS/validation information/timestamps, document-parts trees,
-encrypted wrapper semantics, geospatial features and other PDF 2.0 mechanisms
-remain to be implemented. A namespace, DSS or DPartRoot entry schema does not
-implement its associated mechanism. The optional reader remains limited to its
-[documented PDF 1.0–1.7 scope](packages.md); this writer increment does not expand it.
+Complete conditional and semantic conformance, exhaustive EC3 review, external
+rendering/colour processing and automatic accessibility certification are not
+established by this inventory. The [coverage record](coverage.md) distinguishes
+native mechanisms, declarative objects and remaining work. The optional reader
+retains its [documented PDF 1.0–1.7 input scope](packages.md).
 
 ## Source and checks
 
-The [supplied original `ISO_32000-2_sponsored_EC3.pdf`](https://github.com/PDFToolkit/pdf/blob/v0.6.2/ISO_32000-2_sponsored_EC3.pdf) is preserved in the public core repository with its original name and bytes, following redistribution authorization confirmed by the project owner. Its identity, physical pages and fingerprint appear in the
-[pilot metadata](https://github.com/PDFToolkit/pdf/blob/v0.6.2/resources/iso32000-2-2020/metadata.json)
-and [coverage inventory](https://github.com/PDFToolkit/pdf/blob/v0.6.2/resources/iso32000-2-2020/coverage.json).
-The supplied file comes from the **PDF Association**, through its [official sponsored access](https://www.pdfa.org/sponsored-standards/).
+The [original `ISO_32000-2_sponsored_EC3.pdf`](https://github.com/PDFToolkit/pdf/blob/v0.7.0/ISO_32000-2_sponsored_EC3.pdf)
+is preserved in the public core repository with its original filename and bytes,
+following the project owner's confirmed redistribution authorization.
+[Catalogue metadata](https://github.com/PDFToolkit/pdf/blob/v0.7.0/resources/iso32000-2-2020/metadata.json)
+and the [coverage inventory](https://github.com/PDFToolkit/pdf/blob/v0.7.0/resources/iso32000-2-2020/coverage.json)
+record its identity, physical pages and hash. The supplied file comes from the
+**PDF Association**, through its [official sponsored access](https://www.pdfa.org/sponsored-standards/).
+Both supplied main-standard copies and all companion originals remain in the repository.
 
-The [public errata](https://pdf-issues.pdfa.org/32000-2-2020/) provide the
+The [public errata](https://pdf-issues.pdfa.org/32000-2-2020/) include the
 [corrected associated-files rules](https://pdf-issues.pdfa.org/32000-2-2020/clause14.html#14135-associated-files-linked-to-graphics-objects).
-The pilot descriptions are concise project-authored summaries, not copied
-normative paragraphs. The generator verifies reproducible files; unit tests
-exercise invalid domains, edition collisions and correction provenance.
-Independent PDF validation checks emitted objects and attachment bytes.
-See [mechanism coverage](coverage.md) for the other corpora and their limits.
+Existing project-authored summaries have French translations. Additional source
+excerpts retain their original English and are labelled as normative text.
+Generators check reproducibility; tests exercise invalid domains, edition
+collisions and correction provenance. Independent implementations inspect actual
+PDF bytes, cryptography, metadata and structure. See [coverage](coverage.md) and
+the [bundle guide](pdf-2-0-bundle.md) for the verified domains and their limits.

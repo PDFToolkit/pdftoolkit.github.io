@@ -4,7 +4,7 @@ Cette architecture décrit le core et les modules optionnels aux versions publi�
 sélectionnées dans le [manifeste de sources](../resources/sources.json).
 Le [guide des composants](components.md) présente leurs objets concrets ; la
 [couverture](coverage.md) distingue constructions natives, règles vérifiées et
-travail restant dans les deux références conservées.
+travail restant dans les références Adobe/ISO conservées et leur bundle complémentaire.
 
 ## Domaine PDF
 
@@ -25,6 +25,13 @@ Les noms, valeurs, références et structures sont partagés par composition. Le
 `PDF\Specification` sépare une définition de norme et un objet PDF. `SourceReference`, `Requirement`, `ObjectTypeConstraint`, `EntryDefinition` et `TableDefinition` sont des valeurs immuables. Les définitions générées sont construites par des instances, sans lecture JSON à l'exécution ni registre global.
 
 Les dictionnaires et entrées générés portent les termes du tableau d'origine. Le numéro de tableau stabilise les noms de classes lorsque plusieurs tableaux portent un titre similaire. Les noms de classes PHP sont uniques sans tenir compte de la casse ; les noms PDF restent sensibles à la casse. Cette différence est vérifiée dans les tests.
+
+ISO 32000-1, les extensions Adobe et ISO 32000-2 possèdent des namespaces de
+catalogue et des éditions de source distincts. `NameAlternatives` représente un
+ensemble de noms permis explicitement vérifié ; une phrase citant plusieurs noms
+ne se réduit pas au premier nom apparemment fixe. Les entrées à clé variable
+conservent leur motif source et reçoivent une clé `NameType` explicite. Chaque
+correction conserve son autorité et sa page.
 
 Une table d'« additional entries » peut composer les définitions communes de son type. Les entrées inconnues restent accessibles par un objet `Entry` explicite afin de permettre les extensions du format. Ce mécanisme n'autorise pas à contourner les contraintes d'une entrée connue.
 
@@ -79,6 +86,13 @@ sa réservation. Le chiffrement des chaînes et flux passe par un `FileEncryptio
 et ses backends explicitement choisis. Les offsets sont ceux des octets écrits,
 avec les filtres, réservations et paramètres de sécurité applicables.
 
+`PendingSignature` et `PendingDocumentTimestamp` partagent le mécanisme de
+réservation via `PendingSignatureDictionary`, avec des types de dictionnaires
+et contrats de fournisseurs distincts. `PdfMacTokenComposer` se lie à la clé
+de chiffrement réelle et à la révision sérialisée. Il ne remplace ni le fournisseur
+de signature ni sa politique de confiance. Les snapshots immuables conservent
+les octets et les identités des révisions historiques.
+
 ## Validation
 
 Les constructeurs refusent les états localement invalides. Les validations de graphe interviennent au moment de la sérialisation, lorsque les parents et ressources peuvent être établis. Les contraintes conditionnelles de la norme ne sont pas présentées comme automatiquement couvertes tant qu'une validation et un test dédiés ne les prennent pas en charge.
@@ -99,7 +113,7 @@ et les contraintes ouvertes.
 
 Les tests PHPUnit vérifient des comportements et des contre-exemples ; des lecteurs indépendants contrôlent aussi les fichiers produits. L'analyse PHPStan au niveau 8 et le format PSR-12 font partie de `composer check`.
 
-Le modèle requiert PHP 8.3 ou supérieur, avec des constantes typées, des classes `readonly` et des enums. La CI exécute les vérifications sous PHP 8.3, 8.4 et 8.5. Sous PHP 8.5, l'attribut natif `NoDiscard` signale les résultats ignorés des méthodes immuables qui le déclarent ; ces méthodes construisent les mêmes objets sous les trois versions.
+Le modèle requiert PHP 8.3 ou supérieur en 64 bits, avec des constantes typées, des classes `readonly` et des enums. La CI exécute les vérifications sous PHP 8.3, 8.4 et 8.5. Sous PHP 8.5, l'attribut natif `NoDiscard` signale les résultats ignorés des méthodes immuables qui le déclarent ; ces méthodes construisent les mêmes objets sous les trois versions.
 
 ## Extension
 

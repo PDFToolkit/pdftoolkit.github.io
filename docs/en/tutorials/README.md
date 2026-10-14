@@ -102,7 +102,11 @@ PDF, all three pages and the objects read.
 | [25. Object generations](25-object-lifecycle.md) | Deletion, free list and reuse. | [object-lifecycle.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/object-lifecycle.php) |
 | [26. Signature policy](26-signature-field-policy.md) | Field, seeds, lock and an actually signed result. | [signature-field-policy.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/signature-field-policy.php) |
 | [27. PDF 2.0 and associated files](27-pdf20-associated-files.md) | Unicode metadata, AF relationships and corrected named MCAF resources. | [pdf20-associated-files.php](https://github.com/PDFToolkit/pdf/blob/v0.6.2/examples/pdf20-associated-files.php) |
+| [28. Metadata, declarations and document parts](28-pdf20-metadata-declarations.md) | XMP scope, AF, black point compensation and DPart relationships. | [pdf20-metadata-declarations.php](https://github.com/PDFToolkit/pdf/blob/v0.7.0/examples/pdf20-metadata-declarations.php) |
+| [29. An encrypted-payload wrapper](29-pdf20-encrypted-payload.md) | A readable outer document, hidden collection and independently encrypted inner PDF. | [pdf20-encrypted-payload.php](https://github.com/PDFToolkit/pdf/blob/v0.7.0/examples/pdf20-encrypted-payload.php) |
 | [30. Namespaces and WTPDF checks](30-pdf20-tagged-namespaces.md) | Qualified roles, PDF 1.7/2.0 types, reciprocal ParentTree and mechanical-audit boundaries. | [pdf20-tagged-namespaces.php](https://github.com/PDFToolkit/pdf/blob/v0.7.0/examples/pdf20-tagged-namespaces.php) |
+| [31. Modern signatures and integrity](31-pdf20-modern-signature.md) | Named curves, SHA-3, exact byte ranges and PDF MAC. | [pdf20-modern-signature.php](https://github.com/PDFToolkit/pdf/blob/v0.7.0/examples/pdf20-modern-signature.php) |
+| [32. Document timestamps and DSS](32-pdf20-timestamp-dss.md) | RFC3161, explicit validation policy, VRI and preserved historical signatures. | [pdf20-timestamp-dss.php](https://github.com/PDFToolkit/pdf/blob/v0.7.0/examples/pdf20-timestamp-dss.php) |
 
 After the first document, lessons 03 to 07 can be read in any order matching
 your interests. Lessons 08 and 11 concern file organization; lessons 09 and 10

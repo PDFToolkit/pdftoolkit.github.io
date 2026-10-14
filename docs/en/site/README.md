@@ -61,13 +61,26 @@ It publishes input-PDF bytes, its three previews and reading console output.
 Their provenance uses the reader commit pinned in the manifest; the core
 retains its generation examples.
 
-The ISO 32000-2:2020 EC3 pilot is read from `resources/iso32000-2-2020/`.
+The ISO 32000-2:2020 EC3 catalogue is read from `resources/iso32000-2-2020/`.
 Its API panels use explicit edition mappings rather than bare table numbers.
 `repositorySpecificationSources` records the original filename, hash, size, pages and links to the PDF and its metadata at the documented core commit. The original is public in that repository following confirmed redistribution authorization; its 19 MB are not duplicated in site output. The build verifies original bytes before publishing that link. Lesson 27 uses a real generated PDF and the selected font module.
 
+`bundleSpecificationSources` separately records all eleven companion originals
+from `resources/iso32000-2-bundle/sources.json`. Their names, byte identities,
+physical pages and PDF Association provenance are checked before publishing
+pinned repository links. The source PDFs remain outside site assets and Composer
+archives. API panels distinguish translated project-authored summaries from
+original normative English excerpts. Complete base-table inventory and complete
+conformance are separate manifest fields.
+
+The build checks the ISO2 catalogue compiler, PHP generator and TS 32005 matrix,
+then runs the metadata, AES-GCM/CMS/MAC, timestamp/DSS and tagged-content oracles.
+The timestamp example receives the explicitly selected `--openssl` executable.
+All examples have paired English/French explanations and actual rendered PDFs.
+
 ## Local build
 
-The workflow uses PHP 8.3 or later, Composer, Python 3.13, Poppler
+The workflow uses 64-bit PHP 8.3 or later, Composer, Python 3.13, OpenSSL, Poppler
 (`pdftoppm`) and qpdf 12.4.2. Python dependencies are locked with their
 hashes. The published site is static.
 
@@ -117,7 +130,7 @@ checks their PDFs with qpdf and independent readers, renders every page,
 builds the site and checks its links. `--docs-revision` expects the complete
 40-character SHA of the documentation commit; it does not replace package
 revisions in the manifest. Tool paths can be specified with `--php`,
-`--qpdf` and `--pdftoppm`.
+`--qpdf`, `--openssl` and `--pdftoppm`.
 
 To rebuild only the rendering from already-validated inputs:
 

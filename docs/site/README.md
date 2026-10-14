@@ -62,13 +62,27 @@ les octets du PDF d'entrée, ses trois aperçus et la sortie console de lecture.
 Leur provenance utilise le commit du lecteur fixé dans le manifeste ; le core
 conserve ses exemples de génération.
 
-Le pilote ISO 32000-2:2020 EC3 est lu dans `resources/iso32000-2-2020/`.
+Le catalogue ISO 32000-2:2020 EC3 est lu dans `resources/iso32000-2-2020/`.
 Ses fiches API utilisent une édition explicite au lieu du seul numéro de tableau.
 `repositorySpecificationSources` conserve l’identité du fichier original, son empreinte, sa taille, ses pages et les liens vers le PDF et ses métadonnées au commit documenté du core. L’original est public dans ce dépôt après autorisation de redistribution confirmée ; les 19 Mo ne sont pas dupliqués dans la sortie du site. La construction vérifie les octets d’origine avant de publier ce lien. La leçon 27 utilise un PDF réellement généré et le module de fontes sélectionné.
 
+`bundleSpecificationSources` consigne séparément les onze originaux complémentaires
+à partir de `resources/iso32000-2-bundle/sources.json`. Leurs noms, identités d’octets,
+pages physiques et provenance PDF Association sont vérifiés avant publication de
+liens vers le commit du dépôt. Les PDF sources restent hors des ressources du site
+et des archives Composer. Les fiches API distinguent résumés du projet traduits
+et extraits normatifs originaux en anglais. Inventaire complet des tableaux de
+base et conformité complète sont deux champs distincts du manifeste.
+
+La construction vérifie le compilateur du catalogue ISO2, le générateur PHP et
+la matrice TS 32005, puis exécute les oracles de métadonnées, AES-GCM/CMS/MAC,
+horodatages/DSS et contenu balisé. L’exemple d’horodatage reçoit l’exécutable
+choisi explicitement par `--openssl`. Tous les exemples possèdent des explications
+anglaises/françaises et de véritables rendus PDF.
+
 ## Construction locale
 
-PHP 8.3 ou supérieur, Composer, Python 3.13, Poppler (`pdftoppm`) et qpdf 12.4.2
+PHP 8.3 ou supérieur en 64 bits, Composer, Python 3.13, OpenSSL, Poppler (`pdftoppm`) et qpdf 12.4.2
 sont utilisés par le workflow. Les dépendances Python sont verrouillées avec
 leurs empreintes. Le site publié est statique.
 
@@ -118,7 +132,7 @@ vérifie leurs PDF avec qpdf et les lecteurs indépendants, rend chaque page,
 construit le site et contrôle ses liens. `--docs-revision` attend le SHA complet
 de 40 caractères du commit de documentation ; il ne remplace pas les révisions
 de packages du manifeste. Les chemins des outils peuvent être précisés avec
-`--php`, `--qpdf` et `--pdftoppm`.
+`--php`, `--qpdf`, `--openssl` et `--pdftoppm`.
 
 Pour reconstruire seulement le rendu depuis des entrées déjà validées :
 
