@@ -4,6 +4,26 @@
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-10-14
+
+- Document core 0.7.0 and optional PDF modules 0.1.8 from their published tags;
+  preserve independent OpenType 0.1.0 and separate documentation provenance.
+- Publish paired English/French guides for the eleven-source PDF 2.0 bundle,
+  its objects, algorithms, validation evidence and explicit conformance limits.
+- Expand edition-specific API panels and search to the full base dictionary
+  inventory, including variable keys and original normative English excerpts.
+  Keep translated project-authored summaries and source approval states distinct.
+- Add executable tutorials with actual PDF previews for XMP/declarations,
+  encrypted payloads, qualified namespaces, modern signatures and timestamps/DSS.
+- Extend the bilingual path to 34 tutorials with geospatial measurements and
+  structure destinations; explain PDF2 standard-font metrics explicitly.
+- Link the clause-by-clause WTPDF requirement review and check its source identity,
+  declared execution boundaries and evidence paths during every documentation build.
+- Run independent metadata, AES-GCM/CMS/MAC, historical-timestamp and tagging
+  oracles in the site build; validate every linked original's byte identity.
+- Update installation, runtime requirements, architecture, security review,
+  package boundaries, READMEs and navigation while preserving existing URLs.
+
 ## [0.4.0] - 2026-10-14
 
 - Add independent OpenType 0.1.0 alongside the PDF core and optional converters:

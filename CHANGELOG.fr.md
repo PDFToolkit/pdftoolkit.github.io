@@ -4,6 +4,26 @@
 
 ## [Non publié]
 
+## [0.5.0] - 2026-10-14
+
+- Documenter le core 0.7.0 et les modules PDF 0.1.8 à partir de leurs tags publiés ;
+  conserver OpenType 0.1.0 indépendant et la provenance propre à la documentation.
+- Publier les guides anglais/français du bundle PDF 2.0 à onze sources, de ses
+  objets, algorithmes, preuves de validation et limites explicites de conformité.
+- Étendre les fiches API et la recherche à l’inventaire des dictionnaires de base,
+  avec clés variables et extraits normatifs originaux en anglais. Distinguer
+  les résumés du projet traduits et les états d’approbation des corrections.
+- Ajouter des tutoriels exécutables avec aperçus PDF réels pour XMP/déclarations,
+  enveloppes chiffrées, espaces de noms, signatures modernes et horodatages/DSS.
+- Étendre le parcours bilingue à 34 tutoriels avec mesures géospatiales et
+  destinations de structure ; expliquer les métriques explicites des polices PDF2.
+- Relier la revue WTPDF par clause et vérifier identité de source, frontières
+  d’exécution déclarées et chemins de preuve à chaque construction documentaire.
+- Exécuter les oracles indépendants de métadonnées, AES-GCM/CMS/MAC, horodatages
+  historiques et structure ; vérifier l’identité des octets des originaux liés.
+- Actualiser installation, prérequis, architecture, revue de sécurité, frontières
+  des packages, README et navigation tout en préservant les URL existantes.
+
 ## [0.4.0] - 2026-10-14
 
 - Ajouter OpenType 0.1.0 indépendant à côté du core et des convertisseurs PDF :
