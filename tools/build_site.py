@@ -165,6 +165,7 @@ class Site:
         self.pdf_pages = {}
         self.base = '/' + base.strip('/') + '/' if base.strip('/') else '/'
         self.docs_revision = docs_revision
+        self.stylesheet_revision = hashlib.sha256((content_root / 'docs/site/assets/site.css').read_bytes()).hexdigest()[:12]
         self.packages = load_sources(sources)
         self.revision = self.packages[CORE_PACKAGE]['revision']
         self.release = self.packages[CORE_PACKAGE]['version']
@@ -340,7 +341,7 @@ class Site:
 <link rel="canonical" href="{e(SITE_ORIGIN + self.url(route))}">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; frame-src 'self'; object-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'">
 <link rel="icon" href="{e(self.url('assets/favicon.svg'))}" type="image/svg+xml">
-<link rel="stylesheet" href="{e(self.url('assets/site.css'))}"><script defer src="{e(self.url('assets/site.js'))}"></script></head>
+<link rel="stylesheet" href="{e(self.url('assets/site.css') + '?v=' + self.stylesheet_revision)}"><script defer src="{e(self.url('assets/site.js'))}"></script></head>
 <body><a class="skip-link" href="#main">Aller au contenu</a>
 <header class="site-header"><a class="brand" href="{e(self.url('index.html'))}"><span class="brand-mark" aria-hidden="true">◈</span> PDFToolkit <small>objet par objet</small></a>
 <nav class="top-nav" aria-label="Navigation principale"><a href="{e(self.url('guides/modules.html'))}">Packages</a><a href="{e(self.url('tutorials/index.html'))}">Tutoriels</a><a href="{e(self.url('reference/index.html'))}">Référence</a><a href="{DOCUMENTATION_REPOSITORY}">GitHub ↗</a></nav>

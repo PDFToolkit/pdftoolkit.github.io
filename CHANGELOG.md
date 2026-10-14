@@ -7,6 +7,8 @@
 - Keep the component search input at its normal control height on desktop and
   mobile. Remove a flex basis that incorrectly applied 230 pixels to its height
   inside a column label; retain the responsive width and minimum 44-pixel height.
+- Fingerprint stylesheet URLs from their content so browsers load updated styles
+  after a documentation deployment instead of retaining a cached previous version.
 
 ## [0.1.1] - 2026-10-14
 
