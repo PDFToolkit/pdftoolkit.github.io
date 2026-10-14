@@ -119,6 +119,13 @@ def check(root):
         slug = name.removeprefix('pdftoolkit/pdf-') if optional else 'core'
         if f'reference/packages/{slug}.html' not in documents:
             errors.append('Missing package API index: ' + name)
+        package_url = 'https://packagist.org/packages/' + name
+        for route in ('index.html', 'reference/index.html', f'reference/packages/{slug}.html', f'modules/{slug}/index.html', 'guides/demarrer.html', 'guides/modules.html'):
+            if route not in documents or package_url not in documents[route].links:
+                errors.append(f'{route}: missing published Packagist package link for {name}')
+    for route in ('guides/demarrer.html', 'guides/modules.html'):
+        if route in documents and re.search(r'composer\s+config\s+repositories\.', (root / route).read_text(encoding='utf-8')):
+            errors.append('Application installation must use the published Packagist packages: ' + route)
     documentation_sources = manifest.get('documentationSources', [])
     guides = {record['page']: record for record in documentation_sources}
     expected_guides = {page for page in documents if page.startswith(('guides/', 'tutorials/', 'recipes/', 'modules/')) and page != 'modules/core/index.html'}

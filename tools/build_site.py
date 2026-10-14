@@ -539,12 +539,15 @@ class Site:
         slug = 'core' if name == CORE_PACKAGE else MODULES[name][0]
         return f'reference/packages/{slug}.html'
 
+    def packagist_link(self, name: str) -> str:
+        return f'<a href="https://packagist.org/packages/{quote(name, safe="/")}">Installer avec Composer · Packagist ↗</a>'
+
     def package_cards(self) -> str:
         cards = ''
         for name, package in self.packages.items():
             guide = 'modules/core/index.html' if name == CORE_PACKAGE else f'modules/{MODULES[name][0]}/index.html'
             count = sum(item['package'] == name for item in self.components)
-            cards += f'<div class="card"><div class="card-body"><span class="eyebrow">{"Module optionnel" if package["optional"] else "Core"} · {e(package["version"])}</span><h3><code>{e(name)}</code></h3><p>{number(count)} composants</p><p><a href="{e(self.url(guide))}">Guide du package →</a></p><p><a href="{e(self.url(self.package_route(name)))}">Référence API →</a></p></div></div>'
+            cards += f'<div class="card"><div class="card-body"><span class="eyebrow">{"Module optionnel" if package["optional"] else "Core"} · {e(package["version"])}</span><h3><code>{e(name)}</code></h3><p>{number(count)} composants</p><p><a href="{e(self.url(guide))}">Guide du package →</a></p><p><a href="{e(self.url(self.package_route(name)))}">Référence API →</a></p><p>{self.packagist_link(name)}</p></div></div>'
         return '<div class="cards">' + cards + '</div>'
 
     def module_navigation(self, name: str) -> str:
@@ -555,6 +558,8 @@ class Site:
     def core_hub(self) -> None:
         package = self.packages[CORE_PACKAGE]
         body = f'<p><span class="badge">Core · <code>{CORE_PACKAGE}</code> {e(package["version"])}</span></p><p>Le core représente les objets et mécanismes de PDF 1.7 et les compose en fichiers PDF. Il fournit la syntaxe, les dictionnaires, les flux, les pages, les images et les polices PDF, ainsi que l’écriture et les révisions. Les lecteurs de PDF externes, PNG/JPEG et TrueType sont des modules optionnels.</p>'
+        install_command = f'composer require "{CORE_PACKAGE}:^{package["version"]}"'
+        body += f'<h2>Installer le core</h2><p>{self.packagist_link(CORE_PACKAGE)}</p><pre><code class="language-sh">{e(install_command)}</code></pre><p>Composer installe uniquement le core et vérifie ses extensions PHP requises. Les modules optionnels sont choisis par l’application.</p>'
         body += '<h2>Commencer et construire</h2><ul>'
         for route, title in [('guides/demarrer.html', 'Installation et premier document'), ('tutorials/index.html', 'Tutoriels avec code et PDF'), ('guides/composants.html', 'Responsabilités des composants'), ('guides/architecture.html', 'Architecture'), ('recipes/index.html', 'Recettes')]:
             body += f'<li><a href="{e(self.url(route))}">{e(title)}</a></li>'
@@ -783,6 +788,7 @@ class Site:
         for name, package in self.packages.items():
             items = [item for item in self.components if item['package'] == name]
             package_body = f'<p><code>{e(name)}</code> · version <a href="{e(package["repository"] + "/releases/tag/v" + package["version"])}">{e(package["version"])}</a> · <a href="{e(package["repository"] + "/commit/" + package["revision"])}">source {e(package["revision"][:7])}</a></p>'
+            package_body += f'<p>{self.packagist_link(name)}</p>'
             guide = 'modules/core/index.html' if name == CORE_PACKAGE else f'modules/{MODULES[name][0]}/index.html'
             package_body += f'<p><a href="{e(self.url(guide))}">Lire le guide du package →</a></p>' + self.component_cards(items)
             self.page(self.package_route(name), 'API de ' + name, 'Référence par package', package_body)
@@ -885,6 +891,8 @@ class Site:
             self.documentation_sources.append({'page': route, 'package': owner, 'source': source, 'repository': package['repository'], 'revision': package['revision'], 'sourceUrl': source_url, 'sourceSha256': hashlib.sha256((root / source).read_bytes()).hexdigest()})
             if owner in MODULES:
                 body = f'<p><span class="badge">Module optionnel · {e(owner)} {e(package["version"])}</span></p>' + self.module_navigation(owner) + body
+                if route == f'modules/{MODULES[owner][0]}/index.html':
+                    body = f'<p>{self.packagist_link(owner)}</p>' + body
             if route == 'tutorials/index.html':
                 body = self.tutorial_cards() + body
             example = next((name for name, target in self.examples.items() if target == route), None)
