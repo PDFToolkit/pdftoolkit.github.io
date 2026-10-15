@@ -1,21 +1,21 @@
 # 28. Métadonnées XMP, déclarations et parties de document
 
-Le [script complet](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/pdf20-metadata-declarations.php)
+Le [script complet](https://github.com/PDFToolkit/pdf/blob/v0.11.0/examples/pdf20-metadata-declarations.php)
 produit un PDF 2.0 avec un titre bilingue, une déclaration de l'auteur, un rapport
-incorporé et des métadonnées distinctes pour le document, une partie documentaire
+incorporé et des métadonnées distinctes pour le document, la hiérarchie des parties documentaires
 et une séquence de dessin. Le rectangle coloré utilise la compensation du point
 noir. Ces informations sont écrites dans les objets PDF correspondants ; elles
 ne se limitent pas aux phrases visibles sur la page.
 
 ## Exécuter l'exemple
 
-Depuis un checkout du core **0.7.1**, avec ses dépendances installées :
+Depuis un checkout du core **0.11.0**, avec ses dépendances installées :
 
 ```bash
 php examples/pdf20-metadata-declarations.php metadata.pdf
 ```
 
-L’exemple fournit Courier avec des [métriques explicites](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/fixtures/pdf20-courier-font.php) : FirstChar/LastChar, largeurs ASCII et FontDescriptor. PDF 2.0 ne permet plus d’omettre ces entrées pour les quatorze polices standard. Cette construction n’incorpore pas de programme de fonte ; un profil exigeant l’incorporation demande une fonte explicitement incorporée.
+L’exemple fournit Courier avec des [métriques explicites](https://github.com/PDFToolkit/pdf/blob/v0.11.0/examples/fixtures/pdf20-courier-font.php) : FirstChar/LastChar, largeurs ASCII et FontDescriptor. PDF 2.0 ne permet plus d’omettre ces entrées pour les quatorze polices standard. Cette construction n’incorpore pas de programme de fonte ; un profil exigeant l’incorporation demande une fonte explicitement incorporée.
 
 
 PHP 8.3 ou supérieur suffit. Ce script utilise les objets natifs du core ; aucun
@@ -80,8 +80,8 @@ et les noms de fichiers ne déclenchent aucun chargement externe.
 ## Donner à chaque métadonnée son propriétaire
 
 La déclaration du catalogue porte sur le document ; elle ne s'étend pas à ses
-fichiers incorporés ou référencés. Le flux XMP d'une partie documentaire décrit
-cette partie, tandis qu'un autre flux décrit uniquement la séquence du rectangle.
+fichiers incorporés ou référencés. Le flux XMP du DPartRoot décrit
+la hiérarchie, tandis qu'un autre flux décrit uniquement la séquence du rectangle.
 Les trois flux gardent des identités et des vocabulaires distincts.
 
 La séquence de dessin utilise une `MetadataPropertyList` sous
@@ -101,16 +101,34 @@ Le choix appartient à l'application qui connaît la ressource décrite.
 ## Séparer DPM, parties de document et état graphique
 
 `DocumentPart` porte ici un dictionnaire `DocumentPartMetadata` avec `Job
-(Proof 42)` et un flux XMP sous `Metadata`. **DPM et XMP sont deux mécanismes
-distincts.** DPM contient des données applicatives typées ; ses clés et les noms
-de niveaux suivent la syntaxe XML Name. Ses valeurs sont des chaînes textuelles
-ou dates, tableaux, dictionnaires, booléens et nombres.
+(Proof 42)` et le nom UTF-8 décodé `State /Révisé`. **DPM et XMP sont deux mécanismes
+distincts.** DPM contient des données applicatives typées ; ses clés de dictionnaire
+et noms de niveaux suivent XML Name. Les valeurs comprennent chaînes textuelles/dates,
+noms UTF-8, tableaux, dictionnaires, booléens et nombres. Nulls et flux sont refusés.
 
-`DocumentPartRoot` relie le catalogue au nœud. La page référence sa partie via
-`DocumentPartEntry`, puis `setPageRange()` définit les bornes de cette même page.
-Le constructeur d'arbre gère les parents ; la validation du graphe contrôle les
-liens réciproques, l'ordre des pages, l'absence de chevauchement, la couverture
-des pages et les niveaux déclarés. DPM n'est pas hérité implicitement d'un parent.
+La correction EC3 interdit `Metadata` sur un DPart. Passer le `MetadataEntry` XMP
+à `DocumentPartRoot`, avec le nœud racine, le niveau d'enregistrement facultatif
+et les noms de niveaux. L'argument variadique du constructeur se nomme `entries`.
+
+```php
+$part = new DocumentPart(new DocumentPartMetadata(
+    new Entry(new NameType('Job'), new TextString('Proof 42')),
+    new Entry(new NameType('State'), new NameType('Révisé')),
+));
+$partRoot = new DocumentPartRoot(
+    $part, new IntegerType(0), new NameType('Proof'),
+    new MetadataEntry($hierarchyMetadata),
+);
+```
+
+Pour une hiérarchie, appeler `addChildren($first, ...$others)` sur un parent
+explicite. Chaque tableau `/DParts` est plat et ordonné ; les parents représentent
+les niveaux, sans tableaux imbriqués. L'ancienne méthode `addGroup()` est supprimée.
+La page référence sa feuille par `DocumentPartEntry` ; `setPageRange()` définit
+ensuite sa plage. La validation contrôle parents/pages réciproques, appartenance
+unique, ordre, plages non superposées, couverture et niveaux déclarés. Les lots
+refusés restent détachés. DPM ne s'hérite pas implicitement. Le
+[guide de migration](../migration-0.11.md) explique arguments nommés et graphes existants.
 
 Enfin, `UseBlackPointCompensation(BlackPointCompensation::On)` écrit
 `UseBlackPtComp /ON` dans une ressource `GraphicsStateParameters`, sélectionnée
@@ -133,11 +151,11 @@ application qui construit manuellement un flux XML brut reste responsable de
 son contenu ; le graphe contrôle ses références et son type PDF. Cette leçon
 ne constitue pas une validation générale de toutes les règles ISO 32000-2.
 
-Sources conservées : [PDF Declarations, pages 7–10](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/PDF-Declarations.pdf#page=7),
-[compensation du point noir, page 4](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/PDF20_AN001-BPC.pdf#page=4),
-[fichiers associés, pages 7 et 12–13](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/PDF20_AN002-AF.pdf#page=7)
-et [emplacements des métadonnées, pages 4–10](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/PDF20_AN003-ObjectMetadataLocations.pdf#page=4).
-Les parties de document sont définies dans [ISO 32000-2, pages physiques 850–853](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf#page=850).
+Sources conservées : [PDF Declarations, pages 7–10](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/reference-documents/PDF-Declarations.pdf#page=7),
+[compensation du point noir, page 4](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/reference-documents/PDF20_AN001-BPC.pdf#page=4),
+[fichiers associés, pages 7 et 12–13](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/reference-documents/PDF20_AN002-AF.pdf#page=7)
+et [emplacements des métadonnées, pages 4–10](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/reference-documents/PDF20_AN003-ObjectMetadataLocations.pdf#page=4).
+Les parties de document sont définies dans [ISO 32000-2, pages physiques 850–853](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf#page=850).
 La provenance du bundle est l'[accès sponsorisé de la PDF Association](https://pdfa.org/sponsored-standards/).
 
 [Parcours des tutoriels](README.md) · [Guide PDF 2.0](../pdf-2-0.md)

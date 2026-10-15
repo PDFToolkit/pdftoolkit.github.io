@@ -1,21 +1,21 @@
 # 28. XMP metadata, declarations and document parts
 
-The [complete script](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/pdf20-metadata-declarations.php)
+The [complete script](https://github.com/PDFToolkit/pdf/blob/v0.11.0/examples/pdf20-metadata-declarations.php)
 produces a PDF 2.0 file with a bilingual title, an author's declaration, an
-embedded report and separate metadata for the document, one document part and
+embedded report and separate metadata for the document, the document-part hierarchy and
 one drawing sequence. The coloured rectangle uses black point compensation.
 These values are written into the corresponding PDF objects; they are more
 than explanatory text on the page.
 
 ## Run the example
 
-From a core **0.7.1** checkout with its dependencies installed:
+From a core **0.11.0** checkout with its dependencies installed:
 
 ```bash
 php examples/pdf20-metadata-declarations.php metadata.pdf
 ```
 
-The example supplies Courier through [explicit metrics](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/fixtures/pdf20-courier-font.php): FirstChar/LastChar, ASCII widths and a FontDescriptor. PDF 2.0 no longer permits omitting these entries for the fourteen standard fonts. This construction does not embed a font program; profiles requiring embedding need an explicitly embedded font.
+The example supplies Courier through [explicit metrics](https://github.com/PDFToolkit/pdf/blob/v0.11.0/examples/fixtures/pdf20-courier-font.php): FirstChar/LastChar, ASCII widths and a FontDescriptor. PDF 2.0 no longer permits omitting these entries for the fourteen standard fonts. This construction does not embed a font program; profiles requiring embedding need an explicitly embedded font.
 
 
 PHP 8.3 or later is sufficient. This script uses native core objects and needs
@@ -80,7 +80,7 @@ external loading.
 ## Give each metadata stream its owner
 
 The catalog declaration applies to the document; it does not extend to embedded
-or referenced files. The document part's XMP stream describes that part, while
+or referenced files. The DPartRoot XMP stream describes the hierarchy, while
 another stream describes only the rectangle's drawing sequence. The three
 streams retain distinct identities and vocabularies.
 
@@ -100,16 +100,34 @@ location because it knows which information resource the metadata describes.
 ## Separate DPM, document parts and graphics state
 
 The `DocumentPart` contains a `DocumentPartMetadata` dictionary with `Job
-(Proof 42)` and an XMP stream under `Metadata`. **DPM and XMP are separate
-mechanisms.** DPM holds typed application data; its keys and level names follow
-XML Name syntax. Its values are text/date strings, arrays, dictionaries,
-booleans and numbers.
+(Proof 42)` and the decoded UTF-8 name `State /Révisé`. **DPM and XMP are separate
+mechanisms.** DPM holds typed application data; dictionary keys and level names
+follow XML Name syntax. Values may include text/date strings, UTF-8 names, arrays,
+dictionaries, booleans and numbers. Nulls and streams are refused.
 
-`DocumentPartRoot` links the catalog to the node. The page refers to its part
-through `DocumentPartEntry`; `setPageRange()` then sets that same page as the
-range. The hierarchy builder manages parent links. Graph validation checks
-reciprocal references, page order, nonoverlapping ranges, page coverage and
-declared levels. DPM is not implicitly inherited from a parent.
+The EC3 correction forbids `Metadata` on a DPart. Pass the XMP `MetadataEntry`
+to `DocumentPartRoot`, alongside the root node, optional record level and level
+names. The constructor's variadic argument is named `entries`.
+
+```php
+$part = new DocumentPart(new DocumentPartMetadata(
+    new Entry(new NameType('Job'), new TextString('Proof 42')),
+    new Entry(new NameType('State'), new NameType('Révisé')),
+));
+$partRoot = new DocumentPartRoot(
+    $part, new IntegerType(0), new NameType('Proof'),
+    new MetadataEntry($hierarchyMetadata),
+);
+```
+
+For a hierarchy, call `addChildren($first, ...$others)` on an explicit parent.
+Every `/DParts` array is flat and ordered; nesting is represented by parent nodes,
+not nested arrays. The old `addGroup()` method is removed. The page refers to its
+leaf through `DocumentPartEntry`; `setPageRange()` then sets its page range.
+Validation checks reciprocal parents/pages, unique membership, page order,
+nonoverlapping ranges, coverage and declared levels. Rejected batches remain
+unattached. DPM is not implicitly inherited. The [migration guide](../migration-0.11.md)
+explains named arguments and existing graphs.
 
 Finally, `UseBlackPointCompensation(BlackPointCompensation::On)` writes
 `UseBlackPtComp /ON` into a `GraphicsStateParameters` resource selected by `gs`.
@@ -131,11 +149,11 @@ manually constructs a raw XML stream remains responsible for its content; the
 graph validates its references and PDF type. This lesson is not a general
 validator for every ISO 32000-2 rule.
 
-Preserved sources: [PDF Declarations, pages 7–10](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/PDF-Declarations.pdf#page=7),
-[black point compensation, page 4](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/PDF20_AN001-BPC.pdf#page=4),
-[associated files, pages 7 and 12–13](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/PDF20_AN002-AF.pdf#page=7)
-and [metadata locations, pages 4–10](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/PDF20_AN003-ObjectMetadataLocations.pdf#page=4).
-Document parts are defined in [ISO 32000-2, physical pages 850–853](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf#page=850).
+Preserved sources: [PDF Declarations, pages 7–10](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/reference-documents/PDF-Declarations.pdf#page=7),
+[black point compensation, page 4](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/reference-documents/PDF20_AN001-BPC.pdf#page=4),
+[associated files, pages 7 and 12–13](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/reference-documents/PDF20_AN002-AF.pdf#page=7)
+and [metadata locations, pages 4–10](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/reference-documents/PDF20_AN003-ObjectMetadataLocations.pdf#page=4).
+Document parts are defined in [ISO 32000-2, physical pages 850–853](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf#page=850).
 The bundle comes from the [PDF Association's sponsored access](https://pdfa.org/sponsored-standards/).
 
 [Tutorial path](README.md) · [PDF 2.0 guide](../pdf-2-0.md)

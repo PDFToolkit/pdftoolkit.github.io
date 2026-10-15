@@ -1,148 +1,299 @@
 # Révisions natives protégées
 
-Ce guide décrit les opérations natives de révisions protégées du core 0.10.0.
 
-Une signature valide protège les octets signés. Elle ne détermine pas seule si
-les changements suivants sont autorisés. Le writer natif vérifie les signatures
-historiques, classe toute la modification émise et croise les restrictions
-DocMDP, FieldMDP, verrous Adobe et droits d’usage authentifiés applicables.
-Le [tutoriel du formulaire certifié](tutorials/37-protected-form-fill.md) présente
-une opération complète et son résultat visible.
+Le core 0.11.0 étend les opérations protégées de 0.10.0 et le garde incrémental commun
+introduit en 0.8.1. Tous les points d’entrée d’`IncrementalUpdate` et opérations
+directes d’`IncrementalWriter` comparent les révisions figées complètes aux
+restrictions historiques authentifiées DocMDP, FieldMDP, verrous Adobe et droits
+d’usage. Les opérations natives prises en charge sont bornées ; ce mécanisme ne
+classe pas les modifications de PDF signés arbitraires.
 
-## Conserver le véritable historique natif
+Les références primaires conservées sont
+[PDF32000_2008.pdf](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/reference-documents/PDF32000_2008.pdf), pages physiques
+440–444, 478–482 et 485 ;
+[ISO_32000-2_sponsored_EC3.pdf](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf),
+pages physiques 545–549, 560, 588–592, 606 et 607–608 ; et
+[adobe_supplement_iso32000.pdf](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/reference-documents/adobe_supplement_iso32000.pdf),
+page physique 43. [coverage.json](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/signature-revisions/coverage.json) conserve leurs identités et
+SHA-256 exacts. La vérification mathématique précède l’évaluation des permissions.
+L’opération réelle respecte chaque restriction applicable ; les droits d’usage
+ne priment jamais sur DocMDP ou un verrou de champ.
 
-Utiliser la `FileRevision` renvoyée par l’écriture native ou la signature vérifiée
-dans la même exécution. Snapshots fournis au constructeur, clones, sérialisation
-PHP et octets d’un PDF externe ne recréent pas son autorité d’émission.
-`PreparedSignature::finalize()` complète les octets réservés, mais des octets
-opaques seuls ne prouvent aucun historique vérifié. La vérification lie les octets
-finaux, le dictionnaire de signature, l’unique intervalle Contents, ByteRange et
-le certificat effectif.
+## Provenance native et comparaison complète
 
-Chaque point d’entrée d’`IncrementalUpdate` et appel direct à `IncrementalWriter`
-utilise le même garde. Supprimer `Perms`, remplacer `Root`, détacher l’AcroForm ou
-renommer un champ n’efface aucune restriction historique. Le lecteur optionnel
-inspecte des PDF externes ; il ne les convertit pas en historiques authentifiés
-du writer natif.
+Conserver la véritable révision renvoyée par `FileStructure::toRevision()`,
+`FileWriter::revision()`, `LinearizedWriter::revision()` ou la signature native.
+L’autorité d’émission appartient à cette instance exacte de `FileRevision` dans
+l’exécution courante. Snapshots fournis au constructeur, clones et désérialisation
+PHP ne la recréent pas, même à octets identiques. Supprimer `Perms`, remplacer
+`Root`, détacher l’AcroForm ou renommer un champ n’efface aucune restriction.
 
-## Choisir une opération prise en charge
+La finalisation modifie exactement les réservations `Contents` et `ByteRange`.
+L’historique vérifié lie les octets finaux, l’identité de signature, son unique
+intervalle Contents exclu, le format, le conteneur complété et le certificat
+effectif. Un MAC attaché est installé avant la vérification mathématique finale.
+`PreparedSignature::signWithPolicy()` et `finalizeWithPolicy()` vérifient la sortie
+réelle. Le `sign()` de bas niveau fournit un historique vérifié si le backend
+choisi fournit le certificat et un vérificateur de sortie. Le `finalize()` opaque
+complète seulement les octets ; il n’autorise aucune mise à jour protégée ultérieure.
 
-Les opérations du classificateur sont bornées et soumises à toutes les autres
-restrictions historiques. Un niveau de permission n’autorise pas l’édition générale.
+Chaque comparaison conserve les données étrangères à l’opération : catalogue,
+pages, contenus, trailer, champs et objets. Les références partagées sont
+contrôlées par leurs vrais chemins propriétaires ; un alias privé sous un
+propriétaire par ailleurs légitime n’en fait pas partie. Les nouveaux objets
+appartiennent à l’opération prouvée. Charges orphelines, suppressions d’objets et
+réutilisations de numéros libres historiques sont refusées. Les flux d’apparence
+et ressources partagés existants restent immuables ; les apparences de
+remplacement utilisent des identités neuves et des ressources historiques inchangées.
 
-| Opération | Périmètre natif protégé |
-| --- | --- |
-| Remplir un champ `Tx` existant | P2/P3 ; texte simple direct, valeurs par défaut/actions/drapeaux fixes, ReadOnly hérité et verrous conservés, `MaxLen`/comb contrôlés. |
-| Remplir un champ `Ch` existant | P2/P3 ; options fixes, valeur et `I`/`TI` ordonnés cohérents avec la version PDF choisie. |
-| Changer un `Btn` case/radio | P2/P3 ; `V`, `AS` des widgets et apparences Off/actif existantes concordent. Boutons poussoirs et remplacement de leurs programmes exclus. |
-| Remplacer une apparence de texte/choix | Conserver géométrie, liaisons de ressources et chaque octet hors d’une région de texte variable isolée ; voir ci-dessous. |
-| Ajouter/modifier/détacher une annotation | P3 seulement ; sous-types et entrées listés, page propriétaire et ordre des annotations restantes inchangés. |
-| Ajouter une signature native | Champ non signé existant, réservation inchangée ou nouveau champ terminal unique ; la preuve complète de signature reste distincte. |
-| Ajouter des preuves DSS/horodatage documentaire | Preuve de maintenance PDF 2.0 ; verrous Adobe P1 supplémentaires et droits d’usage non desserrés. |
-| Instancier un modèle de page | Non implémenté par ce classificateur natif. |
-| Mélanger remplissage/annotations et signature/maintenance | Refusé ; séparer en révisions individuellement autorisées. |
+## Formulaires et annotations pris en charge
 
-La liste d’annotations admises est `Text`, `FreeText`, `Line`, `Square`, `Circle`,
-`Polygon`, `PolyLine`, `Highlight`, `Underline`, `Squiggly`, `StrikeOut`, `Caret`,
-`Ink` et `Stamp`. ReadOnly, Locked et LockedContents interdisent la modification.
-Widgets, nouvelles actions, nouvelles relations et dépendances étrangères ne
-reçoivent aucune autorité d’annotation. Le détachement conserve l’objet historique.
+- Sous P2/P3, remplir les champs terminaux existants `Tx`, `Ch` et `Btn` hors
+  boutons poussoirs. Valeurs et drapeaux hérités effectifs sont examinés.
+  Identités, noms, arborescence, valeurs par défaut, options, actions et géométrie
+  des widgets restent fixes. ReadOnly et les verrous historiques FieldMDP/Adobe
+  restent actifs, y compris les descendants protégés par un champ non terminal.
+  Les noms qualifiés doivent être sans ambiguïté ; renommage et changement de
+  parent sont refusés.
+- Le texte simple respecte `MaxLen` et les contraintes comb. Valeurs de choix et
+  `I`/`TI` concordent avec les options fixes et la version PDF. Cases à cocher et
+  boutons radio concordent avec `AS` et les apparences Off/actif existantes ; le
+  remplissage ne permet pas de remplacer leurs programmes d’apparence.
+- Les champs FileSelect stockent le chemin fourni comme texte ; aucun fichier
+  n’est ouvert ni téléchargé. Les champs enrichis exigent des valeurs texte
+  `V`/`RV` cohérentes et un `RichTextFilling(new WtPdfXmlRichTextParser())`
+  explicite par mise à jour. L’interpréteur XML borné vérifie l’équivalence des
+  valeurs sans DTD, entités externes ni réseau. Chaque widget concerné exige
+  une nouvelle apparence normale complète ; une apparence périmée est refusée.
+  ISO 2 §12.7.4.3 impose cette régénération complète : la restriction `/Tx` du
+  texte simple ne s’applique pas. Ressources historiques, géométrie et verrous
+  restent fixes. L’appelant fournit les instructions graphiques ; l’accord
+  XML/valeur ne prouve pas leur équivalence visuelle. L’interpréteur n’est jamais
+  activé implicitement.
+- `V`/`RV` texte acceptent aussi les chaînes indirectes et flux texte. Les octets
+  bruts ou Flate simple sont décodés avec une limite de 1 Mio encodé/décodé. Un
+  objet de valeur modifié appartient exclusivement à l’entrée exacte du champ ;
+  aucun partage via défaut, parent hérité, ressource ou alias privé ne donne un
+  droit d’écriture. Le garde détecte un changement de cible même si le dictionnaire
+  du champ reste identique, applique FieldMDP et compte `MaxLen` en Unicode selon
+  la version effective, y compris les valeurs UTF-8 avec BOM en PDF 2.0. Les flux
+  texte ne peuvent introduire fichiers externes, métadonnées ou dépendances étrangères.
+- Le remplacement d’apparence à texte variable non enrichi conserve la géométrie
+  et chaque octet décodé hors de l’unique région `/Tx BMC`…`EMC` correspondant ;
+  sans région existante, il l’ajoute à la fin. Les instructions de dessin/état
+  possèdent leur isolation `q`/`Q`. Chemins, clipping en attente et objets texte
+  ne traversent ni cette région ni les frontières de restauration graphique.
+  Le lexer traite chaînes/noms échappés, commentaires et conteneurs. Les flux
+  bruts et un unique `FlateDecode` sont pris en charge : par défaut 1 Mio encodé
+  et décodé, 100 000 tokens et une imbrication de 64. Tx multiples/imbriqués,
+  images inline, opérateurs inconnus/Type3 et prédicteurs sont refusés. La preuve
+  porte sur les frontières des régions/états, pas toute la conformité des
+  opérandes graphiques, l’équivalence visuelle de la valeur ou l’intention humaine.
+  Les noms de ressources conservent leurs liaisons ; les nouvelles liaisons
+  sélectionnent uniquement des objets historiques inchangés. Les alternatives
+  d’apparence et noms d’états existants sont conservés ; ajouter R/D ou un état
+  sans programme historique comparable est refusé.
+- P3 permet en plus la création, modification et suppression par détachement
+  bornées des annotations `Text`, `FreeText`, `Line`, `Square`, `Circle`,
+  `Polygon`, `PolyLine`, `Highlight`, `Underline`, `Squiggly`, `StrikeOut`,
+  `Caret`, `Ink` et `Stamp`. Page propriétaire et ordre des annotations restantes
+  restent fixes. ReadOnly, Locked et LockedContents interdisent la modification.
+  Widgets, actions, nouvelles relations et dépendances arbitraires restent hors
+  de ce périmètre. Le détachement conserve les octets de l’objet historique.
 
-Identités des champs, noms qualifiés, structure parent/enfant, drapeaux/valeurs
-par défaut hérités et propriétaires des widgets sont comparés aux révisions figées.
-Seuls les changements de valeur et de sélection classifiés sont permis. Une valeur
-terminale ne contourne ni un parent en lecture seule ni un verrou FieldMDP.
-Noms ambigus, renommage, changement de parent, alias supplémentaires et objets
-non classifiés sont refusés. Les nouvelles apparences ont des identités neuves ;
-flux partagés et ressources historiques restent immuables. Un remplissage
-n’autorise jamais à changer le contenu de page.
+`PageTemplateInstantiation($source, new NameType('Invoice'))->update()` ajoute
+une instance exacte d’une page invisible de l’arbre signé `Names/Templates`.
+Son type devient `Page`, son `Parent` désigne la racine existante et
+`TemplateInstantiated` conserve le nom exact. Contenu, ressources et toutes les
+autres propriétés gardent leurs valeurs historiques. Le garde commun prouve
+indépendamment les changements figés réels, conserve l’ordre des pages et
+l’héritage de la racine, vérifie le décompte ajouté et chaque nouvel objet.
+P1 refuse l’opération ; UR exige le droit spécifique `SpawnTemplate` et sa
+permission de sauvegarde. Passer l’autorisation par mise à jour à
+`update($authorization)` lorsque nécessaire. Aucun modèle externe n’est chargé
+et aucun script n’est exécuté. Les instances sont actuellement insérées sous la
+racine et ne contiennent ni annotations ni champs à cloner ; ces opérations de
+propriété/renommage nécessitent des preuves distinctes.
 
-## Conserver la frontière du texte variable
+Le parcours de signature unique reste disponible sous P2/P3 et les historiques
+FieldMDP permissifs : champ non signé existant, réservation inchangée ou nouveau
+champ terminal de signature, avec preuve complète et restreinte des changements.
+PDF 2.0 permet la maintenance DSS ou l’horodatage documentaire prouvés selon les
+politiques historiques applicables. L’exception DocMDP ne desserre ni les verrous
+Adobe P1 supplémentaires ni les droits d’usage. Les remplissages/modifications
+d’annotations mélangés à une signature, un DSS ou un horodatage sont refusés.
 
-Pour une apparence de texte/choix non enrichie, la procédure ISO remplace une
-région `/Tx BMC`…`EMC` correspondant ; sans région, elle l’ajoute à la fin. Le
-classificateur natif conserve chaque octet décodé du préfixe/suffixe et la géométrie.
-Les instructions possèdent leur isolation `q`/`Q`. Le contenu marqué seul ne
-sauvegarde pas l’état graphique ; chemins, clipping en attente et objets texte
-ne traversent ni la région ni les frontières de restauration graphique.
+## Autorité explicite des droits d’usage
 
-L’analyse lexicale bornée reconnaît commentaires, noms/chaînes échappés et
-conteneurs : un faux `EMC` dans une chaîne n’élargit pas la région remplaçable.
-Elle accepte les octets bruts ou un `FlateDecode` sans prédicteurs. Les limites
-par défaut sont 1 Mio encodé et décodé, 100 000 tokens et une imbrication de 64.
-Tx multiples/imbriqués, images inline, opérateurs inconnus et opérateurs de glyphes
-Type3 sont refusés. Les noms de ressources gardent leurs liaisons ; les noms
-ajoutés désignent uniquement des objets historiques inchangés. Alternatives
-d’apparence et noms d’états existants sont conservés ; ajouter R/D ou un état
-sans programme historique comparable est refusé. C’est une preuve
-de régions/états, pas une validation complète du langage graphique ni la preuve
-que les glyphes correspondent à la valeur. Texte enrichi et régénération
-arbitraire des apparences restent hors périmètre.
-
-## Autoriser UR3 explicitement à chaque mise à jour
-
-L’historique UR3 natif non chiffré avec transformation `V=2.2` exige une
-`UsageRightsAuthorization` choisie par l’application. Le callback
-`UsageRightsAuthority::permits()` reçoit la vraie `VerifiedRevisionSignature` ;
+Les historiques UR3 natifs, avec transformation version `2.2`
+(y compris sa valeur par défaut lorsqu’elle est absente),
+exigent une `UsageRightsAuthorization` à chaque mise à jour.
+`UsageRightsAuthority::permits()` reçoit la véritable `VerifiedRevisionSignature` ;
 ses `facts` exposent les algorithmes vérifiés et le certificat signataire lié.
-L’application décide si cette identité peut accorder des droits d’usage.
-Validité mathématique, politique autodéclarée du PDF ou simple présence d’un
-certificat n’établissent ni cette autorité ni la confiance PKI.
+L’application décide si cette identité peut accorder des droits d’usage. La
+validité mathématique seule n’accorde rien ; le callback ne vérifie pas
+implicitement les chemins PKI ou la révocation.
 
-```php
-use PDF\Document\Signatures\UsageRightsAuthorization;
-use PDF\Document\Signatures\Policies\UsageRight;
-use PDF\Syntax\FileStructure\IncrementalUpdate;
+Passer l’autorisation parmi les derniers arguments d’opération d’`IncrementalUpdate`,
+par exemple `new UsageRightsAuthorization($authority, UsageRight::FillField)`.
+La sélection non vide d’opérations appartient à cette seule mise à jour. Chaque
+remplissage, création/modification/suppression d’annotation ou signature respecte
+les droits UR3 signés et cette sélection, plus les règles historiques DocMDP/FieldMDP/Adobe.
 
-$authorization = new UsageRightsAuthorization($authority, UsageRight::FillField);
-$update = new IncrementalUpdate($nativeRevision, $replacementBody, null, null, $authorization);
-$next = $update->toRevision();
-```
+La sauvegarde est vérifiée séparément par opération réelle : un droit d’annotation
+sans rapport ne rend pas un remplissage persistable. En ISO 1.7, `FillIn` non
+restrictif exige `FullSave` signé ; droits restrictifs, modifications d’annotations
+et signature réelle conservent leurs règles de sauvegarde prévues. La sélection
+applicative `FillField` autorise un remplissage persisté si la politique signée
+permet sa sauvegarde : elle n’exige pas en plus `FullSave` côté application
+lorsque ce droit signé fournit seulement la condition de sauvegarde. En PDF 2.0,
+`P=false`/absent permet d’ignorer les restrictions UR, tout en exigeant identité
+vérifiée, sélection applicative explicite et chaque règle historique DocMDP/FieldMDP.
+`P=true` restrictif suit la table 258 : contrairement à ISO 1.7, le remplissage
+exige `FullSave` signé ; modifications d’annotations et signature gardent leurs
+conditions implicites de sauvegarde. La version provient de la source signée,
+jamais d’une élévation ultérieure du catalogue. Une version de transformation
+inconnue reste refusée. Les historiques `UR` anciens, signatures opaques/non vérifiées, refus d’autorité, maintenance non
+classifiée et sauvegarde générale sont refusés. UR est déprécié en PDF 2.0.
 
-`$authority` implémente explicitement `UsageRightsAuthority` dans l’application ;
-`$nativeRevision` et `$replacementBody` sont le véritable historique natif et les
-objets préparés. La sélection non vide d’opérations vaut pour cette seule mise à
-jour. Chaque remplissage, création/modification/suppression d’annotation ou
-signature appartient aux droits signés et à cette sélection, tout en respectant
-les restrictions DocMDP/FieldMDP/Adobe.
+## Limites restantes et preuves
 
-La sauvegarde est évaluée séparément par opération. En ISO 1.7, `FillIn` non
-restrictif exige `FullSave` signé ; un droit d’annotation sans rapport ne peut
-fournir sa sauvegarde. Droits restrictifs, modification d’annotations et signature
-réelle conservent leurs règles prévues. `FillField` applicatif autorise un
-remplissage persisté si la politique signée le permet ; il n’exige pas en plus
-`FullSave` applicatif lorsque le droit signé fournit seulement cette condition.
+L’instanciation de pages nommées visibles, le clonage des annotations/champs
+d’un modèle, la création/suppression/renommage généraux de champs, la régénération
+arbitraire d’apparences, les nouvelles ressources et la lecture/classification
+authentifiée de chaînes externes restent hors de ce périmètre natif. Intégrité
+mathématique, politique de modification, confiance du certificat, révocation et
+revue humaine des apparences sont distinctes. Le core ne dépend pas du lecteur
+PDF externe pour prouver les modifications natives.
 
-PDF 2.0 accepte ici uniquement `P=true` explicite et restrictif. Sa sémantique
-différente de `P=false`/absent n’est pas assimilée à ISO 1.7. `UR` ancien, historique
-UR chiffré, signatures non vérifiées/opaques, refus d’autorité et opérations de
-maintenance/sauvegarde générale non classifiées restent refusés. UR est déprécié
-en PDF 2.0 ; chaîne PKI et révocation restent du ressort de l’application.
+[examples/protected-form-fill.php](https://github.com/PDFToolkit/pdf/blob/v0.11.0/examples/protected-form-fill.php) signe
+DocMDP P2, verrouille `Reference` avec FieldMDP puis remplit `Response` avec une
+nouvelle apparence Tx isolée, en conservant les octets signés. Depuis un checkout
+contenant les fixtures publiques de signature, exécuter
+`php examples/protected-form-fill.php output.pdf` avec le backend OpenSSL disponible.
+Le certificat public de test n’apporte aucune confiance. qpdf et le rendu vérifient
+la sortie. pyHanko classe cet exemple `OTHER` parce que l’AP modifié appartient à
+un widget enfant sans `/T` ; ses contrôles CMS/ByteRange restent séparés, sans
+revendiquer une approbation DocMDP par pyHanko.
 
-## Lire les preuves et leurs limites
+`ProtectedFormFillChangesTest`, `VariableTextAppearanceChangesTest` et
+`ProtectedAnnotationChangesTest` couvrent valeurs figées, héritage, widgets,
+isolation des apparences, propriétaires et changements cachés.
+`AuthenticatedUsageRightsTest` utilise de vraies signatures UR3, une autorité
+explicite et des historiques ultérieurs DocMDP P1/P2 ou FieldMDP ; il vérifie les
+intersections d’opération et de sauvegarde. `IncrementalSignaturePermissionsTest`
+conserve les attaques sur points d’entrée, sorties opaques et historiques fournis.
 
-La matrice de validation indépendante utilise pyHanko 0.37.0 inchangé, qpdf et
-Poppler sous PHP 8.3/8.4/8.5. Par runtime : 97 refus natifs, 148 PDF contrôlés,
-32 combinaisons natives et 32 remplissages indépendants, quatre chaînes
-d’annotations P3 et 198 pixels. UR3 ajoute huit sources signées, trois
-remplissages autorisés et 11 CMS vérifiés indépendamment ; altérer un octet signé
-est détecté. Ces comptes sont des preuves CMS, structure et rendu, pas 148
-approbations de politique ni une décision indépendante d’autorité d’usage.
+`tools/validate_incremental_permissions.py` utilise pyHanko 0.37.0 non modifié,
+qpdf et Poppler. Le candidat passe sous PHP 8.3/8.4/8.5 : 113 refus natifs et 284
+PDF contrôlés indépendamment par runtime ; 32 combinaisons natives de formulaire
+et 32 remplissages indépendants ; quatre chaînes d’annotations P3 ; 198 pixels
+contrôlés (144 boutons, 48 annotations, six attaque d’apparence partagée). UR3
+apporte dix sources signées, cinq remplissages autorisés et 15 fichiers CMS
+vérifiés indépendamment ; altérer un octet signé est détecté. Ces contrôles
+portent sur CMS/structure/rendu, pas 284 approbations de permissions ni une
+décision indépendante d’autorité de droits d’usage.
 
-| Observation indépendante | Interprétation |
-| --- | --- |
-| pyHanko confirme 16 combinaisons `Tx`/`Ch` | Ces changements de valeur concordent avec sa politique de modification inchangée. |
-| Les 32 sorties de boutons remplis et 12 opérations P3 renvoient `OTHER` et `docmdp_ok=false` | Valeurs, états, CMS et pixels sont vérifiés séparément ; la politique de l’oracle n’est pas modifiée. |
-| Deux changements ReadOnly passent pyHanko | Le classificateur natif les refuse ; ReadOnly et FieldMDP sont distincts. |
-| Le tutoriel 37 renvoie `OTHER` | L’AP modifié appartient à un widget enfant sans `/T` ; les preuves CMS/ByteRange et de rendu n’impliquent pas une approbation DocMDP pyHanko. |
-| pyHanko strict refuse de valider les signatures hybrides | Sa matrice utilise Table/Stream ; les tests hybrides natifs restent séparés. |
+La politique pyHanko inchangée confirme les 16 combinaisons `Tx`/`Ch`, mais renvoie
+`docmdp_ok=false`/`OTHER` pour les 32 sorties de boutons remplis (16 natives et 16
+indépendantes) et les 12 opérations d’annotations P3. Valeurs, états, CMS et
+pixels rendus sont vérifiés séparément. Elle accepte deux changements ReadOnly
+refusés par le classificateur natif. Le mode strict ne valide pas les signatures
+hybrides : sa matrice utilise Table/Stream, et les tests hybrides natifs restent
+distincts. Les rapports conservent ces différences, sans politique modifiée,
+récupération réseau ni racine de confiance PKI implicite.
 
-Les sources sont ISO 32000-1:2008, pages physiques 440–444, 478–482 et 485 ;
-ISO 32000-2:2020 EC3, pages physiques 545–549, 560, 588–592, 606 et 607–608 ;
-et le supplément Adobe, page physique 43. Le catalogue conservé du core
-`resources/signature-revisions/coverage.json` contient leurs SHA-256 exacts.
-Modèles de pages, création/suppression générales de champs, nouvelles ressources,
-classification de chaînes externes, validation graphique complète et revue
-humaine de l’apparence/intention restent des limites explicites.
+La matrice de texte étendue ajoute 32 remplissages natifs et 32 indépendants.
+pyHanko accepte les huit combinaisons FileSelect et huit flux texte simples, mais
+classe `OTHER` les 16 combinaisons enrichies sous forme de chaînes/flux dans les deux implémentations. L’oracle examine le vrai
+`RV` du dictionnaire physique : le résumé normalisé des champs pypdf l’omet.
+Ces résultats ne revendiquent pas l’équivalence visuelle du texte enrichi.
 
-[Tutoriel du formulaire certifié](tutorials/37-protected-form-fill.md) · [Sécurité](security.md) · [Révisions incrémentales](tutorials/11-incremental-update.md)
+Migration : une source PDF 2.0 UR3 restrictive accordant seulement `FillIn` ne
+peut plus être sauvegardée par ce garde. Les nouvelles autorisations restrictives
+doivent aussi signer `Document.FullSave`. Modifier la déclaration initiale
+invaliderait sa signature ; ce correctif ne la réécrit pas. Cette distinction
+vient des versions ISO, sans revendiquer une annotation EC3.
+
+Huit combinaisons de modèles couvrent P2/P3, PDF 1.7/2.0 et xref Table/Stream,
+avec deux instances successives chacune. qpdf, pypdf et la vérification CMS
+passent pour 24 PDF ; Poppler contrôle 96 pixels des pages initiales et ajoutées.
+La politique pyHanko non modifiée classe les sorties instanciées `OTHER` ; elle
+n’approuve pas indépendamment leur classification DocMDP. Les tests natifs
+couvrent xref hybride, faux noms/contenus de modèle, objets orphelins, ordre,
+héritage, P1 et sélection d’opération UR.
+
+En PDF 2.0, le `P` DocMDP doit être un objet entier valant 1, 2 ou 3
+(EC3 #152) ; une valeur absente vaut 2. La version effective de la source signée
+inclut la version du catalogue. PDF 1.7 conserve son type numérique mais refuse
+les valeurs fractionnaires. `DocMdpPermissionTypesTest` vérifie le chemin réel
+du transform figé.
+
+## UR3 chiffré et permissions de sécurité authentifiées
+
+Ajouter `PasswordUsageRightsAuthentication($password, $handler)` ou
+`CertificateUsageRightsAuthentication($decrypter, ...$namedCredentials)` aux
+arguments finaux de `UsageRightsAuthorization`, avec les droits sélectionnés.
+L’encodage du mot de passe et le gestionnaire concret sont explicites
+(Standard R2–R7). L’authentification doit retrouver la clé exacte de la source
+signée ; son résultat réel propriétaire/utilisateur détermine l’application du
+mot de permissions de sécurité. Un `AuthenticatedFileKey` construit par
+l’appelant ne constitue pas une autorité acceptée.
+
+L’authentification par certificat déchiffre les enveloppes ordonnées réelles et
+vérifie leur seed, leur clé et leurs permissions. Le `P` historique du dictionnaire
+de chiffrement ne remplace jamais les droits CMS du destinataire. Le choix
+s3/s4/s5 et l’ordre des octets de la source sont conservés ; les bits réservés s3
+ne peuvent pas accorder des droits R3. Le bit public-key 2 d’accès complet reste
+distinct de l’accès propriétaire par mot de passe. Chaque clé de filtre déclarée
+est authentifiée dans ce périmètre de mise à jour native. Fournir
+`CryptFilterUsageRightsCredential(new NameType('AttachmentKey'), $otherDecrypter)`
+pour une autre identité. Les payloads de flux individuels de 20 octets n’ont pas
+de permissions documentaires ; tous les mots de portée documentaire sont
+intersectés. Cette politique d’écriture est volontairement plus stricte que
+l’accès différé aux pièces jointes du Reader : elle exige les credentials de
+toutes les clés déclarées avant l’écriture.
+
+Un mot de passe correct ou un certificat correspondant ne suffit pas si les
+permissions réelles interdisent l’opération classifiée. Remplissage/signature de
+champs existants, création de champs, annotations et instanciation de templates
+suivent leurs bits et distinctions de révision (ISO1 Tables 22/24, pages physiques
+69/73–74 ; intersection des gestionnaires page physique 485).
+L’accès propriétaire/complet n’annule ni UR, ni DocMDP, ni FieldMDP, ni la sélection
+explicite de l’application. Chaque mise à jour fournit de nouveau son
+authentification ; un remplissage antérieur ou une erreur de callback n’accorde
+aucune autorité. Les backends cryptographiques et leurs credentials sont des ports
+choisis par l’appelant ; aucun réseau, découverte d’identité, validation PKI ou
+magasin de confiance n’est implicite.
+
+Créer un nouveau champ terminal de signature exige en plus `Form.Add`, signé et
+sélectionné par l’application, indépendamment de `Signature.Modify`. Le
+gestionnaire de sécurité doit aussi autoriser la création de champs ; le droit
+de remplir des champs existants ne suffit pas. Les champs de signature existants
+et non signés conservent leur chemin distinct.
+
+`EncryptedUsageRightsTest` emploie de vraies sources signées chiffrées : mauvais
+credentials, droits utilisateur refusés, accès propriétaire/complet réel, bits
+réservés s3, intersections de filtres, faits CMS altérés et création de champs.
+`tools/validate_encrypted_usage_rights.py` contrôle 78 sources et 78 sorties
+incrémentales Table/Stream/Hybrid, Standard R2–R7 et PubSec s3/s4/s5 : 156 contrôles
+CMS indépendants, 78 altérations d’octets signés et 156 refus natifs de credentials.
+qpdf vérifie 72 PDF par mot de passe pris en charge. pyHanko déchiffre les autres
+gestionnaires couverts ; pypdf et qpdf vérifient R5 historique, que pyHanko ne parvient pas à authentifier dans cette matrice. `Contents` est lu physiquement avant
+le cache d’objets déchiffrés car les signatures UR sont hors de l’arbre des champs.
+Ces preuves portent sur les octets, la cryptographie et les mots de permissions,
+pas sur une approbation indépendante de la politique UR.
+
+## Boutons et valeurs nulles — EC3
+
+`ButtonFieldSemantics::Pdf20`, fourni explicitement à `ButtonField`, autorise les boutons radio dont l’apparence normale ne contient que l’état actif : `Off` devient facultatif. L’état `AS` reste cohérent avec `V`. Les cases à cocher conservent leur apparence `Off` obligatoire. Cette sémantique exige la version effective PDF 2.0, y compris après une mise à niveau du catalogue. Elle permet aussi de conserver `V`/`DV` dans les boutons poussoirs sans leur attribuer un nouveau comportement. La sémantique historique reste celle par défaut.
+
+Un `TextField` accepte `NullType` comme valeur physique explicite ; la résolution des valeurs héritées traite null comme une entrée absente. Douze PDF indépendants supplémentaires vérifient les transitions radio A → B → Off sous P2/P3, l’intégrité CMS, les références d’apparence inchangées et 24 pixels rendus. L’avis de modification de pyHanko est consigné séparément.
+
+## Contraintes de signature PDF 2.0
+
+Choisir explicitement `SignatureSeedSemantics::Pdf20` lors de la construction de `SignatureSeedValue` pour PDF 2.0. `V` est un `IntegerType` ; la capacité 3 couvre les entrées PDF 2.0. `LockDocument`, `AppearanceFilter` et la capacité 3 ne demandent alors pas de déclaration d’extension Adobe. Le choix historique par défaut conserve le `V` réel et les déclarations Adobe. La signature figée déduit de nouveau l’édition à partir de l’en-tête et du catalogue effectifs : une politique déclarée ne permet pas de contourner la version réelle.
+
+EC3 #158 ignore la liste des condensats pour les mécanismes EdDSA à condensat intrinsèque. Le moteur doit toujours prouver le certificat, la courbe, le condensat et les octets CMS effectivement utilisés ; un moteur RSA offrant un seul condensat ne bénéficie pas de cette exception. DSA en PDF 2.0 respecte la liste, tandis que la règle historique DSA/SHA1 reste propre à PDF 1.7. L’oracle cryptographique vérifie six PDF Ed25519/Ed448 complets avec une contrainte SHA256 obligatoire contradictoire et un `V` entier, sur les trois formats de références croisées.
+
+[Migration 0.11](migration-0.11.md) · [Tutoriel de formulaire certifié](tutorials/37-protected-form-fill.md) · [Sécurité](security.md)
