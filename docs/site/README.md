@@ -112,8 +112,10 @@ du convertisseur. Ses fixtures temporaires restent dans l'espace de validation.
 `tools/build_docs.py` reproduit les tables de glyphes et les fixtures inline/fax,
 puis exécute les oracles HTML5/pypdf, les comparaisons de pixels Poppler pour
 graphiques/contextes/fax, le contrôle des parents d'ancres et le runtime Node.
-Il exécute aussi les exemples 02/03 d'export de figure et de reset ciblé `/DV`,
-qui n'active pas ECMAScript PDF. Ces deux sorties et leurs ressources restent dans
+Il exécute aussi les exemples 02/03/04 d'export de figure, de reset ciblé `/DV`
+et de dérivation authentifiée avec MAC exigé. L'oracle MAC/HTML5 indépendant
+vérifie chemins natif/fourni, identité source, politiques et permissions effectives.
+Le reset n'active pas ECMAScript PDF. Ces trois sorties et leurs ressources restent dans
 `_build/pdfs/html-validation/` ; elles n'ajoutent ni pages ni assets au site.
 
 Le catalogue ISO 32000-2:2020 EC3 est lu dans `resources/iso32000-2-2020/`.

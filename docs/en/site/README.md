@@ -109,8 +109,10 @@ reuse. Its transient fixtures remain in the validation workspace.
 `tools/build_docs.py` reproduces glyph tables and inline/fax fixtures, then runs
 the HTML5/pypdf oracles, Poppler pixel comparisons for graphics/contexts/fax,
 content-parent anchor checks and the Node runtime. It also executes examples
-02/03 for figure export and targeted `/DV` reset, which does not enable PDF
-ECMAScript. These two outputs and their assets stay under
+02/03/04 for figure export, targeted `/DV` reset and MAC-required authenticated
+derivation. The independent MAC/HTML5 oracle checks native and provider paths,
+source identity, effective policies and permissions. Reset does not enable PDF
+ECMAScript. These three outputs and their assets stay under
 `_build/pdfs/html-validation/`; they add neither pages nor assets to the site.
 
 The ISO 32000-2:2020 EC3 catalogue is read from `resources/iso32000-2-2020/`.

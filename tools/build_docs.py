@@ -34,6 +34,8 @@ def validate_html_module(args, html: Path, work: Path, pdfs: Path) -> None:
         [sys.executable, "tools/validate_inline_fax.py", "--php", args.php, "--pdftoppm", args.pdftoppm],
         [sys.executable, "tools/validate_derivation.py", "--php", args.php],
         [sys.executable, "tools/validate_authentication.py", "--php", args.php, "--qpdf", args.qpdf],
+        [sys.executable, "tools/validate_source_integrity.py", "--php", args.php, "--qpdf", args.qpdf,
+         "--work-dir", work / "html-source-integrity"],
     ):
         run(command, html)
     runtime = work / "pdf-html-runtime.js"
@@ -50,6 +52,9 @@ def validate_html_module(args, html: Path, work: Path, pdfs: Path) -> None:
     run([args.php, html / "examples/02-export-figure.php", html / "tests/Fixtures/tagged.pdf", figure], html)
     run([args.qpdf, "--check", figure], html)
     run([args.php, html / "examples/03-safe-form-reset.php", examples / "safe-reset.html"], html)
+    run([args.php, html / "examples/04-authenticate-source-mac.php",
+         html / "tests/Fixtures/source-integrity/tagged-mac-r6-standalone.pdf", examples / "authenticated.html"],
+        html, env={**os.environ, "PDFTOOLKIT_PASSWORD": "native-user"})
 
 
 def build(args) -> None:

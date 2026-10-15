@@ -111,9 +111,45 @@ bytes. Wrong credentials fail; they do not trigger fallback authentication.
 The authenticated source's effective user/owner mask becomes `data-pdf-perms`
 and a diagnostic. The receiving viewer must enforce it; HTML attributes are not
 access control. Reusing a converter does not reuse a previous document's rights.
-Source PDF MAC/public-key authentication and signature trust remain outside this
-operation. The [authentication guide](https://github.com/PDFToolkit/pdf-to-html/blob/v0.3.2/docs/authentication.md)
+Public-key source authentication and signature trust remain outside this
+operation. The [authentication guide](https://github.com/PDFToolkit/pdf-to-html/blob/v0.4.0/docs/authentication.md)
 details the native path and the separate application-provider contract.
+
+## Require the original source MAC
+
+Version 0.4 can require an ISO/TS 32004 MAC before tagged content is interpreted:
+
+```php
+use PDF\Reading\Security\SourceIntegrityPolicy;
+
+$converter = new PdfToHtml(
+    reader: $reader,
+    sourceIntegrity: SourceIntegrityPolicy::RequirePdfMac,
+);
+$result = $converter->convert(new FileBytes($pdfBytes), 'protected.pdf');
+```
+
+The converter preserves or strengthens the injected reader's requirement.
+Both native and provider paths must return the same authenticated source bytes,
+verified permissions and the required MAC status. A permissive converter default
+cannot weaken a reader that already requires integrity. The compatible default
+also accepts unprotected PDFs; `RequirePdfMac` rejects them, including files
+stripped of all integrity markers. Wrong credentials or a corrupt MAC do not
+trigger an unauthenticated fallback.
+
+[Example 04](https://github.com/PDFToolkit/pdf-to-html/blob/v0.4.0/examples/04-authenticate-source-mac.php)
+uses the public `native-user` fixture credential explicitly and writes derived
+HTML/assets. That PDF MAC does not authenticate the new HTML: preserve ordinary
+HTML safety policy and usage permissions. The application still chooses its
+credential preparation and file I/O.
+
+The `AuthenticationProvider` port changes in 0.4: `authenticate()` receives the
+effective `SourceIntegrityPolicy` as its third argument and returns a
+`ReadDocument`, replacing a directly supplied `TaggedDocument`. The converter
+checks original-source identity, permissions and required verification before
+the shared tagged adapter runs. A provider remains trusted application code;
+the port alone does not prove its cryptography or certificate trust. See the
+[migration and MAC boundaries](https://pdftoolkit.github.io/modules/to-html/authentication.html).
 
 ## Export a figure and supply the rendering engine
 

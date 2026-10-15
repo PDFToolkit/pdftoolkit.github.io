@@ -84,6 +84,7 @@ jobs:
       - run: python -m pip install --require-hashes -r tools/site-requirements.txt
       - run: python -m pip install --require-hashes -r _sources/pdf/tools/public-key-validation-requirements.txt
       - run: python -m pip install --require-hashes -r _sources/pdf-to-html/tools/validation-requirements.txt
+      - run: python -m pip install --require-hashes -r _sources/pdf-to-html/tools/source-integrity-validation-requirements.txt
       - uses: ./_sources/pdf/.github/actions/setup-qpdf
       - run: sudo apt-get update && sudo apt-get install -y poppler-utils
       - name: Verify bilingual navigation and search behavior

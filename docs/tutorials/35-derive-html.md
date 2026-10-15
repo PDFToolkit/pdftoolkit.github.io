@@ -116,10 +116,46 @@ octets encodés explicitement. Un mauvais credential échoue sans déclencher de
 fournisseur de secours. Le masque effectif user/owner de la source authentifiée
 devient `data-pdf-perms` et un diagnostic. Le lecteur HTML destinataire doit
 l'appliquer ; des attributs HTML ne sont pas un contrôle d'accès. Réutiliser un
-convertisseur ne réutilise pas les droits d'un précédent document. PDF MAC,
-l'authentification par clé publique et la confiance des signatures restent hors
-de cette opération. Le [guide d'authentification](https://github.com/PDFToolkit/pdf-to-html/blob/v0.3.2/docs/fr/authentication.md)
+convertisseur ne réutilise pas les droits d'un précédent document.
+L'authentification par clé publique source et la confiance des signatures restent
+hors de cette opération. Le [guide d'authentification](https://github.com/PDFToolkit/pdf-to-html/blob/v0.4.0/docs/fr/authentication.md)
 précise le chemin natif et le contrat distinct du fournisseur applicatif.
+
+## Exiger le MAC de la source originale
+
+La version 0.4 peut exiger un MAC ISO/TS 32004 avant d'interpréter le contenu balisé :
+
+```php
+use PDF\Reading\Security\SourceIntegrityPolicy;
+
+$converter = new PdfToHtml(
+    reader: $reader,
+    sourceIntegrity: SourceIntegrityPolicy::RequirePdfMac,
+);
+$result = $converter->convert(new FileBytes($pdfBytes), 'protected.pdf');
+```
+
+Le convertisseur conserve ou renforce l'exigence du lecteur injecté. Les chemins
+natif et fourni doivent retourner les mêmes octets sources authentifiés, les
+permissions vérifiées et le statut MAC requis. La valeur permissive par défaut
+du convertisseur ne relâche pas un lecteur qui exige déjà l'intégrité. La valeur
+compatible par défaut accepte aussi les PDF non protégés ; `RequirePdfMac` les
+refuse, y compris les fichiers privés de tous leurs marqueurs d'intégrité.
+Un mauvais credential ou un MAC corrompu ne déclenche aucun repli non authentifié.
+
+L'[exemple 04](https://github.com/PDFToolkit/pdf-to-html/blob/v0.4.0/examples/04-authenticate-source-mac.php)
+utilise explicitement le credential public de fixture `native-user` et écrit
+HTML/ressources dérivés. Le MAC PDF n'authentifie pas ce nouveau HTML : conserver
+les politiques habituelles de sécurité HTML et les permissions d'usage.
+L'application choisit toujours préparation du credential et entrées/sorties fichier.
+
+Le port `AuthenticationProvider` change dans 0.4 : `authenticate()` reçoit la
+`SourceIntegrityPolicy` effective en troisième argument et retourne un
+`ReadDocument`, au lieu d'un `TaggedDocument` directement fourni. Le convertisseur
+vérifie identité de la source originale, permissions et vérification requise
+avant d'appeler l'adaptateur balisé commun. Un fournisseur reste du code
+applicatif de confiance ; le port ne prouve ni sa cryptographie ni la confiance
+du certificat. Voir la [migration et les frontières MAC](https://pdftoolkit.github.io/fr/modules/to-html/authentication.html).
 
 ## Exporter une figure et fournir le moteur de rendu
 
