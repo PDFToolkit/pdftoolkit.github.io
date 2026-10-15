@@ -38,6 +38,15 @@ Identity filter. Its [seven additional regression cases](https://github.com/PDFT
 use qpdf and cryptography with the specific oracle boundaries explained in the
 [authentication guide](https://pdftoolkit.github.io/modules/reader/authentication.html).
 
+Reader 0.4.1 preserves terminal object numbers and generations through `Encrypt`,
+`Root` and catalog `Metadata` reference chains. Re-reading O/U credentials does
+not decrypt them, and only the actual correctly typed catalog metadata receives
+the implicit cleartext exemption. Four additional encrypted-alias cases use
+pyHanko's unchanged strict parser and Standard handler with cryptography.
+The high-level qpdf/pypdf/pyHanko decryptors do not follow these Encrypt chains;
+their earlier independent checks remain intact. The module guide states those
+oracle limits without extending the exemption to page or object metadata.
+
 ## Bounded mechanisms and explicit capabilities
 
 - Core dictionary rules execute source-linked domains and entry relationships;

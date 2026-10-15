@@ -87,6 +87,7 @@ def build(args) -> None:
     reader = html / "vendor/pdftoolkit/pdf-reader"
     run([sys.executable, "tools/validate_source_mac.py", "--php", args.php, "--qpdf", args.qpdf,
          "--work-dir", work / "source-mac-validation"], reader)
+    run([sys.executable, "tools/validate_metadata_security.py", "--php", args.php, "--qpdf", args.qpdf], reader)
     validate_html_module(args, html, work, pdfs)
     api = work / "api.json"
     run([args.php, content / "tools/export_api.php", api, source, manifest, opentype, html], source)

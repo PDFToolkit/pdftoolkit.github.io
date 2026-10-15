@@ -84,6 +84,13 @@ valeurs de sécurité non nulles conservent leurs obligations d'objets directs.
 Ces règles n'impliquent ni parcours arbitraire du graphe ni réparation implicite
 d'une source malformée.
 
+Le lecteur 0.4.1 conserve les identités terminales `Encrypt`/`Root`/`Metadata`
+du catalogue à travers ces chaînes. Les credentials de chiffrement restent
+inchangés à la relecture ; la métadonnée implicitement claire reste limitée au
+véritable flux du catalogue de type correct. Ses quatre cas d'alias supplémentaires
+conservent le ciphertext original ; le [guide de sécurité](security.md) expose
+leur validation indépendante et les limites des lecteurs de haut niveau.
+
 ## ISO 32000-2:2020 EC3 et bundle complémentaire dans 0.7.1
 
 Le [guide PDF 2.0](pdf-2-0.md) documente les objets propres à l’édition : tableaux

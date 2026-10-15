@@ -24,6 +24,9 @@
 - Expliquer valeurs nulles optionnelles et chaînes physiques bornées de
   références indirectes, avec restrictions des flux d'objets et maintien du
   caractère direct des valeurs de sécurité non nulles.
+- Documenter la conservation des identités terminales Encrypt/Root/Metadata et
+  des credentials inchangés dans le lecteur 0.4.1 ; exécuter ses onze cas de
+  métadonnées, dont quatre alias chiffrés indépendants et les limites des lecteurs de haut niveau.
 - Mettre à jour le tutoriel 35 pour l'intégrité MAC source exigée et la migration
   `AuthenticationProvider` 0.4 : politique effective en argument et retour d'un
   `ReadDocument` authentifié, avec contrôle commun source/permissions avant adaptation.

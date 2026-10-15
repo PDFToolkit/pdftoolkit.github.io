@@ -76,6 +76,13 @@ reference remains rejected. Optional null MAC entries are absent, while actual
 non-null security values retain their required directness. These rules do not
 turn arbitrary graph traversal or malformed source recovery into an implicit operation.
 
+Reader 0.4.1 retains the terminal `Encrypt`/`Root`/catalog `Metadata` identities
+through these chains. Encryption credentials stay unchanged on reaccess, and
+implicit clear metadata remains limited to the actual correctly typed catalog
+stream. Its four additional alias cases preserve original ciphertext; the
+[security guide](security.md) explains their independent validation and
+high-level reader limitations.
+
 ## ISO 32000-2:2020 EC3 and companion bundle in 0.7.1
 
 The [PDF 2.0 guide](pdf-2-0.md) documents edition-specific dictionary objects,

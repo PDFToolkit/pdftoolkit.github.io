@@ -40,6 +40,16 @@ redéfinir le filtre standard Identity. Ses [sept régressions supplémentaires]
 utilisent qpdf et cryptography, avec les limites précises des oracles expliquées
 dans le [guide d'authentification](https://pdftoolkit.github.io/fr/modules/reader/authentication.html).
 
+Le lecteur 0.4.1 conserve les numéros et générations terminaux des chaînes
+`Encrypt`, `Root` et `Metadata` du catalogue. Relire les credentials O/U ne les
+déchiffre pas ; seule la véritable métadonnée du catalogue, de type correct,
+bénéficie de l'exemption implicite de texte clair. Quatre cas d'alias chiffrés
+supplémentaires utilisent le parseur strict et le handler Standard inchangés
+de pyHanko avec cryptography. Les déchiffreurs de haut niveau qpdf/pypdf/pyHanko
+ne suivent pas ces chaînes Encrypt ; leurs anciens contrôles indépendants
+restent intacts. Le guide du module précise ces limites d'oracle sans étendre
+l'exemption aux métadonnées de pages ou d'objets.
+
 ## Mécanismes bornés et capacités explicites
 
 - Les règles de dictionnaire du core exécutent des domaines et relations reliés

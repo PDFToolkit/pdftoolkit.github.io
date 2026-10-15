@@ -23,6 +23,9 @@
   policy, immutable policy composition, framing limits and the signature/PKI boundary.
 - Explain optional null dictionary values and bounded physical indirect-reference
   chains, retaining object-stream restrictions and non-null security directness.
+- Document reader 0.4.1 terminal Encrypt/Root/Metadata identity preservation and
+  unchanged credential entries; run its eleven-case metadata oracle, including
+  four independent encrypted-alias cases and explicit high-level reader limits.
 - Update tutorial 35 for required source MAC integrity and the 0.4
   `AuthenticationProvider` migration: effective policy argument and returned
   authenticated `ReadDocument`, with shared source/permission checks before adaptation.
