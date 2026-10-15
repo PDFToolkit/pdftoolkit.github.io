@@ -66,6 +66,7 @@ GUIDES = [
     ('docs/components.md', 'guides/composants.html', 'Comprendre les composants', 'Guides'),
     ('docs/architecture.md', 'guides/architecture.html', 'Architecture', 'Guides'),
     ('docs/packages.md', 'guides/modules.html', 'Core et modules optionnels', 'Guides'),
+    ('docs/migration-0.11.md', 'guides/migration-0-11.html', 'Migration vers le core 0.11', 'Guides'),
     ('docs/migration-0.5.md', 'guides/migration-0-5.html', 'Migration vers le core 0.5', 'Guides'),
     ('docs/migration-0.4.md', 'guides/migration-0-4.html', 'Migration vers le core 0.4', 'Guides'),
     ('docs/specification.md', 'guides/couverture.html', 'Couverture de la norme', 'Guides'),
@@ -153,10 +154,10 @@ MODULE_GROUPS = {
     'pdftoolkit/pdf-to-html': 'conversion-html',
 }
 MODULES = {
-    'pdftoolkit/pdf-reader': ('reader', 'Lire un PDF', [('docs/architecture.md', 'architecture', 'Architecture du lecteur'), ('docs/pages.md', 'pages', 'Pages, héritage et flux'), ('docs/authentication.md', 'authentication', 'Authentification des PDF chiffrés'), ('docs/public-key-authentication.md', 'public-key-authentication', 'Authentification par clé publique'), ('docs/source-mac.md', 'source-mac', 'Authentifier le MAC du PDF source'), ('docs/components.md', 'components', 'Composants du lecteur'), ('docs/security.md', 'security', 'Limites et sécurité du lecteur')]),
+    'pdftoolkit/pdf-reader': ('reader', 'Lire un PDF', [('docs/architecture.md', 'architecture', 'Architecture du lecteur'), ('docs/pages.md', 'pages', 'Pages, héritage et flux'), ('docs/revision-history.md', 'revision-history', 'Historique physique des révisions'), ('docs/structural-policy.md', 'structural-policy', 'Politique structurelle PDF 2.0'), ('docs/authentication.md', 'authentication', 'Authentification des PDF chiffrés'), ('docs/public-key-authentication.md', 'public-key-authentication', 'Authentification par clé publique'), ('docs/source-mac.md', 'source-mac', 'Authentifier le MAC du PDF source'), ('docs/components.md', 'components', 'Composants du lecteur'), ('docs/security.md', 'security', 'Limites et sécurité du lecteur')]),
     'pdftoolkit/pdf-images': ('images', 'Convertir des images', [('docs/architecture.md', 'architecture', 'Contrats des convertisseurs d’images')]),
     'pdftoolkit/pdf-fonts': ('fonts', 'Analyser des fontes', [('docs/true-type-to-pdf.md', 'true-type-to-pdf', 'Du programme TrueType aux objets PDF')]),
-    'pdftoolkit/opentype': ('opentype', 'Modèle objet OpenType indépendant', [('docs/architecture.md', 'architecture', 'Architecture OpenType'), ('docs/coverage.md', 'coverage', 'Couverture OpenType'), ('docs/substitutions.md', 'substitutions', 'Substitutions de glyphes'), ('docs/positioning.md', 'positioning', 'Positionnement et variations OpenType')]),
+    'pdftoolkit/opentype': ('opentype', 'Modèle objet OpenType indépendant', [('docs/architecture.md', 'architecture', 'Architecture OpenType'), ('docs/coverage.md', 'coverage', 'Couverture OpenType'), ('docs/substitutions.md', 'substitutions', 'Substitutions de glyphes'), ('docs/positioning.md', 'positioning', 'Positionnement et variations OpenType'), ('docs/font-axes.md', 'font-axes', 'Axes des fontes variables'), ('docs/font-metadata.md', 'font-metadata', 'Noms et métadonnées OS/2'), ('docs/variable-metrics.md', 'variable-metrics', 'Métriques verticales et variables'), ('docs/truetype-outlines.md', 'truetype-outlines', 'Contours TrueType'), ('docs/cff-outlines.md', 'cff-outlines', 'Contours CFF et CFF2'), ('docs/truetype-variations.md', 'truetype-variations', 'Variations des contours TrueType'), ('docs/font-headers-and-styles.md', 'font-headers-and-styles', 'En-têtes et styles des fontes'), ('docs/device-metrics.md', 'device-metrics', 'Métriques pré-calculées')]),
     'pdftoolkit/pdf-to-html': ('to-html', 'Dériver du HTML depuis un PDF', [
         ('docs/architecture.md', 'architecture', 'Architecture de la dérivation HTML'),
         ('docs/coverage.md', 'coverage', 'Couverture de la dérivation HTML'),
