@@ -122,6 +122,8 @@ def build(args) -> None:
     run([sys.executable, "tools/validate_public_key_aliases.py", "--php", args.php,
          "--work-dir", work / "public-key-alias-validation",
          "--fixtures-dir", work / "public-key-validation"], reader)
+    run([sys.executable, "tools/validate_revision_history.py", "--php", args.php, "--qpdf", args.qpdf,
+         "--work-dir", work / "reader-revision-history-validation"], reader)
     validate_html_module(args, html, work, pdfs)
     api = work / "api.json"
     run([args.php, content / "tools/export_api.php", api, source, manifest, opentype, html, reader_consumer], source)
@@ -144,7 +146,7 @@ def build(args) -> None:
     for validator in ("validate_mechanisms.py", "validate_adobe_supplement.py", "validate_pdf20_fonts.py"):
         run([sys.executable, "tools/" + validator, pdfs], source)
     run([sys.executable, "tools/validate_pdf20_foundations.py", "--php", args.php, "--qpdf", args.qpdf, "--example", pdfs / "pdf20-associated-files.pdf"], source)
-    run([sys.executable, "tools/validate_pdf20_metadata.py", "--php", args.php, "--qpdf", args.qpdf, "--work-dir", work / "pdf20-metadata"], source)
+    run([sys.executable, "tools/validate_pdf20_metadata.py", "--php", args.php, "--qpdf", args.qpdf, "--work-dir", work / "pdf20-metadata", "--pdftoppm", args.pdftoppm], source)
     run([sys.executable, "tools/validate_iso32000_crypto.py", "--php", args.php, "--qpdf", args.qpdf, "--openssl", args.openssl, "--work-dir", work / "pdf20-crypto"], source)
     run([sys.executable, "tools/validate_pdf20_timestamps.py", "--php", args.php, "--qpdf", args.qpdf, "--openssl", args.openssl, "--work-dir", work / "pdf20-timestamps"], source)
     run([sys.executable, "tools/validate_pdf20_geospatial.py", "--php", args.php, "--qpdf", args.qpdf, "--work-dir", work / "pdf20-geospatial"], source)
@@ -159,10 +161,15 @@ def build(args) -> None:
          "--pdftoppm", args.pdftoppm, "--work-dir", work / "barcode-validation"], source)
     run([sys.executable, "tools/validate_wtpdf_type3_usage.py", "--php", args.php, "--qpdf", args.qpdf,
          "--pdftoppm", args.pdftoppm, "--work-dir", work / "wtpdf-type3-validation"], source)
+    run([sys.executable, "tools/validate_type3_resources.py", "--php", args.php, "--qpdf", args.qpdf,
+         "--pdftoppm", args.pdftoppm, "--ghostscript", args.ghostscript,
+         "--work-dir", work / "type3-resource-validation"], source)
     run([sys.executable, "tools/validate_annotation_appearances.py", "--php", args.php, "--qpdf", args.qpdf,
          "--pdftoppm", args.pdftoppm, "--work-dir", work / "annotation-appearance-validation"], source)
     run([sys.executable, "tools/validate_incremental_permissions.py", "--php", args.php, "--qpdf", args.qpdf,
          "--pdftoppm", args.pdftoppm, "--work-dir", work / "incremental-permissions-validation"], source)
+    run([sys.executable, "tools/validate_encrypted_usage_rights.py", "--php", args.php, "--qpdf", args.qpdf,
+         "--work-dir", work / "encrypted-usage-rights-validation"], source)
     run([sys.executable, content / "tools/build_site.py", "--content-root", content, "--source-root", source,
          "--opentype-root", opentype, "--pdf-to-html-root", html, "--sources", manifest, "--api", api, "--pdf-dir", pdfs, "--pdf-preview-dir", previews,
          "--output", args.output.resolve(), "--base-path", "/", "--docs-revision", args.docs_revision], content)
@@ -185,6 +192,7 @@ if __name__ == "__main__":
     parser.add_argument("--openssl", default=shutil.which("openssl"), help="Explicit OpenSSL executable for offline signature/timestamp examples and oracles")
     parser.add_argument("--pdftoppm", default="pdftoppm")
     parser.add_argument("--pdftotext", default="pdftotext")
+    parser.add_argument("--ghostscript", default="gs")
     parser.add_argument("--poppler-glib-bin", type=Path)
     parser.add_argument("--remote", action="store_true")
     options = parser.parse_args()
