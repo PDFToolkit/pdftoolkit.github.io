@@ -43,7 +43,7 @@ composer require "roukmoute/pdf:^0.11.0" "pdftoolkit/pdf-images:^0.1.12"
 Le module installe le core avec sa contrainte stable. Le [guide des packages](packages.md) explique leur frontière, les installations et le fonctionnement du lecteur. Conserver le `composer.lock` de l'application pour fixer les versions et les commits utilisés.
 
 
-Le [modèle OpenType indépendant](https://pdftoolkit.github.io/fr/modules/opentype/index.html), [`pdftoolkit/opentype`](https://packagist.org/packages/pdftoolkit/opentype), représente les tables de fonte, les correspondances Unicode, les métriques et les premières substitutions GSUB. Il ne dépend d’aucun package PDF. Sa [couverture](https://github.com/PDFToolkit/opentype/blob/v0.3.0/docs/coverage.md) détaille les mécanismes présents et ceux restant à construire.
+Le [modèle OpenType indépendant](https://pdftoolkit.github.io/fr/modules/opentype/index.html), [`pdftoolkit/opentype`](https://packagist.org/packages/pdftoolkit/opentype), représente les tables de fonte, les correspondances Unicode, le layout GSUB/GPOS, les métriques variables et les contours TrueType/CFF/CFF2 non hintés. Il ne dépend d’aucun package PDF. Sa [couverture](https://github.com/PDFToolkit/opentype/blob/v0.3.0/docs/fr/coverage.md) détaille les mécanismes présents et ceux restant à construire.
 
 ```sh
 composer require "pdftoolkit/opentype:^0.3.0"

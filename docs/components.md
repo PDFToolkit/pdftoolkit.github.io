@@ -141,7 +141,7 @@ Cet extrait construit l'objet ; il faut encore l'insérer, par référence, dans
 
 La table indiquée dans le nom rattache chaque classe à la norme et distingue des tableaux portant des titres proches. Les dictionnaires d'entrées supplémentaires composent leurs définitions communes : le [`Type2ShadingDictionaryTable80`](https://github.com/PDFToolkit/pdf/blob/v0.11.0/src/Specification/Dictionary/Type2ShadingDictionaryTable80.php) utilise, par exemple, les entrées communes de la table 78 et les entrées spécifiques de la table 80. Le [tutoriel dégradé](tutorials/07-gradient.md) les assemble.
 
-Les 263 dictionnaires et leurs 1 405 classes d’entrée couvrent les tables d’entrées ISO 32000-1 recensées. ISO 32000-2 possède son propre catalogue : 306 dictionnaires et 1 709 entrées, dont 1 702 fixes et sept variables. Les noms PDF restent sensibles à la casse : `/OP` et `/op` sont deux clés différentes, même lorsque les classes PHP doivent employer un suffixe pour conserver cette distinction.
+Les 263 dictionnaires et leurs 1 405 classes d’entrée couvrent les tables d’entrées ISO 32000-1 recensées. ISO 32000-2 possède son propre catalogue : 306 dictionnaires et 1 711 entrées, dont 1 704 fixes et sept variables. Les noms PDF restent sensibles à la casse : `/OP` et `/op` sont deux clés différentes, même lorsque les classes PHP doivent employer un suffixe pour conserver cette distinction.
 
 ## 3. Références, identité et sérialisation
 

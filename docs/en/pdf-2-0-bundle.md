@@ -10,7 +10,7 @@ There is no global registry or implicit conversion of an external file.
 
 | Document | Executable mechanisms | Validation and limits |
 | --- | --- | --- |
-| ISO 32000-2:2020 EC3 | Edition-specific base dictionary inventory, text encodings, associated files, R=6, namespaces, document parts, encrypted wrappers, DSS and document timestamps | 306 dictionary tables and 1,709 entry objects; selected EC3 overlays and explicit semantic limits remain separate. |
+| ISO 32000-2:2020 EC3 | Edition-specific base dictionary inventory, text encodings, associated files, R=6, namespaces, document parts, encrypted wrappers, DSS and document timestamps | 306 dictionary tables and 1,711 entry objects; selected EC3 overlays and explicit semantic limits remain separate. |
 | ISO/TS 32001:2022 EC3 | SHA3-256/384/512 and fixed 64-byte SHAKE256; explicit ISO extension declaration and signature digest objects | Independent digest/CMS checks; EC3 deletion of clause 5.1.3 is respected rather than extending the struck-out signature-reference rule. |
 | ISO/TS 32002:2022 EC3 | Named P-256/P-384/P-521 and Brainpool curves, Ed25519/Ed448, exact curve/digest combinations and CMS construction | Independent verification of 23 supported curve/digest signatures. Certificate trust and revocation remain application policies. |
 | ISO/TS 32003:2023 | AES-GCM/AESV4 with V=6/R=7, authentication tag, per-key nonce sequence and R=6 credential algorithms | pyHanko decrypts native files; altered ciphertext is rejected. R=6 AES-CBC remains a separate selection. |
@@ -23,7 +23,7 @@ There is no global registry or implicit conversion of an external file.
 | Application Note 003 | Object metadata streams, correct resource scope, named marked-content properties, document parts and DPM | Native XMP serialization is escaped UTF-8 XML. Opaque caller-supplied XML and content bytes require their own validation. |
 
 The base ISO 32000-2 catalogue inventories 440 tables and models 306 dictionary
-tables with 1,709 fixed or variable entries. Source continuation pages and
+tables with 1,711 fixed or variable entries. Source continuation pages and
 extraction corrections are traceable. This coverage and these companion
 mechanisms do not establish complete conformance to every clause of the base
 standard. The [PDF 2.0 guide](pdf-2-0.md) and [coverage guide](coverage.md) retain

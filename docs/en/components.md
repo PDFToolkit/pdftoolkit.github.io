@@ -141,7 +141,7 @@ This snippet constructs the object; it must still be inserted, by reference, int
 
 The table in a class name connects it to the standard and distinguishes tables with similar titles. Additional-entry dictionaries compose their common definitions: for example, [`Type2ShadingDictionaryTable80`](https://github.com/PDFToolkit/pdf/blob/v0.11.0/src/Specification/Dictionary/Type2ShadingDictionaryTable80.php) uses the common entries of table 78 and specific entries of table 80. The [shading tutorial](tutorials/07-gradient.md) assembles them.
 
-The 263 dictionaries and their 1,405 entry classes cover the inventoried ISO 32000-1 entry tables. ISO 32000-2 has its own catalogue: 306 dictionary models and 1,709 entries, including 1,702 fixed and seven variable. PDF names remain case-sensitive: `/OP` and `/op` are different keys, even when PHP classes must use a suffix to retain that distinction.
+The 263 dictionaries and their 1,405 entry classes cover the inventoried ISO 32000-1 entry tables. ISO 32000-2 has its own catalogue: 306 dictionary models and 1,711 entries, including 1,704 fixed and seven variable. PDF names remain case-sensitive: `/OP` and `/op` are different keys, even when PHP classes must use a suffix to retain that distinction.
 
 ## 3. References, identity and serialization
 

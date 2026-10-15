@@ -11,7 +11,7 @@ implicite d’un fichier externe n’intervient.
 
 | Document | Mécanismes exécutables | Vérifications et limites |
 | --- | --- | --- |
-| ISO 32000-2:2020 EC3 | Inventaire des dictionnaires propre à l’édition, encodages textuels, fichiers associés, R=6, espaces de noms, parties documentaires, enveloppes chiffrées, DSS et horodatages | 306 tableaux de dictionnaires et 1 709 objets d’entrées ; corrections EC3 sélectionnées et limites sémantiques restent distinctes. |
+| ISO 32000-2:2020 EC3 | Inventaire des dictionnaires propre à l’édition, encodages textuels, fichiers associés, R=6, espaces de noms, parties documentaires, enveloppes chiffrées, DSS et horodatages | 306 tableaux de dictionnaires et 1 711 objets d’entrées ; corrections EC3 sélectionnées et limites sémantiques restent distinctes. |
 | ISO/TS 32001:2022 EC3 | SHA3-256/384/512 et SHAKE256 fixe de 64 octets ; déclaration d’extension ISO et objets de sélection du condensat | Vérifications indépendantes des condensats et CMS ; la suppression EC3 de la clause 5.1.3 est respectée au lieu d’étendre la règle barrée sur les références de signature. |
 | ISO/TS 32002:2022 EC3 | Courbes nommées P-256/P-384/P-521 et Brainpool, Ed25519/Ed448, combinaisons exactes courbe/condensat et construction CMS | Vérification indépendante de 23 combinaisons. La confiance dans le certificat et sa révocation relèvent de la politique applicative. |
 | ISO/TS 32003:2023 | AES-GCM/AESV4 avec V=6/R=7, étiquette d’authentification, séquence de nonces par clé et algorithmes d’authentification R=6 | pyHanko déchiffre les fichiers natifs ; un contenu chiffré altéré est refusé. AES-CBC R=6 reste un choix distinct. |
@@ -24,7 +24,7 @@ implicite d’un fichier externe n’intervient.
 | Note d’application 003 | Flux de métadonnées d’objets, portée des ressources, propriétés nommées de contenu marqué, parties documentaires et DPM | La sérialisation XMP native produit du XML UTF-8 échappé. Le XML et les contenus opaques fournis par l’appelant demandent leur propre validation. |
 
 Le catalogue de base ISO 32000-2 inventorie 440 tableaux et modélise 306 tableaux
-de dictionnaires avec 1 709 entrées fixes ou variables. Les pages de continuation
+de dictionnaires avec 1 711 entrées fixes ou variables. Les pages de continuation
 et les corrections d’extraction sont traçables. Cette couverture et les mécanismes
 complémentaires n’établissent pas la conformité à toutes les clauses de la norme.
 Le [guide PDF 2.0](pdf-2-0.md) et la [couverture](coverage.md)
