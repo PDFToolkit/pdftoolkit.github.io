@@ -51,7 +51,8 @@ and retained graphs. Exceptions are a point rectangle and `Popup`/`Projection`/
 `Link`; a horizontal or vertical zero-area rectangle still requires its
 appearance. Forms, states and a name-valued `AS` are checked without rejecting
 the legal unmatched-state case. The source ledger includes exact approved EC3
-issues #22 and #124. Eight PDFs, nine native refusals and 28 independent pixel
+issues #22 and #124. Projection annotations separately prohibit `AP` when either
+rectangle dimension is zero. Eight PDFs, eleven native refusals and 28 independent pixel
 checks exercise this domain; no implicit appearance is invented.
 
 WTPDF follows actual selected native Type 3 glyph programs and their auxiliary

@@ -54,7 +54,8 @@ natifs ou conservés. Les exceptions sont un rectangle réduit à un point et
 `Popup`/`Projection`/`Link` ; un rectangle horizontal ou vertical d'aire nulle
 demande encore son apparence. Forms, états et `AS` de type nom sont contrôlés
 sans refuser le cas licite d'un état non correspondant. Le registre source
-inclut les corrections EC3 exactes approuvées #22 et #124. Huit PDF, neuf refus
+inclut les corrections EC3 exactes approuvées #22 et #124. Projection interdit
+séparément `AP` lorsqu'une dimension du rectangle est nulle. Huit PDF, onze refus
 natifs et 28 contrôles indépendants de pixels exercent ce domaine ; aucune
 apparence implicite n'est inventée.
 

@@ -102,6 +102,11 @@ d'aire nulle demande encore `AP`. La validation du graphe natif applique la
 version effective aux objets neufs et aux objets gelés conservés ; elle reste
 distincte du rendu d'un PDF arbitraire importé.
 
+Les annotations Projection ont une règle de sous-type supplémentaire
+(§12.5.6.24, page physique 520) : `AP` est interdit lorsqu'une des dimensions du
+rectangle est nulle. Cela ne transforme pas l'exception de point des annotations
+ordinaires en un test d'aire.
+
 Un dictionnaire d'apparences fourni exige son entrée normale `N`. `N`, `R` et
 `D` désignent des flux Form XObject ou des dictionnaires d'états contenant ces
 flux. Lorsqu'une entrée utilise un dictionnaire d'états, le `AS` de l'annotation
@@ -112,7 +117,7 @@ des apparences n'exécute aucune action et ne prouve pas le rendu d'un lecteur d
 
 Le [registre des sources et preuves d'apparence](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/annotation-appearances/README.fr.md)
 décrit la migration lors du passage d'un graphe PDF 1.7 conservé vers PDF 2.0.
-Son oracle indépendant examine huit PDF, neuf refus natifs et 28 pixels Poppler.
+Son oracle indépendant examine huit PDF, onze refus natifs et 28 pixels Poppler.
 Le repli d'un lecteur devant un état non correspondant n'est pas compté comme
 une image d'apparence garantie.
 

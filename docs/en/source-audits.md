@@ -98,6 +98,10 @@ rectangle still needs `AP`. Native graph validation applies the effective
 version to fresh objects and retained frozen objects; this is separate from
 rendering an imported arbitrary PDF.
 
+Projection annotations have an additional subtype rule (§12.5.6.24, physical
+page 520): `AP` is forbidden when either rectangle dimension is zero. This does
+not turn the point-only exception for ordinary annotations into an area test.
+
 A supplied appearance dictionary requires its normal `N` entry. `N`, `R` and
 `D` identify Form XObject streams or state dictionaries containing such streams.
 When any entry uses a state dictionary, the annotation's `AS` must be a name.
@@ -108,7 +112,7 @@ actions or establish a particular viewer's rendering behavior.
 
 The [appearance source and evidence record](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/annotation-appearances/README.md)
 describes migration when upgrading a retained PDF 1.7 graph to PDF 2.0. Its
-independent oracle examines eight PDFs, nine native refusals and 28 Poppler
+independent oracle examines eight PDFs, eleven native refusals and 28 Poppler
 pixels. It does not count a viewer's unmatched-state fallback as a guaranteed
 appearance image.
 
