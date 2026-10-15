@@ -4,8 +4,8 @@
     {
       "name": "roukmoute/pdf",
       "repository": "https://github.com/PDFToolkit/pdf",
-      "version": "0.8.0",
-      "revision": "ae2374be61a455f87a0225c94b25b5252f2457b9",
+      "version": "0.8.1",
+      "revision": "af12829ea280e37ad8117d68c6bf29999ea9d887",
       "optional": false
     },
     {
@@ -39,8 +39,8 @@
     {
       "name": "pdftoolkit/pdf-to-html",
       "repository": "https://github.com/PDFToolkit/pdf-to-html",
-      "version": "0.3.1",
-      "revision": "2dde73ca432c7e46a2fd3dc5e109431765a72bf3",
+      "version": "0.3.2",
+      "revision": "04c386d09fe2380f693238995bfd1fbb33cd3bad",
       "optional": true
     }
   ]
