@@ -1,6 +1,6 @@
 # 22. Fontes simples, Type3 et écriture verticale
 
-Le [script complet](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/native-fonts.php) réunit des glyphes Type3
+Le [script complet](https://github.com/PDFToolkit/pdf/blob/v0.11.0/examples/native-fonts.php) réunit des glyphes Type3
 dessinés avec les opérateurs PDF, une police simple incorporée et une fonte
 composite dont les métriques placent les glyphes verticalement.
 
@@ -13,6 +13,21 @@ Une fonte Type3 contient des `CharProcs`, chacun étant un flux de dessin.
 `EncodingDifferences` et `SimpleWidths` relient noms, codes et métriques. La
 matrice du font transforme les coordonnées du glyphe vers l'espace textuel.
 Le programme de dessin ne devient pas un moteur de mise en page.
+
+Depuis le core 0.11, `FontDescriptor` accepte `fontName: null` pour une
+fonte Type3. Les autres sous-types exigent toujours ce nom ; `requiredName()`
+explicite cette précondition. Lorsque `Type3Font.Name` et le `FontName` du
+descripteur sont tous deux présents, ils doivent être identiques (EC3 #11).
+Une fonte Type3 employée dans un PDF balisé exige toujours son descripteur
+indirect. Le [guide de migration](../migration-0.11.md) explique ce changement.
+
+`Type3Font` peut omettre `Resources`. Le programme du glyphe utilise alors les
+ressources prévues par le contexte PDF ; le lecteur doit pouvoir les résoudre
+(EC3 #128). Fournir un dictionnaire vide n'équivaut pas à omettre l'entrée.
+Les glyphes peuvent contenir les opérateurs graphiques PDF permis, y compris du
+texte et des Forms imbriquées. L'audit WTPDF suit seulement les glyphes réellement
+sélectionnés, avec budgets partagés et refus des cycles ; il n'est pas un moteur
+de rastérisation et ne valide pas les programmes opaques.
 
 Une fonte simple utilise des codes d'un octet, `FirstChar`, `LastChar` et les
 largeurs correspondantes. Son `FontDescriptor` décrit les métriques et référence
@@ -39,4 +54,4 @@ le rendu de l'exemple est vérifié séparément.
 
 Référence : ISO 9.5–9.10, tables 110–127, pages physiques 261–303 ; annexe D.
 
-[Index](README.md) · [Code complet](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/native-fonts.php)
+[Index](README.md) · [Code complet](https://github.com/PDFToolkit/pdf/blob/v0.11.0/examples/native-fonts.php)

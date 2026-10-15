@@ -14,7 +14,7 @@ Ouvrir `examples/object-stream.pdf`. La page affiche « An explicit object strea
 
 ![Aperçu de la page avec objets compressés](previews/object-stream.png)
 
-Le [code commenté](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/object-stream.php) précise chaque étape. Il utilise une police standard et un flux de texte comme le premier tutoriel.
+Le [code commenté](https://github.com/PDFToolkit/pdf/blob/v0.11.0/examples/object-stream.php) précise chaque étape. Il utilise une police standard et un flux de texte comme le premier tutoriel.
 
 ## 1. Compresser le flux de contenu
 

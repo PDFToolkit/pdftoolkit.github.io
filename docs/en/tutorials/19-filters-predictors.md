@@ -1,6 +1,6 @@
 # 19. Predict rows before compression
 
-The [complete script](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/filters-predictors.php)
+The [complete script](https://github.com/PDFToolkit/pdf/blob/v0.11.0/examples/filters-predictors.php)
 draws the same RGB pixels three times: Flate/Paeth, LZW/TIFF and adaptive LZW/PNG.
 
 ```sh
@@ -29,4 +29,4 @@ and partial rows.
 
 Reference: ISO 7.4.4, physical pages 28–33.
 
-[Index](README.md) · [Complete code](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/filters-predictors.php)
+[Index](README.md) · [Complete code](https://github.com/PDFToolkit/pdf/blob/v0.11.0/examples/filters-predictors.php)

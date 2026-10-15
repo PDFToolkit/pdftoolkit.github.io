@@ -6,7 +6,7 @@ calculations in its script and explains the choices producing the result.
 
 | Recipe | Result | Code |
 | --- | --- | --- |
-| [An explicitly drawn table](table.md) | Header, five rows, alternating backgrounds, grid and total. | [table.php](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/table.php) |
+| [An explicitly drawn table](table.md) | Header, five rows, alternating backgrounds, grid and total. | [table.php](https://github.com/PDFToolkit/pdf/blob/v0.11.0/examples/table.php) |
 
 ## Propose a recipe
 

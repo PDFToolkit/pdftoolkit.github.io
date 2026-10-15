@@ -1,6 +1,6 @@
 # 22. Simple fonts, Type3 and vertical writing
 
-The [complete script](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/native-fonts.php)
+The [complete script](https://github.com/PDFToolkit/pdf/blob/v0.11.0/examples/native-fonts.php)
 combines Type3 glyphs drawn with PDF operators, an embedded simple font and a
 composite font whose metrics position glyphs vertically.
 
@@ -12,6 +12,19 @@ A Type3 font contains `CharProcs`, each a drawing stream. `d0` or `d1` declares
 its width and, where applicable, its box. `Type3CharProcs`, `EncodingDifferences`
 and `SimpleWidths` connect names, codes and metrics. The font matrix transforms
 glyph coordinates into text space. The drawing program does not become a layout engine.
+
+Since core 0.11, `FontDescriptor` accepts `fontName: null` for a Type3 font.
+Other subtypes still require a name; `requiredName()` expresses that precondition.
+When `Type3Font.Name` and the descriptor's `FontName` are both present, they must
+agree (EC3 #11). A Type3 font used in Tagged PDF still requires its indirect
+descriptor. The [migration guide](../migration-0.11.md) explains this API change.
+
+`Type3Font` may omit `Resources`. Its glyph program then uses the resources
+provided by its PDF context, which the reader must be able to resolve (EC3 #128).
+Supplying an empty dictionary is different from omitting the entry. Glyphs can
+contain permitted PDF graphics operators, including text and nested Forms.
+WTPDF inspection follows only actually selected glyphs, with shared budgets and
+cycle rejection; it is not a rasterizer and does not validate opaque programs.
 
 A simple font uses one-byte codes, `FirstChar`, `LastChar` and corresponding
 widths. Its `FontDescriptor` describes metrics and references an embedded program.
@@ -35,4 +48,4 @@ Some readers classify FontFile3/OpenType with glyf outlines as TrueType; Table
 
 Reference: ISO 9.5–9.10, Tables 110–127, physical pages 261–303; Annex D.
 
-[Index](README.md) · [Complete code](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/native-fonts.php)
+[Index](README.md) · [Complete code](https://github.com/PDFToolkit/pdf/blob/v0.11.0/examples/native-fonts.php)

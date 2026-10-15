@@ -1,6 +1,6 @@
 # 18. A composite encoding different from Identity-H
 
-The [complete script](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/cmap-font.php)
+The [complete script](https://github.com/PDFToolkit/pdf/blob/v0.11.0/examples/cmap-font.php)
 displays `ABCDEF éΩ fi` with a one-byte encoding in an embedded CMap. The font
 comes from the optional conversion module; PDF objects and CMaps remain in the core.
 
@@ -28,4 +28,4 @@ CI verifies extracted text with pypdf and Poppler.
 
 Reference: ISO 9.7 and 9.10, physical pages 268–292 and 299–302.
 
-[Index](README.md) · [Complete code](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/cmap-font.php)
+[Index](README.md) · [Complete code](https://github.com/PDFToolkit/pdf/blob/v0.11.0/examples/cmap-font.php)

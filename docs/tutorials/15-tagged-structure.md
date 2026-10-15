@@ -1,6 +1,6 @@
 # 15. Relier le contenu à sa structure logique
 
-Le [script complet](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/tagged-structure.php) construit trois pages :
+Le [script complet](https://github.com/PDFToolkit/pdf/blob/v0.11.0/examples/tagged-structure.php) construit trois pages :
 un titre, un paragraphe continuant sur la seconde page, un tableau avec en-tête
 identifié et un lien associant son texte et son annotation.
 
@@ -34,4 +34,4 @@ pourquoi ces valeurs dépendent de l'ensemble du graphe.
 
 Référence : ISO 14.7–14.9, pages physiques 564–628.
 
-[Index](README.md) · [Code complet](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/tagged-structure.php)
+[Index](README.md) · [Code complet](https://github.com/PDFToolkit/pdf/blob/v0.11.0/examples/tagged-structure.php)

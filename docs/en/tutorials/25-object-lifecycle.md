@@ -4,7 +4,7 @@ An indirect object is identified by its **number and generation**. An update
 can free its number, then assign it to a new identity. The old reference must
 not designate that new value.
 
-Run [object-lifecycle.php](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/object-lifecycle.php):
+Run [object-lifecycle.php](https://github.com/PDFToolkit/pdf/blob/v0.11.0/examples/object-lifecycle.php):
 
 ```bash
 php examples/object-lifecycle.php /tmp/object-lifecycle.pdf
@@ -97,9 +97,9 @@ without a blanket exception.
 Revisions after linearization have a separate corpus of 90 histories, or 270
 PDFs, with exact checks of prefixes, references and hints.
 
-Preserved sources: [indirect objects and null, page 29](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/PDF32000_2008.pdf#page=29),
-[xref, pages 48–50](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/PDF32000_2008.pdf#page=48),
-[updates and ObjStm, pages 52–55](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/PDF32000_2008.pdf#page=52),
-[Annex F, page 683](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/PDF32000_2008.pdf#page=683).
+Preserved sources: [indirect objects and null, page 29](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/reference-documents/PDF32000_2008.pdf#page=29),
+[xref, pages 48–50](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/reference-documents/PDF32000_2008.pdf#page=48),
+[updates and ObjStm, pages 52–55](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/reference-documents/PDF32000_2008.pdf#page=52),
+[Annex F, page 683](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/reference-documents/PDF32000_2008.pdf#page=683).
 
 [Tutorial path](README.md) · [Incremental revisions](11-incremental-update.md)

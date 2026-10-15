@@ -14,7 +14,7 @@ Open `examples/object-stream.pdf`. The page displays “An explicit object strea
 
 ![Preview of the page with compressed objects](../../tutorials/previews/object-stream.png)
 
-The [commented code](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/object-stream.php) explains each step. It uses a standard font and text stream like the first tutorial.
+The [commented code](https://github.com/PDFToolkit/pdf/blob/v0.11.0/examples/object-stream.php) explains each step. It uses a standard font and text stream like the first tutorial.
 
 ## 1. Compress the content stream
 

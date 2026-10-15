@@ -1,6 +1,6 @@
 # 29. A readable wrapper with an encrypted PDF payload
 
-The [complete script](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/pdf20-encrypted-payload.php)
+The [complete script](https://github.com/PDFToolkit/pdf/blob/v0.11.0/examples/pdf20-encrypted-payload.php)
 creates two documents: a password-protected PDF and an unencrypted PDF 2.0
 wrapper embedding it. The wrapper's page explains how to access the content;
 its collection identifies which file to open. The embedded content is actually
@@ -14,7 +14,7 @@ From a core **0.7.1** checkout, with PHP 8.3 or later and OpenSSL:
 php examples/pdf20-encrypted-payload.php wrapper.pdf
 ```
 
-The example supplies Courier through [explicit metrics](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/fixtures/pdf20-courier-font.php): FirstChar/LastChar, ASCII widths and a FontDescriptor. PDF 2.0 no longer permits omitting these entries for the fourteen standard fonts. This construction does not embed a font program; profiles requiring embedding need an explicitly embedded font.
+The example supplies Courier through [explicit metrics](https://github.com/PDFToolkit/pdf/blob/v0.11.0/examples/fixtures/pdf20-courier-font.php): FirstChar/LastChar, ASCII widths and a FontDescriptor. PDF 2.0 no longer permits omitting these entries for the fourteen standard fonts. This construction does not embed a font program; profiles requiring embedding need an explicitly embedded font.
 
 
 The demonstration reader password is **`demo-reader`**. It appears on the page
@@ -110,10 +110,10 @@ Native tests also exercise inconsistent wrappers and incremental changes;
 successfully rendering the wrapper alone would not demonstrate inner
 encryption.
 
-Preserved sources: [ISO 32000-2, physical pages 109–110](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf#page=109)
+Preserved sources: [ISO 32000-2, physical pages 109–110](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf#page=109)
 for the wrapper and table 28;
-[file specifications, pages 149–152](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf#page=149);
-and [associated-files application note, page 10, §4.1.5](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/PDF20_AN002-AF.pdf#page=10).
+[file specifications, pages 149–152](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf#page=149);
+and [associated-files application note, page 10, §4.1.5](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/reference-documents/PDF20_AN002-AF.pdf#page=10).
 The bundle comes from the [PDF Association's sponsored access](https://pdfa.org/sponsored-standards/).
 
 [Tutorial path](README.md) · [Metadata and document parts](28-pdf20-metadata-declarations.md)

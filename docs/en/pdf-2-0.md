@@ -1,6 +1,6 @@
 # PDF 2.0: objects, writing and companion specifications
 
-Core **0.9.1** implements ISO 32000-2:2020 objects and mechanisms, with reviewed
+Core **0.11.0** implements ISO 32000-2:2020 objects and mechanisms, with reviewed
 corrections from Errata Collection 3 (EC3, 2026-06-01). It requires 64-bit PHP 8.3
 or later and keeps explicit construction, document-scoped objects and no global
 registry. Table coverage does not establish complete conditional, algorithmic or
@@ -141,15 +141,15 @@ constraints are executable; native mechanisms implement contextual relationships
 Complete conditional and semantic conformance, exhaustive EC3 review, external
 rendering/colour processing and automatic accessibility certification are not
 established by this inventory. The [coverage record](coverage.md) distinguishes
-native mechanisms, declarative objects and remaining work. The optional reader 0.5.0 accepts [PDF 1.0–2.0 syntax and PDF 2.0 UTF-8 strings](packages.md), with its other explicit limits.
+native mechanisms, declarative objects and remaining work. The optional reader 0.6.0 accepts [PDF 1.0–2.0 syntax and PDF 2.0 UTF-8 strings](packages.md), with its other explicit limits.
 
 ## Source and checks
 
-The [original `ISO_32000-2_sponsored_EC3.pdf`](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf)
+The [original `ISO_32000-2_sponsored_EC3.pdf`](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf)
 is preserved in the public core repository with its original filename and bytes,
 following the project owner's confirmed redistribution authorization.
-[Catalogue metadata](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/iso32000-2-2020/metadata.json)
-and the [coverage inventory](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/iso32000-2-2020/coverage.json)
+[Catalogue metadata](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/iso32000-2-2020/metadata.json)
+and the [coverage inventory](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/iso32000-2-2020/coverage.json)
 record its identity, physical pages and hash. The supplied file comes from the
 **PDF Association**, through its [official sponsored access](https://www.pdfa.org/sponsored-standards/).
 Both supplied main-standard copies and all companion originals remain in the repository.

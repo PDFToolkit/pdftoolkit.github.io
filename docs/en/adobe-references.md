@@ -5,7 +5,7 @@ definitions, verify corrections and distinguish the PDF format from the
 behavior of a particular Acrobat version. They concern PDF 1.7 and belong
 in the `PDFToolkit/pdf` repository.
 
-The active definition reference remains [ISO 32000-1:2008](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/PDF32000_2008.pdf),
+The active definition reference remains [ISO 32000-1:2008](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/reference-documents/PDF32000_2008.pdf),
 with the extensions in the [Adobe supplement](adobe-supplement.md). Archiving
 the documents below changes neither generated classes, version rules nor
 mechanism implementation status. The [coverage guide](coverage.md)
@@ -14,7 +14,7 @@ distinguishes these dimensions.
 ## Retained documents
 
 Page numbers in this guide refer to physical PDF pages, starting at 1.
-The [reference catalogue](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/adobe-references/metadata.json)
+The [reference catalogue](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/adobe-references/metadata.json)
 records their identities, sizes, SHA-256 hashes and relationships between
 attachments. Files retain their original names and bytes in Git and can be
 downloaded from the documentation. They are excluded from Composer archives
@@ -22,10 +22,10 @@ so installing the library does not add these documentation volumes.
 
 | Document | Edition and pages | Purpose |
 | --- | --- | --- |
-| [PDF Reference, version 1.7](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/pdf_reference_1-7.pdf) | Sixth edition, November 2006; 1,310 pages | Adobe reference preceding ISO 32000-1, with examples, historical notes and implementation notes. |
-| [Errata for the PDF Reference](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/pdf_17_errata.pdf) | October 2007; 18 pages | Corrections to the sixth edition, to compare with ISO rules and executable checks. |
-| [PDF Redaction: Addendum](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/pdf_reference1-7_addendum_redaction.pdf) | November 2006; 4 pages | Introduction of `Redact` annotations and the distinction between designating an area and destroying its content. |
-| [PDF Reference and Related Documentation](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/pdf_reference.pdf) | Acrobat SDK 8.1 portfolio, April 2007 cover; 1 page and 4 embedded PDFs | Original container grouping the previous three documents and Acrobat 8.1 implementation notes. |
+| [PDF Reference, version 1.7](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/reference-documents/pdf_reference_1-7.pdf) | Sixth edition, November 2006; 1,310 pages | Adobe reference preceding ISO 32000-1, with examples, historical notes and implementation notes. |
+| [Errata for the PDF Reference](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/reference-documents/pdf_17_errata.pdf) | October 2007; 18 pages | Corrections to the sixth edition, to compare with ISO rules and executable checks. |
+| [PDF Redaction: Addendum](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/reference-documents/pdf_reference1-7_addendum_redaction.pdf) | November 2006; 4 pages | Introduction of `Redact` annotations and the distinction between designating an area and destroying its content. |
+| [PDF Reference and Related Documentation](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/reference-documents/pdf_reference.pdf) | Acrobat SDK 8.1 portfolio, April 2007 cover; 1 page and 4 embedded PDFs | Original container grouping the previous three documents and Acrobat 8.1 implementation notes. |
 
 The [PDF Association's historical archive](https://pdfa.org/resource/pdf-specification-archive/)
 places the 2006 Adobe reference and its errata before the standardization of
@@ -114,7 +114,7 @@ annotation must then remove the affected content and the annotation, and
 produce the replacement appearance.
 
 The core already contains the
-[redaction annotation dictionary](https://github.com/PDFToolkit/pdf/blob/v0.9.1/src/Specification/Dictionary/RedactionAnnotationTable192.php),
+[redaction annotation dictionary](https://github.com/PDFToolkit/pdf/blob/v0.11.0/src/Specification/Dictionary/RedactionAnnotationTable192.php),
 from ISO table 192, PDF pages 421 and 422. The addendum's eight entries
 (`Subtype`, `QuadPoints`, `IC`, `RO`, `OverlayText`, `Repeat`, `DA` and `Q`)
 appear in that definition. Core 0.8.0 separately adds the native `SecureRedaction`

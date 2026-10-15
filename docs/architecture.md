@@ -122,15 +122,16 @@ Une bibliothèque de confort peut transformer ses propres objets de mise en page
 Dans `pdftoolkit/pdf-fonts`, les polices TrueType se composent d'un programme, de tables et métriques, d'une correspondance caractère/CID et d'un programme CIDFont incorporable. Ces données alimentent les objets du core : FontFile2, descripteur, fonte CID, fonte Type0, métriques et ToUnicode. L'encodage du texte reste un service distinct. Le module fournit des octets ; il ne sélectionne pas une police système et ne compose pas les scripts complexes.
 
 Le modèle indépendant [OpenType](https://github.com/PDFToolkit/opentype) conserve
-ses propres objets de tables, glyphes, métriques, substitutions GSUB et
-positionnement GPOS. Il ne dépend ni du core PDF ni du convertisseur de fontes.
-La version 0.2 ajoute GDEF, ajustements device, positionnement contextuel et
-variations de layout natives à coordonnées normalisées explicites. Les résultats
-restent des séquences immuables. Composition Unicode complète, bidi, retour à la
-ligne et instanciation de contours variables restent distincts. Ces objets ne
-produisent pas directement de dictionnaires PDF. Consulter le
-[positionnement](https://github.com/PDFToolkit/opentype/blob/v0.2.0/docs/fr/positioning.md)
-et la [couverture](https://github.com/PDFToolkit/opentype/blob/v0.2.0/docs/fr/coverage.md).
+ses propres objets de tables, glyphes, métriques, GSUB et GPOS, sans dépendance
+au core PDF ni à son convertisseur de fontes. La version 0.3 normalise les axes
+fvar/avar, interprète name/OS/2/STAT et évalue les métriques HVAR/VVAR/MVAR.
+Elle assemble les contours quadratiques TrueType, applique gvar/cvar et exécute
+les programmes cubiques Type 2 CFF/CFF2 avec sous-programmes et blends bornés.
+Les résultats géométriques restent immuables et ne produisent aucun fichier de
+fonte ni dictionnaire PDF. VM TrueType, rastérisation, shaping Unicode complet,
+bidi, retour à la ligne et sous-ensembles restent des responsabilités distinctes.
+La [couverture](https://github.com/PDFToolkit/opentype/blob/v0.3.0/docs/fr/coverage.md)
+distingue 27 périmètres de tables implémentés, quatre partiels et 19 en attente.
 
 Dans `pdftoolkit/pdf-images`, les lecteurs d'images reçoivent un `ImageFileBytes`. Le PNG devient des échantillons couleur et éventuellement alpha ; le JPEG devient un `DCTImage` du core avec ses octets encodés et sa transformation de couleur. `ImageXObjectFactory`, dans le core, compose leurs dictionnaires et leurs flux sans connaître le fichier d'origine. Les noms de ressources et matrices de peinture restent explicites. Les limites de lecture sont fournies par un `ImageImportLimits` du module.
 

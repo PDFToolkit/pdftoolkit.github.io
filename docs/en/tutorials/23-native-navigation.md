@@ -1,6 +1,6 @@
 # 23. Labels, articles and presentation
 
-The [complete script](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/native-navigation.php)
+The [complete script](https://github.com/PDFToolkit/pdf/blob/v0.11.0/examples/native-navigation.php)
 builds three pages identified by `i`, `AA` and `A-8`. Two articles and a presentation
 list connect these pages without changing their drawing instructions. Bookmarks
 demonstrate an explicit destination, a PDF name and a destination string.
@@ -143,4 +143,4 @@ article reading, timers and animations remain functions of the PDF application.
 References: ISO 12.3.2, physical pages 373–375; ISO 12.4.2–12.4.4, physical pages
 382–389; GoTo, ISO 12.6.4.2, physical page 426.
 
-[Index](README.md) · [Complete code](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/native-navigation.php)
+[Index](README.md) · [Complete code](https://github.com/PDFToolkit/pdf/blob/v0.11.0/examples/native-navigation.php)

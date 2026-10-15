@@ -4,7 +4,7 @@ This example builds a PDF portfolio with a CSV, notes and a JSON export related
 to the CSV. The container page explains their relationships; files are actually
 embedded and can be extracted by a compatible reader.
 
-Run [embedded-files.php](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/embedded-files.php):
+Run [embedded-files.php](https://github.com/PDFToolkit/pdf/blob/v0.11.0/examples/embedded-files.php):
 
 ```bash
 php examples/embedded-files.php /tmp/embedded-files.pdf
@@ -89,8 +89,8 @@ content, `Size`, MD5, Mac forks, `EF`/`RF`/`CI` links, tree limits and value
 updates are checked using pypdf, `hashlib` and qpdf. The example's pages and
 rendering are inspected too.
 
-Preserved sources: [Table 5, page 28](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/PDF32000_2008.pdf#page=28),
-[file specifications and streams, pages 107–115](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/PDF32000_2008.pdf#page=107),
-[collections, pages 378–381](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/PDF32000_2008.pdf#page=378).
+Preserved sources: [Table 5, page 28](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/reference-documents/PDF32000_2008.pdf#page=28),
+[file specifications and streams, pages 107–115](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/reference-documents/PDF32000_2008.pdf#page=107),
+[collections, pages 378–381](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/reference-documents/PDF32000_2008.pdf#page=378).
 
 [Tutorial path](README.md) · [Verified coverage](../coverage.md)

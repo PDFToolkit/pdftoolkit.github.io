@@ -7,12 +7,11 @@ original PDFs remain unchanged in `resources/reference-documents/`.
 
 ## Execute relations between dictionary entries
 
-The two inventories now carry **197 intrinsic semantic rules**: 98 for PDF 1.7
-and 99 for PDF 2.0, across 33 source tables in each edition. A table exposes
-immutable `SemanticRule` objects, each retaining its identifier, source and
+Each edition has its own versioned intrinsic semantic-rule ledger. A table
+exposes immutable `SemanticRule` objects retaining their identifier, source and
 typed `DictionaryConstraint`. Derived dictionaries inherit applicable rules.
-`SchemaDictionary::validate()` and serialization execute them; listing a rule
-does not replace its execution.
+`SchemaDictionary::validate()` and serialization execute them; an entry count
+does not measure conformance.
 
 The checks include numeric domains and array dimensions, function inputs and
 outputs, filter/`DecodeParms` alignment, cross-reference stream ranges and direct
@@ -20,19 +19,19 @@ objects, calibrated/ICC colour relationships, image samples and masks, annotatio
 geometry and choice options. They concern their declared dictionary domain;
 resource interpretation and all document-wide conditions remain separate.
 
-The [PDF 1.7 rule data](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/iso32000-1/semantic-rules.json)
-and [PDF 2.0 rule data](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/iso32000-2-2020/semantic-rules.json)
+The [PDF 1.7 rule data](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/iso32000-1/semantic-rules.json)
+and [PDF 2.0 rule data](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/iso32000-2-2020/semantic-rules.json)
 retain source tables and physical pages. Their generators reproduce the PHP
 definitions from those reviewed resources.
 
 ## Check the effective annotation, action and measurement graph
 
 The new native checks concern relationships across actual document objects,
-separately from the 197 intrinsic dictionary rules. They resolve references
+separately from the intrinsic dictionary rules. They resolve references
 against the effective graph and retain the applicable PDF version, including
 objects inherited from an earlier native revision. The dedicated regression
 suite has 84 tests and 132 assertions; these are test counts, not normative-rule
-counts. The [source-bound record](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/graph-semantics/coverage.json)
+counts. The [source-bound record](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/graph-semantics/coverage.json)
 retains source pages, counterexamples and implementation boundaries.
 
 Markup replies must identify an annotation on the same page. Group replies,
@@ -54,10 +53,13 @@ external target semantics retain their separate coverage boundaries.
 
 ## Preserve the exact EC3 correction
 
-The [EC3 review record](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/iso32000-2-2020/ec3-semantic-reviews.json)
+The [EC3 review record](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/iso32000-2-2020/ec3-semantic-reviews.json)
 binds each reviewed annotation to the retained document hash, physical page,
 annotation identity and approval thread. The checker verifies those bindings.
-These six corrections do not establish a review of every EC3 annotation.
+The table below gives examples; the versioned ledger retains the exact reviewed
+annotations and evidence, including each thread's own `Accepted` or `Completed`
+status. The exhaustive annotation inventory and actually executed constraints
+are distinct records.
 
 | Reviewed correction | Implemented behaviour |
 | --- | --- |
@@ -67,9 +69,11 @@ These six corrections do not establish a review of every EC3 annotation.
 | #468, physical page 558 | PDF 2.0 choice indices can be supplied without `MultiSelect`. Different display names sharing an export value require indices. An array-valued `V` alone does not require them. |
 | #22, physical page 483 | `AP` is required with its stated exceptions for actual PDF 2.0 page annotations, while PDF 1.2–1.7 keeps its optional-appearance contract. |
 | #124, physical page 483 | Rectangle indices are zero-based: only `Rect[0]==Rect[2]` **and** `Rect[1]==Rect[3]` supplies the point exception. A horizontal or vertical line is not exempt. |
+| #86/#290/#609/#612, DParts | Flat child arrays with explicit parents, XMP metadata on DPartRoot and UTF-8 DPM names; see [0.11 migration](migration-0.11.md) and [tutorial 28](tutorials/28-pdf20-metadata-declarations.md). |
+| #11/#128, Type3 | Optional Type3 descriptor FontName, agreement with Name when both exist, and explicit or contextual resources; see [tutorial 22](tutorials/22-native-fonts.md). |
+| #152/#474, FontWeight | Integral values from 1 to 1000 in PDF 2.0; historical steps of 100 remain required for PDF 1.x. |
 
-Five reviewed threads end as completed; #468 is accepted. The record
-retains that distinction. Native `ChoiceField` construction selects its edition
+The record retains the accepted status of #468. Native `ChoiceField` construction selects its edition
 explicitly with `ChoiceIndexSemantics::Pdf17` (the default) or
 `ChoiceIndexSemantics::Pdf20Ec3`. The latter requires an effective PDF 2.0 version.
 When migrating positional arguments, pass this enum before any variadic `Entry`
@@ -111,7 +115,7 @@ such as displaying nothing; it does not guarantee a particular fallback.
 The writer preserves that legal case. Declaring appearances does not execute
 actions or establish a particular viewer's rendering behavior.
 
-The [appearance source and evidence record](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/annotation-appearances/README.md)
+The [appearance source and evidence record](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/annotation-appearances/README.md)
 describes migration when upgrading a retained PDF 1.7 graph to PDF 2.0. Its
 independent oracle examines eight PDFs, eleven native refusals and 28 Poppler
 pixels. It does not count a viewer's unmatched-state fallback as a guaranteed
@@ -119,7 +123,7 @@ appearance image.
 
 ## Review the Adobe errata without mixing editions
 
-The [Adobe errata review](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/adobe-references/errata-review.json)
+The [Adobe errata review](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/adobe-references/errata-review.json)
 classifies **65 correction records**, covering every correction-bearing physical
 page from 3 through 18 of the retained 18-page document. Thirty-one records link
 native mechanisms, including ones implemented in earlier releases. Other records
@@ -134,20 +138,21 @@ source identities and their applicable editions.
 ## Read the remaining boundaries
 
 The native incremental guard requires actual emitted-revision provenance,
-verified historical signatures and a complete frozen-delta proof. Core 0.10.0 adds bounded form filling, isolated variable-text appearances, listed
-P3 markup and clear UR3 operations with per-update granting authority and saving
-checks. These grants never override historical field locks or unrelated content
-preservation. Signing and PDF 2.0 maintenance remain separate operations.
-The [protected-revisions guide](protected-revisions.md) records the allowlists,
-unsupported cases and unchanged pyHanko comparison limits. The
-[security review](security.md) retains migration from opaque finalization or
-caller-supplied snapshots and the explicit PKI boundary.
+verified historical signatures and complete frozen-delta evidence. Core 0.11
+covers plain/rich filling, exclusively owned indirect values, regenerated
+appearances, limited historical templates, P3 annotations and encrypted UR3
+with explicit per-update authentication and authority. These operations preserve
+locks and unrelated resources. PDF 2.0 rules follow the historically signed
+version, including UR3 saving rights and signature seeds. The
+[protected-revisions guide](protected-revisions.md) records refusals and oracle
+boundaries; the [0.11 migration guide](migration-0.11.md) explains the API.
 
-The [coverage guide](coverage.md) and source ledgers still identify unreviewed EC3
-annotations, additional conditional/resource relationships and incomplete
-authenticated DocMDP/FieldMDP/UR revision-difference authorization. Rendering,
-external font and codec semantics, certificate trust and human accessibility
-assessment require their own evidence.
+The [coverage guide](coverage.md) and ledgers describe scopes that still need
+execution or independent evidence. Classifying an editorial correction, checking
+a dictionary rule and implementing a consumer algorithm are distinct acts.
+General external-revision classification, rendering, external font/codec
+semantics, certificate trust and human accessibility assessment require their
+own evidence.
 
 The Adobe redaction addendum now has a conservative native processor for an
 explicitly normalized graph. Its [dedicated tutorial](tutorials/36-applied-redaction.md)

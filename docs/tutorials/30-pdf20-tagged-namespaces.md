@@ -1,6 +1,6 @@
 # 30. Espaces de noms PDF 2.0 et vérification WTPDF
 
-Le [script complet](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/pdf20-tagged-namespaces.php) construit une page avec une structure logique indépendante de son dessin. Il combine des rôles PDF 2.0, les types de table des matières propres à PDF 1.7 et un paragraphe personnalisé. Une police incorporée, des liens ParentTree réciproques et des métadonnées XMP rendent ces associations inspectables dans le fichier réel.
+Le [script complet](https://github.com/PDFToolkit/pdf/blob/v0.11.0/examples/pdf20-tagged-namespaces.php) construit une page avec une structure logique indépendante de son dessin. Il combine des rôles PDF 2.0, les types de table des matières propres à PDF 1.7 et un paragraphe personnalisé. Une police incorporée, des liens ParentTree réciproques et des métadonnées XMP rendent ces associations inspectables dans le fichier réel.
 
 L’aperçu présente cinq lignes. Leur position ne crée pas leur sens : le script construit explicitement les éléments H1, P, TOC, TOCI et Reference qui permettent de les interpréter.
 
@@ -90,7 +90,7 @@ L’audit ne crée aucune déclaration. Il distingue `Failed`, `HumanReviewRequi
 
 Les contrôles mécaniques portent notamment sur les namespaces, les tableaux réguliers avec cellules fusionnées, certaines relations de listes et de notes, les annotations, les métadonnées, les descriptions de fichiers incorporés et l’usage réel des polices. Ils distinguent une police rendue, dont le programme doit être incorporé, d’une police utilisée exclusivement avec le mode de rendu de texte 3. Ils vérifient aussi certaines correspondances CID/GID et ToUnicode.
 
-Le choix sémantique des types, la pertinence d’une description, l’ordre de lecture voulu et le contexte d’un champ exigent une revue humaine. Les programmes de fonte, leurs droits d’incorporation, certaines métriques, la grammaire MathML et d’autres règles exhaustives exigent une validation complémentaire. Le [relevé détaillé](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/wtpdf-1.0/coverage.json) sépare ces limites des contrôles exécutés. Cet audit partiel ne constitue pas une certification WTPDF ou PDF/UA-2.
+Le choix sémantique des types, la pertinence d’une description, l’ordre de lecture voulu et le contexte d’un champ exigent une revue humaine. Les programmes de fonte, leurs droits d’incorporation, certaines métriques, la grammaire MathML et d’autres règles exhaustives exigent une validation complémentaire. Le [relevé détaillé](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/wtpdf-1.0/coverage.json) sépare ces limites des contrôles exécutés. Cet audit partiel ne constitue pas une certification WTPDF ou PDF/UA-2.
 
 ## Vérifier les octets générés
 
@@ -107,6 +107,6 @@ On peut modifier les textes, créer un second namespace personnalisé ou remplac
 
 ## Références
 
-Les [sources du bundle conservées](https://github.com/PDFToolkit/pdf/tree/v0.9.1/resources/reference-documents) proviennent de la [PDF Association](https://www.pdfa.org/sponsored-standards/). Pages physiques utiles : ISO 32000-2, 739–744 pour les dictionnaires et namespaces, 809–810 pour les namespaces standards ; ISO/TS 32005, 9–13 pour les règles de mélange et 14–46 pour le tableau complet ; WTPDF, 9–10 pour les niveaux de conformité, 14–30 pour la structure, 32–49 pour les autres contraintes. Les empreintes et l’identité de chaque fichier figurent dans le catalogue du bundle.
+Les [sources du bundle conservées](https://github.com/PDFToolkit/pdf/tree/v0.11.0/resources/reference-documents) proviennent de la [PDF Association](https://www.pdfa.org/sponsored-standards/). Pages physiques utiles : ISO 32000-2, 739–744 pour les dictionnaires et namespaces, 809–810 pour les namespaces standards ; ISO/TS 32005, 9–13 pour les règles de mélange et 14–46 pour le tableau complet ; WTPDF, 9–10 pour les niveaux de conformité, 14–30 pour la structure, 32–49 pour les autres contraintes. Les empreintes et l’identité de chaque fichier figurent dans le catalogue du bundle.
 
 [Parcours des tutoriels](README.md) · [Guide PDF 2.0](../pdf-2-0.md) · [Couverture](../coverage.md)

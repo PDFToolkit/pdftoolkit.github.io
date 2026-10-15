@@ -119,14 +119,15 @@ A convenience library can transform its own layout objects into this model. A ne
 In `pdftoolkit/pdf-fonts`, TrueType fonts consist of a program, tables and metrics, a character/CID mapping and an embeddable CIDFont program. These data feed the core objects: FontFile2, descriptor, CID font, Type0 font, metrics and ToUnicode. Text encoding remains a separate service. The module supplies bytes; it does not select a system font or shape complex scripts.
 
 The independent [OpenType](https://github.com/PDFToolkit/opentype) model retains
-its own table, glyph, metric, GSUB substitution and GPOS positioning objects.
-It depends on neither the PDF core nor the font converter. Version 0.2 adds GDEF,
-device adjustments, contextual positioning and native layout variations with
-explicit normalized coordinates. Results remain immutable sequences. Full
-Unicode shaping, bidi, line breaking and variable-outline instantiation remain
-separate work. These objects do not directly produce PDF dictionaries. See
-[positioning](https://github.com/PDFToolkit/opentype/blob/v0.2.0/docs/positioning.md)
-and [coverage](https://github.com/PDFToolkit/opentype/blob/v0.2.0/docs/coverage.md).
+its own table, glyph, metric, GSUB and GPOS objects without depending on the PDF
+core or its font converter. Version 0.3 normalizes fvar/avar axes, interprets
+name/OS/2/STAT and evaluates HVAR/VVAR/MVAR metrics. It assembles quadratic
+TrueType outlines, applies gvar/cvar and executes bounded Type 2 CFF/CFF2 cubic
+programs, subroutines and blends. Geometric results remain immutable and do not
+produce a font file or PDF dictionaries. A TrueType VM, rasterization, complete
+Unicode shaping, bidi, line breaking and subsetting remain distinct tasks.
+The [coverage ledger](https://github.com/PDFToolkit/opentype/blob/v0.3.0/docs/coverage.md)
+distinguishes 27 implemented table scopes, four partial tables and 19 pending.
 
 In `pdftoolkit/pdf-images`, image readers receive an `ImageFileBytes`. PNG becomes color samples and, where present, alpha; JPEG becomes a core `DCTImage` with its encoded bytes and color transform. `ImageXObjectFactory`, in the core, composes their dictionaries and streams without knowing the original file. Resource names and painting matrices remain explicit. An `ImageImportLimits` from the module supplies read limits.
 

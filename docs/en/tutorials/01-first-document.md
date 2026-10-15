@@ -16,7 +16,7 @@ Open `examples/hello-world.pdf`. The Letter-sized page displays “Super ! Le PD
 
 ![Preview of the first document](../../tutorials/previews/hello-world.png)
 
-The [complete code](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/hello-world.php) contains the imports and comments corresponding to the steps below.
+The [complete code](https://github.com/PDFToolkit/pdf/blob/v0.11.0/examples/hello-world.php) contains the imports and comments corresponding to the steps below.
 
 ## 1. Name a font resource
 

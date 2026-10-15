@@ -1,6 +1,6 @@
 # 29. Enveloppe lisible et PDF incorporé chiffré
 
-Le [script complet](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/pdf20-encrypted-payload.php)
+Le [script complet](https://github.com/PDFToolkit/pdf/blob/v0.11.0/examples/pdf20-encrypted-payload.php)
 crée deux documents : un PDF protégé par mot de passe et une enveloppe PDF 2.0
 non chiffrée qui l'incorpore. La page de l'enveloppe explique comment accéder
 au contenu ; la collection identifie le fichier à ouvrir. Le contenu incorporé
@@ -14,7 +14,7 @@ Depuis un checkout du core **0.7.1**, avec PHP 8.3 ou supérieur et OpenSSL :
 php examples/pdf20-encrypted-payload.php wrapper.pdf
 ```
 
-L’exemple fournit Courier avec des [métriques explicites](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/fixtures/pdf20-courier-font.php) : FirstChar/LastChar, largeurs ASCII et FontDescriptor. PDF 2.0 ne permet plus d’omettre ces entrées pour les quatorze polices standard. Cette construction n’incorpore pas de programme de fonte ; un profil exigeant l’incorporation demande une fonte explicitement incorporée.
+L’exemple fournit Courier avec des [métriques explicites](https://github.com/PDFToolkit/pdf/blob/v0.11.0/examples/fixtures/pdf20-courier-font.php) : FirstChar/LastChar, largeurs ASCII et FontDescriptor. PDF 2.0 ne permet plus d’omettre ces entrées pour les quatorze polices standard. Cette construction n’incorpore pas de programme de fonte ; un profil exigeant l’incorporation demande une fonte explicitement incorporée.
 
 
 Le mot de passe de lecture de démonstration est **`demo-reader`**. Il est écrit
@@ -111,10 +111,10 @@ de la page déchiffrée. Les tests natifs vérifient aussi les enveloppes incoh�
 et les changements incrémentaux ; la réussite du rendu de l'enveloppe ne suffit
 pas à démontrer le chiffrement intérieur.
 
-Sources conservées : [ISO 32000-2, pages physiques 109–110](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf#page=109)
+Sources conservées : [ISO 32000-2, pages physiques 109–110](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf#page=109)
 pour l'enveloppe et la table 28 ;
-[spécification de fichier, pages 149–152](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf#page=149) ;
-[note sur les fichiers associés, page 10, §4.1.5](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/PDF20_AN002-AF.pdf#page=10).
+[spécification de fichier, pages 149–152](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf#page=149) ;
+[note sur les fichiers associés, page 10, §4.1.5](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/reference-documents/PDF20_AN002-AF.pdf#page=10).
 Le bundle provient de l'[accès sponsorisé de la PDF Association](https://pdfa.org/sponsored-standards/).
 
 [Parcours des tutoriels](README.md) · [Métadonnées et parties de document](28-pdf20-metadata-declarations.md)

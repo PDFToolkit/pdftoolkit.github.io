@@ -7,32 +7,30 @@ conditional rule, rendering operation or external profile requirement.
 
 ## Executable source rules and reviewed EC3 corrections
 
-The [source-audit guide](source-audits.md) distinguishes 197 executed intrinsic
-dictionary rules (98 PDF 1.7, 99 PDF 2.0), six reviewed EC3 corrections and a
-65-record classification covering all correction-bearing pages of the Adobe
-errata. Counts describe those exact domains, not a percentage of PDF conformance.
-The native appearance-placement algorithm and choice-index semantics preserve
-the applicable edition and source correction.
+The [source-audit guide](source-audits.md) distinguishes executed intrinsic
+rules for each edition, EC3 corrections bound to exact annotations and the
+65 classified Adobe errata records. Versioned ledgers retain scope and evidence;
+their size is not a PDF conformance percentage. Editorial classification or a
+dictionary definition does not establish execution of an algorithm.
 
-The [redaction tutorial](tutorials/36-applied-redaction.md) demonstrates actual
-conservative deletion from a normalized graph and a fresh single-revision file.
-WTPDF can optionally compare parsed XML rich text with the canonical field value.
-Unreviewed EC3 annotations, other conditional/resource relationships, general
-authenticated DocMDP/FieldMDP/UR change authorization, rendering and external or
-human conformance evidence remain explicit work.
+The incremental guard compares complete frozen native revisions and requires
+their provenance and verified historical signatures. Core 0.11 adds bounded
+rich text and exclusively owned indirect values to Tx/Ch/Btn filling, with
+complete normal-appearance replacement. It permits historical page templates
+without annotations and retains the listed P3 annotation operations. Encrypted
+UR3 histories require explicit password or certificate authentication, every
+named key and per-update granting authority. The signed PDF version determines
+saving rights and PDF 2.0 `P=false`/absent cases. Field locks, encryption rights
+and application scope continue to apply together. The
+[protected-revisions guide](protected-revisions.md) explains contracts,
+intersections and oracle differences; the [migration guide](migration-0.11.md)
+covers DParts, Type3 descriptors and explicit PDF 2.0 semantics.
 
-The guard introduced in 0.8.1 requires verified native provenance and compares
-the complete frozen delta at every incremental entry point. Core 0.10.0
-extends terminal signing and PDF 2.0 DSS/timestamp maintenance with bounded
-`Tx`/`Ch`/checkbox/radio filling, isolated variable-text AP replacement, listed P3
-markup and clear UR3 history with explicit per-update authority. Historical field
-locks, shared resources and unrelated content stay protected. Unknown operations,
-including mixed filling/signing/maintenance updates, fail closed. See the
-[protected-revisions guide](protected-revisions.md) for the exact allowlist,
-saving intersection and independent oracle differences. Redaction also rejects
-font entries outside their actual simple/composite/CID domain; the
-[security review](security.md) and [redaction tutorial](tutorials/36-applied-redaction.md)
-retain their separate input and provenance boundaries.
+The [redaction tutorial](tutorials/36-applied-redaction.md) demonstrates real
+deletion from a normalized graph into a fresh file without history. WTPDF can
+compare parsed XML with the canonical field value. These operations and EC3
+corrections do not establish general conformance, rendering or properties
+requiring human assessment.
 
 ## Ordered barcode appearances, graph relations and source integrity
 
@@ -47,7 +45,7 @@ the encoder's responsibility.
 
 The [source-audit guide](source-audits.md) adds effective annotation ownership,
 reply/popup relationships, remote-action targets and rectilinear measure checks.
-The dedicated 84 tests and 132 assertions remain separate from the 197 intrinsic
+The dedicated 84 tests and 132 assertions remain separate from the intrinsic
 dictionary rules. They do not execute actions, open remote targets or implement
 every annotation/measurement condition.
 
@@ -92,11 +90,17 @@ stream. Its four additional alias cases preserve original ciphertext; the
 [security guide](security.md) explains their independent validation and
 high-level reader limitations.
 
+Reader 0.6 exposes [physical revisions](https://pdftoolkit.github.io/modules/reader/revision-history.html)
+and exact source prefixes within shared budgets. These views remain
+unauthenticated; read them separately with explicit credentials and integrity
+policies to access protected content. Reading history does not verify signatures
+or supply a native writer `FileRevision`.
+
 ## ISO 32000-2:2020 EC3 and companion bundle in 0.7.1
 
 The [PDF 2.0 guide](pdf-2-0.md) documents edition-specific dictionary objects,
 including continued tables, fixed and variable entries, common definitions and
-reviewed corrections. The [ISO2 inventory](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/iso32000-2-2020/coverage.json)
+reviewed corrections. The [ISO2 inventory](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/iso32000-2-2020/coverage.json)
 records exact counts and the remaining semantic/EC3 review. It is not merged
 with ISO1 or Adobe into a single conformance percentage.
 
@@ -110,22 +114,22 @@ viewports, affine matrices and typed point clouds.
 Initial, incremental and linearized output are checked through the actual
 emitted graph and immutable revision snapshots.
 
-The [per-document coverage record](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/iso32000-2-bundle/coverage.json)
+The [per-document coverage record](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/iso32000-2-bundle/coverage.json)
 links implementation files, tests and independent oracles to each original.
-The [WTPDF record](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/wtpdf-1.0/coverage.json)
+The [WTPDF record](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/wtpdf-1.0/coverage.json)
 distinguishes mechanical failures from human review and additional validation.
-Its [requirement inventory](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/wtpdf-1.0/requirements.json)
+Its [requirement inventory](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/wtpdf-1.0/requirements.json)
 records each assessed aspect, source clause, execution boundary and evidence path.
 The reproducible checker rejects omitted clauses and missing evidence files.
 No automatic WTPDF/PDF/UA-2 certification or complete base-standard conformance
 is claimed. Reader 0.3 adds opt-in R=2–7 password authentication, hybrid xrefs
 and further filter decoding to PDF 1.0–2.0 input. Its
-[authentication guide](https://github.com/PDFToolkit/pdf-reader/blob/v0.5.0/docs/authentication.md)
+[authentication guide](https://github.com/PDFToolkit/pdf-reader/blob/v0.6.0/docs/authentication.md)
 states the supported crypt filters. Reader 0.4 adds the source MAC boundary
 described above; Reader 0.5 adds bounded public-key source authentication.
 These input mechanisms remain distinct from writing and rendering.
 
-The [original main standard](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf)
+The [original main standard](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf)
 and all eleven newly supplied originals remain unchanged in the public core
 repository, with source identities and physical pages. The provider is the
 [PDF Association](https://www.pdfa.org/sponsored-standards/). The Adobe downloads
@@ -135,9 +139,9 @@ below remain available unchanged.
 
 | Document | Inventory | Source |
 | --- | --- | --- |
-| ISO 32000-1:2008, PDF 1.7 | 756 pages; 392 tables; 263 dictionary tables; 1,405 entry classes; 73 content operators | [PDF32000_2008.pdf](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/PDF32000_2008.pdf) |
-| Adobe supplement, extension level 3 | 140 pages; 66 tables, including 61 dictionary tables | [adobe_supplement_iso32000.pdf](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/adobe_supplement_iso32000.pdf) |
-| ISO 32000-2:2020 EC3, PDF 2.0 | 1,023 physical pages; edition-specific base dictionary inventory and reviewed EC3 overlays | [ISO_32000-2_sponsored_EC3.pdf](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf) |
+| ISO 32000-1:2008, PDF 1.7 | 756 pages; 392 tables; 263 dictionary tables; 1,405 entry classes; 73 content operators | [PDF32000_2008.pdf](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/reference-documents/PDF32000_2008.pdf) |
+| Adobe supplement, extension level 3 | 140 pages; 66 tables, including 61 dictionary tables | [adobe_supplement_iso32000.pdf](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/reference-documents/adobe_supplement_iso32000.pdf) |
+| ISO 32000-2:2020 EC3, PDF 2.0 | 1,023 physical pages; edition-specific base dictionary inventory and reviewed EC3 overlays | [ISO_32000-2_sponsored_EC3.pdf](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf) |
 
 Original files remain in the core repository. Catalogues record their SHA-256
 hashes and physical page numbers; interpretation corrections retain the
@@ -161,8 +165,8 @@ between editions' signature digest contracts.
 
 ## Reading the coverage
 
-The [ISO inventory](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/iso32000-1/coverage.json) examines 98 mechanism families.
-The [Adobe inventory](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/adobe-supplement-iso32000/coverage.json)
+The [ISO inventory](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/iso32000-1/coverage.json) examines 98 mechanism families.
+The [Adobe inventory](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/adobe-supplement-iso32000/coverage.json)
 distinguishes its tables, algorithms, requirements, product notes and external
 standards. Their initial baseline is version 0.3.0; subsequent additions must
 include implementation files and validation evidence.
@@ -198,7 +202,7 @@ list verified mechanisms and remaining work rather than a completeness figure.
 | Password encryption | ISO R=2/3/4 algorithms, RC4 and AESV2, with filters and incremental updates; Adobe R=5 remains explicitly available. |
 | Certificate encryption | CMS recipient groups, distinct filter keys and s3/s4/s5 formats; key, data and permission-interpretation checks. |
 | Signatures | Contents reservation, ByteRange fixed before signing and filling without shifting; independent verification of the three ISO formats and successive signatures. |
-| Signature policies | DocMDP, FieldMDP, usage-rights, seed and certificate-criteria objects; intrinsic checks. Signed-field orchestration and native provenance/delta guards are implemented. Core 0.10.0 adds the bounded form/P3/UR3 operations in [the dedicated guide](protected-revisions.md); general classification remains open. |
+| Signature policies | DocMDP, FieldMDP, usage-rights, seed and certificate-criteria objects; intrinsic checks. Signed-field orchestration and native provenance/delta guards are implemented. Core 0.11.0 adds the bounded form/template/P3/UR3 operations in [the dedicated guide](protected-revisions.md); general classification remains open. |
 | Hybrid references | Classic table and auxiliary xref stream, historical references, compressed objects and reading by older and newer readers. |
 | Linearization | Native ordering, page and shared-resource hints, thumbnails and attachments, compressed objects, three xref formats and encrypted variants. |
 
@@ -215,16 +219,13 @@ list verified mechanisms and remaining work rather than a completeness figure.
 | Historical signing permissions | First certification, uniqueness, UR cardinality, historical P1, FieldMDP descendant selection and no Adobe permission elevation for a new field signature. |
 | Effective graph | Inherited page resources, boxes and rotation, name-tree order and limits, nonexistent generations and native relationships checked on snapshots. |
 
-These additions are not yet a declaration of complete coverage. General
-comparison of authenticated changes permitted by DocMDP, FieldMDP and UR
-remains open beyond the bounded native forms and markup in 0.10.0: arbitrary
-page/content/resource edits, other annotation relationships, rich text, template
-instantiation and external revision chains need their own analysis. Other priorities include
-the remaining annotation relationships and measurement rules,
-multimedia/RichMedia graphs, some function rules and external barcode
-symbology codecs. Conditions, version thresholds and resources must
-also continue to be audited family by family. The inventories distinguish
-these tasks from constructions and evidence already delivered.
+These additions do not declare complete coverage. General classification of
+external PDF changes, arbitrary page/content/resource edits, templates with
+annotations or fields and legacy UR handlers remain outside the permitted
+native operations. Ledgers also distinguish conditional rules, multimedia
+graphs, resources and barcode symbologies needing other processors or evidence.
+Supported cases have tests and independent oracles; they do not certify every
+revision or document.
 
 ## Editable appearances corrected in version 0.5.1
 
@@ -234,14 +235,23 @@ and list selections stay in the replaceable part. Without this marker, the
 ISO procedure allows new text to be appended to the old stream, explaining
 the overlap observed in Acrobat Reader.
 
-The [regression oracle](https://github.com/PDFToolkit/pdf/blob/v0.9.1/tools/validate_variable_text_appearances.py)
+The [regression oracle](https://github.com/PDFToolkit/pdf/blob/v0.11.0/tools/validate_variable_text_appearances.py)
 parses actual operators with pypdf and exercises two successive replacements
 for every appearance. It verifies that old text disappears, frames remain
 and the negative case without a marker behaves as expected. These checks
 pass on all three PHP versions; they are not interactive Acrobat validation.
 Static drawings, buttons and signatures retain freely constructed appearances.
 
-The independent OpenType model still lacks user-axis normalization through `fvar`/`avar`, `STAT`, complete `name`/`OS/2` table models and the other pending tables listed in its [coverage guide](https://pdftoolkit.github.io/modules/opentype/coverage.html). Existing static TrueType extraction in `pdf-fonts` does not imply those complete models. Full shaping, variable-outline instantiation and CFF/CFF2 remain open. None of the source inventories declares exhaustive PDF or OpenType conformance.
+OpenType 0.3 provides fvar/avar 1.0 normalization, name/OS/2/STAT metadata,
+unhinted TrueType outlines, Type 2 CFF/CFF2 programs and
+HVAR/VVAR/MVAR/gvar/cvar variations. Its [complete table ledger](https://pdftoolkit.github.io/modules/opentype/coverage.html)
+records 27 implemented scopes, four partial tables and 19 pending. Remaining
+cmap formats, avar 2.0, a TrueType VM, color/bitmap/BASE/JSTF/MATH tables,
+TTC/OTC/WOFF/WOFF2 containers and font writing/subsetting remain explicit.
+Rasterization, complete Unicode shaping, bidi and line breaking belong to
+separate consumers. `pdf-fonts` continues to convert supported static TrueType
+programs. Evaluating an OpenType instance does not create an embeddable static
+font file.
 
 ## Core boundary
 

@@ -10,7 +10,7 @@ replaces its content stream twice and preserves the original font, page and cata
 php examples/incremental-update.php incremental-update.pdf
 ```
 
-The [complete script](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/incremental-update.php)
+The [complete script](https://github.com/PDFToolkit/pdf/blob/v0.11.0/examples/incremental-update.php)
 produces a page displaying “Revision 2 : contenu mis a jour.” The file also
 contains bytes from revisions 0 and 1, but the reader uses the latest xref
 records to resolve the page's stream.

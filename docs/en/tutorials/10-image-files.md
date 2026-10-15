@@ -9,12 +9,12 @@ Reading these files belongs to the optional
 [`pdftoolkit/pdf-images`](https://github.com/PDFToolkit/pdf-images) module. Samples,
 DCT images and XObject streams belong to the core. `composer install` in the
 core checkout installs the module for examples; an application installs it from
-Packagist using `composer require "pdftoolkit/pdf-images:^0.1.11"`. The
+Packagist using `composer require "pdftoolkit/pdf-images:^0.1.12"`. The
 [package guide](../packages.md) also explains how to select the core release series.
 
-- **Complete example:** [image-files.php](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/image-files.php).
+- **Complete example:** [image-files.php](https://github.com/PDFToolkit/pdf/blob/v0.11.0/examples/image-files.php).
 - **Result:** four images on a Letter page, with a checkerboard revealing transparency.
-- **Data:** [MIT-licensed synthetic patterns](https://github.com/PDFToolkit/pdf-images/blob/v0.1.10/examples/assets/images/README.md), distributed with the module in `vendor/pdftoolkit/pdf-images/examples/assets/images/`.
+- **Data:** [MIT-licensed synthetic patterns](https://github.com/PDFToolkit/pdf-images/blob/v0.1.12/examples/assets/images/README.md), distributed with the module in `vendor/pdftoolkit/pdf-images/examples/assets/images/`.
 - **Prerequisites:** [first document](01-first-document.md), [drawing](03-graphics.md) and [images](06-images.md).
 
 ## 1. Supply bytes without delegating file access

@@ -1,6 +1,6 @@
 # 15. Connect content to its logical structure
 
-The [complete script](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/tagged-structure.php)
+The [complete script](https://github.com/PDFToolkit/pdf/blob/v0.11.0/examples/tagged-structure.php)
 builds three pages: a title, a paragraph continuing onto the second page, a table
 with an identified header, and a link associating its text with its annotation.
 
@@ -32,4 +32,4 @@ on the entire graph.
 
 Reference: ISO 14.7–14.9, physical pages 564–628.
 
-[Index](README.md) · [Complete code](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/tagged-structure.php)
+[Index](README.md) · [Complete code](https://github.com/PDFToolkit/pdf/blob/v0.11.0/examples/tagged-structure.php)

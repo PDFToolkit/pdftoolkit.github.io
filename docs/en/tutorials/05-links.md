@@ -6,7 +6,7 @@
 
 Create two clickable areas on a page: one opens the GitHub repository, the other displays a second page. This tutorial composes classes derived from specification tables to show how to use a feature without a specialized domain facade.
 
-Read [pages and text](02-pages-and-text.md) and [destinations](04-navigation.md), then install dependencies with `composer install`. The script [examples/links.php](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/links.php) runs independently on PHP 8.3 or later with the extensions required by Composer.
+Read [pages and text](02-pages-and-text.md) and [destinations](04-navigation.md), then install dependencies with `composer install`. The script [examples/links.php](https://github.com/PDFToolkit/pdf/blob/v0.11.0/examples/links.php) runs independently on PHP 8.3 or later with the extensions required by Composer.
 
 ## Run and inspect
 
@@ -56,7 +56,7 @@ Definitions also expose conditional rules in their descriptions. They do not aut
 | Explicit `/Fit` destination | §12.3.2.2, Table 151 |
 | `/URI` action | §12.6.4.7, Table 206 |
 
-See the [specification preserved in the core](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/PDF32000_2008.pdf) and the [definitions guide](../specification.md).
+See the [specification preserved in the core](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/reference-documents/PDF32000_2008.pdf) and the [definitions guide](../specification.md).
 
 ## Variations and limitations
 

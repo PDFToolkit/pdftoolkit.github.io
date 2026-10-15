@@ -1,6 +1,6 @@
 # 20. Sign without moving objects
 
-The [complete script](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/signed-document.php)
+The [complete script](https://github.com/PDFToolkit/pdf/blob/v0.11.0/examples/signed-document.php)
 produces a visible page and a detached CMS signature associated with an invisible `/Sig` field.
 
 ```sh
@@ -48,4 +48,4 @@ verifies ByteRange, CMS, digests and RSA signatures, and rejects a modified mess
 
 Reference: ISO 12.8, physical pages 474–487.
 
-[Index](README.md) · [Complete code](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/signed-document.php)
+[Index](README.md) · [Complete code](https://github.com/PDFToolkit/pdf/blob/v0.11.0/examples/signed-document.php)

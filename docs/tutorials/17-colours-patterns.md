@@ -1,6 +1,6 @@
 # 17. Couleurs, motifs et sept types de dégradés
 
-Le [script complet](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/colours-patterns.php) présente sur deux pages
+Le [script complet](https://github.com/PDFToolkit/pdf/blob/v0.11.0/examples/colours-patterns.php) présente sur deux pages
 des espaces couleur, des motifs répétitifs et les sept types de shading ISO.
 
 ```sh
@@ -33,4 +33,4 @@ de patches. Le profil de test possède sa propre provenance dans les fixtures.
 
 Référence : ISO 8.6–8.7, pages physiques 146–215.
 
-[Index](README.md) · [Code complet](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/colours-patterns.php)
+[Index](README.md) · [Code complet](https://github.com/PDFToolkit/pdf/blob/v0.11.0/examples/colours-patterns.php)

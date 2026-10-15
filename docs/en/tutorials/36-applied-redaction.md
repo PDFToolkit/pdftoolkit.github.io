@@ -10,7 +10,7 @@ Core 0.8.0 introduces `SecureRedaction` for an explicitly normalized object grap
 ## Run the actual example
 
 ```sh
-composer require "roukmoute/pdf:^0.10.0"
+composer require "roukmoute/pdf:^0.11.0"
 php examples/pdf17-secure-redaction.php redacted.pdf --source=original.pdf
 ```
 

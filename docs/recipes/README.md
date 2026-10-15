@@ -4,7 +4,7 @@ Les [tutoriels](../tutorials/README.md) introduisent les objets du format par é
 
 | Recette | Résultat | Code |
 | --- | --- | --- |
-| [Un tableau dessiné explicitement](table.md) | En-tête, cinq lignes, fonds alternés, grille et total. | [table.php](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/table.php) |
+| [Un tableau dessiné explicitement](table.md) | En-tête, cinq lignes, fonds alternés, grille et total. | [table.php](https://github.com/PDFToolkit/pdf/blob/v0.11.0/examples/table.php) |
 
 ## Proposer une recette
 

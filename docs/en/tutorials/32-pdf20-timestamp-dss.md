@@ -1,6 +1,6 @@
 # 32. Document timestamps and validation evidence
 
-The [complete script](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/pdf20-timestamp-dss.php) writes a readable PDF with two genuine RFC3161 document timestamps. Between them it appends certificate evidence in a Document Security Store (DSS) and signature-specific Validation Related Information (VRI). The visible page lists these steps; the evidence lives in PDF objects and signed historical byte ranges.
+The [complete script](https://github.com/PDFToolkit/pdf/blob/v0.11.0/examples/pdf20-timestamp-dss.php) writes a readable PDF with two genuine RFC3161 document timestamps. Between them it appends certificate evidence in a Document Security Store (DSS) and signature-specific Validation Related Information (VRI). The visible page lists these steps; the evidence lives in PDF objects and signed historical byte ranges.
 
 The demonstration authority operates offline with a **public test key**. Its mathematical signatures are real, but its identity and local clock are not a trusted timestamp service. Applications explicitly choose a provider and the certificate, time and revocation policy they accept.
 
@@ -12,7 +12,7 @@ From a core 0.7.1 checkout with locked development dependencies, supply the Open
 php examples/pdf20-timestamp-dss.php timestamps.pdf /usr/bin/openssl
 ```
 
-The example supplies Courier through [explicit metrics](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/fixtures/pdf20-courier-font.php): FirstChar/LastChar, ASCII widths and a FontDescriptor. PDF 2.0 no longer permits omitting these entries for the fourteen standard fonts. This construction does not embed a font program; profiles requiring embedding need an explicitly embedded font.
+The example supplies Courier through [explicit metrics](https://github.com/PDFToolkit/pdf/blob/v0.11.0/examples/fixtures/pdf20-courier-font.php): FirstChar/LastChar, ASCII widths and a FontDescriptor. PDF 2.0 no longer permits omitting these entries for the fourteen standard fonts. This construction does not embed a font program; profiles requiring embedding need an explicitly embedded font.
 
 
 On Windows, quote a path containing spaces. The example also accepts `PDFTOOLKIT_OPENSSL` instead of its second argument. It does not fetch a certificate, private key, revocation response or timestamp over the network.
@@ -75,6 +75,6 @@ The pinned validation dependencies belong to development tooling. None becomes a
 
 ## References
 
-ISO 32000-2:2020 clauses 12.8.4 and 12.8.5 describe DSS/VRI and document timestamps; physical page 606 states their DocMDP treatment. The [retained main standard](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf) and the [bundle catalogue](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/iso32000-2-bundle/sources.json) identify the supplied PDF Association source and its correction collection. `TimestampRequest`, `TimestampResponse` and `TimestampToken` model RFC3161 data explicitly.
+ISO 32000-2:2020 clauses 12.8.4 and 12.8.5 describe DSS/VRI and document timestamps; physical page 606 states their DocMDP treatment. The [retained main standard](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf) and the [bundle catalogue](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/iso32000-2-bundle/sources.json) identify the supplied PDF Association source and its correction collection. `TimestampRequest`, `TimestampResponse` and `TimestampToken` model RFC3161 data explicitly.
 
 [Tutorial path](README.md) · [Modern signatures](31-pdf20-modern-signature.md) · [Bundle guide](../pdf-2-0-bundle.md)
