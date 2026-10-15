@@ -68,7 +68,7 @@ Their provenance uses the reader commit pinned in the manifest; the core
 retains its generation examples.
 
 The PDF-to-HTML checkout is separately pinned under `_sources/pdf-to-html`.
-Its locked reader supplies the documented reader 0.3.1 without changing the core
+Its locked reader supplies the documented reader without changing the core
 lock. Tutorial 35 runs its real CLI against the independently generated tagged
 fixture. The build checks the retained reference and fixture bytes, then executes
 the package's pypdf/HTML5 oracle. It copies every asset listed in the CLI JSON,
@@ -84,6 +84,15 @@ two result pages. The build separately validates source/result bytes and pixels
 with qpdf, pypdf and Poppler; its private source copy is never published as the
 redacted result. EC3 annotation identities and approval threads are checked
 against the unchanged canonical PDF, separately from dictionary generation.
+
+The reader's source-MAC guide is published at `/modules/reader/source-mac.html`
+and its French counterpart. The full build executes that selected reader's
+independent source-MAC oracle with its actual locked core, then checks native
+barcode partition/PMD/appearance placement and selected Type 3 glyph usage from
+the selected core checkout. Their reports and hostile/source fixtures stay in
+private build directories, outside the published tutorial assets. Barcode test
+patterns do not prove a symbology; the Type 3 report preserves the observed
+Poppler mode-7 difference instead of treating it as a conformance result.
 
 The current selection documents PDF-to-HTML 0.3.2 and reader 0.3.1. The
 [requirements ledger](https://pdftoolkit.github.io/modules/to-html/requirements.html),

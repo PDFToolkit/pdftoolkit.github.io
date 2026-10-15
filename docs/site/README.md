@@ -69,7 +69,7 @@ Leur provenance utilise le commit du lecteur fixé dans le manifeste ; le core
 conserve ses exemples de génération.
 
 Le checkout PDF vers HTML est fixé séparément sous `_sources/pdf-to-html`.
-Son lecteur verrouillé fournit la version 0.3.1 documentée sans changer le lock
+Son lecteur verrouillé fournit le lecteur documenté sans changer le lock
 du core. Le tutoriel 35 exécute son vrai CLI sur la fixture balisée produite
 indépendamment. La construction vérifie les octets de référence et de fixture,
 puis exécute l'oracle pypdf/HTML5 du package. Elle copie chaque ressource du JSON
@@ -86,6 +86,16 @@ source/résultat avec qpdf, pypdf et Poppler ; sa copie source privée n'est jam
 publiée comme résultat caviardé. Les identités d'annotations EC3 et fils
 d'approbation sont vérifiés contre le PDF canonique inchangé, indépendamment de
 la génération des dictionnaires.
+
+Le guide du MAC source du lecteur est publié sous `/modules/reader/source-mac.html`
+et dans sa version française. La construction complète exécute l'oracle MAC
+source indépendant de ce lecteur sélectionné avec son véritable core verrouillé,
+puis vérifie répartition/PMD/placement d'apparences de codes-barres et usages des
+glyphes Type 3 sélectionnés depuis le checkout du core retenu. Les rapports et
+fixtures hostiles/sources restent dans les répertoires privés du build, hors
+des ressources de tutoriels publiées. Les motifs de test des codes-barres ne
+prouvent aucune symbologie ; le rapport Type 3 conserve la différence observée
+de Poppler en mode 7 sans la transformer en résultat de conformité.
 
 La sélection actuelle documente PDF vers HTML 0.3.2 et le lecteur 0.3.1. Le
 [registre des exigences](https://pdftoolkit.github.io/fr/modules/to-html/requirements.html),
