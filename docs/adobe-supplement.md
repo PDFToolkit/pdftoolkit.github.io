@@ -81,10 +81,54 @@ interprétation implicite ne masque cette ambiguïté du document.
 
 `BarcodeModuleWidth` calcule `ceil(distanceInches × Resolution)` et construit
 l'entrée `XSymWidth` entière. `BarcodeDataPreparation` conserve les octets pour
-`DataPrep = 0` et leur applique Flate pour `DataPrep = 1`. Ces objets mettent en
-œuvre la préparation et la formule des pages 46–47. Ils ne choisissent pas
-l'encodage du texte et ne dessinent pas un symbole PDF417, QR ou Data Matrix :
-les codecs de ces symbologies dépendent de normes externes.
+`DataPrep = 0` et leur applique Flate pour `DataPrep = 1`.
+
+### Préparer les messages ordonnés et les apparences natives des widgets
+
+`BarcodeMessagePartition` reçoit les véritables octets `V`, déjà explicitement
+encodés. Les données binaires et le BOM éventuel restent inchangés. Avec
+`DataPrep = 1`, il compresse **la valeur entière une seule fois** avec Flate au
+format zlib avant de la répartir ; compresser séparément les parties de chaque
+widget produirait des messages différents. Les parties suivent l'ordre des
+widgets, leurs tailles diffèrent d'au plus un octet et les premières reçoivent
+le reste. Chaque `BarcodeMessage` expose son indice, le total et son décalage
+en octets. Une valeur explicitement vide produit encore une partie par widget ;
+une valeur absente demande une décision applicative.
+
+`BarcodeFieldPreparation` associe ces messages aux `BarcodeWidgetParameters`
+explicites : le rectangle et les véritables `BarcodePaperMetadata` sérialisées
+dans chaque widget. `render()` appelle la capacité fournie
+`BarcodeImageEncoder::encode(BarcodeEncodingRequest): ImageXObject` et retourne
+des `BarcodeWidgetAppearance` sans les attacher ni modifier le champ.
+L'application les attache dans l'ordre et les lie à leurs pages.
+
+Pour une image opaque device acceptée, l'adaptateur construit un
+`FormAppearanceStream` natif et `AP.N` : boîte locale normalisée, puis `q`,
+matrice largeur/hauteur, `Do` et `Q`. L'image remplit le rectangle entier du
+widget. Les coins inversés sont acceptés ; cette opération de production
+d'apparence exige des étendues finies et positives. Elle ne déclare pas les
+rectangles d'aire nulle universellement invalides en PDF. Octets d'entrée et
+préparés, nombre de widgets, pixels et octets d'échantillons cumulés ont des
+budgets explicites, vérifiés avant l'appel suivant de l'encodeur. Celui-ci doit
+aussi borner ses propres allocations et calculs.
+
+La page 46 d'Adobe permet de fusionner un widget unique avec son champ ; la
+page 47 le décrit fusionné dans la procédure. Les deux représentations natives
+licites restent disponibles par construction explicite `addWidget()` ou
+`mergeWidget()`. Le budget de traitement par défaut de 255 widgets vient de
+la note Acrobat 9 E-7 ; il est configurable et ne constitue pas une cardinalité
+universelle du PDF.
+
+Le core ne fournit aucun codec PDF417, QR Code ou Data Matrix. L'encodeur
+assume capacité, ECC, géométrie des modules, zones de silence et réassemblage
+côté lecteur. L'adaptateur d'apparence refuse masques, images alternatives et
+graphes d'image annexes. Changer la valeur demande de reconstruire un plan ;
+aucun JavaScript ni suivi automatique de saisie n'est exécuté. L'oracle
+indépendant utilise cinq PDF, dix widgets et 45 contrôles de pixels Poppler avec
+un **motif de test** annoncé : il prouve préparation des octets, association PMD
+et placement, sans prouver un symbole lisible par scanner. Le
+[registre des sources et preuves](https://github.com/PDFToolkit/pdf/blob/v0.9.0/resources/barcodes/README.fr.md)
+du package décrit toutes les frontières et l'ambiguïté des pages 46/47.
 
 ## Chiffrement historique AES-256
 

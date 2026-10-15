@@ -92,6 +92,13 @@ bounded incremental signing/maintenance, plus font-domain validation during
 redaction. The [security guide](https://pdftoolkit.github.io/guides/security.html)
 explains supported operations, rejected changes and runtime provenance migration.
 
+Further source-bound additions cover ordered barcode messages and native
+widget appearances, effective annotation/action/rectilinear-measure relationships,
+selected Type 3 glyph usage and contextual WTPDF deprecation recommendations.
+Source PDF MAC verification has its [reader guide](https://pdftoolkit.github.io/modules/reader/source-mac.html) and explicit required-input
+policy. The guides retain symbology, rendering, opaque-content and trust boundaries;
+their checks provide evidence for those operations, not complete PDF conformance.
+
 ## Reproducible sources
 
 [resources/sources.json](resources/sources.json) records the selected stable

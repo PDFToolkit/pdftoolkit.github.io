@@ -28,10 +28,11 @@ de dictionnaires avec 1 709 entrées fixes ou variables. Les pages de continuati
 et les corrections d’extraction sont traçables. Cette couverture et les mécanismes
 complémentaires n’établissent pas la conformité à toutes les clauses de la norme.
 Le [guide PDF 2.0](pdf-2-0.md) et la [couverture](coverage.md)
-conservent cette distinction. Le lecteur 0.3 ajoute séparément l'authentification
-par mot de passe et des mécanismes de décodage. Son contrat d'entrée ne couvre
-ni PDF MAC ni l'authentification par clé publique ; consulter son
-[guide d'authentification](https://github.com/PDFToolkit/pdf-reader/blob/v0.3.1/docs/authentication.md).
+conservent cette distinction. Le lecteur 0.4 fournit séparément
+l'authentification par mot de passe, le décodage et la vérification du MAC PDF
+source. L'authentification par clé publique en entrée reste indisponible ; voir
+son [guide d'authentification](https://pdftoolkit.github.io/fr/modules/reader/authentication.html)
+et son [guide du MAC source](https://pdftoolkit.github.io/fr/modules/reader/source-mac.html).
 
 ## Des algorithmes sélectionnés indépendamment
 
@@ -73,6 +74,38 @@ le fournisseur dédié, car PHP 8.3 n’expose pas l’opération EdDSA nécessa
 fournisseur reçoit explicitement l’exécutable et la clé ; choisir les autres
 algorithmes ne lance aucun processus. Voir le [tutoriel des signatures et de
 l’intégrité](tutorials/31-pdf20-modern-signature.md).
+
+## Vérifier le MAC source avant de lire le contenu protégé
+
+Le lecteur 0.4 utilise `PdfMacTokenVerifier` du core via un
+`StandardPasswordAuthentication` choisi explicitement. Il vérifie `AuthCode`
+autonome du dernier trailer physique ou son MAC attaché à une signature avant
+de retourner le contenu protégé du catalogue. L'étendue lexicale du véritable
+jeton et le `ByteRange` direct doivent couvrir tout le fichier courant sauf ce
+jeton. Un MAC hérité n'authentifie pas une nouvelle révision ; rechercher des
+octets identiques ne prouve pas l'identité du jeton exclu. Les attachements aux
+signatures et horodatages documentaires sont pris en charge dans les limites
+documentées des jetons hexadécimaux directs.
+
+`SourceIntegrityPolicy::AcceptUnprotected`, valeur compatible par défaut,
+vérifie tout MAC signalé mais accepte aussi les PDF non protégés. Choisir
+`RequirePdfMac` lorsque l'entrée doit être protégée : un PDF clair ne révèle
+pas que tous les marqueurs de chiffrement et d'intégrité ont été supprimés.
+`DocumentReader::sourceIntegrityPolicy()` expose l'exigence configurée ;
+`requiringSourceIntegrity()` la conserve ou la renforce avec les mêmes
+identifiants et limites. Une entrée protégée invalide ne provoque pas de repli
+vers un déchiffrement non authentifié.
+
+La vérification utilise la clé Standard R5–R7 authentifiée et couvre les octets
+chiffrés originaux et la structure du fichier. Elle ne vérifie ni mathématiquement
+la signature, ni la confiance envers le certificat ou la TSA. Toute personne
+détenant cette clé de fichier peut créer un nouveau MAC. Aucune requête de
+ressource externe, certificat ou révocation n'est effectuée. Le
+[guide du module](https://pdftoolkit.github.io/fr/modules/reader/source-mac.html)
+décrit les budgets CMS/octets, algorithmes pris en charge, quinze fichiers réels
+indépendants, cas hostiles et frontières de cadrage exactes. Les anciens MAC
+ne sont pas tous revérifiés indépendamment ; l'authentification par clé publique
+source reste distincte.
 
 ## Les métadonnées et déclarations ont un propriétaire
 
@@ -142,6 +175,48 @@ un flux `RV` opaque ou des namespaces/CSS non pris en charge, le contrôle reste
 en attente au lieu de réussir. Un parseur plus riche peut être fourni explicitement.
 Ce domaine de comparaison mécanique est couvert ; le sens humain et les autres
 exigences WTPDF demandent toujours leurs propres preuves.
+
+### Examiner les programmes de glyphes Type 3 réellement utilisés
+
+L'audit natif d'utilisation des fontes sélectionne les `CharProcs` gérés à
+partir des véritables codes d'octets affichés. `Type3GlyphSelection` conserve
+les glyphes distincts dans l'ordre de première utilisation ; il n'invente ni
+conversion Unicode ni glyphe par défaut implicite. Seuls les programmes
+sélectionnés et rendus créent des obligations d'incorporation de fontes
+auxiliaires. Leurs ressources locales, Forms imbriqués et états graphiques
+hérités sont examinés avec les mêmes budgets cumulatifs d'opérations, de texte
+et de récursion. Déclarer les ressources d'un glyphe inutilisé ne les rend pas.
+
+ISO 32000-2 §9.3.6 supprime les descriptions de glyphes Type 3 dans les modes
+de rendu du texte 3 et 7. L'audit suit cette règle et détecte toujours les codes
+affichés indéfinis ou explicitement `.notdef`. Les vérifications indépendantes
+qpdf/pypdf/Poppler examinent cinq véritables PDF. Poppler peut exécuter un glyphe
+Type 3 en mode 7 ; cette observation est consignée sans être comptée comme
+confirmation de la règle de suppression de la norme. Contenu opaque,
+dictionnaires Type 3 génériques non gérés, validité du programme de fonte,
+licence et sens Unicode demandent encore leurs propres preuves. Le
+[registre relié aux sources](https://github.com/PDFToolkit/pdf/blob/v0.9.0/resources/wtpdf-1.0/type3-usage.json)
+conserve explicitement ces limites.
+
+### Signaler les fonctionnalités dépréciées dans leur contexte réel
+
+`WtPdfDeprecatedChecks` examine le graphe construit selon les entrées explicites
+de `WtPdfDeprecatedCatalogue`, avec clauses sources et pages physiques. Il
+distingue domaines de dictionnaires, opérateurs de contenu et contexte de
+fichier fourni. Une clé privée sans rapport portant le même nom ne prouve pas
+l'utilisation d'une fonctionnalité PDF dépréciée. Les nœuds partagés et arêtes
+répétées consomment des budgets explicites ; charges opaques, contexte de trailer
+omis et sémantiques non résolues demandent encore une validation complémentaire.
+
+WTPDF §6.2 recommande d'éviter les fonctionnalités dépréciées avec **should**.
+Le rapport expose donc des constats `Recommendation` et `recommendations()`
+séparément de `failures()` et `pending()`. Une recommandation ne devient pas
+silencieusement une erreur bloquante. Les interdictions WTPDF indépendantes
+restent des erreurs lorsqu'elles s'appliquent. Fournir
+`WtPdfDeprecatedFileContext` pour examiner le contexte de trailer/chiffrement
+construit ; il n'authentifie pas des octets importés. CMS, CMaps et formats
+embarqués opaques demandent leurs propres parseurs. Une liste d'erreurs vide
+ne prouve toujours pas la conformité WTPDF ou PDF/UA.
 
 ## Conserver les signatures avec horodatages et données de validation
 

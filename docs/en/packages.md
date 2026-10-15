@@ -203,10 +203,17 @@ R=5–7 receives explicitly prepared Unicode credentials; historical R=2–4 ins
 uses `PdfDocEncodedPassword` with PDFDocEncoding bytes. The
 [authentication guide](https://github.com/PDFToolkit/pdf-reader/blob/v0.3.1/docs/authentication.md)
 details R=2–7, named `StrF`/`StmF`/`EFF` filters and AES-GCM tag checks. The default
-reader opens no encrypted input without that selection. Source PDF MAC and
-public-key authentication remain rejected. Authentication exposes user/owner
+reader opens no encrypted input without that selection. Reader 0.4 verifies
+indicated source PDF MACs before returning protected content. Select
+`SourceIntegrityPolicy::RequirePdfMac` when the application must also reject
+ordinary unprotected or stripped PDFs; the compatible default accepts them.
+`requiringSourceIntegrity()` preserves or strengthens a reader's existing
+policy without replacing its credentials or limits. The
+[source MAC guide](https://pdftoolkit.github.io/modules/reader/source-mac.html)
+explains exact byte coverage and supported framing. Public-key source
+authentication remains unsupported. Authentication exposes user/owner
 permissions; the receiving application enforces them. It does not validate
-signatures or confer certificate trust.
+signature mathematics or confer certificate trust.
 
 Read values cannot be directly passed back to the writer: their references
 belong to the original file. Graph import and remapping, rewriting, merging

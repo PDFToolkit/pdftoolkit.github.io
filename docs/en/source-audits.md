@@ -25,6 +25,33 @@ and [PDF 2.0 rule data](https://github.com/PDFToolkit/pdf/blob/v0.8.0/resources/
 retain source tables and physical pages. Their generators reproduce the PHP
 definitions from those reviewed resources.
 
+## Check the effective annotation, action and measurement graph
+
+The new native checks concern relationships across actual document objects,
+separately from the 197 intrinsic dictionary rules. They resolve references
+against the effective graph and retain the applicable PDF version, including
+objects inherited from an earlier native revision. The dedicated regression
+suite has 84 tests and 132 assertions; these are test counts, not normative-rule
+counts. The [source-bound record](https://github.com/PDFToolkit/pdf/blob/v0.9.0/resources/graph-semantics/coverage.json)
+retains source pages, counterexamples and implementation boundaries.
+
+Markup replies must identify an annotation on the same page. Group replies,
+popup ownership and optional reciprocal `Parent` links have their own rules;
+a Popup cannot supply its own appearance or actions. Page ownership and unique
+annotation names are checked against the actual `Annots` arrays. `GoToR` and
+`GoToE` check file specifications, `D`/`SD` destination branches, remote page
+indices, `NewWindow` and bounded embedded-target paths. These checks do not open
+remote files or prove that an external target exists.
+
+Rectilinear `RL` measures validate required `X`/`D`/`A` arrays, optional
+`Y`/`T`/`S`, origin, conversion factor and each number-format dictionary.
+Fraction controls are interpreted in their last-array-element context.
+`Y` without `CYX` remains a legal declaration: it makes the corresponding
+calculations unavailable rather than universally invalidating the dictionary.
+This validates the measurement declaration; it is not a coordinate engine or
+display-formatting algorithm. Other annotation families, multimedia graphs and
+external target semantics retain their separate coverage boundaries.
+
 ## Preserve the exact EC3 correction
 
 The [EC3 review record](https://github.com/PDFToolkit/pdf/blob/v0.8.0/resources/iso32000-2-2020/ec3-semantic-reviews.json)

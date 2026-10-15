@@ -27,9 +27,10 @@ tables with 1,709 fixed or variable entries. Source continuation pages and
 extraction corrections are traceable. This coverage and these companion
 mechanisms do not establish complete conformance to every clause of the base
 standard. The [PDF 2.0 guide](pdf-2-0.md) and [coverage guide](coverage.md) retain
-that distinction. Reader 0.3 separately adds password authentication and decoding
-mechanisms. Its input contract does not include source PDF MAC or public-key
-authentication; consult the [reader guide](https://github.com/PDFToolkit/pdf-reader/blob/v0.3.1/docs/authentication.md).
+that distinction. Reader 0.4 separately provides password authentication,
+decoding and source PDF MAC verification. Public-key source authentication
+remains unsupported; consult the [reader guide](https://pdftoolkit.github.io/modules/reader/authentication.html)
+and its [source MAC guide](https://pdftoolkit.github.io/modules/reader/source-mac.html).
 
 ## Algorithms are selected independently
 
@@ -68,6 +69,34 @@ Ed448 use an explicitly selected OpenSSL executable through the dedicated
 provider because PHP 8.3 does not expose the needed EdDSA operation. This provider
 receives the executable and key explicitly; selecting other algorithms does not
 start a process. See the [signature and integrity tutorial](tutorials/31-pdf20-modern-signature.md).
+
+## Verify the source MAC before reading protected content
+
+Reader 0.4 uses the core's `PdfMacTokenVerifier` through an explicitly selected
+`StandardPasswordAuthentication`. It verifies the latest physical trailer's
+standalone `AuthCode` or its signature-attached MAC before returning protected
+catalog content. The actual lexical token span and direct `ByteRange` must
+cover the complete current file except that token. An inherited MAC cannot
+authenticate an appended revision, and searching for equal bytes does not prove
+the excluded token's identity. Both signature and document-timestamp attachment
+locations are supported within the documented direct hexadecimal token bounds.
+
+`SourceIntegrityPolicy::AcceptUnprotected`, the compatible default, verifies
+every indicated MAC but also accepts unprotected PDFs. Select `RequirePdfMac`
+when protected input is expected: a clear PDF cannot reveal that all encryption
+and integrity markers were removed. `DocumentReader::sourceIntegrityPolicy()`
+exposes the configured requirement; `requiringSourceIntegrity()` preserves or
+strengthens it with the same credentials and limits. Invalid protected input
+does not fall back to unauthenticated decryption.
+
+MAC verification uses the authenticated Standard R5–R7 file key and covers
+original ciphertext and structural bytes. It is not mathematical signature
+verification or certificate/TSA trust. Anyone holding that file key can create
+a new MAC. No external resource, certificate or revocation request is performed.
+The [module guide](https://pdftoolkit.github.io/modules/reader/source-mac.html)
+documents CMS/byte budgets, supported algorithms, 15 independent real files,
+adversarial cases and exact framing boundaries. Historical MACs are not each
+independently revalidated, and public-key source authentication remains separate.
 
 ## Metadata and declarations have an owner
 
@@ -131,6 +160,45 @@ remote resources and active content. A missing backend, opaque `RV` stream or
 unsupported namespace/CSS remains pending rather than passing. A richer parser
 can be supplied explicitly. This closes that mechanical comparison domain;
 human meaning and the remaining WTPDF requirements still need separate evidence.
+
+### Inspect the Type 3 glyph programs actually used
+
+The native font-use audit selects managed `CharProcs` from the actual shown
+byte codes. `Type3GlyphSelection` retains distinct glyphs in first-use order;
+it neither invents Unicode conversion nor substitutes an implicit default glyph.
+Only selected rendered glyph programs create auxiliary-font embedding
+obligations. Their local resources, nested Forms and inherited graphics state
+are inspected with the same cumulative operation, text and recursion budgets.
+An unused glyph's resources do not become rendered merely by being declared.
+
+ISO 32000-2 §9.3.6 suppresses Type 3 glyph descriptions in text rendering modes
+3 and 7. The audit follows that rule while still detecting shown undefined or
+explicit `.notdef` codes. Independent qpdf/pypdf/Poppler checks examine five
+actual PDFs. Poppler can execute a Type 3 glyph in mode 7; that observation is
+recorded rather than counted as confirmation of the standard's suppression rule.
+Opaque content, generic unmanaged Type 3 dictionaries, font-program correctness,
+licensing and Unicode meaning still need their own evidence. The
+[source-bound review](https://github.com/PDFToolkit/pdf/blob/v0.9.0/resources/wtpdf-1.0/type3-usage.json)
+keeps these limits explicit.
+
+### Report deprecated features in their actual context
+
+`WtPdfDeprecatedChecks` inspects the constructed graph against explicit
+`WtPdfDeprecatedCatalogue` entries with source clauses and physical pages.
+It distinguishes dictionary domains, content operators and the supplied file
+context. An unrelated private key with the same spelling does not prove use of
+a deprecated PDF feature. Shared nodes and repeated edges consume explicit
+budgets; opaque payloads, omitted trailer context and unresolved semantics
+remain additional validation requirements.
+
+WTPDF §6.2 says deprecated features **should** be avoided. The report therefore
+exposes `Recommendation` findings and `recommendations()` separately from
+`failures()` and `pending()`. It does not silently turn a recommendation into a
+hard failure. Existing independent WTPDF prohibitions still fail when applicable.
+Supply `WtPdfDeprecatedFileContext` when the audit must inspect the constructed
+trailer/encryption context; it is not authentication of imported bytes. CMS,
+CMaps and opaque embedded formats require their own parsers. An empty failure
+list still does not establish WTPDF or PDF/UA conformance.
 
 ## Preserve signatures with timestamps and validation data
 

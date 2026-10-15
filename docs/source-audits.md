@@ -26,6 +26,36 @@ et [règles PDF 2.0](https://github.com/PDFToolkit/pdf/blob/v0.8.0/resources/iso
 conservent leurs tableaux et pages physiques. Les générateurs reproduisent les
 définitions PHP à partir de ces ressources vérifiées.
 
+## Vérifier le graphe effectif d'annotations, d'actions et de mesures
+
+Les nouveaux contrôles natifs concernent les relations entre les véritables
+objets du document, séparément des 197 règles intrinsèques des dictionnaires.
+Ils résolvent les références dans le graphe effectif et conservent la version
+PDF applicable, y compris pour les objets hérités d'une révision native antérieure.
+La suite de régressions dédiée comporte 84 tests et 132 assertions ; ces nombres
+comptent des tests, pas des règles normatives. Le
+[registre relié aux sources](https://github.com/PDFToolkit/pdf/blob/v0.9.0/resources/graph-semantics/coverage.json)
+conserve pages sources, contre-exemples et frontières d'implémentation.
+
+Une réponse de markup doit désigner une annotation de la même page. Les
+réponses de groupe, l'appartenance des popups et leur éventuel lien réciproque
+`Parent` ont leurs propres règles ; un Popup ne porte ni apparence ni actions
+propres. L'appartenance aux pages et l'unicité des noms d'annotations sont
+vérifiées dans les véritables tableaux `Annots`. `GoToR` et `GoToE` vérifient
+spécifications de fichier, branches de destination `D`/`SD`, indices de page
+distante, `NewWindow` et chemins de cibles embarquées bornés. Ces contrôles
+n'ouvrent aucun fichier distant et ne prouvent pas l'existence de la cible externe.
+
+Les mesures rectilignes `RL` valident les tableaux obligatoires `X`/`D`/`A`, les
+éventuels `Y`/`T`/`S`, l'origine, le facteur de conversion et chaque dictionnaire
+de format numérique. Les contrôles de fractions sont interprétés dans le
+contexte du dernier élément du tableau. `Y` sans `CYX` reste une déclaration
+licite : les calculs correspondants deviennent indisponibles sans invalider
+universellement le dictionnaire. Ce mécanisme valide la déclaration de mesure ;
+il ne calcule ni coordonnées ni affichage formaté. Les autres familles
+d'annotations, graphes multimédias et sémantiques des cibles externes conservent
+leurs frontières de couverture distinctes.
+
 ## Conserver la correction EC3 exacte
 
 Le [registre de vérification EC3](https://github.com/PDFToolkit/pdf/blob/v0.8.0/resources/iso32000-2-2020/ec3-semantic-reviews.json)

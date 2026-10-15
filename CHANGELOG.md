@@ -2,6 +2,24 @@
 
 [English](CHANGELOG.md) · [Français](CHANGELOG.fr.md)
 
+## Unreleased
+
+- Explain ordered barcode value preparation, global compression before
+  partitioning, exact PMD association and full-widget native appearances.
+  Retain the explicit encoder capability, processing budgets, test-image oracle
+  boundary and Adobe's single-widget representation ambiguity.
+- Document effective annotation ownership/replies/popups, remote-action targets
+  and rectilinear measure checks; keep 84 tests/132 assertions separate from
+  the 197 intrinsic dictionary rules and incomplete normative coverage.
+- Explain actual selected native Type 3 glyph inspection, rendering modes 3/7,
+  independent Poppler differences and contextual WTPDF deprecation findings.
+  Distinguish recommendations, failures and pending opaque/file-context evidence.
+- Add the reader's bilingual source PDF MAC guide to module navigation and
+  required-route checks. Document exact current-file coverage, required integrity
+  policy, immutable policy composition, framing limits and the signature/PKI boundary.
+- Run independent barcode, Type 3 usage and source-MAC oracles during the full
+  documentation build, keeping their verification artifacts private to the build.
+
 ## [0.8.0] - 2026-10-15
 
 - Document core 0.8.1, reader 0.3.1, image/font modules 0.1.9, independent

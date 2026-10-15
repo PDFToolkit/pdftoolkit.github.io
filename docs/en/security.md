@@ -38,7 +38,7 @@ Identity filter. Its [seven additional regression cases](https://github.com/PDFT
 use qpdf and cryptography with the specific oracle boundaries explained in the
 [authentication guide](https://pdftoolkit.github.io/modules/reader/authentication.html).
 
-## New bounded mechanisms in 0.8 / 0.3 / 0.2
+## Bounded mechanisms and explicit capabilities
 
 - Core dictionary rules execute source-linked domains and entry relationships;
   they do not sanitize arbitrary graphs or certify every normative condition.
@@ -57,7 +57,22 @@ use qpdf and cryptography with the specific oracle boundaries explained in the
 - Reader 0.3 authenticates explicit R=2–7 credentials and decrypts each payload
   once. Named crypt filters, object streams and AES-GCM tags have independent
   fixtures. Retained plaintext shares cumulative budgets; original ciphertext is
-  separately available. Source PDF MAC/public-key authentication is rejected.
+  separately available. Reader 0.4 additionally verifies indicated source PDF
+  MACs before protected content is interpreted. `RequirePdfMac` rejects
+  unprotected or stripped input; the compatible default also accepts ordinary
+  unprotected PDFs. Exact lexical token identity, full-current-file byte coverage
+  and CMS framing are checked. This does not verify signature mathematics or
+  certificate trust; a holder of the file key can construct a new MAC.
+  [The source MAC guide](https://pdftoolkit.github.io/modules/reader/source-mac.html)
+  explains policies, budgets and rejection boundaries. Public-key source
+  authentication remains unsupported.
+- Barcode preparation compresses the whole explicit value before ordered
+  partitioning and checks cumulative budgets before invoking the next supplied
+  encoder. The core constructs native full-rectangle `AP.N` images; symbology,
+  quiet zones and the encoder's own execution remain its explicit capability.
+- WTPDF Type 3 inspection follows actual selected glyph programs and bounded
+  nested resources. Contextual deprecation checks distinguish recommendations
+  from failures; opaque programs and missing file context stay pending.
 - OpenType 0.2 bounds contextual lookups, glyph expansion and variation stores.
   Native positioning/substitution is compared with HarfBuzz; it does not execute
   font hints or provide a complete Unicode shaping engine.

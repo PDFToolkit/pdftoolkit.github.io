@@ -2,6 +2,24 @@
 
 [English](CHANGELOG.md) · [Français](CHANGELOG.fr.md)
 
+## À paraître
+
+- Expliquer la préparation ordonnée des valeurs de codes-barres, la compression
+  globale avant répartition, l'association exacte aux PMD et les apparences
+  natives sur tout le widget. Conserver la capacité d'encodage explicite, les
+  budgets, la frontière de l'oracle à image de test et l'ambiguïté Adobe du widget unique.
+- Documenter appartenance/réponses/popups des annotations effectives, cibles
+  d'actions distantes et contrôles des mesures rectilignes ; séparer les 84 tests
+  et 132 assertions des 197 règles intrinsèques et de la couverture normative incomplète.
+- Expliquer l'inspection des véritables glyphes Type 3 natifs sélectionnés, les
+  modes 3/7, les différences Poppler indépendantes et les constats contextuels
+  de dépréciation WTPDF. Distinguer recommandations, erreurs et preuves opaques/de contexte en attente.
+- Ajouter le guide bilingue du MAC PDF source à la navigation du lecteur et aux
+  routes obligatoires. Décrire couverture exacte du fichier courant, politique
+  d'intégrité requise, composition immuable, limites de cadrage et frontière signature/PKI.
+- Exécuter les oracles indépendants des codes-barres, usages Type 3 et MAC source
+  pendant la construction complète de la documentation, avec résultats privés au build.
+
 ## [0.8.0] - 2026-10-15
 
 - Documenter le core 0.8.1, le lecteur 0.3.1, les modules images/fontes 0.1.9,

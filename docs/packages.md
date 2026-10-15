@@ -203,9 +203,17 @@ R=5–7 reçoit un credential Unicode préparé explicitement ; R=2–4 utilise 
 [guide d'authentification](https://github.com/PDFToolkit/pdf-reader/blob/v0.3.1/docs/fr/authentication.md)
 précise R=2–7, les filtres nommés `StrF`/`StmF`/`EFF` et la vérification des tags
 AES-GCM. Par défaut le lecteur n'ouvre aucune entrée chiffrée sans cette sélection.
-PDF MAC et l'authentification par clé publique en entrée restent refusés.
-L'authentification expose les permissions user/owner ; l'application qui reçoit
-les données les applique. Elle ne vérifie ni les signatures ni la confiance des certificats.
+Le lecteur 0.4 vérifie tout MAC PDF source signalé avant de retourner le contenu
+protégé. Choisir `SourceIntegrityPolicy::RequirePdfMac` lorsque l'application
+doit aussi refuser les PDF ordinaires non protégés ou privés de leurs marqueurs ;
+la valeur compatible par défaut les accepte. `requiringSourceIntegrity()`
+conserve ou renforce la politique existante du lecteur sans remplacer ses
+identifiants ni ses limites. Le
+[guide du MAC source](https://pdftoolkit.github.io/fr/modules/reader/source-mac.html)
+décrit la couverture exacte des octets et le cadrage pris en charge.
+L'authentification par clé publique source reste indisponible. L'authentification
+expose les permissions user/owner ; l'application qui reçoit les données les
+applique. Elle ne vérifie ni mathématiquement les signatures ni la confiance des certificats.
 
 Les valeurs lues ne sont pas directement réinjectables dans le writer : leurs
 références appartiennent au fichier d'origine. L'import et le remappage du graphe,

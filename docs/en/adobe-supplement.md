@@ -81,10 +81,50 @@ implicit interpretation hides this ambiguity in the document.
 
 `BarcodeModuleWidth` calculates `ceil(distanceInches × Resolution)` and
 constructs the integer `XSymWidth` entry. `BarcodeDataPreparation` preserves
-bytes for `DataPrep = 0` and applies Flate for `DataPrep = 1`. These objects
-implement the preparation and formula on pages 46–47. They do not choose
-text encoding or draw a PDF417, QR or Data Matrix symbol: codecs for those
-symbologies depend on external standards.
+bytes for `DataPrep = 0` and applies Flate for `DataPrep = 1`.
+
+### Prepare ordered messages and native widget appearances
+
+`BarcodeMessagePartition` receives the actual, explicitly encoded `V` bytes.
+It keeps binary data and any BOM unchanged. With `DataPrep = 1`, it compresses
+the **entire value once** with zlib-framed Flate before partitioning; compressing
+each widget's part independently would produce different messages. The parts
+follow widget order, their sizes differ by at most one byte, and earlier parts
+receive the remainder. Each `BarcodeMessage` exposes its index, total and byte
+offset. An explicitly empty value still produces one part for every widget;
+an absent value requires an application decision.
+
+`BarcodeFieldPreparation` binds those messages to explicit
+`BarcodeWidgetParameters`: the rectangle and actual `BarcodePaperMetadata`
+serialized into each widget. `render()` invokes the supplied
+`BarcodeImageEncoder::encode(BarcodeEncodingRequest): ImageXObject` capability
+and returns `BarcodeWidgetAppearance` objects without attaching or mutating the
+field. The application attaches them in order and binds them to their pages.
+
+For an accepted opaque device-colour image, the adapter constructs a native
+`FormAppearanceStream` and `AP.N`: a normalized local bounding box followed by
+`q`, a width/height matrix, `Do` and `Q`. The image fills the whole widget
+rectangle. Reversed corners are supported; this appearance-producing operation
+requires finite positive extents. It does not declare zero-area rectangles
+universally invalid PDF syntax. Input/prepared bytes, widget count and cumulative
+image pixels/sample bytes have explicit budgets, checked before the next encoder
+call. The supplied encoder must also bound its own allocations and work.
+
+Adobe page 46 permits a single widget merged with its field, while page 47
+describes it as merged in the procedure. Both legal native representations remain
+available through explicit `addWidget()` or `mergeWidget()` construction. The
+default 255-widget processing budget comes from Acrobat 9 note E-7; it is
+configurable and is not a universal PDF cardinality constraint.
+
+The core supplies no PDF417, QR Code or Data Matrix codec. The encoder owns
+capacity, ECC, module geometry, quiet zones and scanner-side reconstruction.
+The appearance adapter accepts no masks, alternate images or ancillary image
+graphs. A changed value requires a newly constructed plan; no JavaScript or
+automatic input observation runs. The independent oracle uses five PDFs, ten
+widgets and 45 Poppler pixel checks with an announced **test pattern**, proving
+byte preparation, PMD association and placement rather than a scannable symbol.
+The package's [source and evidence record](https://github.com/PDFToolkit/pdf/blob/v0.9.0/resources/barcodes/README.md)
+documents every boundary and the page 46/47 ambiguity.
 
 ## Historical AES-256 encryption
 

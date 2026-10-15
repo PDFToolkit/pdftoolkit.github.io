@@ -29,6 +29,37 @@ It also rejects redaction font entries outside their actual simple/composite/CID
 domain. The [security review](security.md) and [redaction tutorial](tutorials/36-applied-redaction.md)
 describe the exact runtime provenance, verification and input boundaries.
 
+## Ordered barcode appearances, graph relations and source integrity
+
+Native barcode construction now preserves the exact encoded field value,
+compresses the whole value before partitioning, binds ordered parts to their
+serialized PMD and constructs full-widget `AP.N` from an explicitly supplied
+image encoder. The [Adobe supplement guide](adobe-supplement.md) explains
+empty/binary values, budgets, separate or merged single widgets and the source
+ambiguity. Five PDFs, ten widgets and 45 pixel checks use an announced test
+image. PDF417/QR/Data Matrix algorithms, quiet zones and scanner behavior remain
+the encoder's responsibility.
+
+The [source-audit guide](source-audits.md) adds effective annotation ownership,
+reply/popup relationships, remote-action targets and rectilinear measure checks.
+The dedicated 84 tests and 132 assertions remain separate from the 197 intrinsic
+dictionary rules. They do not execute actions, open remote targets or implement
+every annotation/measurement condition.
+
+WTPDF follows actual selected native Type 3 glyph programs and their auxiliary
+fonts, with ISO2 rendering-mode 3/7 semantics and explicit Poppler differences.
+Contextual deprecation checks distinguish `Recommendation` findings from
+failures and retain pending opaque/file-context evidence. Neither addition
+certifies arbitrary font programs or WTPDF/PDF/UA conformance.
+
+Reader 0.4 verifies standalone and signature-attached source PDF MACs before
+protected content is interpreted, using the original bytes and exact token
+span. Its [MAC guide](https://pdftoolkit.github.io/modules/reader/source-mac.html)
+distinguishes the compatible unprotected-input policy from `RequirePdfMac`,
+latest-file authentication from historical per-revision verification, and MAC
+integrity from signature mathematics or certificate trust. Public-key source
+authentication remains unsupported.
+
 ## ISO 32000-2:2020 EC3 and companion bundle in 0.7.1
 
 The [PDF 2.0 guide](pdf-2-0.md) documents edition-specific dictionary objects,
@@ -58,8 +89,9 @@ No automatic WTPDF/PDF/UA-2 certification or complete base-standard conformance
 is claimed. Reader 0.3 adds opt-in R=2–7 password authentication, hybrid xrefs
 and further filter decoding to PDF 1.0–2.0 input. Its
 [authentication guide](https://github.com/PDFToolkit/pdf-reader/blob/v0.3.1/docs/authentication.md)
-states the supported crypt filters and rejects source PDF MAC/public-key
-authentication. These input mechanisms remain distinct from writing and rendering.
+states the supported crypt filters. Reader 0.4 adds the source MAC boundary
+described above; public-key source authentication remains unsupported.
+These input mechanisms remain distinct from writing and rendering.
 
 The [original main standard](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf)
 and all eleven newly supplied originals remain unchanged in the public core
@@ -155,9 +187,9 @@ These additions are not yet a declaration of complete coverage. General
 comparison of authenticated changes permitted by DocMDP, FieldMDP and UR
 remains open: pages, content, shared resources, annotations, inherited values
 and template instantiation need their own analysis. Other priorities include
-annotation families and their relationships, other 2D measurement rules,
-multimedia/RichMedia graphs, some function rules and barcode appearance
-preparation procedures. Conditions, version thresholds and resources must
+the remaining annotation relationships and measurement rules,
+multimedia/RichMedia graphs, some function rules and external barcode
+symbology codecs. Conditions, version thresholds and resources must
 also continue to be audited family by family. The inventories distinguish
 these tasks from constructions and evidence already delivered.
 

@@ -31,6 +31,40 @@ de leur domaine simple/composite/CID réel sont également refusées. La
 [revue de sécurité](security.md) et le [tutoriel de caviardisation](tutorials/36-applied-redaction.md)
 précisent les frontières de provenance, de vérification et des entrées acceptées.
 
+## Apparences de codes-barres ordonnées, relations du graphe et intégrité source
+
+La construction native des codes-barres conserve la valeur de champ exactement
+encodée, compresse la valeur entière avant répartition, lie les parties
+ordonnées aux PMD sérialisées et construit `AP.N` sur tout le widget via un
+encodeur d'image fourni explicitement. Le [guide du supplément Adobe](adobe-supplement.md)
+explique valeurs vides/binaires, budgets, widget unique séparé ou fusionné et
+ambiguïté de source. Cinq PDF, dix widgets et 45 contrôles de pixels utilisent
+une image de test annoncée. Algorithmes PDF417/QR/Data Matrix, zones de silence
+et comportement du scanner restent sous la responsabilité de l'encodeur.
+
+Le [guide d'audit des sources](source-audits.md) ajoute appartenance effective
+des annotations, relations réponse/popup, cibles d'actions distantes et
+contrôles de mesures rectilignes. Les 84 tests et 132 assertions dédiés restent
+séparés des 197 règles intrinsèques des dictionnaires. Ils n'exécutent pas
+d'actions, n'ouvrent pas les cibles distantes et n'implémentent pas toutes les
+conditions d'annotations ou de mesures.
+
+WTPDF suit les véritables programmes de glyphes Type 3 natifs sélectionnés et
+leurs fontes auxiliaires, avec la sémantique ISO2 des modes 3/7 et les
+différences Poppler explicites. Les contrôles contextuels de dépréciation
+distinguent `Recommendation` des erreurs et conservent les preuves opaques/de
+contexte de fichier en attente. Ces ajouts ne certifient ni un programme de
+fonte arbitraire ni la conformité WTPDF/PDF/UA.
+
+Le lecteur 0.4 vérifie les MAC PDF sources autonomes ou attachés à une signature
+avant d'interpréter le contenu protégé, sur les octets originaux et l'étendue
+exacte du jeton. Son [guide MAC](https://pdftoolkit.github.io/fr/modules/reader/source-mac.html)
+distingue la politique compatible acceptant les entrées non protégées de
+`RequirePdfMac`, l'authentification du fichier courant de la vérification de
+chaque ancienne révision, et l'intégrité MAC de la validité mathématique des
+signatures ou de la confiance des certificats. L'authentification par clé
+publique source reste indisponible.
+
 ## ISO 32000-2:2020 EC3 et bundle complémentaire dans 0.7.1
 
 Le [guide PDF 2.0](pdf-2-0.md) documente les objets propres à l’édition : tableaux
@@ -60,8 +94,9 @@ Aucune certification WTPDF/PDF/UA-2 automatique ni conformité complète à la n
 de base n’est revendiquée. Le lecteur 0.3 ajoute l'authentification R=2–7 sur
 activation explicite, les xrefs hybrides et d'autres filtres au périmètre PDF
 1.0–2.0. Son [guide d'authentification](https://github.com/PDFToolkit/pdf-reader/blob/v0.3.1/docs/authentication.md)
-précise les filtres cryptographiques acceptés et refuse PDF MAC/authentification
-par clé publique en entrée. Ces mécanismes restent distincts de l'écriture et du rendu.
+précise les filtres cryptographiques acceptés. Le lecteur 0.4 ajoute la frontière
+MAC source décrite ci-dessus ; l'authentification par clé publique en entrée
+reste indisponible. Ces mécanismes restent distincts de l'écriture et du rendu.
 
 L’[original de la norme principale](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf)
 et les onze nouveaux originaux restent inchangés dans le dépôt public du core,
@@ -158,9 +193,9 @@ Ces ajouts ne constituent pas encore une déclaration de couverture complète.
 La comparaison générale des modifications authentifiées permises par DocMDP,
 FieldMDP et UR reste ouverte : pages, contenu, ressources partagées, annotations,
 valeurs héritées et instanciation de templates demandent une analyse propre.
-Les autres priorités sont les familles d'annotations et leurs relations, les
-autres règles de mesure 2D, les graphes multimédia/RichMedia, certaines règles de
-fonctions et les procédures de préparation des apparences de codes-barres.
+Les autres priorités sont les relations d'annotations et règles de mesure
+restantes, les graphes multimédia/RichMedia, certaines règles de fonctions
+et les codecs externes de symbologies de codes-barres.
 Les conditions, seuils de versions et ressources doivent aussi continuer à être
 audités famille par famille. Les inventaires distinguent ces travaux des
 constructions et preuves déjà livrées.

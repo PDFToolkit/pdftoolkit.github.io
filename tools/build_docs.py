@@ -79,6 +79,8 @@ def build(args) -> None:
         [sys.executable, "-m", "unittest", "discover", "-s", "tests", "-p", "test_wtpdf_requirements.py"],
     ):
         run(command, source)
+    reader = html / "vendor/pdftoolkit/pdf-reader"
+    run([sys.executable, "tools/validate_source_mac.py", "--php", args.php, "--qpdf", args.qpdf], reader)
     validate_html_module(args, html, work, pdfs)
     api = work / "api.json"
     run([args.php, content / "tools/export_api.php", api, source, manifest, opentype, html], source)
@@ -112,6 +114,10 @@ def build(args) -> None:
     run([sys.executable, "tools/validate_source_mechanisms.py", pdfs, "--php", args.php, "--qpdf", args.qpdf, *poppler], source)
     run([sys.executable, "tools/validate_secure_redaction.py", "--php", args.php, "--qpdf", args.qpdf,
          "--pdftoppm", args.pdftoppm, "--work-dir", work / "redaction-validation"], source)
+    run([sys.executable, "tools/validate_barcode_appearances.py", "--php", args.php, "--qpdf", args.qpdf,
+         "--pdftoppm", args.pdftoppm, "--work-dir", work / "barcode-validation"], source)
+    run([sys.executable, "tools/validate_wtpdf_type3_usage.py", "--php", args.php, "--qpdf", args.qpdf,
+         "--pdftoppm", args.pdftoppm, "--work-dir", work / "wtpdf-type3-validation"], source)
     run([sys.executable, content / "tools/build_site.py", "--content-root", content, "--source-root", source,
          "--opentype-root", opentype, "--pdf-to-html-root", html, "--sources", manifest, "--api", api, "--pdf-dir", pdfs, "--pdf-preview-dir", previews,
          "--output", args.output.resolve(), "--base-path", "/", "--docs-revision", args.docs_revision], content)

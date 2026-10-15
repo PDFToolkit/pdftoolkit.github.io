@@ -99,6 +99,15 @@ pour la signature/maintenance incrémentale bornée, ainsi que le contrôle du
 domaine des fontes du caviardage. Le [guide de sécurité](https://pdftoolkit.github.io/fr/guides/securite.html)
 précise les opérations permises, refus et migration de provenance dans l’exécution.
 
+Les ajouts reliés aux sources couvrent aussi les messages ordonnés des
+codes-barres et leurs apparences natives, les relations effectives entre
+annotations/actions/mesures rectilignes, l'utilisation des glyphes Type 3
+sélectionnés et les recommandations contextuelles de dépréciation WTPDF.
+La vérification du MAC PDF source a son [guide lecteur](https://pdftoolkit.github.io/fr/modules/reader/source-mac.html) et sa politique explicite
+d'entrée obligatoirement protégée. Les guides conservent les frontières de
+symbologie, rendu, contenu opaque et confiance ; les contrôles fournissent des
+preuves pour ces opérations sans établir une conformité PDF complète.
+
 ## Sources reproductibles
 
 [resources/sources.json](resources/sources.json) consigne les versions stables

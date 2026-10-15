@@ -231,6 +231,7 @@ TEXT = {
     'Appliquer une caviardisation': 'Apply redaction',
     'Suppression conservatrice des données et écriture d’un nouveau fichier.': 'Conservative data removal and writing a fresh file.',
     'Authentification des PDF chiffrés': 'Encrypted PDF authentication',
+    'Authentifier le MAC du PDF source': 'Authenticate the source PDF MAC',
     'Positionnement et variations OpenType': 'OpenType positioning and variations',
     'PDF 2.0 : objets et mécanismes': 'PDF 2.0: objects and mechanisms',
     'Horodatages et preuves de validation': 'Timestamps and validation evidence',

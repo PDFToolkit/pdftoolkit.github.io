@@ -40,7 +40,7 @@ redéfinir le filtre standard Identity. Ses [sept régressions supplémentaires]
 utilisent qpdf et cryptography, avec les limites précises des oracles expliquées
 dans le [guide d'authentification](https://pdftoolkit.github.io/fr/modules/reader/authentication.html).
 
-## Nouveaux mécanismes bornés dans 0.8 / 0.3 / 0.2
+## Mécanismes bornés et capacités explicites
 
 - Les règles de dictionnaire du core exécutent des domaines et relations reliés
   aux sources ; elles n'assainissent pas un graphe arbitraire et ne certifient pas
@@ -62,8 +62,25 @@ dans le [guide d'authentification](https://pdftoolkit.github.io/fr/modules/reade
 - Le lecteur 0.3 authentifie des credentials R=2–7 explicites et déchiffre chaque
   payload une seule fois. Filtres nommés, flux d'objets et tags AES-GCM disposent
   de fixtures indépendantes. Le texte déchiffré partage les budgets cumulatifs ;
-  le ciphertext original reste accessible séparément. PDF MAC/l'authentification
-  par clé publique en entrée sont refusés.
+  le ciphertext original reste accessible séparément. Le lecteur 0.4 vérifie
+  aussi tout MAC PDF source signalé avant d'interpréter le contenu protégé.
+  `RequirePdfMac` refuse une entrée non protégée ou privée de ses marqueurs ;
+  la valeur compatible par défaut accepte aussi les PDF ordinaires non protégés.
+  Identité lexicale du jeton, couverture de tout le fichier courant et cadrage
+  CMS sont contrôlés. Cela ne vérifie ni mathématiquement la signature ni la
+  confiance du certificat ; qui détient la clé du fichier peut créer un nouveau
+  MAC. Le [guide du MAC source](https://pdftoolkit.github.io/fr/modules/reader/source-mac.html)
+  explique politiques, budgets et frontières de refus. L'authentification par
+  clé publique en entrée reste indisponible.
+- La préparation des codes-barres compresse la valeur explicite entière avant
+  sa répartition ordonnée et vérifie les budgets cumulatifs avant l'appel
+  suivant de l'encodeur fourni. Le core construit les images natives `AP.N`
+  sur tout le rectangle ; symbologie, zones de silence et exécution propre
+  de l'encodeur restent sa capacité explicite.
+- L'inspection WTPDF des Type 3 suit les véritables programmes de glyphes
+  sélectionnés et leurs ressources imbriquées bornées. Les contrôles contextuels
+  de dépréciation distinguent recommandations et erreurs ; programmes opaques
+  et contexte de fichier absent restent en attente.
 - OpenType 0.2 borne les lookups contextuels, l'expansion des glyphes et les
   tables de variation. Substitution et positionnement natifs sont comparés à
   HarfBuzz ; ils n'exécutent pas le hinting et ne forment pas un shaper Unicode complet.
