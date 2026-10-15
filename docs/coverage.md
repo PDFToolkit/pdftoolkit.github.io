@@ -22,6 +22,15 @@ d'autres relations conditionnelles/de ressources, l'autorisation générale des
 modifications DocMDP/FieldMDP/UR authentifiées, le rendu et les preuves externes
 ou humaines de conformité restent des travaux explicites.
 
+Le core 0.8.1 impose une garde du delta complet à chaque entrée incrémentale
+native pour l’historique émis vérifié. Seules la signature terminale et la
+maintenance DSS/horodatage documentaire PDF 2.0 sont classifiées ; les verrous
+restent actifs. Les changements généraux de formulaire, annotation et UR non
+classifiés sont refusés, même avec P2/P3. Les entrées de police du caviardage hors
+de leur domaine simple/composite/CID réel sont également refusées. La
+[revue de sécurité](security.md) et le [tutoriel de caviardisation](tutorials/36-applied-redaction.md)
+précisent les frontières de provenance, de vérification et des entrées acceptées.
+
 ## ISO 32000-2:2020 EC3 et bundle complémentaire dans 0.7.1
 
 Le [guide PDF 2.0](pdf-2-0.md) documente les objets propres à l’édition : tableaux
@@ -128,7 +137,7 @@ les mécanismes vérifiés et le travail restant, plutôt qu'un chiffre de compl
 | Chiffrement par mot de passe | Algorithmes ISO R=2/3/4, RC4 et AESV2, avec filtres et mises à jour incrémentales ; R=5 Adobe reste disponible explicitement. |
 | Chiffrement par certificat | Groupes de destinataires CMS, clés de filtres distinctes et formats s3/s4/s5 ; contrôle des clés, données et interprétations de permissions. |
 | Signatures | Réservation de Contents, fixation de ByteRange avant signature et remplissage sans déplacement ; vérification indépendante des trois formats ISO et de signatures successives. |
-| Politiques de signature | Objets DocMDP, FieldMDP, droits d'usage, seeds et critères de certificat ; contrôles intrinsèques. L'orchestration et la comparaison des révisions autorisées restent ouvertes. |
+| Politiques de signature | Objets DocMDP, FieldMDP, droits d'usage, seeds et critères de certificat ; contrôles intrinsèques. L’orchestration de champs signés et la garde native restreinte 0.8.1 sont implémentées ; la classification générale des changements autorisés reste ouverte. |
 | Références hybrides | Table classique et flux xref auxiliaire, références historiques, objets comprimés et lecture par lecteurs anciens et récents. |
 | Linéarisation | Ordonnancement natif, indices de pages et ressources partagées, vignettes et pièces jointes, objets comprimés, trois formats xref et variantes chiffrées. |
 

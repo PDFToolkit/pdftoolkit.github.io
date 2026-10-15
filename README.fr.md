@@ -94,6 +94,10 @@ conservatrice avec nouveau fichier PDF et la comparaison XML WTPDF optionnelle
 du texte enrichi. Les guides distinguent le classement de 65 errata Adobe d'une
 implémentation complète et conservent les exigences EC3 non examinées, politiques
 documentaires et preuves externes ou humaines.
+Le core 0.8.1 ajoute des protections de provenance native et du delta complet
+pour la signature/maintenance incrémentale bornée, ainsi que le contrôle du
+domaine des fontes du caviardage. Le [guide de sécurité](https://pdftoolkit.github.io/fr/guides/securite.html)
+précise les opérations permises, refus et migration de provenance dans l’exécution.
 
 ## Sources reproductibles
 

@@ -163,6 +163,29 @@ et les permissions. L'[oracle de politiques](https://github.com/PDFToolkit/pdf/b
 vérifie huit PDF et neuf signatures RSA/DSA sans modifier les lecteurs.
 La comparaison générale des modifications autorisées par MDP/UR demeure distincte.
 
+Le core **0.8.1** applique aussi les restrictions historiques DocMDP/FieldMDP à la
+frontière commune du writer incrémental, même sans `PreparedSignature`. Il compare
+toutes les différences des révisions figées, pas seulement le champ sélectionné.
+Les opérations protégées prises en charge sont la signature terminale et la
+maintenance DSS/horodatage documentaire PDF 2.0. Les verrous historiques restent
+applicables ; P2/P3 n’autorisent ni remplissage général, ni modification
+d’annotations, ni changements étrangers non classifiés. Les mises à jour UR sont
+refusées. Les entrées `/Lock` et `/Reference` existantes peuvent rester inchangées
+dans une opération autorisée.
+
+Utiliser la `FileRevision` native originale émise dans l’exécution courante. Les
+snapshots fournis, clones et sérialisations PHP ne conservent pas cette autorité.
+Les signatures historiques terminées exigent une vérification réelle liée aux
+octets finaux, `ByteRange`, `Contents`, dictionnaire et certificat du signataire,
+y compris au CMS/MAC final le cas échéant. Des octets opaques remis à `finalize()`
+ne constituent pas cette preuve. Les contrôles établissent l’intégrité
+mathématique, pas la confiance PKI ni une classification générale des changements
+de PDF externes. Les [régressions des permissions incrémentales](https://github.com/PDFToolkit/pdf/blob/v0.8.1/tests/IncrementalSignaturePermissionsTest.php)
+et l’[oracle indépendant](https://github.com/PDFToolkit/pdf/blob/v0.8.1/tools/validate_incremental_permissions.py)
+exercent les opérations natives permises et les changements étrangers refusés.
+Le [guide des sources conservées](https://github.com/PDFToolkit/pdf/blob/v0.8.1/resources/signature-revisions/README.fr.md)
+consigne les pages exactes, les opérations prises en charge et les choix de migration.
+
 Les tests [AdobeEncryptionTest](https://github.com/PDFToolkit/pdf/blob/v0.8.0/tests/AdobeEncryptionTest.php) et le validateur
 [validate_adobe_encryption.py](https://github.com/PDFToolkit/pdf/blob/v0.8.0/tools/validate_adobe_encryption.py) couvrent le
 protocole historique R=5. Ce protocole est sélectionné explicitement pour

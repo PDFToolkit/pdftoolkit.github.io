@@ -11,7 +11,7 @@ explicitement normalisé.
 ## Exécuter le véritable exemple
 
 ```sh
-composer require "roukmoute/pdf:^0.8"
+composer require "roukmoute/pdf:^0.8.1"
 php examples/pdf17-secure-redaction.php redacted.pdf --source=original.pdf
 ```
 
@@ -79,6 +79,12 @@ Les fontes conservées perdent les données descriptives telles que `CharSet`,
 `FontFamily` et `Style`. Les dictionnaires propres à chaque contexte vérifient
 les types des valeurs conservées : une chaîne cachée sous un champ numérique
 est refusée.
+Le core 0.8.1 vérifie aussi le domaine et le sous-type réels de la police. Une
+police simple Type1 ou TrueType ne peut conserver des entrées superflues
+`CIDSystemInfo` ou `DescendantFonts`. Une Type0 exige son véritable descendant
+CID et un encodage compatible ; les identifiants CID légitimes restent dans ce
+domaine. Les combinaisons invalides sont refusées avant tout résultat au lieu
+de recopier des chaînes inutilisées dans la sortie.
 
 ## Produire l'apparence de remplacement
 

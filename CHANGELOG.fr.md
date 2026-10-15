@@ -14,6 +14,12 @@
   partagées et les frontières des entrées refusées.
   Expliquer bornes transformées, dépendances transitives des masques, métadonnées
   de fontes, types/contextes et budgets des arêtes vérifiés par des lecteurs indépendants.
+- Expliquer la provenance native du core 0.8.1, les signatures historiques
+  vérifiées, la garde du delta complet et les opérations bornées de signature,
+  DSS et horodatage. Garder UR, changements généraux de formulaire/annotation et
+  confiance PKI hors de ces opérations prouvées. Documenter le domaine des fontes
+  du caviardage et le refus des données CID inutilisées sur les polices simples,
+  en préservant les identifiants CID légitimes.
 - Exposer l'authentification lecteur/HTML et le positionnement/variations OpenType
   dans les menus ; expliquer permissions vérifiées et domaines de fontes/composition incomplets.
 - Expliquer les métadonnées claires limitées au catalogue, EFF indirect,

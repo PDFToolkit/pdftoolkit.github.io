@@ -87,6 +87,10 @@ conservative [applied redaction](https://pdftoolkit.github.io/tutorials/36-appli
 with fresh PDF output, and optional WTPDF XML rich-text comparison. The guides
 distinguish the 65-record Adobe errata classification from complete implementation
 and retain the unreviewed EC3, document-policy and external/human requirements.
+Core 0.8.1 adds verified native-history and complete-delta protections for
+bounded incremental signing/maintenance, plus font-domain validation during
+redaction. The [security guide](https://pdftoolkit.github.io/guides/security.html)
+explains supported operations, rejected changes and runtime provenance migration.
 
 ## Reproducible sources
 

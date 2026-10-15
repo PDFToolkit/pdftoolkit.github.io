@@ -157,6 +157,27 @@ and permissions. The [policy oracle](https://github.com/PDFToolkit/pdf/blob/v0.8
 verifies eight PDFs and nine RSA/DSA signatures without modifying readers.
 General comparison of MDP/UR-permitted modifications remains separate.
 
+Core **0.8.1** also applies historical DocMDP/FieldMDP restrictions at the common
+incremental writer boundary, even without `PreparedSignature`. It compares the
+entire frozen delta, not only the selected signature field. Supported protected
+operations are terminal signing and PDF 2.0 DSS/document timestamp maintenance.
+Historical field locks remain binding; P2/P3 do not authorize unclassified form
+filling, annotation edits or unrelated changes. UR updates are refused. Existing
+`/Lock` and `/Reference` entries may remain unchanged in a permitted operation.
+
+Use the original native `FileRevision` emitted in the current runtime. Supplied
+snapshots, clones and PHP serialization cannot preserve its emission authority.
+Completed historical signatures must have actual verification bound to the final
+bytes, `ByteRange`, `Contents`, signature dictionary and signing credential,
+including the final CMS/MAC when applicable. Opaque `finalize()` bytes alone do
+not establish this evidence. The checks establish mathematical integrity, not
+PKI trust or arbitrary external-PDF change classification. The
+[incremental-permission regressions](https://github.com/PDFToolkit/pdf/blob/v0.8.1/tests/IncrementalSignaturePermissionsTest.php)
+and [independent permission oracle](https://github.com/PDFToolkit/pdf/blob/v0.8.1/tools/validate_incremental_permissions.py)
+exercise both permitted native operations and rejected unrelated changes.
+The [retained-source guide](https://github.com/PDFToolkit/pdf/blob/v0.8.1/resources/signature-revisions/README.md)
+records exact source pages, supported operations and migration choices.
+
 [AdobeEncryptionTest](https://github.com/PDFToolkit/pdf/blob/v0.8.0/tests/AdobeEncryptionTest.php)
 and [validate_adobe_encryption.py](https://github.com/PDFToolkit/pdf/blob/v0.8.0/tools/validate_adobe_encryption.py)
 cover historical R=5. This protocol is explicitly selected for

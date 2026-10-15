@@ -76,6 +76,14 @@ source identities and their applicable editions.
 
 ## Read the remaining boundaries
 
+Core 0.8.1 adds a conservative guard on every native incremental writer path.
+It requires actual emitted-revision provenance and verified signature history,
+then classifies the entire delta for terminal signing or PDF 2.0 DSS/timestamp
+maintenance. Existing field restrictions still bind. General form filling,
+annotation changes and UR authority are not inferred from P2/P3 and remain
+rejected when unclassified. See the [security review](security.md) for migration
+from opaque finalization or caller-supplied snapshots and the PKI boundary.
+
 The [coverage guide](coverage.md) and source ledgers still identify unreviewed EC3
 annotations, additional conditional/resource relationships and incomplete
 authenticated DocMDP/FieldMDP/UR revision-difference authorization. Rendering,

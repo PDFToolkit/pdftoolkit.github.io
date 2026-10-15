@@ -140,11 +140,19 @@ For the signing operation, an earlier DocMDP or Adobe `P1` lock forbids a new
 Adobe permissions remain the historical minimum: a new `P3` does not increase
 an old `P2`.
 
-These operation checks do not yet perform a **general comparison of every
-revision change**: all field values, removals or moves, page content, shared
-resources, appearances, annotations and page-template instantiation. Complete
-DocMDP/FieldMDP/UR analysis remains to be developed. A mathematically valid UR
-signature also does not prove that its signer is authorized to grant rights.
+Since core 0.8.1 every incremental entry point compares the **entire frozen
+delta** for protected native history, including a provisional signature or
+timestamp. It permits only proven terminal signing and PDF 2.0 DSS/timestamp
+maintenance; changing other fields, pages, resources, widgets or annotations is
+rejected when unclassified, even with P2/P3. Existing `/Lock` and `/Reference`
+entries may stay frozen. This conservative boundary is not a general permitted-
+change classifier. UR updates are refused; a mathematically valid UR signature
+does not establish a rights-granting authority.
+
+Keep the original native `FileRevision` from the current runtime and use a
+verified signing path for protected continuation. Reconstructed/cloned snapshots
+and opaque `finalize()` output provide no such authority; see
+[security and migration](../security.md).
 
 `PolicySignatureBackend`, `SignatureOutputVerifier` and `SignatureSigningEvidence`
 support explicit external integration. `finalizeWithPolicy()` applies the same

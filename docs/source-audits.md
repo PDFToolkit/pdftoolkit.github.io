@@ -78,6 +78,15 @@ préserve les identités des sources et leurs éditions applicables.
 
 ## Comprendre les limites restantes
 
+Le core 0.8.1 ajoute une garde conservatrice à chaque chemin d’écriture
+incrémentale native. Elle exige la provenance réelle des révisions émises et
+un historique de signatures vérifié, puis classe toutes les différences pour
+la signature terminale ou la maintenance DSS/horodatage PDF 2.0. Les restrictions
+de champs restent applicables. Le remplissage général, les annotations et
+l’autorité UR ne se déduisent pas de P2/P3 et sont refusés sans classification.
+La [revue de sécurité](security.md) décrit la migration depuis les finalisations
+opaques ou snapshots fournis et la frontière PKI.
+
 La [couverture](coverage.md) et les registres recensent toujours des annotations
 EC3 non examinées, d'autres relations conditionnelles/de ressources et une
 autorisation incomplète des différences de révision DocMDP/FieldMDP/UR

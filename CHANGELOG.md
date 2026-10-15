@@ -13,6 +13,11 @@
   fresh-file destruction, shared-resource handling and rejected input boundaries.
   Explain transformed bounds, transitive mask dependencies, descriptor metadata,
   context/type validation and graph-edge work budgets verified by independent readers.
+- Explain core 0.8.1 native emission provenance, verified historical signatures,
+  complete-delta guards and bounded signing/DSS/timestamp operations. Keep UR,
+  general form/annotation changes and PKI trust outside those proved operations.
+  Document the redaction font-domain correction and rejection of unused CID
+  payloads on simple fonts, with preserved legitimate CID identifiers.
 - Expose reader/HTML authentication and OpenType positioning/variation guides in
   module menus; explain verified permissions and incomplete shaping/font domains.
 - Explain reader 0.3.1 catalog-only clear metadata, indirect EFF selection,

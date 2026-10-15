@@ -10,7 +10,7 @@ Core 0.8.0 introduces `SecureRedaction` for an explicitly normalized object grap
 ## Run the actual example
 
 ```sh
-composer require "roukmoute/pdf:^0.8"
+composer require "roukmoute/pdf:^0.8.1"
 php examples/pdf17-secure-redaction.php redacted.pdf --source=original.pdf
 ```
 
@@ -73,6 +73,11 @@ pruned. The result does not preserve the source's accessibility structure.
 Retained fonts lose ancillary descriptor data such as `CharSet`, `FontFamily`
 and `Style`. Context-specific dictionaries validate the types of retained
 values: a string concealed under a numeric field is rejected.
+Core 0.8.1 also validates the actual font domain and subtype. A simple Type1 or
+TrueType font cannot retain superfluous `CIDSystemInfo` or `DescendantFonts`
+entries. A Type0 font requires its actual CID descendant and compatible encoding;
+legitimate CID identifiers remain in that domain. Invalid combinations are
+rejected before any result, rather than carrying unused strings into the output.
 
 ## Produce the replacement appearance
 

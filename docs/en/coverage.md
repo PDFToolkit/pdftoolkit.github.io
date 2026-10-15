@@ -21,6 +21,14 @@ Unreviewed EC3 annotations, other conditional/resource relationships, general
 authenticated DocMDP/FieldMDP/UR change authorization, rendering and external or
 human conformance evidence remain explicit work.
 
+Core 0.8.1 enforces a complete-delta guard at every native incremental entry
+point for verified emitted history. Only terminal signing and PDF 2.0
+DSS/document timestamp maintenance are classified; existing field locks apply.
+Unclassified form, annotation and UR changes are refused even under P2/P3.
+It also rejects redaction font entries outside their actual simple/composite/CID
+domain. The [security review](security.md) and [redaction tutorial](tutorials/36-applied-redaction.md)
+describe the exact runtime provenance, verification and input boundaries.
+
 ## ISO 32000-2:2020 EC3 and companion bundle in 0.7.1
 
 The [PDF 2.0 guide](pdf-2-0.md) documents edition-specific dictionary objects,
@@ -126,7 +134,7 @@ list verified mechanisms and remaining work rather than a completeness figure.
 | Password encryption | ISO R=2/3/4 algorithms, RC4 and AESV2, with filters and incremental updates; Adobe R=5 remains explicitly available. |
 | Certificate encryption | CMS recipient groups, distinct filter keys and s3/s4/s5 formats; key, data and permission-interpretation checks. |
 | Signatures | Contents reservation, ByteRange fixed before signing and filling without shifting; independent verification of the three ISO formats and successive signatures. |
-| Signature policies | DocMDP, FieldMDP, usage-rights, seed and certificate-criteria objects; intrinsic checks. Orchestration and comparison of permitted revisions remain open. |
+| Signature policies | DocMDP, FieldMDP, usage-rights, seed and certificate-criteria objects; intrinsic checks. Signed-field orchestration and the narrow native 0.8.1 guard are implemented; general permitted-change classification remains open. |
 | Hybrid references | Classic table and auxiliary xref stream, historical references, compressed objects and reading by older and newer readers. |
 | Linearization | Native ordering, page and shared-resource hints, thumbnails and attachments, compressed objects, three xref formats and encrypted variants. |
 

@@ -142,12 +142,20 @@ un nouveau `V`. Un ancien `FieldMDP` interdit la signature d'un champ sélection
 y compris ses descendants. Les permissions Adobe restent le minimum historique :
 un nouveau `P3` n'augmente pas un ancien `P2`.
 
-Ces contrôles de l'opération ne réalisent pas encore la **comparaison générale de
-toutes les modifications** d'une révision : valeurs de tous les champs, retraits
-ou déplacements, contenu de pages, ressources partagées, apparences, annotations
-et instanciation de modèles de pages. L'analyse complète DocMDP/FieldMDP/UR reste
-un mécanisme à poursuivre. Une signature UR mathématiquement valide ne prouve
-pas non plus que son signataire est une autorité habilitée à accorder des droits.
+Depuis le core 0.8.1, chaque entrée incrémentale compare **toutes les différences
+des révisions figées** d’un historique natif protégé, même avec une signature ou
+un horodatage provisoire. Seules la signature terminale prouvée et la maintenance
+DSS/horodatage PDF 2.0 sont permises ; modifier d’autres champs, pages, ressources,
+widgets ou annotations est refusé sans classification, même avec P2/P3. Les
+entrées `/Lock` et `/Reference` existantes peuvent rester figées. Cette frontière
+conservatrice n’est pas un classificateur général des changements autorisés.
+Les mises à jour UR sont refusées ; une signature UR mathématiquement valide
+ne prouve pas l’autorité à accorder des droits.
+
+Conserver la `FileRevision` native originale de l’exécution courante et utiliser
+une signature vérifiée pour poursuivre un historique protégé. Des snapshots
+reconstruits/clonés ou une sortie opaque de `finalize()` n’ont pas cette autorité ;
+voir [sécurité et migration](../security.md).
 
 `PolicySignatureBackend`, `SignatureOutputVerifier` et `SignatureSigningEvidence`
 permettent une intégration externe explicite. `finalizeWithPolicy()` applique le
