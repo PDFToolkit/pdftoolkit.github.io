@@ -87,6 +87,23 @@ separate responsibility.
 The writer also rejects an empty page `Contents` array. Omit `Contents` for a
 page without a content stream, or supply an explicit empty stream.
 
+## Require the native PDF 2.0 annotation appearance
+
+Table 166, physical page 483, requires an annotation `AP` in PDF 2.0 except for
+`Popup`, `Projection`, `Link`, or a rectangle reduced to a **single point**:
+both pairs of coordinates coincide. A vertical or horizontal zero-area
+rectangle still needs `AP`. Native graph validation applies the effective
+version to fresh objects and retained frozen objects; this is separate from
+rendering an imported arbitrary PDF.
+
+A supplied appearance dictionary requires its normal `N` entry. `N`, `R` and
+`D` identify Form XObject streams or state dictionaries containing such streams.
+When any entry uses a state dictionary, the annotation's `AS` must be a name.
+If that name has no matching
+stream, the PDF 2.0 consumer procedure on physical page 491 selects no appearance;
+the writer preserves that legal case. Declaring appearances does not execute
+actions or establish a particular viewer's rendering behavior.
+
 ## Review the Adobe errata without mixing editions
 
 The [Adobe errata review](https://github.com/PDFToolkit/pdf/blob/v0.8.0/resources/adobe-references/errata-review.json)

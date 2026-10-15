@@ -91,6 +91,23 @@ relations entre annotations restent des responsabilités distinctes.
 L'écriture refuse aussi un tableau `Contents` vide sur une page. Omettre
 `Contents` pour une page sans flux de contenu, ou fournir un flux explicitement vide.
 
+## Exiger l'apparence native des annotations PDF 2.0
+
+Le tableau 166, page physique 483, impose `AP` à une annotation PDF 2.0, sauf
+pour `Popup`, `Projection`, `Link` ou un rectangle réduit à **un seul point** :
+les deux paires de coordonnées coïncident. Un rectangle vertical ou horizontal
+d'aire nulle demande encore `AP`. La validation du graphe natif applique la
+version effective aux objets neufs et aux objets gelés conservés ; elle reste
+distincte du rendu d'un PDF arbitraire importé.
+
+Un dictionnaire d'apparences fourni exige son entrée normale `N`. `N`, `R` et
+`D` désignent des flux Form XObject ou des dictionnaires d'états contenant ces
+flux. Lorsqu'une entrée utilise un dictionnaire d'états, le `AS` de l'annotation
+doit être un nom. Si ce nom n'a aucun
+flux correspondant, la procédure du consommateur PDF 2.0, page physique 491,
+ne sélectionne aucune apparence ; le writer conserve ce cas licite. Déclarer
+des apparences n'exécute aucune action et ne prouve pas le rendu d'un lecteur donné.
+
 ## Examiner les errata Adobe sans confondre les éditions
 
 Le [registre des errata Adobe](https://github.com/PDFToolkit/pdf/blob/v0.8.0/resources/adobe-references/errata-review.json)

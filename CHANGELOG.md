@@ -11,6 +11,8 @@
 - Document effective annotation ownership/replies/popups, remote-action targets
   and rectilinear measure checks; keep 84 tests/132 assertions separate from
   the 197 intrinsic dictionary rules and incomplete normative coverage.
+- Explain PDF 2.0's required native `AP`, the point-only and subtype exceptions,
+  Form/state normal appearances and the legal unmatched `AS` consumer behavior.
 - Explain actual selected native Type 3 glyph inspection, rendering modes 3/7,
   independent Poppler differences and contextual WTPDF deprecation findings.
   Distinguish recommendations, failures and pending opaque/file-context evidence.

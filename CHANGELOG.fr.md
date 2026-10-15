@@ -11,6 +11,8 @@
 - Documenter appartenance/réponses/popups des annotations effectives, cibles
   d'actions distantes et contrôles des mesures rectilignes ; séparer les 84 tests
   et 132 assertions des 197 règles intrinsèques et de la couverture normative incomplète.
+- Expliquer `AP` natif obligatoire en PDF 2.0, les exceptions de point et de
+  sous-type, les apparences normales Form/états et le cas licite d'un `AS` sans état correspondant.
 - Expliquer l'inspection des véritables glyphes Type 3 natifs sélectionnés, les
   modes 3/7, les différences Poppler indépendantes et les constats contextuels
   de dépréciation WTPDF. Distinguer recommandations, erreurs et preuves opaques/de contexte en attente.
