@@ -75,6 +75,7 @@ are distinct records.
 | #549, empty paths | Path-painting operators without a current path are accepted outside text objects; independent rendered comparisons check that they add no marks. |
 | #156, physical page 153 | RichMedia embedded assets require a MIME Subtype, including a primary asset outside the Assets name tree. |
 | #296, XMP encoding | PDF 2.0 metadata uses decoded UTF-8 bytes and immutable encoding evidence in retained native revisions; this is separate from XML/XMP schema conformance. |
+| #188, contextual placement | The explicit PDF 2.0 structure-attribute policy resolves Figure placement from its context while preserving explicit A/C precedence and historical PDF 1.7 defaults. |
 | #482, output-profile references | Each non-embedded alternative requires `FS=URL` and a PDFDocEncoded RFC3986 reference. This validates the declaration without fetching a profile or validating ICC data. |
 
 The record retains the accepted status of #468. Native `ChoiceField` construction selects its edition

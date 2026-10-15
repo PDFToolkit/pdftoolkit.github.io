@@ -79,6 +79,7 @@ annotations et les contraintes effectivement exécutées sont deux données dist
 | #549, chemins vides | Les opérateurs de peinture sans chemin courant sont acceptés hors objets texte ; les comparaisons de rendu indépendantes vérifient qu'ils n'ajoutent aucune marque. |
 | #156, page physique 153 | Les pièces jointes RichMedia exigent un Subtype MIME, y compris la pièce principale absente de l'arbre de noms Assets. |
 | #296, encodage XMP | Les métadonnées PDF 2.0 utilisent des octets UTF-8 décodés et une preuve immuable dans les révisions natives conservées ; ce contrôle reste distinct de la conformité aux schémas XML/XMP. |
+| #188, placement contextuel | La politique explicite d'attributs PDF 2.0 résout le placement de Figure depuis son contexte, en conservant la priorité A/C explicite et les défauts historiques PDF 1.7. |
 | #482, références de profils de sortie | Chaque alternative non embarquée exige `FS=URL` et une référence RFC3986 en PDFDocEncoding. Le contrôle valide la déclaration sans télécharger de profil ni analyser les données ICC. |
 
 Le registre conserve notamment le statut accepted de #468. La construction native

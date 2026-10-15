@@ -53,6 +53,18 @@ compressed bytes as text. Upgrading a retained PDF 1.7 document to PDF 2.0 also
 checks its metadata against the new requirement. This verifies the encoding
 required by EC3 #296; it does not establish XML schema or XMP conformance.
 
+## Select contextual structure attributes
+
+Use `StructureAttributeSemantics::Pdf20` with `StandardStructureAttributes`
+when resolving PDF 2.0 attributes, or pass it as `attributeSemantics:` to
+`StructureTreeRoot`. The historical `Pdf17` policy remains the default.
+In PDF 2.0, a Figure under P defaults to Inline placement; under Sect it defaults
+to Block. Explicit A/C attributes take precedence over contextual defaults.
+
+The native writer checks the effective edition of newly validated structure
+trees. This does not reconstruct arbitrary imported or historical generic
+structure trees; namespace and TS32005 validation retain their separate scope.
+
 ## Authenticate every encrypted UR3 update
 
 Pass one `PasswordUsageRightsAuthentication` or `CertificateUsageRightsAuthentication`

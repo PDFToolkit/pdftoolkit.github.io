@@ -59,6 +59,19 @@ pas les octets comprimés comme du texte. Le passage d'un document PDF 1.7 conse
 porte sur l'encodage demandé par EC3 #296 ; il ne prouve pas la conformité aux
 schémas XML ou XMP.
 
+## Choisir les attributs de structure contextuels
+
+Utiliser `StructureAttributeSemantics::Pdf20` avec `StandardStructureAttributes`
+pour résoudre les attributs PDF 2.0, ou le passer à `StructureTreeRoot` par
+`attributeSemantics:`. La politique historique `Pdf17` reste celle par défaut.
+En PDF 2.0, une Figure sous P prend le placement Inline par défaut ; sous Sect,
+elle prend Block. Les attributs A/C explicites priment sur les défauts contextuels.
+
+Le writer natif vérifie l'édition effective des arbres de structure nouvellement
+validés. Il ne reconstruit pas les arbres génériques historiques ou importés
+arbitraires ; les validations des namespaces et de TS32005 gardent leur périmètre
+distinct.
+
 ## Authentifier chaque mise à jour UR3 chiffrée
 
 Fournir un `PasswordUsageRightsAuthentication` ou `CertificateUsageRightsAuthentication`
