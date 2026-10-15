@@ -20,6 +20,24 @@ def run(command: list, cwd: Path, output: Path | None = None, env: dict[str, str
         subprocess.run(list(map(str, command)), cwd=cwd, check=True, env=env)
 
 
+def prepare_reader_oracle_autoload(reader: Path, html: Path) -> None:
+    """Bind installed-package CLI reporters to the real locked consumer loader."""
+    autoload = html / "vendor/autoload.php"
+    if not autoload.is_file():
+        raise ValueError("The released HTML checkout must have its locked vendor autoloader")
+    directory = reader / "vendor"
+    directory.mkdir(exist_ok=True)
+    bridge = directory / "autoload.php"
+    escaped = autoload.as_posix().replace("\\", "\\\\").replace("'", "\\'")
+    contents = (
+        "<?php\n\n// Documentation validation only: reuse the actual locked consumer.\n"
+        f"return require '{escaped}';\n"
+    )
+    if bridge.exists() and bridge.read_text(encoding="utf-8") != contents:
+        raise ValueError("Refusing to replace an existing reader validation autoloader")
+    bridge.write_text(contents, encoding="utf-8", newline="\n")
+
+
 def validate_html_module(args, html: Path, work: Path, pdfs: Path) -> None:
     """Exercise released module behavior without adding validation outputs to site assets."""
     for command in (
@@ -85,6 +103,7 @@ def build(args) -> None:
     ):
         run(command, source)
     reader = html / "vendor/pdftoolkit/pdf-reader"
+    prepare_reader_oracle_autoload(reader, html)
     run([sys.executable, "tools/validate_source_mac.py", "--php", args.php, "--qpdf", args.qpdf,
          "--work-dir", work / "source-mac-validation"], reader)
     run([sys.executable, "tools/validate_metadata_security.py", "--php", args.php, "--qpdf", args.qpdf], reader)
