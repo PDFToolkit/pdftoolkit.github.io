@@ -28,7 +28,10 @@ de dictionnaires avec 1 709 entrées fixes ou variables. Les pages de continuati
 et les corrections d’extraction sont traçables. Cette couverture et les mécanismes
 complémentaires n’établissent pas la conformité à toutes les clauses de la norme.
 Le [guide PDF 2.0](pdf-2-0.md) et la [couverture](coverage.md)
-conservent cette distinction. Le lecteur 0.2 accepte la syntaxe PDF 1.0–2.0 et les chaînes UTF-8 PDF 2.0. Ce périmètre syntaxique reste distinct des nouveaux mécanismes d’écriture et de chiffrement du core.
+conservent cette distinction. Le lecteur 0.3 ajoute séparément l'authentification
+par mot de passe et des mécanismes de décodage. Son contrat d'entrée ne couvre
+ni PDF MAC ni l'authentification par clé publique ; consulter son
+[guide d'authentification](https://github.com/PDFToolkit/pdf-reader/blob/v0.3.0/docs/authentication.md).
 
 ## Des algorithmes sélectionnés indépendamment
 
@@ -115,6 +118,30 @@ pertinent, les descriptions alternatives appropriées, la fidélité des
 correspondances Unicode et les faits relatifs aux programmes de fonte externes
 demandent encore des preuves. Le [tutoriel des espaces de noms](tutorials/30-pdf20-tagged-namespaces.md)
 présente un rapport concret à côté du PDF balisé réellement généré.
+
+### Comparer explicitement le texte enrichi des champs
+
+Le core 0.8.0 fournit un backend XML natif optionnel pour la clause WTPDF 8.10.3.3
+(page physique 46) :
+
+```php
+use PDF\Document\Structure\WtPdfGraphChecks;
+use PDF\Document\Structure\WtPdfRichTextChecks;
+use PDF\Document\Structure\WtPdfXmlRichTextParser;
+
+$checks = new WtPdfGraphChecks(
+    richText: new WtPdfRichTextChecks(new WtPdfXmlRichTextParser()),
+);
+```
+
+Avec `ext-dom`, le parseur décode le contenu paragraph/span et les entités XML
+acceptés, normalise les fins de ligne et compare le résultat à la valeur `V`
+canonique héritée du champ. L'analyse reste locale au document, bornée, et refuse
+DTD, entités externes, ressources distantes et contenu actif. Sans backend, pour
+un flux `RV` opaque ou des namespaces/CSS non pris en charge, le contrôle reste
+en attente au lieu de réussir. Un parseur plus riche peut être fourni explicitement.
+Ce domaine de comparaison mécanique est couvert ; le sens humain et les autres
+exigences WTPDF demandent toujours leurs propres preuves.
 
 ## Conserver les signatures avec horodatages et données de validation
 

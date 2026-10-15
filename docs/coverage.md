@@ -5,6 +5,23 @@ sources distinctes. Définitions, algorithmes natifs, relations documentaires et
 conformité sont des dimensions différentes. L’inventaire complet des tableaux
 n’établit pas toutes les conditions, opérations de rendu ou exigences de profils externes.
 
+## Règles de source exécutées dans le core 0.8.0
+
+Le [guide des audits de source](source-audits.md) distingue 197 règles intrinsèques
+de dictionnaires exécutées (98 PDF 1.7, 99 PDF 2.0), quatre corrections EC3
+examinées et un classement de 65 corrections couvrant toutes les pages d'errata
+Adobe qui en contiennent. Ces nombres décrivent ces domaines précis, pas un
+pourcentage de conformité PDF. Le placement natif des apparences et la sémantique
+des indices de choix préservent l'édition et la correction applicables.
+
+Le [tutoriel de caviardisation](tutorials/36-applied-redaction.md) démontre une
+suppression conservatrice réelle dans un graphe normalisé et un nouveau fichier
+à une révision. WTPDF peut comparer le texte enrichi XML analysé à la valeur
+canonique d'un champ, sur activation explicite. Les annotations EC3 non examinées,
+d'autres relations conditionnelles/de ressources, l'autorisation générale des
+modifications DocMDP/FieldMDP/UR authentifiées, le rendu et les preuves externes
+ou humaines de conformité restent des travaux explicites.
+
 ## ISO 32000-2:2020 EC3 et bundle complémentaire dans 0.7.1
 
 Le [guide PDF 2.0](pdf-2-0.md) documente les objets propres à l’édition : tableaux
@@ -31,7 +48,11 @@ Son [inventaire d’exigences](https://github.com/PDFToolkit/pdf/blob/v0.7.1/res
 consigne chaque aspect étudié, clause source, frontière d’exécution et chemin de preuve.
 Le vérificateur reproductible rejette clauses omises et fichiers de preuve absents.
 Aucune certification WTPDF/PDF/UA-2 automatique ni conformité complète à la norme
-de base n’est revendiquée. Le lecteur 0.2 accepte la syntaxe PDF 1.0–2.0 et les chaînes UTF-8 PDF 2.0 ; il ne fournit pas les mécanismes de chiffrement ou de rendu du writer.
+de base n’est revendiquée. Le lecteur 0.3 ajoute l'authentification R=2–7 sur
+activation explicite, les xrefs hybrides et d'autres filtres au périmètre PDF
+1.0–2.0. Son [guide d'authentification](https://github.com/PDFToolkit/pdf-reader/blob/v0.3.0/docs/authentication.md)
+précise les filtres cryptographiques acceptés et refuse PDF MAC/authentification
+par clé publique en entrée. Ces mécanismes restent distincts de l'écriture et du rendu.
 
 L’[original de la norme principale](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf)
 et les onze nouveaux originaux restent inchangés dans le dépôt public du core,
@@ -56,10 +77,12 @@ sont également conservés, avec leur portfolio et un catalogue d'empreintes.
 Ce sont des sources de comparaison et d'audit ; leur archivage ne modifie pas
 les compteurs des deux inventaires actifs ni les statuts d'implémentation.
 
-Les définitions `Redact` existent dans le tableau ISO 192. L'application de la
-caviardisation, qui doit détruire le contenu et ses traces, reste un mécanisme
-à construire avec un processeur de contenu. Une annotation ou une mise à jour
-incrémentale ne constitue pas cette suppression.
+Les définitions `Redact` existent dans le tableau ISO 192. Le core 0.8.0 applique
+aussi la caviardisation avec un processeur natif conservateur pour le contenu
+normalisé pris en charge. Il retire les données touchées et canaux annexes et
+écrit un nouveau graphe ; le contenu non pris en charge doit être normalisé
+explicitement ou est refusé. Une annotation ou une mise à jour incrémentale
+seule ne supprime toujours pas les données source.
 
 Dans la version 0.5.2, la comparaison avec les errata Adobe corrige aussi le
 `Count` de racine des signets tous explicitement fermés au premier niveau.

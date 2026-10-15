@@ -56,6 +56,7 @@ def publish_derivation_assets(report_path: Path, html_path: Path, target: Path) 
 
 GUIDES = [
     ('docs/coverage.md', 'guides/mecanismes.html', 'Couverture des éditions PDF', 'Guides'),
+    ('docs/source-audits.md', 'guides/source-audits.html', 'Règles de source et corrections vérifiées', 'Guides'),
     ('docs/pdf-2-0.md', 'guides/pdf-2-0.html', 'PDF 2.0 : objets et mécanismes', 'Guides'),
     ('docs/pdf-2-0-bundle.md', 'guides/pdf-2-0-bundle.html', 'Bundle PDF 2.0 : mécanismes et vérifications', 'Guides'),
     ('docs/adobe-supplement.md', 'guides/supplement-adobe.html', 'Supplément Adobe et extensions', 'Guides'),
@@ -110,6 +111,7 @@ LESSONS = [
     ('33-pdf20-geospatial', '33-pdf20-geospatial', 'Objets géospatiaux et mesures', 'pdf20-geospatial', 'Systèmes de coordonnées, points appariés, viewports et nuages de points.'),
     ('34-pdf20-structure-destinations', '34-pdf20-destinations-structure', 'Destinations vers la structure logique', 'pdf20-structure-destinations', 'Cibles sémantiques, parcours du contenu et destinations de page de repli.'),
     ('35-derive-html', '35-deriver-html', 'Dériver du HTML depuis un PDF balisé', 'derive-html', 'Structure logique, contenu Unicode et HTML sémantique avec diagnostics explicites.'),
+    ('36-applied-redaction', '36-caviardisation', 'Appliquer une caviardisation', 'pdf17-secure-redaction', 'Suppression conservatrice des données et écriture d’un nouveau fichier.'),
 ]
 EXTERNAL_EXAMPLES = {
     'reading-pages': {
@@ -148,13 +150,14 @@ MODULE_GROUPS = {
     'pdftoolkit/pdf-to-html': 'conversion-html',
 }
 MODULES = {
-    'pdftoolkit/pdf-reader': ('reader', 'Lire un PDF', [('docs/architecture.md', 'architecture', 'Architecture du lecteur'), ('docs/pages.md', 'pages', 'Pages, héritage et flux'), ('docs/components.md', 'components', 'Composants du lecteur'), ('docs/security.md', 'security', 'Limites et sécurité du lecteur')]),
+    'pdftoolkit/pdf-reader': ('reader', 'Lire un PDF', [('docs/architecture.md', 'architecture', 'Architecture du lecteur'), ('docs/pages.md', 'pages', 'Pages, héritage et flux'), ('docs/authentication.md', 'authentication', 'Authentification des PDF chiffrés'), ('docs/components.md', 'components', 'Composants du lecteur'), ('docs/security.md', 'security', 'Limites et sécurité du lecteur')]),
     'pdftoolkit/pdf-images': ('images', 'Convertir des images', [('docs/architecture.md', 'architecture', 'Contrats des convertisseurs d’images')]),
     'pdftoolkit/pdf-fonts': ('fonts', 'Analyser des fontes', [('docs/true-type-to-pdf.md', 'true-type-to-pdf', 'Du programme TrueType aux objets PDF')]),
-    'pdftoolkit/opentype': ('opentype', 'Modèle objet OpenType indépendant', [('docs/architecture.md', 'architecture', 'Architecture OpenType'), ('docs/coverage.md', 'coverage', 'Couverture OpenType'), ('docs/substitutions.md', 'substitutions', 'Substitutions de glyphes')]),
+    'pdftoolkit/opentype': ('opentype', 'Modèle objet OpenType indépendant', [('docs/architecture.md', 'architecture', 'Architecture OpenType'), ('docs/coverage.md', 'coverage', 'Couverture OpenType'), ('docs/substitutions.md', 'substitutions', 'Substitutions de glyphes'), ('docs/positioning.md', 'positioning', 'Positionnement et variations OpenType')]),
     'pdftoolkit/pdf-to-html': ('to-html', 'Dériver du HTML depuis un PDF', [
         ('docs/architecture.md', 'architecture', 'Architecture de la dérivation HTML'),
         ('docs/coverage.md', 'coverage', 'Couverture de la dérivation HTML'),
+        ('docs/authentication.md', 'authentication', 'Authentification des PDF chiffrés'),
         ('docs/requirements.md', 'requirements', 'Exigences de la dérivation HTML'),
         ('docs/policies.md', 'policies', 'Politiques de dérivation HTML'),
         ('docs/graphics.md', 'graphics', 'Graphiques PDF et rendu de figures'),
@@ -477,7 +480,7 @@ class Site:
         groups = [
             ('Découvrir', [('index.html', 'Accueil'), ('guides/demarrer.html', 'Démarrer'), ('guides/modules.html', 'Core et modules'), ('guides/pdf-2-0.html', 'PDF 2.0'), ('guides/composants.html', 'Les composants'), ('guides/architecture.html', 'Architecture')]),
             ('Packages', [('modules/core/index.html', 'Core : objets et écriture'), *[(f'modules/{slug}/index.html', title) for slug, title, _ in MODULES.values()]]),
-            ('Explorer', [('reference/index.html', 'Référence des composants'), ('guides/couverture.html', 'Couverture de la norme'), ('guides/mecanismes.html', 'Couverture des éditions PDF'), ('guides/pdf-2-0-bundle.html', 'Spécifications complémentaires PDF 2.0'), ('guides/supplement-adobe.html', 'Supplément Adobe'), ('guides/references-adobe.html', 'Références Adobe conservées'), ('guides/securite.html', 'Sécurité'), ('guides/versions.html', 'Versions')]),
+            ('Explorer', [('reference/index.html', 'Référence des composants'), ('guides/couverture.html', 'Couverture de la norme'), ('guides/mecanismes.html', 'Couverture des éditions PDF'), ('guides/source-audits.html', 'Règles de source et corrections vérifiées'), ('guides/pdf-2-0-bundle.html', 'Spécifications complémentaires PDF 2.0'), ('guides/supplement-adobe.html', 'Supplément Adobe'), ('guides/references-adobe.html', 'Références Adobe conservées'), ('guides/securite.html', 'Sécurité'), ('guides/versions.html', 'Versions')]),
             ('Apprendre', [('tutorials/index.html', 'Tous les tutoriels'), *[(f'tutorials/{slug}.html', f'{i:02d}. {title}') for i, (_, slug, title, _, _) in enumerate(LESSONS, 1)], ('recipes/table.html', 'Recette : tableau')]),
         ]
         html = ''
@@ -771,7 +774,7 @@ class Site:
         for route, title in [('guides/demarrer.html', 'Installation et premier document'), ('tutorials/index.html', 'Tutoriels avec code et PDF'), ('guides/composants.html', 'Responsabilités des composants'), ('guides/architecture.html', 'Architecture'), ('recipes/index.html', 'Recettes')]:
             body += f'<li><a href="{e(self.url(route))}">{e(title)}</a></li>'
         body += '</ul><h2>Référence et versions</h2><ul>'
-        for route, title in [(self.package_route(CORE_PACKAGE), 'API du core'), ('guides/couverture.html', 'Définitions et couverture de la norme'), ('guides/mecanismes.html', 'Mécanismes vérifiés et limites'), ('guides/securite.html', 'Sécurité et responsabilités'), ('guides/signalements.html', 'Signalements privés'), ('guides/versions.html', 'Changelog')]:
+        for route, title in [(self.package_route(CORE_PACKAGE), 'API du core'), ('guides/couverture.html', 'Définitions et couverture de la norme'), ('guides/mecanismes.html', 'Mécanismes vérifiés et limites'), ('guides/source-audits.html', 'Règles de source et corrections vérifiées'), ('tutorials/36-caviardisation.html', 'Appliquer une caviardisation'), ('guides/securite.html', 'Sécurité et responsabilités'), ('guides/signalements.html', 'Signalements privés'), ('guides/versions.html', 'Changelog')]:
             body += f'<li><a href="{e(self.url(route))}">{e(title)}</a></li>'
         body += f'</ul><p><a href="{e(package["repository"] + "/releases/tag/v" + package["version"])}">Version publiée {e(package["version"])}</a> · <a href="{e(package["repository"] + "/commit/" + package["revision"])}">Source {e(package["revision"][:7])}</a></p>'
         self.page('modules/core/index.html', 'Core : objets PDF et écriture', 'Packages', body)

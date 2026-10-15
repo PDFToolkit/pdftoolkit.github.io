@@ -75,10 +75,12 @@ Exemples de sujets explicitement corrigés :
 - Pages 8 et 9 : déplacement de ligne `T*` et organisation des programmes
   OpenType embarqués.
 
-Cet inventaire de sujets ne déclare pas un audit exhaustif des 18 pages terminé.
-Une règle déjà présente dans ISO 32000-1 peut avoir sa définition dans le core
-sans que toutes ses contraintes soient contrôlées. Les validations actuelles et
-les travaux restants sont indiqués dans le [guide de couverture](coverage.md).
+Le core 0.8.0 ajoute un classement relié aux sources de 65 corrections couvrant
+toutes les pages physiques qui en contiennent (3–18). Il distingue les mécanismes
+natifs, changements éditoriaux, opérations du consommateur et travaux partiels ou
+externes. Ce classement complet ne déclare pas une implémentation complète. Le
+[guide des audits de source](source-audits.md) et la [couverture](coverage.md)
+expliquent les règles exécutées et contraintes restantes.
 
 Des correspondances concrètes ont été vérifiées dans le code existant : les
 clés de dictionnaire sont uniques ; un filtre `Crypt` explicite est unique et
@@ -116,8 +118,8 @@ Le core contient déjà le
 [dictionnaire des annotations de caviardisation](https://github.com/PDFToolkit/pdf/blob/v0.5.4/src/Specification/Dictionary/RedactionAnnotationTable192.php),
 issu du tableau ISO 192, pages PDF 421 et 422. Les huit entrées de l'addendum
 (`Subtype`, `QuadPoints`, `IC`, `RO`, `OverlayText`, `Repeat`, `DA` et `Q`)
-figurent dans cette définition. Cela permet la construction du dictionnaire ;
-cela ne constitue pas un moteur d'application de la caviardisation.
+figurent dans cette définition. Le core 0.8.0 ajoute séparément le processeur
+natif `SecureRedaction` pour un graphe explicitement normalisé.
 
 La page 3 de l'addendum exige de supprimer les données, y compris la partie
 concernée d'une image : un masque ou un rectangle opaque ne suffit pas. Les
@@ -125,10 +127,14 @@ métadonnées et les autres formes de contenu doivent aussi être examinées.
 Une mise à jour incrémentale conserve les octets des révisions précédentes et
 ne peut donc pas assurer à elle seule cette destruction.
 
-Un futur processeur de caviardisation devra s'appuyer sur la lecture,
-l'interprétation et la réécriture du contenu dans un module dédié. Les objets
-`Redact`, les coordonnées et les apparences PDF restent dans le core. Ce
-processeur n'est pas implémenté par l'ajout des références documentaires.
+Le [tutoriel de caviardisation](tutorials/36-applied-redaction.md) exécute une
+suppression réelle et écrit un nouveau graphe sans révision antérieure. Les
+ressources partagées touchées sont retirées de tous leurs usages ; sans géométrie
+de fonte fiable, tous les objets texte de la page sélectionnée sont supprimés
+de manière conservatrice. Les canaux annexes sont retirés, les ressources
+conservées assainies et le contenu non pris en charge refusé. Ce mécanisme PDF
+natif a un domaine borné ; ce n'est pas un éditeur général de fichiers externes
+arbitraires. qpdf, pypdf et Poppler vérifient le véritable exemple indépendamment.
 
 ## Notes d'implémentation Acrobat
 

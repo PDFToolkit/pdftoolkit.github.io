@@ -41,10 +41,11 @@ class HtmlDerivationSourcesTest(unittest.TestCase):
         self.assertEqual('modules/to-html/reporting.html', route_for('modules/to-html/signalements.html', 'en'))
         self.assertIn('HTML derivation', translate_interface('<h2>Architecture de la dérivation HTML</h2>'))
 
-    def test_html_module_navigation_exposes_the_three_new_bilingual_guides(self):
+    def test_html_module_navigation_exposes_bilingual_capability_guides(self):
         owner = 'pdftoolkit/pdf-to-html'
         guides = {route: (source, title) for source, route, title in MODULES[owner][2]}
         expected_titles = {
+            'authentication': 'Encrypted PDF authentication',
             'requirements': 'HTML derivation requirements',
             'policies': 'HTML derivation policies',
             'graphics': 'PDF graphics and figure rendering',

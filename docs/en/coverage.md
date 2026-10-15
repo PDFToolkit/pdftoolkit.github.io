@@ -5,6 +5,22 @@ Dictionary definitions, native algorithms, document relationships and conformanc
 are different dimensions. A complete table inventory does not establish every
 conditional rule, rendering operation or external profile requirement.
 
+## Executable source rules in core 0.8.0
+
+The [source-audit guide](source-audits.md) distinguishes 197 executed intrinsic
+dictionary rules (98 PDF 1.7, 99 PDF 2.0), four reviewed EC3 corrections and a
+65-record classification covering all correction-bearing pages of the Adobe
+errata. Counts describe those exact domains, not a percentage of PDF conformance.
+The native appearance-placement algorithm and choice-index semantics preserve
+the applicable edition and source correction.
+
+The [redaction tutorial](tutorials/36-applied-redaction.md) demonstrates actual
+conservative deletion from a normalized graph and a fresh single-revision file.
+WTPDF can optionally compare parsed XML rich text with the canonical field value.
+Unreviewed EC3 annotations, other conditional/resource relationships, general
+authenticated DocMDP/FieldMDP/UR change authorization, rendering and external or
+human conformance evidence remain explicit work.
+
 ## ISO 32000-2:2020 EC3 and companion bundle in 0.7.1
 
 The [PDF 2.0 guide](pdf-2-0.md) documents edition-specific dictionary objects,
@@ -31,7 +47,11 @@ Its [requirement inventory](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resour
 records each assessed aspect, source clause, execution boundary and evidence path.
 The reproducible checker rejects omitted clauses and missing evidence files.
 No automatic WTPDF/PDF/UA-2 certification or complete base-standard conformance
-is claimed. Reader 0.2 accepts PDF 1.0–2.0 syntax and PDF 2.0 UTF-8 strings; this does not provide the writer’s encryption or rendering mechanisms.
+is claimed. Reader 0.3 adds opt-in R=2–7 password authentication, hybrid xrefs
+and further filter decoding to PDF 1.0–2.0 input. Its
+[authentication guide](https://github.com/PDFToolkit/pdf-reader/blob/v0.3.0/docs/authentication.md)
+states the supported crypt filters and rejects source PDF MAC/public-key
+authentication. These input mechanisms remain distinct from writing and rendering.
 
 The [original main standard](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf)
 and all eleven newly supplied originals remain unchanged in the public core
@@ -56,10 +76,11 @@ are also retained, with their portfolio and a hash catalogue. These are sources
 for comparison and audit; their archival does not change the counts of the
 two active inventories or implementation statuses.
 
-`Redact` definitions exist in ISO table 192. Applying redaction, which must
-destroy content and its traces, remains a mechanism to build with a content
-processor. An annotation or an incremental update does not perform that
-removal.
+`Redact` definitions exist in ISO table 192. Core 0.8.0 also applies redaction
+through a native conservative processor for supported normalized content. It
+removes affected payloads and ancillary channels and writes a fresh graph;
+unsupported content requires explicit normalization or is rejected. An
+annotation or incremental update alone still does not erase source data.
 
 In version 0.5.2, comparison with the Adobe errata also corrects the root
 `Count` of bookmarks all explicitly closed at the top level. The

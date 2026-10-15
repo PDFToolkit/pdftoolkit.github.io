@@ -27,8 +27,9 @@ tables with 1,709 fixed or variable entries. Source continuation pages and
 extraction corrections are traceable. This coverage and these companion
 mechanisms do not establish complete conformance to every clause of the base
 standard. The [PDF 2.0 guide](pdf-2-0.md) and [coverage guide](coverage.md) retain
-that distinction. The optional reader's supported input scope is unchanged;
-the writer’s new mechanisms are distinct from reader 0.2’s PDF 2.0 syntax and UTF-8 support.
+that distinction. Reader 0.3 separately adds password authentication and decoding
+mechanisms. Its input contract does not include source PDF MAC or public-key
+authentication; consult the [reader guide](https://github.com/PDFToolkit/pdf-reader/blob/v0.3.0/docs/authentication.md).
 
 ## Algorithms are selected independently
 
@@ -107,6 +108,29 @@ does not equate "no detected failure" with "conformant": meaningful reading
 order, appropriate alternate descriptions, faithful Unicode mapping and
 external font-program facts still need evidence. The [namespace tutorial](tutorials/30-pdf20-tagged-namespaces.md)
 shows a concrete report next to the actual tagged PDF.
+
+### Compare rich-text field content explicitly
+
+Core 0.8.0 supplies an optional native XML backend for WTPDF clause 8.10.3.3
+(physical page 46):
+
+```php
+use PDF\Document\Structure\WtPdfGraphChecks;
+use PDF\Document\Structure\WtPdfRichTextChecks;
+use PDF\Document\Structure\WtPdfXmlRichTextParser;
+
+$checks = new WtPdfGraphChecks(
+    richText: new WtPdfRichTextChecks(new WtPdfXmlRichTextParser()),
+);
+```
+
+With `ext-dom`, the parser decodes supported paragraph/span content and XML
+entities, normalizes line endings and compares it with the inherited canonical
+field `V`. Parsing is document-local, bounded, and rejects DTDs, external entities,
+remote resources and active content. A missing backend, opaque `RV` stream or
+unsupported namespace/CSS remains pending rather than passing. A richer parser
+can be supplied explicitly. This closes that mechanical comparison domain;
+human meaning and the remaining WTPDF requirements still need separate evidence.
 
 ## Preserve signatures with timestamps and validation data
 

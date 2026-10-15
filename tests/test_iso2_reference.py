@@ -114,6 +114,19 @@ class Iso2ReferenceTest(unittest.TestCase):
         self.assertEqual('fr/tutorials/27-pdf20-fichiers-associes.html', route_for('tutorials/' + lesson[1] + '.html', 'fr'))
         self.assertEqual('iso2', group_for({'package': 'roukmoute/pdf', 'source': 'src/Specification/Iso32000_2/Dictionary/CatalogDictionaryTable29.php'}))
 
+    def test_source_audits_are_reachable_from_the_global_sidebar_in_both_languages(self):
+        site = self.site()
+        for language in ('en', 'fr'):
+            site.language = language
+            with self.subTest(language=language):
+                navigation = site.sidebar('guides/source-audits.html')
+                prefix = '/fr/' if language == 'fr' else '/'
+                self.assertIn('href="' + prefix + 'guides/source-audits.html" aria-current="page"', navigation)
+                self.assertIn('Source rules and reviewed corrections', translate_interface(navigation))
+        lesson = next(item for item in LESSONS if item[3] == 'pdf17-secure-redaction')
+        self.assertEqual(('36-applied-redaction', '36-caviardisation'), lesson[:2])
+        self.assertIn('href="/fr/tutorials/36-caviardisation.html"', navigation)
+
 
 if __name__ == '__main__':
     unittest.main()

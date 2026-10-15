@@ -137,6 +137,22 @@ class OpenTypeSourcesTest(unittest.TestCase):
         self.assertIn("Independent OpenType object model", translated)
         self.assertIn("Glyph substitutions", translated)
 
+    def test_positioning_and_reader_authentication_are_visible_in_both_module_menus(self):
+        site = Site.__new__(Site)
+        site.base = "/"
+        for owner, route, title in (
+            ("pdftoolkit/opentype", "positioning", "OpenType positioning and variations"),
+            ("pdftoolkit/pdf-reader", "authentication", "Encrypted PDF authentication"),
+        ):
+            slug = MODULES[owner][0]
+            for language in ("en", "fr"):
+                site.language = language
+                with self.subTest(owner=owner, language=language):
+                    navigation = site.module_navigation(owner)
+                    prefix = "/fr/" if language == "fr" else "/"
+                    self.assertIn(f'href="{prefix}modules/{slug}/{route}.html"', navigation)
+                    self.assertIn(title, translate_interface(navigation))
+
 
 if __name__ == "__main__":
     unittest.main()

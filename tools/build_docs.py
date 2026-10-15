@@ -33,6 +33,7 @@ def validate_html_module(args, html: Path, work: Path, pdfs: Path) -> None:
         [sys.executable, "tools/validate_graphics_context.py", "--php", args.php, "--pdftoppm", args.pdftoppm],
         [sys.executable, "tools/validate_inline_fax.py", "--php", args.php, "--pdftoppm", args.pdftoppm],
         [sys.executable, "tools/validate_derivation.py", "--php", args.php],
+        [sys.executable, "tools/validate_authentication.py", "--php", args.php, "--qpdf", args.qpdf],
     ):
         run(command, html)
     runtime = work / "pdf-html-runtime.js"
@@ -71,6 +72,7 @@ def build(args) -> None:
         [sys.executable, "tools/compile_iso32000_2_catalogue.py", "--check"],
         [sys.executable, "tools/build_saslprep_tables.py", "--check"],
         [sys.executable, "tools/validate_adobe_references.py"],
+        [sys.executable, "tools/validate_ec3_semantic_reviews.py"],
         [sys.executable, "tools/validate_iso32000_bundle.py"],
         [sys.executable, "tools/generate_structure_inclusion.py", "--check"],
         [sys.executable, "tools/check_wtpdf_requirements.py"],
@@ -108,6 +110,8 @@ def build(args) -> None:
     poppler = ["--poppler-glib-bin", args.poppler_glib_bin] if args.poppler_glib_bin else ["--pdftotext", args.pdftotext]
     run([sys.executable, "tools/validate_pdf20_tagging.py", "--php", args.php, "--qpdf", args.qpdf, "--example", pdfs / "pdf20-tagged-namespaces.pdf", *poppler], source)
     run([sys.executable, "tools/validate_source_mechanisms.py", pdfs, "--php", args.php, "--qpdf", args.qpdf, *poppler], source)
+    run([sys.executable, "tools/validate_secure_redaction.py", "--php", args.php, "--qpdf", args.qpdf,
+         "--pdftoppm", args.pdftoppm, "--work-dir", work / "redaction-validation"], source)
     run([sys.executable, content / "tools/build_site.py", "--content-root", content, "--source-root", source,
          "--opentype-root", opentype, "--pdf-to-html-root", html, "--sources", manifest, "--api", api, "--pdf-dir", pdfs, "--pdf-preview-dir", previews,
          "--output", args.output.resolve(), "--base-path", "/", "--docs-revision", args.docs_revision], content)

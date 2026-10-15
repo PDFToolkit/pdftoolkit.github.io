@@ -75,10 +75,12 @@ Examples of explicitly corrected topics:
 - Pages 8 and 9: `T*` line movement and organization of embedded OpenType
   programs.
 
-This topic inventory does not declare an exhaustive audit of all 18 pages
-complete. A rule already present in ISO 32000-1 may have a core definition
-without all its constraints being checked. Current validations and remaining
-work are listed in the [coverage guide](coverage.md).
+Core 0.8.0 adds a source-linked classification of 65 corrections covering every
+correction-bearing physical page (3–18). It distinguishes native mechanisms,
+editorial changes, consumer operations and partial or external work. This
+complete classification does not declare complete implementation. The
+[source-audit guide](source-audits.md) and [coverage guide](coverage.md) explain
+the executable rules and remaining constraints.
 
 Concrete correspondences have been checked in the existing code: dictionary
 keys are unique; an explicit `Crypt` filter is unique and comes first; its key
@@ -115,8 +117,8 @@ The core already contains the
 [redaction annotation dictionary](https://github.com/PDFToolkit/pdf/blob/v0.5.4/src/Specification/Dictionary/RedactionAnnotationTable192.php),
 from ISO table 192, PDF pages 421 and 422. The addendum's eight entries
 (`Subtype`, `QuadPoints`, `IC`, `RO`, `OverlayText`, `Repeat`, `DA` and `Q`)
-appear in that definition. This allows dictionary construction; it is not
-a redaction application engine.
+appear in that definition. Core 0.8.0 separately adds the native `SecureRedaction`
+processor for an explicitly normalized graph.
 
 Addendum page 3 requires removal of the data, including the affected portion
 of an image: a mask or opaque rectangle is insufficient. Metadata and other
@@ -124,10 +126,13 @@ forms of content must also be examined. An incremental update preserves the
 bytes of previous revisions and therefore cannot ensure this destruction
 on its own.
 
-A future redaction processor must build on reading, interpreting and
-rewriting content in a dedicated module. `Redact` objects, coordinates and
-PDF appearances remain in the core. Adding documentary references does not
-implement this processor.
+The [redaction tutorial](tutorials/36-applied-redaction.md) executes actual
+deletion and writes a fresh graph without earlier revisions. Affected shared
+resources are removed from all uses; absent trusted font geometry, all text
+objects on a selected page are removed conservatively. Ancillary channels are
+dropped, retained resources are sanitized, and unsupported content is rejected.
+This is a bounded native PDF mechanism, not a general editor for arbitrary
+external files. qpdf, pypdf and Poppler check the actual example independently.
 
 ## Acrobat implementation notes
 
