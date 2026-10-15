@@ -30,6 +30,14 @@ explicit reader selection; the [HTML authentication guide](https://pdftoolkit.gi
 shows its construction. The receiving HTML viewer must enforce verified
 permissions. A wrong native password does not fall back to another provider.
 
+Reader 0.3.1 limits the `EncryptMetadata=false` exemption to the actual catalog
+metadata object; page and Form metadata remain encrypted unless they explicitly
+select Identity. It resolves indirect stream types before selecting `EFF`, uses
+the fixed 128-bit V4 file key and ignores attempts to redefine the standard
+Identity filter. Its [seven additional regression cases](https://github.com/PDFToolkit/pdf-reader/blob/v0.3.1/tools/validate_metadata_security.py)
+use qpdf and cryptography with the specific oracle boundaries explained in the
+[authentication guide](https://pdftoolkit.github.io/modules/reader/authentication.html).
+
 ## New bounded mechanisms in 0.8 / 0.3 / 0.2
 
 - Core dictionary rules execute source-linked domains and entry relationships;

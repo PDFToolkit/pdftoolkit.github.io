@@ -32,6 +32,14 @@ mot de passe est une sélection explicite du lecteur ; le
 montre sa construction. Le lecteur HTML doit appliquer les permissions vérifiées.
 Un mauvais mot de passe natif ne déclenche pas un autre fournisseur.
 
+Le lecteur 0.3.1 limite l'exemption `EncryptMetadata=false` au véritable objet
+de métadonnées du catalogue ; les métadonnées de pages et Forms restent chiffrées
+sauf sélection explicite d'Identity. Il résout les types indirects avant de
+choisir `EFF`, utilise la clé V4 fixe de 128 bits et ignore les tentatives de
+redéfinir le filtre standard Identity. Ses [sept régressions supplémentaires](https://github.com/PDFToolkit/pdf-reader/blob/v0.3.1/tools/validate_metadata_security.py)
+utilisent qpdf et cryptography, avec les limites précises des oracles expliquées
+dans le [guide d'authentification](https://pdftoolkit.github.io/fr/modules/reader/authentication.html).
+
 ## Nouveaux mécanismes bornés dans 0.8 / 0.3 / 0.2
 
 - Les règles de dictionnaire du core exécutent des domaines et relations reliés

@@ -15,6 +15,8 @@
   context/type validation and graph-edge work budgets verified by independent readers.
 - Expose reader/HTML authentication and OpenType positioning/variation guides in
   module menus; explain verified permissions and incomplete shaping/font domains.
+- Explain reader 0.3.1 catalog-only clear metadata, indirect EFF selection,
+  fixed V4 keys and reserved Identity filters with seven additional oracle cases.
 - Document optional native WTPDF XML rich-text comparison and its bounded parser.
 - Run EC3 source-binding, destructive-redaction and native HTML authentication
   oracles in the full documentation build, keeping private validation outputs

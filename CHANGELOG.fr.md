@@ -16,6 +16,8 @@
   de fontes, types/contextes et budgets des arêtes vérifiés par des lecteurs indépendants.
 - Exposer l'authentification lecteur/HTML et le positionnement/variations OpenType
   dans les menus ; expliquer permissions vérifiées et domaines de fontes/composition incomplets.
+- Expliquer les métadonnées claires limitées au catalogue, EFF indirect,
+  les clés V4 fixes et Identity réservé du lecteur 0.3.1 avec sept cas d'oracle supplémentaires.
 - Documenter la comparaison XML native optionnelle WTPDF et son parseur borné.
 - Exécuter les oracles des liens EC3, de caviardisation destructive et
   d'authentification HTML native pendant la construction complète, en séparant
