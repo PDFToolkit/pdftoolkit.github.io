@@ -4,8 +4,8 @@
 
 ## [0.8.0] - 2026-10-15
 
-- Document core 0.8.0, reader 0.3.1, image/font modules 0.1.9, independent
-  OpenType 0.2.0 and PDF-to-HTML 0.3.1 in both languages.
+- Document core 0.8.1, reader 0.3.1, image/font modules 0.1.9, independent
+  OpenType 0.2.0 and PDF-to-HTML 0.3.2 in both languages.
 - Add a source-audit guide with the 197 executable dictionary rules, four exact
   EC3 reviews, corrected appearance placement and 65-record Adobe errata review.
   Preserve edition differences and explicit incomplete mechanisms.

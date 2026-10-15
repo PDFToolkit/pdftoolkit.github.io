@@ -1,6 +1,6 @@
 # PDF 2.0 : objets, écriture et spécifications complémentaires
 
-Le core **0.8.0** implémente des objets et mécanismes ISO 32000-2:2020, avec des
+Le core **0.8.1** implémente des objets et mécanismes ISO 32000-2:2020, avec des
 corrections vérifiées d’Errata Collection 3 (EC3, 2026-06-01). Il nécessite PHP 8.3
 ou ultérieur en 64 bits et conserve une construction explicite, des objets propres
 au document et aucun registre global. La couverture des tableaux n’établit pas

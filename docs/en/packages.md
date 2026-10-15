@@ -1,7 +1,7 @@
 # Core and optional modules
 
 PDFToolkit separates the PDF model from external-file processing. The
-**0.8.0 core**, **0.3.1 PDF reader**, **0.1.9 image/font modules**, independent **0.2.0 OpenType model** and **0.3.1 PDF-to-HTML module**
+**0.8.1 core**, **0.3.1 PDF reader**, **0.1.9 image/font modules**, independent **0.2.0 OpenType model** and **0.3.2 PDF-to-HTML module**
 require PHP 8.3 or later and are checked on PHP 8.3, 8.4 and 8.5.
 Core **0.8** and OpenType **0.2** require 64-bit PHP; OpenType remains independent of the
 PDF core. The core retains its Composer name `roukmoute/pdf`
@@ -60,7 +60,7 @@ All six packages are available on Packagist:
 [PDF fonts](https://packagist.org/packages/pdftoolkit/pdf-fonts) and
 [OpenType](https://packagist.org/packages/pdftoolkit/opentype) and
 [PDF to HTML](https://packagist.org/packages/pdftoolkit/pdf-to-html).
-Stable constraints are `roukmoute/pdf:^0.8.0` for the core and
+Stable constraints are `roukmoute/pdf:^0.8.1` for the core and
 `pdftoolkit/pdf-reader:^0.3.1`, `pdftoolkit/pdf-images:^0.1.9` or
 `pdftoolkit/pdf-fonts:^0.1.9` for PDF modules, and `pdftoolkit/opentype:^0.2.0` for the independent font model. Older core tags `v0.1.0` and
 `v0.1.1` retain their PHP 8.5 constraint.
@@ -68,25 +68,25 @@ Stable constraints are `roukmoute/pdf:^0.8.0` for the core and
 To generate PDFs only:
 
 ```sh
-composer require "roukmoute/pdf:^0.8.0"
+composer require "roukmoute/pdf:^0.8.1"
 ```
 
 To add reading of existing PDFs:
 
 ```sh
-composer require "roukmoute/pdf:^0.8.0" "pdftoolkit/pdf-reader:^0.3.1"
+composer require "roukmoute/pdf:^0.8.1" "pdftoolkit/pdf-reader:^0.3.1"
 ```
 
 To convert images:
 
 ```sh
-composer require "roukmoute/pdf:^0.8.0" "pdftoolkit/pdf-images:^0.1.9"
+composer require "roukmoute/pdf:^0.8.1" "pdftoolkit/pdf-images:^0.1.9"
 ```
 
 To analyze TrueType fonts:
 
 ```sh
-composer require "roukmoute/pdf:^0.8.0" "pdftoolkit/pdf-fonts:^0.1.9"
+composer require "roukmoute/pdf:^0.8.1" "pdftoolkit/pdf-fonts:^0.1.9"
 ```
 
 To analyze a font independently of PDF:
@@ -106,7 +106,7 @@ Applications that added GitHub repositories under `repositories` can remove
 those entries from `composer.json`. Composer package names remain identical.
 
 Before 1.0, a new minor release may change names and signatures. The
-`^0.8.0`, `^0.3.1` and `^0.1.9` constraints allow patches within their series and
+`^0.8.1`, `^0.3.1` and `^0.1.9` constraints allow patches within their series and
 exclude the next minor release. Consult changelogs before switching series.
 To work with upcoming development, explicitly request `dev-master` for the
 relevant packages.
@@ -238,10 +238,10 @@ and [coverage guide](coverage.md).
 
 ## Derive HTML from a tagged PDF
 
-The optional [PDF-to-HTML module](https://pdftoolkit.github.io/modules/to-html/index.html) follows the retained PDF Association **Deriving HTML from PDF 1.2** usage specification. Version 0.3.1 installs core 0.8.0+ and reader 0.3.1+ transitively, requiring 64-bit PHP 8.3+ with DOM and mbstring. It derives semantic HTML from logical structure; it does not infer untagged structure, run OCR or reproduce PDF page layout. Model coverage, file-adapter coverage and browser/runtime integration are distinct.
+The optional [PDF-to-HTML module](https://pdftoolkit.github.io/modules/to-html/index.html) follows the retained PDF Association **Deriving HTML from PDF 1.2** usage specification. Version 0.3.2 accepts core `^0.7.1 || ^0.8` and reader `^0.3.1`, requiring 64-bit PHP 8.3+ with DOM and mbstring. The documented source lock selects core 0.8.1 and reader 0.3.1; the command below explicitly requests core 0.8.1 or a later patch. It derives semantic HTML from logical structure; it does not infer untagged structure, run OCR or reproduce PDF page layout. Model coverage, file-adapter coverage and browser/runtime integration are distinct.
 
 ```sh
-composer require "pdftoolkit/pdf-to-html:^0.3.1"
+composer require "roukmoute/pdf:^0.8.1" "pdftoolkit/pdf-to-html:^0.3.2"
 ```
 
 [Follow the executable tutorial](tutorials/35-derive-html.md) and inspect diagnostics before publishing HTML. ParentTree associations, table-header identities, destinations, Unicode mappings, inline images and form actions have tests and independent oracles. The [requirements ledger](https://pdftoolkit.github.io/modules/to-html/requirements.html) links each rule to decisions and evidence; it does not certify universal PDF acceptance.

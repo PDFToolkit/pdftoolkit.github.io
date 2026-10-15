@@ -24,7 +24,7 @@ text is a sequence of operators.
 The core and modules are available on Packagist. From your project:
 
 ```sh
-composer require "roukmoute/pdf:^0.8.0"
+composer require "roukmoute/pdf:^0.8.1"
 ```
 
 Lessons 09, 10 and 12 use `pdftoolkit/pdf-fonts`, `pdftoolkit/pdf-images` and
@@ -109,7 +109,7 @@ PDF, all three pages and the objects read.
 | [32. Document timestamps and DSS](32-pdf20-timestamp-dss.md) | RFC3161, explicit validation policy, VRI and preserved historical signatures. | [pdf20-timestamp-dss.php](https://github.com/PDFToolkit/pdf/blob/v0.8.0/examples/pdf20-timestamp-dss.php) |
 | [33. Geospatial objects and measurements](33-pdf20-geospatial.md) | Coordinate systems, paired control points, viewports, matrices and point clouds. | [pdf20-geospatial.php](https://github.com/PDFToolkit/pdf/blob/v0.8.0/examples/pdf20-geospatial.php) |
 | [34. Structure destinations](34-pdf20-structure-destinations.md) | Semantic targets, content traversal, named SD entries and explicit page fallbacks. | [pdf20-structure-destinations.php](https://github.com/PDFToolkit/pdf/blob/v0.8.0/examples/pdf20-structure-destinations.php) |
-| [35. Derive HTML from tagged PDF](35-derive-html.md) | Tested rules, object-based graphics rendering, targeted reset and actual HTML. | [01-derive-tagged-pdf.php](https://github.com/PDFToolkit/pdf-to-html/blob/v0.3.1/examples/01-derive-tagged-pdf.php) |
+| [35. Derive HTML from tagged PDF](35-derive-html.md) | Tested rules, object-based graphics rendering, targeted reset and actual HTML. | [01-derive-tagged-pdf.php](https://github.com/PDFToolkit/pdf-to-html/blob/v0.3.2/examples/01-derive-tagged-pdf.php) |
 | [36. Apply redaction](36-applied-redaction.md) | Actual deletion, shared resources and a fresh file without history. | [pdf17-secure-redaction.php](https://github.com/PDFToolkit/pdf/blob/v0.8.0/examples/pdf17-secure-redaction.php) |
 
 After the first document, lessons 03 to 07 can be read in any order matching

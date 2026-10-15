@@ -85,7 +85,7 @@ with qpdf, pypdf and Poppler; its private source copy is never published as the
 redacted result. EC3 annotation identities and approval threads are checked
 against the unchanged canonical PDF, separately from dictionary generation.
 
-The current selection documents PDF-to-HTML 0.3.1 and reader 0.3.1. The
+The current selection documents PDF-to-HTML 0.3.2 and reader 0.3.1. The
 [requirements ledger](https://pdftoolkit.github.io/modules/to-html/requirements.html),
 [policies](https://pdftoolkit.github.io/modules/to-html/policies.html) and
 [graphics](https://pdftoolkit.github.io/modules/to-html/graphics.html) guides

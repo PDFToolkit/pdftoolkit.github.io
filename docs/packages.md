@@ -1,7 +1,7 @@
 # Core et modules optionnels
 
 PDFToolkit sépare le modèle PDF des traitements de fichiers externes. Le core
-**0.8.0**, le lecteur PDF **0.3.1**, les modules images/fontes **0.1.9**, le modèle OpenType indépendant **0.2.0** et PDF vers HTML **0.3.1**
+**0.8.1**, le lecteur PDF **0.3.1**, les modules images/fontes **0.1.9**, le modèle OpenType indépendant **0.2.0** et PDF vers HTML **0.3.2**
 nécessitent PHP 8.3 ou supérieur et sont vérifiés sous PHP 8.3, 8.4 et 8.5.
 Le core **0.8** et OpenType **0.2** exigent PHP en 64 bits ; OpenType reste indépendant du core PDF.
 Le core conserve son nom Composer `roukmoute/pdf` après son transfert dans
@@ -58,7 +58,7 @@ Les six packages sont disponibles sur Packagist :
 [fontes PDF](https://packagist.org/packages/pdftoolkit/pdf-fonts) et
 [OpenType](https://packagist.org/packages/pdftoolkit/opentype) et
 [PDF vers HTML](https://packagist.org/packages/pdftoolkit/pdf-to-html).
-Les contraintes stables sont `roukmoute/pdf:^0.8.0` pour le core et
+Les contraintes stables sont `roukmoute/pdf:^0.8.1` pour le core et
 `pdftoolkit/pdf-reader:^0.3.1`, `pdftoolkit/pdf-images:^0.1.9` ou
 `pdftoolkit/pdf-fonts:^0.1.9` pour les modules PDF, et `pdftoolkit/opentype:^0.2.0` pour le modèle de fonte indépendant. Les anciens tags du core `v0.1.0`
 et `v0.1.1` conservent leur contrainte PHP 8.5.
@@ -66,25 +66,25 @@ et `v0.1.1` conservent leur contrainte PHP 8.5.
 Pour générer seulement des PDF :
 
 ```sh
-composer require "roukmoute/pdf:^0.8.0"
+composer require "roukmoute/pdf:^0.8.1"
 ```
 
 Pour ajouter la lecture de PDF existants :
 
 ```sh
-composer require "roukmoute/pdf:^0.8.0" "pdftoolkit/pdf-reader:^0.3.1"
+composer require "roukmoute/pdf:^0.8.1" "pdftoolkit/pdf-reader:^0.3.1"
 ```
 
 Pour convertir des images :
 
 ```sh
-composer require "roukmoute/pdf:^0.8.0" "pdftoolkit/pdf-images:^0.1.9"
+composer require "roukmoute/pdf:^0.8.1" "pdftoolkit/pdf-images:^0.1.9"
 ```
 
 Pour analyser des fontes TrueType :
 
 ```sh
-composer require "roukmoute/pdf:^0.8.0" "pdftoolkit/pdf-fonts:^0.1.9"
+composer require "roukmoute/pdf:^0.8.1" "pdftoolkit/pdf-fonts:^0.1.9"
 ```
 
 Pour analyser une fonte indépendamment du PDF :
@@ -105,7 +105,7 @@ peuvent retirer ces entrées de leur `composer.json`. Les noms Composer des
 packages restent identiques.
 
 Avant 1.0, une nouvelle version mineure peut changer les noms et signatures.
-Les contraintes `^0.8.0`, `^0.3.1` et `^0.1.9` autorisent les correctifs de leur série et
+Les contraintes `^0.8.1`, `^0.3.1` et `^0.1.9` autorisent les correctifs de leur série et
 écartent la version mineure suivante. Consulter les changelogs avant de changer
 de série. Pour travailler sur les développements à venir, demander explicitement
 `dev-master` pour les packages concernés.
@@ -237,10 +237,10 @@ politique de confiance d'une signature. Ces frontières sont détaillées dans l
 
 ## Dériver du HTML depuis un PDF balisé
 
-Le [module PDF vers HTML](https://pdftoolkit.github.io/fr/modules/to-html/index.html), optionnel, suit la spécification d’usage PDF Association **Deriving HTML from PDF 1.2** conservée. La version 0.3.1 installe transitivement le core 0.8.0+ et le lecteur 0.3.1+, sous PHP 8.3+ en 64 bits avec DOM et mbstring. Elle dérive le HTML sémantique de la structure logique, sans inférer de structure absente, faire d’OCR ni reproduire la mise en page. Couverture du modèle, de l’adaptateur de fichiers et intégration navigateur/runtime restent distinctes.
+Le [module PDF vers HTML](https://pdftoolkit.github.io/fr/modules/to-html/index.html), optionnel, suit la spécification d’usage PDF Association **Deriving HTML from PDF 1.2** conservée. La version 0.3.2 accepte le core `^0.7.1 || ^0.8` et le lecteur `^0.3.1`, sous PHP 8.3+ en 64 bits avec DOM et mbstring. Le lock des sources documentées sélectionne le core 0.8.1 et le lecteur 0.3.1 ; la commande ci-dessous demande explicitement le core 0.8.1 ou un correctif ultérieur. Elle dérive le HTML sémantique de la structure logique, sans inférer de structure absente, faire d’OCR ni reproduire la mise en page. Couverture du modèle, de l’adaptateur de fichiers et intégration navigateur/runtime restent distinctes.
 
 ```sh
-composer require "pdftoolkit/pdf-to-html:^0.3.1"
+composer require "roukmoute/pdf:^0.8.1" "pdftoolkit/pdf-to-html:^0.3.2"
 ```
 
 [Suivre le tutoriel exécutable](tutorials/35-derive-html.md) et examiner les diagnostics avant publication du HTML. Les associations ParentTree, identités des en-têtes de tableaux, destinations, correspondances Unicode, images inline et actions de formulaire disposent de tests et d'oracles indépendants. Le [registre des exigences](https://pdftoolkit.github.io/fr/modules/to-html/requirements.html) relie chaque règle aux décisions et preuves ; il ne certifie pas l'acceptation de tout PDF.

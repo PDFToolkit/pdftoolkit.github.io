@@ -4,8 +4,8 @@
 
 ## [0.8.0] - 2026-10-15
 
-- Documenter le core 0.8.0, le lecteur 0.3.1, les modules images/fontes 0.1.9,
-  OpenType indépendant 0.2.0 et PDF vers HTML 0.3.1 dans les deux langues.
+- Documenter le core 0.8.1, le lecteur 0.3.1, les modules images/fontes 0.1.9,
+  OpenType indépendant 0.2.0 et PDF vers HTML 0.3.2 dans les deux langues.
 - Ajouter un guide des audits de source avec les 197 règles de dictionnaires
   exécutables, quatre revues EC3 exactes, le placement corrigé des apparences et
   le classement de 65 errata Adobe. Préserver différences d'édition et mécanismes incomplets.

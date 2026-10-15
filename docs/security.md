@@ -10,7 +10,7 @@ invariants restent dans le core. Le module
 [documentation de sécurité](https://github.com/PDFToolkit/pdf-reader/blob/v0.3.1/docs/security.md)
 pour la lecture de fichiers externes ; cette revue du générateur ne s'y substitue pas.
 
-Les versions documentées sont le core **0.8.0**, le lecteur PDF **0.3.1**, les modules images/fontes **0.1.9** et
+Les versions documentées sont le core **0.8.1**, le lecteur PDF **0.3.1**, les modules images/fontes **0.1.9** et
 OpenType indépendant **0.2.0**. Ces packages nécessitent **PHP 8.3 ou supérieur**
 et sont vérifiés sous PHP 8.3, 8.4 et 8.5. Le core **0.8** et OpenType **0.2** exigent PHP en
 64 bits ; OpenType reste indépendant du core PDF. La revue inclut les
@@ -19,7 +19,7 @@ source et déclarations de conformité ne sont pas des certificats de sécurité
 Le parseur OpenType indépendant possède ses propres
 [frontières de sécurité](https://github.com/PDFToolkit/opentype/blob/v0.2.0/SECURITY.fr.md).
 
-Le module PDF vers HTML **0.3.1**, avec le lecteur **0.3.1+**, conserve ses propres
+Le module PDF vers HTML **0.3.2**, avec le lecteur **0.3.1+**, conserve ses propres
 [contrôles de sécurité](https://pdftoolkit.github.io/fr/modules/to-html/security.html)
 et [politiques explicites](https://pdftoolkit.github.io/fr/modules/to-html/policies.html).
 Ses tests indépendants vérifient filtrage HTML/CSS/URL, associations et IDs,

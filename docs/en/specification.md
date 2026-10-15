@@ -10,7 +10,7 @@ have a separate archival catalogue, including the original portfolio and its
 embedded-document relationships. They support comparison and targeted audits;
 their preservation does not alter the active definition inventories or establish
 implementation of all their procedures.
-Core **0.8.0**, PDF reader **0.3.1**, image/font modules **0.1.9** and independent OpenType **0.2.0**
+Core **0.8.1**, PDF reader **0.3.1**, image/font modules **0.1.9** and independent OpenType **0.2.0**
 require **PHP 8.3 or later** and are checked on PHP 8.3, 8.4 and 8.5. Core **0.8** and OpenType **0.2**
 require 64-bit PHP; OpenType remains independent of the PDF core.
 The PHP runtime version and PDF format version are independent. The [PDF 2.0 guide](pdf-2-0.md)

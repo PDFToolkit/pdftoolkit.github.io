@@ -1,6 +1,6 @@
 # PDF 2.0: objects, writing and companion specifications
 
-Core **0.8.0** implements ISO 32000-2:2020 objects and mechanisms, with reviewed
+Core **0.8.1** implements ISO 32000-2:2020 objects and mechanisms, with reviewed
 corrections from Errata Collection 3 (EC3, 2026-06-01). It requires 64-bit PHP 8.3
 or later and keeps explicit construction, document-scoped objects and no global
 registry. Table coverage does not establish complete conditional, algorithmic or

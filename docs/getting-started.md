@@ -16,10 +16,10 @@ Le core 0.8.0 étend l'[écriture PDF 2.0](pdf-2-0.md) avec les [spécifications
 
 ## Installation
 
-Le core **0.8.0** nécessite PHP 8.3 ou supérieur en 64 bits et les extensions `ctype`, `iconv` et `zlib`. Les backends AES et CMS sont optionnels et nécessitent `openssl`. Le package [`roukmoute/pdf`](https://packagist.org/packages/roukmoute/pdf) est disponible sur Packagist. Depuis le projet consommateur :
+Le core **0.8.1** nécessite PHP 8.3 ou supérieur en 64 bits et les extensions `ctype`, `iconv` et `zlib`. Les backends AES et CMS sont optionnels et nécessitent `openssl`. Le package [`roukmoute/pdf`](https://packagist.org/packages/roukmoute/pdf) est disponible sur Packagist. Depuis le projet consommateur :
 
 ```sh
-composer require "roukmoute/pdf:^0.8.0"
+composer require "roukmoute/pdf:^0.8.1"
 ```
 
 Les modifications d'API figurent dans le [changelog](../CHANGELOG.md) et le
@@ -37,7 +37,7 @@ projet consommateur pour fixer les versions installées.
 Le lecteur PDF **0.3.1** accepte le core `^0.7.1 || ^0.8` ; les modules images/fontes **0.1.9** conservent leurs anciennes séries prises en charge jusqu’à 0.8 sous PHP 8.3 ou supérieur. Le lecteur 0.3.1 accepte la syntaxe PDF 1.0–2.0, les chaînes UTF-8 PDF 2.0 et l’authentification native optionnelle par mot de passe ; la conversion d’images reste PNG/JPEG et celle des fontes reste TrueType statique. Les trois packages sont disponibles sur Packagist : [lecteur](https://packagist.org/packages/pdftoolkit/pdf-reader), [images](https://packagist.org/packages/pdftoolkit/pdf-images) et [fontes](https://packagist.org/packages/pdftoolkit/pdf-fonts). Par exemple, pour importer des fichiers image avec le core 0.8 :
 
 ```sh
-composer require "roukmoute/pdf:^0.8.0" "pdftoolkit/pdf-images:^0.1.9"
+composer require "roukmoute/pdf:^0.8.1" "pdftoolkit/pdf-images:^0.1.9"
 ```
 
 Le module installe le core avec sa contrainte stable. Le [guide des packages](packages.md) explique leur frontière, les installations et le fonctionnement du lecteur. Conserver le `composer.lock` de l'application pour fixer les versions et les commits utilisés.
@@ -162,8 +162,8 @@ L'extracteur `tools/extract_spec.py` conserve la source et les localisations dan
 
 ## Dériver du HTML
 
-Pour dériver du HTML sémantique depuis un PDF balisé, installer `pdftoolkit/pdf-to-html:^0.3.1` puis suivre le [tutoriel 35](tutorials/35-derive-html.md). Cette conversion optionnelle reste hors du core.
+Pour dériver du HTML sémantique depuis un PDF balisé, installer `pdftoolkit/pdf-to-html:^0.3.2` puis suivre le [tutoriel 35](tutorials/35-derive-html.md). Cette conversion optionnelle reste hors du core.
 
-La version 0.3.1 utilise le lecteur 0.3.1+ et exige PHP 8.3+ en 64 bits avec DOM et mbstring. Son [registre des exigences](https://pdftoolkit.github.io/fr/modules/to-html/requirements.html) rattache les règles aux tests. Les [profils](https://pdftoolkit.github.io/fr/modules/to-html/policies.html) distinguent contenu sémantique, actions de formulaire optionnelles et scripts PDF ; aucune de ces actions actives n'est autorisée par défaut. Le [rendu graphique](https://pdftoolkit.github.io/fr/modules/to-html/graphics.html) et l'authentification restent des capacités fournies explicitement par l'application. Conserver les ressources retournées et lire les diagnostics avant publication.
+La version 0.3.2 utilise le lecteur 0.3.1+ et exige PHP 8.3+ en 64 bits avec DOM et mbstring. Son [registre des exigences](https://pdftoolkit.github.io/fr/modules/to-html/requirements.html) rattache les règles aux tests. Les [profils](https://pdftoolkit.github.io/fr/modules/to-html/policies.html) distinguent contenu sémantique, actions de formulaire optionnelles et scripts PDF ; aucune de ces actions actives n'est autorisée par défaut. Le [rendu graphique](https://pdftoolkit.github.io/fr/modules/to-html/graphics.html) et l'authentification restent des capacités fournies explicitement par l'application. Conserver les ressources retournées et lire les diagnostics avant publication.
 
 [Packagist: pdftoolkit/pdf-to-html](https://packagist.org/packages/pdftoolkit/pdf-to-html).
