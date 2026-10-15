@@ -2,6 +2,13 @@
 
 [English](CHANGELOG.md) · [Français](CHANGELOG.fr.md)
 
+## [0.10.0] - 2026-10-15
+
+- Select published core 0.11.0, Reader 0.6.0, images/fonts 0.1.12, HTML 0.5.0 and independent OpenType 0.3.0 from exact annotated tag commits.
+- Update English/French protected-revision, authentication, EC3, font and migration documentation. Add Reader physical-history/structural-policy guides and eight OpenType axes/metadata/metrics/outline guides to navigation and required-route checks.
+- Run independent Reader history and encrypted-UR3 oracles in the full build, alongside the updated signature, certificate, HTML and rendering validations. Preserve explicit unsupported mechanisms and independent-tool limits.
+- Keep documentation/package provenance separate and preserve every legacy route and binary download through the compatibility build.
+
 ## [0.9.2] - 2026-10-15
 
 - Select published core 0.10.0, Reader 0.5.1, image/font modules 0.1.11 and

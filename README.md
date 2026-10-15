@@ -27,17 +27,19 @@ The core groups its eighteen original reference PDFs under
 `resources/reference-documents/`, preserving their original names and bytes.
 Public reference downloads keep their existing URLs.
 
+Core 0.11 adds authenticated encrypted UR3 revisions, historical page templates and bounded rich text; Reader 0.6 inspects physical revision boundaries without creating native writer authority. OpenType 0.3 adds explicit axes, metadata, metrics and variable outlines. The [migration guide](https://pdftoolkit.github.io/guides/migration-0-11.html) and coverage guides distinguish verified mechanisms from remaining boundaries.
+
 ## Install the libraries
 
 The PHP libraries are available on Packagist. Install the core with Composer:
 
 ```sh
-composer require "roukmoute/pdf:^0.10.0"
+composer require "roukmoute/pdf:^0.11.0"
 ```
 
-The documented releases are core **0.10.0**, PDF reader **0.5.1**, images/fonts **0.1.11**,
-independent OpenType **0.2.0** and PDF-to-HTML **0.4.2**. They require **PHP 8.3 or later** and are
-checked on PHP 8.3, 8.4 and 8.5. Core **0.10** and OpenType **0.2** require 64-bit PHP;
+The documented releases are core **0.11.0**, PDF reader **0.6.0**, images/fonts **0.1.12**,
+independent OpenType **0.3.0** and PDF-to-HTML **0.5.0**. They require **PHP 8.3 or later** and are
+checked on PHP 8.3, 8.4 and 8.5. Core **0.11** and OpenType **0.3** require 64-bit PHP;
 OpenType remains independent of the PDF core.
 
 Choose the optional modules according to the files your application handles:
@@ -52,7 +54,7 @@ Choose the optional modules according to the files your application handles:
 The image/font/reader modules install the core as a dependency. The PDF-to-HTML module adds semantic derivation from tagged PDF and installs the reader as well. OpenType provides its own object model and installs without PDF dependencies. The package guide explains
 their Composer commands and supported versions.
 
-PDF-to-HTML 0.4.2 derives semantic content from tagged PDFs with checked structure
+PDF-to-HTML 0.5.0 derives semantic content from tagged PDFs with checked structure
 associations, Unicode, images, tables, navigation and form fields. Its
 [clause ledger](https://pdftoolkit.github.io/modules/to-html/requirements.html)
 links the retained reference to executable decisions and independent tests.

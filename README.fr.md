@@ -29,18 +29,20 @@ Le core regroupe ses dix-huit PDF de référence originaux dans
 `resources/reference-documents/`, avec leurs noms et octets d’origine.
 Les téléchargements publics des références conservent leurs URL existantes.
 
+Le core 0.11 ajoute les révisions UR3 chiffrées authentifiées, les modèles de pages historiques et le texte enrichi borné ; le Reader 0.6 inspecte les frontières physiques des révisions sans créer d’autorité native. OpenType 0.3 ajoute axes, métadonnées, métriques et contours variables avec des objets explicites. Les [migrations](https://pdftoolkit.github.io/fr/guides/migration-0-11.html) et guides de couverture distinguent les mécanismes validés des limites restantes.
+
 ## Installer les bibliothèques
 
 Les bibliothèques PHP sont disponibles sur Packagist. Installer le core avec
 Composer :
 
 ```sh
-composer require "roukmoute/pdf:^0.10.0"
+composer require "roukmoute/pdf:^0.11.0"
 ```
 
-Les versions documentées sont le core **0.10.0**, le lecteur **0.5.1**, les modules
-images/fontes **0.1.11**, OpenType indépendant **0.2.0** et PDF vers HTML **0.4.2**. Elles nécessitent **PHP 8.3 ou supérieur**
-et sont vérifiées sous PHP 8.3, 8.4 et 8.5. Le core **0.10** et OpenType **0.2** exigent PHP en
+Les versions documentées sont le core **0.11.0**, le lecteur **0.6.0**, les modules
+images/fontes **0.1.12**, OpenType indépendant **0.3.0** et PDF vers HTML **0.5.0**. Elles nécessitent **PHP 8.3 ou supérieur**
+et sont vérifiées sous PHP 8.3, 8.4 et 8.5. Le core **0.11** et OpenType **0.3** exigent PHP en
 64 bits ; OpenType reste indépendant du core PDF.
 
 Choisir les modules optionnels selon les fichiers traités par l'application :
@@ -55,7 +57,7 @@ Choisir les modules optionnels selon les fichiers traités par l'application :
 Les modules images/fontes/lecteur installent le core comme dépendance. PDF vers HTML ajoute la dérivation sémantique et installe aussi le lecteur. OpenType possède son propre modèle objet et s’installe sans dépendance PDF. Le guide des packages explique
 leurs commandes Composer et les versions prises en charge.
 
-PDF vers HTML 0.4.2 dérive le contenu sémantique des PDF balisés avec vérification
+PDF vers HTML 0.5.0 dérive le contenu sémantique des PDF balisés avec vérification
 des associations structurelles, Unicode, images, tableaux, navigation et champs.
 Son [registre des clauses](https://pdftoolkit.github.io/fr/modules/to-html/requirements.html)
 relie la référence conservée aux décisions exécutables et aux tests indépendants.
