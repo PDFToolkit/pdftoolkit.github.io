@@ -29,7 +29,7 @@ mechanisms do not establish complete conformance to every clause of the base
 standard. The [PDF 2.0 guide](pdf-2-0.md) and [coverage guide](coverage.md) retain
 that distinction. Reader 0.3 separately adds password authentication and decoding
 mechanisms. Its input contract does not include source PDF MAC or public-key
-authentication; consult the [reader guide](https://github.com/PDFToolkit/pdf-reader/blob/v0.3.0/docs/authentication.md).
+authentication; consult the [reader guide](https://github.com/PDFToolkit/pdf-reader/blob/v0.3.1/docs/authentication.md).
 
 ## Algorithms are selected independently
 

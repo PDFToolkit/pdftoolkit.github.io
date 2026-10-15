@@ -35,8 +35,8 @@ The PHP libraries are available on Packagist. Install the core with Composer:
 composer require "roukmoute/pdf:^0.8.0"
 ```
 
-The documented releases are core **0.8.0**, PDF reader **0.3.0**, images/fonts **0.1.9**,
-independent OpenType **0.2.0** and PDF-to-HTML **0.3.0**. They require **PHP 8.3 or later** and are
+The documented releases are core **0.8.0**, PDF reader **0.3.1**, images/fonts **0.1.9**,
+independent OpenType **0.2.0** and PDF-to-HTML **0.3.1**. They require **PHP 8.3 or later** and are
 checked on PHP 8.3, 8.4 and 8.5. Core **0.8** and OpenType **0.2** require 64-bit PHP;
 OpenType remains independent of the PDF core.
 
@@ -52,7 +52,7 @@ Choose the optional modules according to the files your application handles:
 The image/font/reader modules install the core as a dependency. The PDF-to-HTML module adds semantic derivation from tagged PDF and installs the reader as well. OpenType provides its own object model and installs without PDF dependencies. The package guide explains
 their Composer commands and supported versions.
 
-PDF-to-HTML 0.3.0 derives semantic content from tagged PDFs with checked structure
+PDF-to-HTML 0.3.1 derives semantic content from tagged PDFs with checked structure
 associations, Unicode, images, tables, navigation and form fields. Its
 [clause ledger](https://pdftoolkit.github.io/modules/to-html/requirements.html)
 links the retained reference to executable decisions and independent tests.

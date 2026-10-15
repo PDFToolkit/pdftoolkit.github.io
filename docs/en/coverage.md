@@ -49,7 +49,7 @@ The reproducible checker rejects omitted clauses and missing evidence files.
 No automatic WTPDF/PDF/UA-2 certification or complete base-standard conformance
 is claimed. Reader 0.3 adds opt-in R=2–7 password authentication, hybrid xrefs
 and further filter decoding to PDF 1.0–2.0 input. Its
-[authentication guide](https://github.com/PDFToolkit/pdf-reader/blob/v0.3.0/docs/authentication.md)
+[authentication guide](https://github.com/PDFToolkit/pdf-reader/blob/v0.3.1/docs/authentication.md)
 states the supported crypt filters and rejects source PDF MAC/public-key
 authentication. These input mechanisms remain distinct from writing and rendering.
 

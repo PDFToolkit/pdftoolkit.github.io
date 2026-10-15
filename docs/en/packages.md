@@ -1,7 +1,7 @@
 # Core and optional modules
 
 PDFToolkit separates the PDF model from external-file processing. The
-**0.8.0 core**, **0.3.0 PDF reader**, **0.1.9 image/font modules**, independent **0.2.0 OpenType model** and **0.3.0 PDF-to-HTML module**
+**0.8.0 core**, **0.3.1 PDF reader**, **0.1.9 image/font modules**, independent **0.2.0 OpenType model** and **0.3.1 PDF-to-HTML module**
 require PHP 8.3 or later and are checked on PHP 8.3, 8.4 and 8.5.
 Core **0.8** and OpenType **0.2** require 64-bit PHP; OpenType remains independent of the
 PDF core. The core retains its Composer name `roukmoute/pdf`
@@ -61,7 +61,7 @@ All six packages are available on Packagist:
 [OpenType](https://packagist.org/packages/pdftoolkit/opentype) and
 [PDF to HTML](https://packagist.org/packages/pdftoolkit/pdf-to-html).
 Stable constraints are `roukmoute/pdf:^0.8.0` for the core and
-`pdftoolkit/pdf-reader:^0.3.0`, `pdftoolkit/pdf-images:^0.1.9` or
+`pdftoolkit/pdf-reader:^0.3.1`, `pdftoolkit/pdf-images:^0.1.9` or
 `pdftoolkit/pdf-fonts:^0.1.9` for PDF modules, and `pdftoolkit/opentype:^0.2.0` for the independent font model. Older core tags `v0.1.0` and
 `v0.1.1` retain their PHP 8.5 constraint.
 
@@ -74,7 +74,7 @@ composer require "roukmoute/pdf:^0.8.0"
 To add reading of existing PDFs:
 
 ```sh
-composer require "roukmoute/pdf:^0.8.0" "pdftoolkit/pdf-reader:^0.3.0"
+composer require "roukmoute/pdf:^0.8.0" "pdftoolkit/pdf-reader:^0.3.1"
 ```
 
 To convert images:
@@ -106,12 +106,12 @@ Applications that added GitHub repositories under `repositories` can remove
 those entries from `composer.json`. Composer package names remain identical.
 
 Before 1.0, a new minor release may change names and signatures. The
-`^0.8.0`, `^0.3.0` and `^0.1.9` constraints allow patches within their series and
+`^0.8.0`, `^0.3.1` and `^0.1.9` constraints allow patches within their series and
 exclude the next minor release. Consult changelogs before switching series.
 To work with upcoming development, explicitly request `dev-master` for the
 relevant packages.
 
-Reader 0.3.0 accepts core `^0.7.1 || ^0.8`; image/font modules 0.1.9 also retain
+Reader 0.3.1 accepts core `^0.7.1 || ^0.8`; image/font modules 0.1.9 also retain
 their accepted older core series through `^0.8`. The commands above explicitly
 select core 0.8 constructions. The core retains
 mandatory PHP extensions `ctype`, `iconv` and `zlib`. AES, CMS and signature
@@ -168,7 +168,7 @@ without concatenation or decoding. Traversal and stream-count limits are
 explicit objects; cumulative `ReadDocument` budgets continue to apply.
 To obtain decoded bytes, separately request
 `$document->streamData($stream)`. The
-[page-reading guide](https://github.com/PDFToolkit/pdf-reader/blob/v0.3.0/docs/pages.md)
+[page-reading guide](https://github.com/PDFToolkit/pdf-reader/blob/v0.3.1/docs/pages.md)
 explains every step and supplies an executable example with three inherited
 pages.
 
@@ -201,7 +201,7 @@ $permissions = $document->permissions();
 
 R=5–7 receives explicitly prepared Unicode credentials; historical R=2–4 instead
 uses `PdfDocEncodedPassword` with PDFDocEncoding bytes. The
-[authentication guide](https://github.com/PDFToolkit/pdf-reader/blob/v0.3.0/docs/authentication.md)
+[authentication guide](https://github.com/PDFToolkit/pdf-reader/blob/v0.3.1/docs/authentication.md)
 details R=2–7, named `StrF`/`StmF`/`EFF` filters and AES-GCM tag checks. The default
 reader opens no encrypted input without that selection. Source PDF MAC and
 public-key authentication remain rejected. Authentication exposes user/owner
@@ -212,7 +212,7 @@ Read values cannot be directly passed back to the writer: their references
 belong to the original file. Graph import and remapping, rewriting, merging
 and repair remain to be built. Consult the
 [reader documentation](https://github.com/PDFToolkit/pdf-reader#readme)
-and [its security checks](https://github.com/PDFToolkit/pdf-reader/blob/v0.3.0/docs/security.md)
+and [its security checks](https://github.com/PDFToolkit/pdf-reader/blob/v0.3.1/docs/security.md)
 when choosing budgets. By default, retained binary bytes and total decoded
 stream bytes are each bounded to 128 MiB, in addition to other limits.
 
@@ -238,10 +238,10 @@ and [coverage guide](coverage.md).
 
 ## Derive HTML from a tagged PDF
 
-The optional [PDF-to-HTML module](https://pdftoolkit.github.io/modules/to-html/index.html) follows the retained PDF Association **Deriving HTML from PDF 1.2** usage specification. Version 0.3.0 installs core 0.8.0+ and reader 0.3.0+ transitively, requiring 64-bit PHP 8.3+ with DOM and mbstring. It derives semantic HTML from logical structure; it does not infer untagged structure, run OCR or reproduce PDF page layout. Model coverage, file-adapter coverage and browser/runtime integration are distinct.
+The optional [PDF-to-HTML module](https://pdftoolkit.github.io/modules/to-html/index.html) follows the retained PDF Association **Deriving HTML from PDF 1.2** usage specification. Version 0.3.1 installs core 0.8.0+ and reader 0.3.1+ transitively, requiring 64-bit PHP 8.3+ with DOM and mbstring. It derives semantic HTML from logical structure; it does not infer untagged structure, run OCR or reproduce PDF page layout. Model coverage, file-adapter coverage and browser/runtime integration are distinct.
 
 ```sh
-composer require "pdftoolkit/pdf-to-html:^0.3.0"
+composer require "pdftoolkit/pdf-to-html:^0.3.1"
 ```
 
 [Follow the executable tutorial](tutorials/35-derive-html.md) and inspect diagnostics before publishing HTML. ParentTree associations, table-header identities, destinations, Unicode mappings, inline images and form actions have tests and independent oracles. The [requirements ledger](https://pdftoolkit.github.io/modules/to-html/requirements.html) links each rule to decisions and evidence; it does not certify universal PDF acceptance.

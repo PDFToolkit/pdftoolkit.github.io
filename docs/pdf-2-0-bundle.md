@@ -31,7 +31,7 @@ Le [guide PDF 2.0](pdf-2-0.md) et la [couverture](coverage.md)
 conservent cette distinction. Le lecteur 0.3 ajoute séparément l'authentification
 par mot de passe et des mécanismes de décodage. Son contrat d'entrée ne couvre
 ni PDF MAC ni l'authentification par clé publique ; consulter son
-[guide d'authentification](https://github.com/PDFToolkit/pdf-reader/blob/v0.3.0/docs/authentication.md).
+[guide d'authentification](https://github.com/PDFToolkit/pdf-reader/blob/v0.3.1/docs/authentication.md).
 
 ## Des algorithmes sélectionnés indépendamment
 

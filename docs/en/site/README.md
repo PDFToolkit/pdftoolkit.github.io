@@ -68,7 +68,7 @@ Their provenance uses the reader commit pinned in the manifest; the core
 retains its generation examples.
 
 The PDF-to-HTML checkout is separately pinned under `_sources/pdf-to-html`.
-Its locked reader supplies the documented reader 0.3.0 without changing the core
+Its locked reader supplies the documented reader 0.3.1 without changing the core
 lock. Tutorial 35 runs its real CLI against the independently generated tagged
 fixture. The build checks the retained reference and fixture bytes, then executes
 the package's pypdf/HTML5 oracle. It copies every asset listed in the CLI JSON,
@@ -85,7 +85,7 @@ with qpdf, pypdf and Poppler; its private source copy is never published as the
 redacted result. EC3 annotation identities and approval threads are checked
 against the unchanged canonical PDF, separately from dictionary generation.
 
-The current selection documents PDF-to-HTML 0.3.0 and reader 0.3.0. The
+The current selection documents PDF-to-HTML 0.3.1 and reader 0.3.1. The
 [requirements ledger](https://pdftoolkit.github.io/modules/to-html/requirements.html),
 [policies](https://pdftoolkit.github.io/modules/to-html/policies.html) and
 [graphics](https://pdftoolkit.github.io/modules/to-html/graphics.html) guides

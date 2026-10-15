@@ -63,15 +63,24 @@ An affected image or Form is indivisible. The tainted shared image is removed
 from **both** pages, including its earlier use outside the selected page. The
 green vector rectangles survive. This intentional excess deletion prevents a
 shared resource from retaining affected payloads elsewhere in the result.
+The same rule follows reverse dependencies through `Mask`, `SMask` and nested
+Forms before rebuilding any final page. A surviving image cannot retain a
+deleted image indirectly as its transparency mask.
 
 The fresh catalog drops annotations, metadata, forms/XFA, attachments, actions,
 outlines, structure and alternate-text channels. Unused rendering resources are
 pruned. The result does not preserve the source's accessibility structure.
+Retained fonts lose ancillary descriptor data such as `CharSet`, `FontFamily`
+and `Style`. Context-specific dictionaries validate the types of retained
+values: a string concealed under a numeric field is rejected.
 
 ## Produce the replacement appearance
 
 `QuadPoints` takes precedence over `Rect` for the selected regions. Path bounds
 use conservative control-point hulls, transformed coordinates and stroke extent.
+Rectangle bounds include all four transformed corners under rotation or shear.
+An unpainted path terminated by `n` is also removed when its recoverable geometry
+crosses a region.
 The example paints a black replacement with repeated, centred white `REDACTED`
 text using an explicit default appearance. If `RO` is supplied, that replacement
 Form takes precedence over colour and overlay-text entries.
@@ -96,5 +105,8 @@ absence of secret text, image and metadata payloads, the survival of green
 vectors, the placement of the replacement and the single output revision.
 Those checks demonstrate this normalized example's destruction and rendering;
 applications must still validate their own input domain and publication process.
+The regression oracle renders sixteen pages in total, including four transformed
+rectangle cases and two transitive Mask/SMask dependency cases. Dependency work
+also counts repeated graph edges against the instruction budget.
 
 [Source audits](../source-audits.md) · [Security](../security.md) · [Tutorials](README.md)

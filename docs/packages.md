@@ -1,7 +1,7 @@
 # Core et modules optionnels
 
 PDFToolkit sépare le modèle PDF des traitements de fichiers externes. Le core
-**0.8.0**, le lecteur PDF **0.3.0**, les modules images/fontes **0.1.9**, le modèle OpenType indépendant **0.2.0** et PDF vers HTML **0.3.0**
+**0.8.0**, le lecteur PDF **0.3.1**, les modules images/fontes **0.1.9**, le modèle OpenType indépendant **0.2.0** et PDF vers HTML **0.3.1**
 nécessitent PHP 8.3 ou supérieur et sont vérifiés sous PHP 8.3, 8.4 et 8.5.
 Le core **0.8** et OpenType **0.2** exigent PHP en 64 bits ; OpenType reste indépendant du core PDF.
 Le core conserve son nom Composer `roukmoute/pdf` après son transfert dans
@@ -59,7 +59,7 @@ Les six packages sont disponibles sur Packagist :
 [OpenType](https://packagist.org/packages/pdftoolkit/opentype) et
 [PDF vers HTML](https://packagist.org/packages/pdftoolkit/pdf-to-html).
 Les contraintes stables sont `roukmoute/pdf:^0.8.0` pour le core et
-`pdftoolkit/pdf-reader:^0.3.0`, `pdftoolkit/pdf-images:^0.1.9` ou
+`pdftoolkit/pdf-reader:^0.3.1`, `pdftoolkit/pdf-images:^0.1.9` ou
 `pdftoolkit/pdf-fonts:^0.1.9` pour les modules PDF, et `pdftoolkit/opentype:^0.2.0` pour le modèle de fonte indépendant. Les anciens tags du core `v0.1.0`
 et `v0.1.1` conservent leur contrainte PHP 8.5.
 
@@ -72,7 +72,7 @@ composer require "roukmoute/pdf:^0.8.0"
 Pour ajouter la lecture de PDF existants :
 
 ```sh
-composer require "roukmoute/pdf:^0.8.0" "pdftoolkit/pdf-reader:^0.3.0"
+composer require "roukmoute/pdf:^0.8.0" "pdftoolkit/pdf-reader:^0.3.1"
 ```
 
 Pour convertir des images :
@@ -105,12 +105,12 @@ peuvent retirer ces entrées de leur `composer.json`. Les noms Composer des
 packages restent identiques.
 
 Avant 1.0, une nouvelle version mineure peut changer les noms et signatures.
-Les contraintes `^0.8.0`, `^0.3.0` et `^0.1.9` autorisent les correctifs de leur série et
+Les contraintes `^0.8.0`, `^0.3.1` et `^0.1.9` autorisent les correctifs de leur série et
 écartent la version mineure suivante. Consulter les changelogs avant de changer
 de série. Pour travailler sur les développements à venir, demander explicitement
 `dev-master` pour les packages concernés.
 
-Le lecteur 0.3.0 accepte le core `^0.7.1 || ^0.8` ; les modules images/fontes
+Le lecteur 0.3.1 accepte le core `^0.7.1 || ^0.8` ; les modules images/fontes
 0.1.9 conservent aussi leurs anciennes séries acceptées jusqu'à `^0.8`. Les
 commandes ci-dessus sélectionnent explicitement les constructions du core 0.8. Le core
 conserve ses extensions PHP obligatoires `ctype`, `iconv` et `zlib`. Les backends
@@ -167,7 +167,7 @@ concaténation ni décodage. Les limites de parcours et de nombre de flux sont d
 objets explicites ; les budgets cumulatifs de `ReadDocument` continuent de
 s'appliquer. Pour obtenir les octets décodés, demander séparément
 `$document->streamData($stream)`. Le
-[guide de lecture des pages](https://github.com/PDFToolkit/pdf-reader/blob/v0.3.0/docs/pages.md)
+[guide de lecture des pages](https://github.com/PDFToolkit/pdf-reader/blob/v0.3.1/docs/pages.md)
 explique chaque étape et fournit un exemple exécutable avec trois pages héritées.
 
 Les valeurs PDF restent des objets : `get()` conserve une référence comme
@@ -200,7 +200,7 @@ $permissions = $document->permissions();
 
 R=5–7 reçoit un credential Unicode préparé explicitement ; R=2–4 utilise plutôt
 `PdfDocEncodedPassword` avec des octets PDFDocEncoding. Le
-[guide d'authentification](https://github.com/PDFToolkit/pdf-reader/blob/v0.3.0/docs/fr/authentication.md)
+[guide d'authentification](https://github.com/PDFToolkit/pdf-reader/blob/v0.3.1/docs/fr/authentication.md)
 précise R=2–7, les filtres nommés `StrF`/`StmF`/`EFF` et la vérification des tags
 AES-GCM. Par défaut le lecteur n'ouvre aucune entrée chiffrée sans cette sélection.
 PDF MAC et l'authentification par clé publique en entrée restent refusés.
@@ -211,7 +211,7 @@ Les valeurs lues ne sont pas directement réinjectables dans le writer : leurs
 références appartiennent au fichier d'origine. L'import et le remappage du graphe,
 la réécriture, la fusion et la réparation restent à construire. Consulter
 [la documentation du lecteur](https://github.com/PDFToolkit/pdf-reader#readme)
-et [ses contrôles de sécurité](https://github.com/PDFToolkit/pdf-reader/blob/v0.3.0/docs/security.md)
+et [ses contrôles de sécurité](https://github.com/PDFToolkit/pdf-reader/blob/v0.3.1/docs/security.md)
 pour choisir ses budgets. Par défaut, les octets binaires conservés et le total
 des flux décodés sont chacun bornés à 128 MiB, en plus des autres limites.
 
@@ -237,10 +237,10 @@ politique de confiance d'une signature. Ces frontières sont détaillées dans l
 
 ## Dériver du HTML depuis un PDF balisé
 
-Le [module PDF vers HTML](https://pdftoolkit.github.io/fr/modules/to-html/index.html), optionnel, suit la spécification d’usage PDF Association **Deriving HTML from PDF 1.2** conservée. La version 0.3.0 installe transitivement le core 0.8.0+ et le lecteur 0.3.0+, sous PHP 8.3+ en 64 bits avec DOM et mbstring. Elle dérive le HTML sémantique de la structure logique, sans inférer de structure absente, faire d’OCR ni reproduire la mise en page. Couverture du modèle, de l’adaptateur de fichiers et intégration navigateur/runtime restent distinctes.
+Le [module PDF vers HTML](https://pdftoolkit.github.io/fr/modules/to-html/index.html), optionnel, suit la spécification d’usage PDF Association **Deriving HTML from PDF 1.2** conservée. La version 0.3.1 installe transitivement le core 0.8.0+ et le lecteur 0.3.1+, sous PHP 8.3+ en 64 bits avec DOM et mbstring. Elle dérive le HTML sémantique de la structure logique, sans inférer de structure absente, faire d’OCR ni reproduire la mise en page. Couverture du modèle, de l’adaptateur de fichiers et intégration navigateur/runtime restent distinctes.
 
 ```sh
-composer require "pdftoolkit/pdf-to-html:^0.3.0"
+composer require "pdftoolkit/pdf-to-html:^0.3.1"
 ```
 
 [Suivre le tutoriel exécutable](tutorials/35-derive-html.md) et examiner les diagnostics avant publication du HTML. Les associations ParentTree, identités des en-têtes de tableaux, destinations, correspondances Unicode, images inline et actions de formulaire disposent de tests et d'oracles indépendants. Le [registre des exigences](https://pdftoolkit.github.io/fr/modules/to-html/requirements.html) relie chaque règle aux décisions et preuves ; il ne certifie pas l'acceptation de tout PDF.

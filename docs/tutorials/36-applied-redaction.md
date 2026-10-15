@@ -67,11 +67,18 @@ supprimée des **deux** pages, y compris de son usage antérieur hors de la page
 sélectionnée. Les rectangles vectoriels verts restent présents. Cette
 sur-suppression volontaire évite qu'une ressource partagée conserve ailleurs
 dans le résultat des données concernées.
+La même règle suit les dépendances inverses via `Mask`, `SMask` et les Forms
+imbriquées avant de reconstruire les pages finales. Une image conservée ne peut
+pas retenir indirectement une image supprimée comme masque de transparence.
 
 Le nouveau catalogue retire les annotations, métadonnées, formulaires/XFA,
 pièces jointes, actions, signets, structure et canaux de texte alternatif. Les
 ressources de rendu inutilisées sont éliminées. Le résultat ne préserve pas la
 structure d'accessibilité de la source.
+Les fontes conservées perdent les données descriptives telles que `CharSet`,
+`FontFamily` et `Style`. Les dictionnaires propres à chaque contexte vérifient
+les types des valeurs conservées : une chaîne cachée sous un champ numérique
+est refusée.
 
 ## Produire l'apparence de remplacement
 
@@ -80,6 +87,9 @@ utilisent des enveloppes conservatrices des points de contrôle, les coordonnée
 transformées et l'étendue du trait. L'exemple peint un remplacement noir avec
 le texte blanc `REDACTED` répété et centré, selon une apparence par défaut explicite.
 Si `RO` est fourni, ce Form de remplacement prévaut sur la couleur et le texte superposé.
+Les bornes des rectangles utilisent leurs quatre coins transformés après
+rotation ou cisaillement. Un tracé non peint terminé par `n` est également
+retiré si sa géométrie récupérable traverse une région.
 
 Le processeur ne conserve que des données normalisées prises en charge. Le chemin
 d'image par défaut accepte des lignes exactes d'échantillons en couleurs device.
@@ -102,5 +112,8 @@ l'absence des textes, images et métadonnées secrets, la préservation des vect
 verts, le placement du remplacement et l'unique révision de sortie. Ces contrôles
 démontrent la destruction et le rendu de cet exemple normalisé ; l'application
 doit aussi valider son domaine d'entrée et son processus de publication.
+L'oracle de régression rend seize pages au total, dont quatre cas de rectangles
+transformés et deux cas de dépendances Mask/SMask transitives. Le parcours des
+dépendances compte aussi les arêtes répétées dans le budget d'instructions.
 
 [Audits des sources](../source-audits.md) · [Sécurité](../security.md) · [Tutoriels](README.md)

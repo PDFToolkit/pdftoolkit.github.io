@@ -69,7 +69,7 @@ Leur provenance utilise le commit du lecteur fixé dans le manifeste ; le core
 conserve ses exemples de génération.
 
 Le checkout PDF vers HTML est fixé séparément sous `_sources/pdf-to-html`.
-Son lecteur verrouillé fournit la version 0.3.0 documentée sans changer le lock
+Son lecteur verrouillé fournit la version 0.3.1 documentée sans changer le lock
 du core. Le tutoriel 35 exécute son vrai CLI sur la fixture balisée produite
 indépendamment. La construction vérifie les octets de référence et de fixture,
 puis exécute l'oracle pypdf/HTML5 du package. Elle copie chaque ressource du JSON
@@ -87,7 +87,7 @@ publiée comme résultat caviardé. Les identités d'annotations EC3 et fils
 d'approbation sont vérifiés contre le PDF canonique inchangé, indépendamment de
 la génération des dictionnaires.
 
-La sélection actuelle documente PDF vers HTML 0.3.0 et le lecteur 0.3.0. Le
+La sélection actuelle documente PDF vers HTML 0.3.1 et le lecteur 0.3.1. Le
 [registre des exigences](https://pdftoolkit.github.io/fr/modules/to-html/requirements.html),
 les [politiques](https://pdftoolkit.github.io/fr/modules/to-html/policies.html) et
 les [graphiques](https://pdftoolkit.github.io/fr/modules/to-html/graphics.html)
