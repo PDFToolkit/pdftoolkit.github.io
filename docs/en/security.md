@@ -7,18 +7,18 @@ TrueType and PNG/JPEG converter checks are now maintained in the optional
 [pdf-images](https://github.com/PDFToolkit/pdf-images) modules. PDF objects
 and their invariants remain in the core. The
 [pdf-reader](https://github.com/PDFToolkit/pdf-reader) module has its own
-[security documentation](https://github.com/PDFToolkit/pdf-reader/blob/v0.4.1/docs/security.md)
+[security documentation](https://github.com/PDFToolkit/pdf-reader/blob/v0.5.0/docs/security.md)
 for reading external files; this generator review does not replace it.
 
-The documented versions are core **0.9.1**, PDF reader **0.4.1**, image/font modules **0.1.10** and independent
-OpenType **0.2.0**, with PDF-to-HTML **0.4.0**. These packages require **PHP 8.3 or later** and are checked on
+The documented versions are core **0.9.1**, PDF reader **0.5.0**, image/font modules **0.1.10** and independent
+OpenType **0.2.0**, with PDF-to-HTML **0.4.1**. These packages require **PHP 8.3 or later** and are checked on
 PHP 8.3, 8.4 and 8.5. Core **0.9** and OpenType **0.2** require 64-bit PHP; OpenType
 remains independent of the PDF core. The review includes the [PDF 2.0 companion mechanisms](pdf-2-0-bundle.md);
 individual source definitions and conformance declarations are not security
 certificates. OpenType's independent parser has its own
 [security boundaries](https://github.com/PDFToolkit/opentype/blob/v0.2.0/SECURITY.md).
 
-The **0.4.0** PDF-to-HTML module with reader **0.4.1+** retains its own
+The **0.4.1** PDF-to-HTML module with the selected reader **0.5.0** retains its own
 [security checks](https://pdftoolkit.github.io/modules/to-html/security.html)
 and [explicit policies](https://pdftoolkit.github.io/modules/to-html/policies.html).
 Independent tests verify HTML/CSS/URL filtering, associations and IDs,
@@ -34,7 +34,7 @@ Reader 0.3.1 limits the `EncryptMetadata=false` exemption to the actual catalog
 metadata object; page and Form metadata remain encrypted unless they explicitly
 select Identity. It resolves indirect stream types before selecting `EFF`, uses
 the fixed 128-bit V4 file key and ignores attempts to redefine the standard
-Identity filter. Its [seven additional regression cases](https://github.com/PDFToolkit/pdf-reader/blob/v0.4.1/tools/validate_metadata_security.py)
+Identity filter. Its [seven additional regression cases](https://github.com/PDFToolkit/pdf-reader/blob/v0.5.0/tools/validate_metadata_security.py)
 use qpdf and cryptography with the specific oracle boundaries explained in the
 [authentication guide](https://pdftoolkit.github.io/modules/reader/authentication.html).
 
@@ -73,8 +73,13 @@ oracle limits without extending the exemption to page or object metadata.
   and CMS framing are checked. This does not verify signature mathematics or
   certificate trust; a holder of the file key can construct a new MAC.
   [The source MAC guide](https://pdftoolkit.github.io/modules/reader/source-mac.html)
-  explains policies, budgets and rejection boundaries. Public-key source
-  authentication remains unsupported.
+  explains policies, budgets and rejection boundaries. Reader 0.5 adds explicit
+  [Adobe.PubSec authentication](https://pdftoolkit.github.io/modules/reader/public-key-authentication.html).
+  CMS packet, identity and attempt budgets cover independent filters and deferred
+  attachment access. Permissions are authenticated recipient facts; bit 2 does
+  not imply a Standard owner login, and bit 13 cannot bypass required MAC checks.
+  The application supplies certificate/key bytes and enforces effective rights.
+  Certificate decryption grants neither signature trust nor revocation status.
 - Barcode preparation compresses the whole explicit value before ordered
   partitioning and checks cumulative budgets before invoking the next supplied
   encoder. The core constructs native full-rectangle `AP.N` images; symbology,

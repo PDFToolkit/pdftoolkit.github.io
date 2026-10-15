@@ -87,7 +87,7 @@ PDF, all three pages and the objects read.
 | [09. TrueType font and Unicode](09-embedded-font.md) | Embedded program, CIDs, widths and ToUnicode mapping. | [embedded-font.php](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/embedded-font.php) |
 | [10. JPEG and PNG images](10-image-files.md) | JPEG inspection, PNG decoding, samples and transparency. | [image-files.php](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/image-files.php) |
 | [11. Incremental revisions](11-incremental-update.md) | Preserved bytes, replacements and xref chaining. | [incremental-update.php](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/incremental-update.php) |
-| [12. Read an external PDF](12-reading-pages.md) | Verified tree, inherited values and content streams inspected then decoded. | [reader module's pages.php](https://github.com/PDFToolkit/pdf-reader/blob/v0.4.1/examples/pages.php) |
+| [12. Read an external PDF](12-reading-pages.md) | Verified tree, inherited values and content streams inspected then decoded. | [reader module's pages.php](https://github.com/PDFToolkit/pdf-reader/blob/v0.5.0/examples/pages.php) |
 | [13. Adobe extensions and Bates numbering](13-adobe-extensions.md) | Extension declarations, artifact properties and Bates footer. | [adobe-extensions.php](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/adobe-extensions.php) |
 | [14. AcroForm fields](14-acroform-fields.md) | Tree, values, widgets and appearances. | [acroform-fields.php](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/acroform-fields.php) |
 | [15. Logical structure](15-tagged-structure.md) | Marked content, ParentTree, IDTree and annotations. | [tagged-structure.php](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/tagged-structure.php) |
@@ -110,7 +110,7 @@ PDF, all three pages and the objects read.
 | [32. Document timestamps and DSS](32-pdf20-timestamp-dss.md) | RFC3161, explicit validation policy, VRI and preserved historical signatures. | [pdf20-timestamp-dss.php](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/pdf20-timestamp-dss.php) |
 | [33. Geospatial objects and measurements](33-pdf20-geospatial.md) | Coordinate systems, paired control points, viewports, matrices and point clouds. | [pdf20-geospatial.php](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/pdf20-geospatial.php) |
 | [34. Structure destinations](34-pdf20-structure-destinations.md) | Semantic targets, content traversal, named SD entries and explicit page fallbacks. | [pdf20-structure-destinations.php](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/pdf20-structure-destinations.php) |
-| [35. Derive HTML from tagged PDF](35-derive-html.md) | Tested rules, object-based graphics rendering, targeted reset and actual HTML. | [01-derive-tagged-pdf.php](https://github.com/PDFToolkit/pdf-to-html/blob/v0.4.0/examples/01-derive-tagged-pdf.php) |
+| [35. Derive HTML from tagged PDF](35-derive-html.md) | Tested rules, object-based graphics rendering, targeted reset and actual HTML. | [01-derive-tagged-pdf.php](https://github.com/PDFToolkit/pdf-to-html/blob/v0.4.1/examples/01-derive-tagged-pdf.php) |
 | [36. Apply redaction](36-applied-redaction.md) | Actual deletion, shared resources and a fresh file without history. | [pdf17-secure-redaction.php](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/pdf17-secure-redaction.php) |
 
 After the first document, lessons 03 to 07 can be read in any order matching

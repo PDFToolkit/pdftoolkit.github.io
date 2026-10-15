@@ -11,7 +11,7 @@ distinct, comprenant le portfolio original et les relations de ses documents
 incorporés. Ils servent à la comparaison et aux audits ciblés ; leur
 conservation ne modifie pas les inventaires de définitions actifs et ne prouve
 pas l'implémentation de toutes leurs procédures.
-Le core **0.9.1**, le lecteur PDF **0.4.1**, les modules images/fontes **0.1.10** et OpenType indépendant
+Le core **0.9.1**, le lecteur PDF **0.5.0**, les modules images/fontes **0.1.10** et OpenType indépendant
 **0.2.0** nécessitent **PHP 8.3 ou supérieur** et sont vérifiés sous PHP 8.3,
 8.4 et 8.5. Le core **0.9** et OpenType **0.2** exigent PHP en 64 bits ; OpenType reste indépendant
 du core PDF. La version du runtime PHP et celle du format PDF sont indépendantes.
@@ -123,7 +123,7 @@ Voir le [guide des frontières de packages et d'installation](packages.md).
 | Métadonnées et associations PDF 2.0 | XMP natif échappé, déclarations à portée explicite, validation des ressources nommées du contenu marqué, découverte des fichiers associés, parties de document/DPM et enveloppes de contenus chiffrés. | Le XML/contenu opaque de l’appelant demande une validation distincte. Une déclaration d’auteur ne prouve pas la conformité ; une enveloppe externe ne déchiffre pas son contenu. |
 | Structure qualifiée et WTPDF | Objets namespace, role maps qualifiées, règles d’inclusion TS 32005 et constats mécaniques bornés sur la structure, les métadonnées, annotations et le texte typé réellement utilisé. | Ordre de lecture humain, pertinence des descriptions, fidélité Unicode et preuves sur les programmes de fonte externes restent à établir ; aucune certification automatique. |
 | Sécurité PDF moderne | AES-CBC R=6, AES-GCM R=7, SHA-3/SHAKE, courbes modernes/EdDSA pris en charge, PDF MAC sur les octets réels initiaux/incrémentaux/linéarisés et MAC attaché à la signature. | Choix explicite des algorithmes/fournisseurs/extensions. AES-CBC seul n’authentifie pas le contenu ; la signature mathématique n’établit pas la confiance PKI. |
-| Lecture de PDF externes — pdf-reader | Syntaxe/chaînes PDF 1.0–2.0, xref classiques/stream/hybrides, historiques Prev, flux d’objets, références explicites et décodage sans perte borné, dont LZW et prédicteurs TIFF/PNG. L’authentification Standard R=2–7 et les filtres nommés, choisis explicitement, exposent les permissions user/owner vérifiées. | Ni PDF MAC/authentification par clé publique en entrée, réparation, interprétation du contenu, rendu, extraction de texte, import ou remappage. DCT/JPX/CCITT/JBIG2 restent non pris en charge. L’application applique les permissions. |
+| Lecture de PDF externes — pdf-reader | Syntaxe/chaînes PDF 1.0–2.0, xref classiques/stream/hybrides, historiques Prev, flux d’objets, références explicites et décodage sans perte borné, dont LZW et prédicteurs TIFF/PNG. L’authentification Standard R=2–7 et les filtres nommés, choisis explicitement, exposent les permissions user/owner vérifiées. Authentification Adobe.PubSec s3/s4/s5 explicite, clés indépendantes par filtre, permissions effectives et vérification du MAC PDF source. | Ni confiance des signatures, réparation, interprétation du contenu, rendu, extraction de texte, import ou remappage. DCT/JPX/CCITT/JBIG2 restent non pris en charge. L’application applique les permissions. |
 
 Le writer initial émet des enregistrements libres pour chaque numéro d'objet
 inutilisé inférieur à Size. Les sections incrémentales émettent les enregistrements

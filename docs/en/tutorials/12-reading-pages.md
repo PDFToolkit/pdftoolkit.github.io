@@ -6,9 +6,9 @@ versions selected by the [source manifest](../../../resources/sources.json).
 It traverses the page tree, examines effective attributes and separately requests
 stream decoding. Dictionaries, numbers and rectangles remain core objects.
 
-The [input PDF](https://github.com/PDFToolkit/pdf-reader/blob/v0.4.1/tests/Fixtures/page-tree/classic.pdf)
+The [input PDF](https://github.com/PDFToolkit/pdf-reader/blob/v0.5.0/tests/Fixtures/page-tree/classic.pdf)
 is an original fixture created with pypdf and qpdf independently of the PHP writer.
-The [complete script](https://github.com/PDFToolkit/pdf-reader/blob/v0.4.1/examples/pages.php)
+The [complete script](https://github.com/PDFToolkit/pdf-reader/blob/v0.5.0/examples/pages.php)
 belongs to the reader repository. On the site, its three pages, actual console
 output and commented code appear after the explanations.
 
@@ -18,7 +18,7 @@ In a standalone application, install the reader from Packagist with core 0.5,
 then run the script distributed with the module:
 
 ```sh
-composer require "roukmoute/pdf:^0.9.1" "pdftoolkit/pdf-reader:^0.4.1"
+composer require "roukmoute/pdf:^0.9.1" "pdftoolkit/pdf-reader:^0.5.0"
 php vendor/pdftoolkit/pdf-reader/examples/pages.php vendor/pdftoolkit/pdf-reader/tests/Fixtures/page-tree/classic.pdf
 ```
 
@@ -150,7 +150,7 @@ independently with Poppler.
 
 ## Verification and limitations
 
-The [independent fixtures](https://github.com/PDFToolkit/pdf-reader/blob/v0.4.1/tests/Fixtures/page-tree/README.md)
+The [independent fixtures](https://github.com/PDFToolkit/pdf-reader/blob/v0.5.0/tests/Fixtures/page-tree/README.md)
 have expected values verified with pypdf and qpdf, then PHP tests. Documentation
 preserves the input bytes exactly, executes the locked module's script and renders
 its three pages.
@@ -158,8 +158,8 @@ its three pages.
 Traversal does not validate every PDF resource, annotation or action. Encryption,
 hybrid references and unimplemented codecs remain rejected; reader 0.2 also accepts PDF 2.0 syntax and UTF-8 strings. Importing
 into the writer, merging, rewriting, text extraction and rendering require
-dedicated mechanisms. The [reader guide](https://github.com/PDFToolkit/pdf-reader/blob/v0.4.1/docs/pages.md)
-and its [security checks](https://github.com/PDFToolkit/pdf-reader/blob/v0.4.1/docs/security.md)
+dedicated mechanisms. The [reader guide](https://github.com/PDFToolkit/pdf-reader/blob/v0.5.0/docs/pages.md)
+and its [security checks](https://github.com/PDFToolkit/pdf-reader/blob/v0.5.0/docs/security.md)
 describe responsibilities and budgets.
 
 References: ISO 32000-1:2008, **7.7.3** and Tables **29–30** for trees, pages and

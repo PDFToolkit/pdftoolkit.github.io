@@ -27,10 +27,10 @@ tables with 1,709 fixed or variable entries. Source continuation pages and
 extraction corrections are traceable. This coverage and these companion
 mechanisms do not establish complete conformance to every clause of the base
 standard. The [PDF 2.0 guide](pdf-2-0.md) and [coverage guide](coverage.md) retain
-that distinction. Reader 0.4 separately provides password authentication,
-decoding and source PDF MAC verification. Public-key source authentication
-remains unsupported; consult the [reader guide](https://pdftoolkit.github.io/modules/reader/authentication.html)
-and its [source MAC guide](https://pdftoolkit.github.io/modules/reader/source-mac.html).
+that distinction. Reader 0.5 separately provides explicit password and
+[Adobe.PubSec authentication](https://pdftoolkit.github.io/modules/reader/public-key-authentication.html),
+decoding and source PDF MAC verification. Consult the [password guide](https://pdftoolkit.github.io/modules/reader/authentication.html)
+and the [source MAC guide](https://pdftoolkit.github.io/modules/reader/source-mac.html).
 
 ## Algorithms are selected independently
 
@@ -89,14 +89,16 @@ exposes the configured requirement; `requiringSourceIntegrity()` preserves or
 strengthens it with the same credentials and limits. Invalid protected input
 does not fall back to unauthenticated decryption.
 
-MAC verification uses the authenticated Standard R5–R7 file key and covers
+MAC verification uses the authenticated Standard R5–R7 file key or modern
+PubSec DefaultCryptFilter key and covers
 original ciphertext and structural bytes. It is not mathematical signature
 verification or certificate/TSA trust. Anyone holding that file key can create
 a new MAC. No external resource, certificate or revocation request is performed.
 The [module guide](https://pdftoolkit.github.io/modules/reader/source-mac.html)
 documents CMS/byte budgets, supported algorithms, 15 independent real files,
 adversarial cases and exact framing boundaries. Historical MACs are not each
-independently revalidated, and public-key source authentication remains separate.
+independently revalidated. PubSec uses the same source-integrity boundary after
+its explicit recipient authentication.
 
 ## Metadata and declarations have an owner
 

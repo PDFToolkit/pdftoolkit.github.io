@@ -96,7 +96,16 @@ private build directories, outside the published tutorial assets. Barcode test
 patterns do not prove a symbology; the Type 3 report preserves the observed
 Poppler mode-7 difference instead of treating it as a conformance result.
 
-The current selection documents PDF-to-HTML 0.4.0 and reader 0.4.1. The
+The public-key guide is published at `/modules/reader/public-key-authentication.html`
+and `/fr/modules/reader/public-key-authentication.html`. The build executes
+`validate_public_key_authentication.py` and `validate_public_key_aliases.py`
+against the installed reader and HTML lock. Independent pyHanko/cryptography
+checks cover CMS, filter keys, recipient rights, MAC, four metadata/physical-alias
+cases and two implicitly selected EFF streams with distinct keys. Wrong
+attachment credentials must preserve document opening and fail on attachment
+access. Generated certificates and adversarial inputs remain private build data.
+
+The current selection documents PDF-to-HTML 0.4.1 and reader 0.5.0. The
 [requirements ledger](https://pdftoolkit.github.io/modules/to-html/requirements.html),
 [policies](https://pdftoolkit.github.io/modules/to-html/policies.html) and
 [graphics](https://pdftoolkit.github.io/modules/to-html/graphics.html) guides
@@ -106,7 +115,10 @@ rasterization, authentication and additional codecs.
 Native R=2–7 authentication is an explicit reader selection. The HTML package's
 independent authentication oracle decrypts actual qpdf fixtures and parses the
 derived HTML, checking user/owner permissions, wrong credentials and converter
-reuse. Its transient fixtures remain in the validation workspace.
+reuse. The public-key HTML oracle separately verifies six independent tagged
+sources, recipient masks, standalone/signature-attached MAC, wrong certificates,
+required integrity and reuse with unencrypted input. Its transient fixtures
+remain in the validation workspace.
 
 `tools/build_docs.py` reproduces glyph tables and inline/fax fixtures, then runs
 the HTML5/pypdf oracles, Poppler pixel comparisons for graphics/contexts/fax,
@@ -165,6 +177,7 @@ python -m pip install --require-hashes -r tools/site-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf/tools/public-key-validation-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf-to-html/tools/validation-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf-to-html/tools/source-integrity-validation-requirements.txt
+python -m pip install --require-hashes -r _sources/pdf-to-html/vendor/pdftoolkit/pdf-reader/tools/source-mac-validation-requirements.txt
 python tools/build_docs.py --source-root _sources/pdf --opentype-root _sources/opentype --pdf-to-html-root _sources/pdf-to-html --docs-revision "$(git rev-parse HEAD)" --remote
 ```
 
@@ -189,6 +202,7 @@ python -m pip install --require-hashes -r tools/site-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf/tools/public-key-validation-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf-to-html/tools/validation-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf-to-html/tools/source-integrity-validation-requirements.txt
+python -m pip install --require-hashes -r _sources/pdf-to-html/vendor/pdftoolkit/pdf-reader/tools/source-mac-validation-requirements.txt
 $docsRevision = git rev-parse HEAD
 python tools/build_docs.py --source-root _sources/pdf --opentype-root _sources/opentype --pdf-to-html-root _sources/pdf-to-html --docs-revision $docsRevision --remote
 ```

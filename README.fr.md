@@ -38,8 +38,8 @@ Composer :
 composer require "roukmoute/pdf:^0.9.1"
 ```
 
-Les versions documentées sont le core **0.9.1**, le lecteur **0.4.1**, les modules
-images/fontes **0.1.10**, OpenType indépendant **0.2.0** et PDF vers HTML **0.4.0**. Elles nécessitent **PHP 8.3 ou supérieur**
+Les versions documentées sont le core **0.9.1**, le lecteur **0.5.0**, les modules
+images/fontes **0.1.10**, OpenType indépendant **0.2.0** et PDF vers HTML **0.4.1**. Elles nécessitent **PHP 8.3 ou supérieur**
 et sont vérifiées sous PHP 8.3, 8.4 et 8.5. Le core **0.9** et OpenType **0.2** exigent PHP en
 64 bits ; OpenType reste indépendant du core PDF.
 
@@ -55,7 +55,7 @@ Choisir les modules optionnels selon les fichiers traités par l'application :
 Les modules images/fontes/lecteur installent le core comme dépendance. PDF vers HTML ajoute la dérivation sémantique et installe aussi le lecteur. OpenType possède son propre modèle objet et s’installe sans dépendance PDF. Le guide des packages explique
 leurs commandes Composer et les versions prises en charge.
 
-PDF vers HTML 0.4.0 dérive le contenu sémantique des PDF balisés avec vérification
+PDF vers HTML 0.4.1 dérive le contenu sémantique des PDF balisés avec vérification
 des associations structurelles, Unicode, images, tableaux, navigation et champs.
 Son [registre des clauses](https://pdftoolkit.github.io/fr/modules/to-html/requirements.html)
 relie la référence conservée aux décisions exécutables et aux tests indépendants.
@@ -70,7 +70,11 @@ Le lecteur 0.4 et PDF vers HTML 0.4 proposent une authentification native par mo
 de passe sur activation explicite, avec permissions user/owner vérifiées. Les
 [guides du lecteur](https://pdftoolkit.github.io/fr/modules/reader/authentication.html)
 et [du HTML](https://pdftoolkit.github.io/fr/modules/to-html/authentication.html)
-expliquent credentials, filtres, refus et responsabilités du viewer. OpenType 0.2
+expliquent credentials, filtres, refus et responsabilités du viewer. Le lecteur
+0.5 propose aussi une [authentification Adobe.PubSec](https://pdftoolkit.github.io/fr/modules/reader/public-key-authentication.html)
+explicite, avec clés indépendantes par filtre, droits destinataire authentifiés
+et vérification du MAC source. Déchiffrer par certificat ne prouve pas la
+confiance des signatures. OpenType 0.2
 fournit indépendamment GSUB/GPOS/GDEF et des coordonnées de variation explicites ;
 son [guide de positionnement](https://pdftoolkit.github.io/fr/modules/opentype/positioning.html)
 précise les ajustements natifs et les limites de composition et de contours.

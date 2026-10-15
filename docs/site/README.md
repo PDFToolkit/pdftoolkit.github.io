@@ -99,7 +99,17 @@ des ressources de tutoriels publiées. Les motifs de test des codes-barres ne
 prouvent aucune symbologie ; le rapport Type 3 conserve la différence observée
 de Poppler en mode 7 sans la transformer en résultat de conformité.
 
-La sélection actuelle documente PDF vers HTML 0.4.0 et le lecteur 0.4.1. Le
+Le guide de clé publique est publié sous `/modules/reader/public-key-authentication.html`
+et `/fr/modules/reader/public-key-authentication.html`. Le build exécute
+`validate_public_key_authentication.py` et `validate_public_key_aliases.py`
+contre le lecteur installé et le lock HTML. Les contrôles indépendants
+pyHanko/cryptography couvrent CMS, clés des filtres, droits destinataire, MAC,
+quatre cas de métadonnées/alias physiques et deux flux EFF implicites à clés
+distinctes. Un mauvais credential de pièce jointe doit permettre l'ouverture
+du document puis échouer à son accès. Certificats générés et entrées adverses
+restent des données privées du build.
+
+La sélection actuelle documente PDF vers HTML 0.4.1 et le lecteur 0.5.0. Le
 [registre des exigences](https://pdftoolkit.github.io/fr/modules/to-html/requirements.html),
 les [politiques](https://pdftoolkit.github.io/fr/modules/to-html/policies.html) et
 les [graphiques](https://pdftoolkit.github.io/fr/modules/to-html/graphics.html)
@@ -109,7 +119,10 @@ rasterisation, d'authentification et de codecs supplémentaires.
 L'authentification R=2–7 native est une sélection explicite du lecteur. L'oracle
 indépendant du package HTML déchiffre de vraies fixtures qpdf et analyse le HTML
 dérivé pour vérifier permissions user/owner, mauvais credentials et réutilisation
-du convertisseur. Ses fixtures temporaires restent dans l'espace de validation.
+du convertisseur. L'oracle HTML de clé publique vérifie séparément six sources
+balisées indépendantes, masques destinataire, MAC autonome/attaché à une signature,
+mauvais certificats, intégrité requise et réutilisation avec une entrée claire.
+Ses fixtures temporaires restent dans l'espace de validation.
 
 `tools/build_docs.py` reproduit les tables de glyphes et les fixtures inline/fax,
 puis exécute les oracles HTML5/pypdf, les comparaisons de pixels Poppler pour
@@ -169,6 +182,7 @@ python -m pip install --require-hashes -r tools/site-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf/tools/public-key-validation-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf-to-html/tools/validation-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf-to-html/tools/source-integrity-validation-requirements.txt
+python -m pip install --require-hashes -r _sources/pdf-to-html/vendor/pdftoolkit/pdf-reader/tools/source-mac-validation-requirements.txt
 python tools/build_docs.py --source-root _sources/pdf --opentype-root _sources/opentype --pdf-to-html-root _sources/pdf-to-html --docs-revision "$(git rev-parse HEAD)" --remote
 ```
 
@@ -193,6 +207,7 @@ python -m pip install --require-hashes -r tools/site-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf/tools/public-key-validation-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf-to-html/tools/validation-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf-to-html/tools/source-integrity-validation-requirements.txt
+python -m pip install --require-hashes -r _sources/pdf-to-html/vendor/pdftoolkit/pdf-reader/tools/source-mac-validation-requirements.txt
 $docsRevision = git rev-parse HEAD
 python tools/build_docs.py --source-root _sources/pdf --opentype-root _sources/opentype --pdf-to-html-root _sources/pdf-to-html --docs-revision $docsRevision --remote
 ```

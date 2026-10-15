@@ -66,8 +66,11 @@ protected content is interpreted, using the original bytes and exact token
 span. Its [MAC guide](https://pdftoolkit.github.io/modules/reader/source-mac.html)
 distinguishes the compatible unprotected-input policy from `RequirePdfMac`,
 latest-file authentication from historical per-revision verification, and MAC
-integrity from signature mathematics or certificate trust. Public-key source
-authentication remains unsupported.
+integrity from signature mathematics or certificate trust. Reader 0.5 adds explicit
+[public-key authentication](https://pdftoolkit.github.io/modules/reader/public-key-authentication.html)
+for Adobe.PubSec s3/s4/s5, independent filter keys and deferred EFOpen access.
+Effective recipient rights come from authenticated CMS payloads, not `Encrypt.P`;
+modern PubSec MAC verification uses the authenticated DefaultCryptFilter key.
 
 Reader 0.4 also treats optional dictionary null values as absent, including
 unavailable reference terminals. `ReadDocument::resolve()` follows physical
@@ -112,9 +115,9 @@ The reproducible checker rejects omitted clauses and missing evidence files.
 No automatic WTPDF/PDF/UA-2 certification or complete base-standard conformance
 is claimed. Reader 0.3 adds opt-in R=2–7 password authentication, hybrid xrefs
 and further filter decoding to PDF 1.0–2.0 input. Its
-[authentication guide](https://github.com/PDFToolkit/pdf-reader/blob/v0.4.1/docs/authentication.md)
+[authentication guide](https://github.com/PDFToolkit/pdf-reader/blob/v0.5.0/docs/authentication.md)
 states the supported crypt filters. Reader 0.4 adds the source MAC boundary
-described above; public-key source authentication remains unsupported.
+described above; Reader 0.5 adds bounded public-key source authentication.
 These input mechanisms remain distinct from writing and rendering.
 
 The [original main standard](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf)

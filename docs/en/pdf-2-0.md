@@ -141,7 +141,7 @@ constraints are executable; native mechanisms implement contextual relationships
 Complete conditional and semantic conformance, exhaustive EC3 review, external
 rendering/colour processing and automatic accessibility certification are not
 established by this inventory. The [coverage record](coverage.md) distinguishes
-native mechanisms, declarative objects and remaining work. The optional reader 0.4.1 accepts [PDF 1.0–2.0 syntax and PDF 2.0 UTF-8 strings](packages.md), with its other explicit limits.
+native mechanisms, declarative objects and remaining work. The optional reader 0.5.0 accepts [PDF 1.0–2.0 syntax and PDF 2.0 UTF-8 strings](packages.md), with its other explicit limits.
 
 ## Source and checks
 

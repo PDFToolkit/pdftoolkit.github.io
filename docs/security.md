@@ -7,11 +7,11 @@ dans les modules optionnels [pdf-fonts](https://github.com/PDFToolkit/pdf-fonts)
 et [pdf-images](https://github.com/PDFToolkit/pdf-images). Les objets PDF et leurs
 invariants restent dans le core. Le module
 [pdf-reader](https://github.com/PDFToolkit/pdf-reader) a sa propre
-[documentation de sécurité](https://github.com/PDFToolkit/pdf-reader/blob/v0.4.1/docs/security.md)
+[documentation de sécurité](https://github.com/PDFToolkit/pdf-reader/blob/v0.5.0/docs/security.md)
 pour la lecture de fichiers externes ; cette revue du générateur ne s'y substitue pas.
 
-Les versions documentées sont le core **0.9.1**, le lecteur PDF **0.4.1**, les modules images/fontes **0.1.10** et
-OpenType indépendant **0.2.0**, ainsi que PDF vers HTML **0.4.0**. Ces packages nécessitent **PHP 8.3 ou supérieur**
+Les versions documentées sont le core **0.9.1**, le lecteur PDF **0.5.0**, les modules images/fontes **0.1.10** et
+OpenType indépendant **0.2.0**, ainsi que PDF vers HTML **0.4.1**. Ces packages nécessitent **PHP 8.3 ou supérieur**
 et sont vérifiés sous PHP 8.3, 8.4 et 8.5. Le core **0.9** et OpenType **0.2** exigent PHP en
 64 bits ; OpenType reste indépendant du core PDF. La revue inclut les
 [mécanismes complémentaires PDF 2.0](pdf-2-0-bundle.md) ; les définitions de
@@ -19,7 +19,7 @@ source et déclarations de conformité ne sont pas des certificats de sécurité
 Le parseur OpenType indépendant possède ses propres
 [frontières de sécurité](https://github.com/PDFToolkit/opentype/blob/v0.2.0/SECURITY.fr.md).
 
-Le module PDF vers HTML **0.4.0**, avec le lecteur **0.4.1+**, conserve ses propres
+Le module PDF vers HTML **0.4.1**, avec le lecteur sélectionné **0.5.0**, conserve ses propres
 [contrôles de sécurité](https://pdftoolkit.github.io/fr/modules/to-html/security.html)
 et [politiques explicites](https://pdftoolkit.github.io/fr/modules/to-html/policies.html).
 Ses tests indépendants vérifient filtrage HTML/CSS/URL, associations et IDs,
@@ -36,7 +36,7 @@ Le lecteur 0.3.1 limite l'exemption `EncryptMetadata=false` au véritable objet
 de métadonnées du catalogue ; les métadonnées de pages et Forms restent chiffrées
 sauf sélection explicite d'Identity. Il résout les types indirects avant de
 choisir `EFF`, utilise la clé V4 fixe de 128 bits et ignore les tentatives de
-redéfinir le filtre standard Identity. Ses [sept régressions supplémentaires](https://github.com/PDFToolkit/pdf-reader/blob/v0.4.1/tools/validate_metadata_security.py)
+redéfinir le filtre standard Identity. Ses [sept régressions supplémentaires](https://github.com/PDFToolkit/pdf-reader/blob/v0.5.0/tools/validate_metadata_security.py)
 utilisent qpdf et cryptography, avec les limites précises des oracles expliquées
 dans le [guide d'authentification](https://pdftoolkit.github.io/fr/modules/reader/authentication.html).
 
@@ -80,8 +80,14 @@ l'exemption aux métadonnées de pages ou d'objets.
   CMS sont contrôlés. Cela ne vérifie ni mathématiquement la signature ni la
   confiance du certificat ; qui détient la clé du fichier peut créer un nouveau
   MAC. Le [guide du MAC source](https://pdftoolkit.github.io/fr/modules/reader/source-mac.html)
-  explique politiques, budgets et frontières de refus. L'authentification par
-  clé publique en entrée reste indisponible.
+  explique politiques, budgets et frontières de refus. Le lecteur 0.5 ajoute
+  l'[authentification Adobe.PubSec](https://pdftoolkit.github.io/fr/modules/reader/public-key-authentication.html)
+  explicite. Les budgets de paquets CMS, identités et tentatives couvrent les
+  filtres indépendants et l'accès différé aux pièces jointes. Les permissions
+  sont des faits destinataire authentifiés ; le bit 2 ne représente pas un owner
+  Standard, et le bit 13 ne contourne pas le MAC requis. L'application fournit
+  les octets certificat/clé et applique les droits effectifs. Le déchiffrement
+  n'accorde ni confiance des signatures ni statut de révocation.
 - La préparation des codes-barres compresse la valeur explicite entière avant
   sa répartition ordonnée et vérifie les budgets cumulatifs avant l'appel
   suivant de l'encodeur fourni. Le core construit les images natives `AP.N`

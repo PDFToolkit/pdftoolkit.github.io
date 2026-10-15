@@ -11,8 +11,8 @@
     {
       "name": "pdftoolkit/pdf-reader",
       "repository": "https://github.com/PDFToolkit/pdf-reader",
-      "version": "0.4.1",
-      "revision": "3743621ad499c839512e50d08a03153bb982defa",
+      "version": "0.5.0",
+      "revision": "9659316f1ff159a4706c34c4b1c6947f9afe3b91",
       "optional": true
     },
     {
@@ -39,8 +39,8 @@
     {
       "name": "pdftoolkit/pdf-to-html",
       "repository": "https://github.com/PDFToolkit/pdf-to-html",
-      "version": "0.4.0",
-      "revision": "8ded01eb3215dae059142d2b66c6cd726ef37d85",
+      "version": "0.4.1",
+      "revision": "5011e9c3a546856627264462c731f82161ab2ba6",
       "optional": true
     }
   ]

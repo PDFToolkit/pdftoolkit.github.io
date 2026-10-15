@@ -54,6 +54,7 @@ def validate_html_module(args, html: Path, work: Path, pdfs: Path) -> None:
         [sys.executable, "tools/validate_authentication.py", "--php", args.php, "--qpdf", args.qpdf],
         [sys.executable, "tools/validate_source_integrity.py", "--php", args.php, "--qpdf", args.qpdf,
          "--work-dir", work / "html-source-integrity"],
+        [sys.executable, "tools/validate_public_key_authentication.py", "--php", args.php],
     ):
         run(command, html)
     runtime = work / "pdf-html-runtime.js"
@@ -107,6 +108,11 @@ def build(args) -> None:
     run([sys.executable, "tools/validate_source_mac.py", "--php", args.php, "--qpdf", args.qpdf,
          "--work-dir", work / "source-mac-validation"], reader)
     run([sys.executable, "tools/validate_metadata_security.py", "--php", args.php, "--qpdf", args.qpdf], reader)
+    run([sys.executable, "tools/validate_public_key_authentication.py", "--php", args.php,
+         "--work-dir", work / "public-key-validation"], reader)
+    run([sys.executable, "tools/validate_public_key_aliases.py", "--php", args.php,
+         "--work-dir", work / "public-key-alias-validation",
+         "--fixtures-dir", work / "public-key-validation"], reader)
     validate_html_module(args, html, work, pdfs)
     api = work / "api.json"
     run([args.php, content / "tools/export_api.php", api, source, manifest, opentype, html], source)

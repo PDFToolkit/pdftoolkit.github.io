@@ -10,7 +10,7 @@ have a separate archival catalogue, including the original portfolio and its
 embedded-document relationships. They support comparison and targeted audits;
 their preservation does not alter the active definition inventories or establish
 implementation of all their procedures.
-Core **0.9.1**, PDF reader **0.4.1**, image/font modules **0.1.10** and independent OpenType **0.2.0**
+Core **0.9.1**, PDF reader **0.5.0**, image/font modules **0.1.10** and independent OpenType **0.2.0**
 require **PHP 8.3 or later** and are checked on PHP 8.3, 8.4 and 8.5. Core **0.9** and OpenType **0.2**
 require 64-bit PHP; OpenType remains independent of the PDF core.
 The PHP runtime version and PDF format version are independent. The [PDF 2.0 guide](pdf-2-0.md)
@@ -111,7 +111,7 @@ the core, which has no production dependency on them. See the
 | PDF 2.0 metadata and associations | Escaped native XMP, declarations with explicit scope, named marked-content resource validation, associated-file discovery, document parts/DPM and encrypted payload wrappers. | Opaque caller XML/content needs separate validation. An author assertion does not prove conformance; an outer wrapper does not decrypt its payload. |
 | Qualified structure and WTPDF | Namespace objects, qualified role maps, TS 32005 inclusion rules and bounded mechanical audit findings for structure, metadata, annotations and actual typed text use. | Human reading order, meaningful descriptions, faithful Unicode semantics and external font-program evidence remain pending; no automatic certification. |
 | Modern PDF security | R=6 AES-CBC, R=7 AES-GCM, SHA-3/SHAKE, supported modern curves/EdDSA, PDF MAC over actual initial/incremental/linearized bytes and signature-attached MAC. | Explicit algorithm/provider/extension selection. AES-CBC alone is unauthenticated; signature mathematics does not establish PKI trust. |
-| External PDF reading — pdf-reader | PDF 1.0–2.0 object syntax/strings, classic/stream/hybrid xrefs, Prev histories, object streams, explicit references and bounded lossless decoding including LZW and TIFF/PNG predictors. Opt-in Standard password authentication R=2–7 and named crypt filters expose verified user/owner permissions. | No source PDF MAC/public-key authentication, repair, content interpretation, rendering, text extraction, graph import or remapping. DCT/JPX/CCITT/JBIG2 codecs remain unsupported. The application enforces permissions. |
+| External PDF reading — pdf-reader | PDF 1.0–2.0 object syntax/strings, classic/stream/hybrid xrefs, Prev histories, object streams, explicit references and bounded lossless decoding including LZW and TIFF/PNG predictors. Opt-in Standard R=2–7 and Adobe.PubSec s3/s4/s5 authentication, independent named-filter keys and source PDF MAC verification expose effective authenticated permissions. | No signature trust, repair, content interpretation, rendering, text extraction, graph import or remapping. DCT/JPX/CCITT/JBIG2 codecs remain unsupported. The application enforces permissions. |
 
 The initial writer emits free records for every unused object number below Size.
 Incremental sections emit changed records and newly introduced free holes, keeping

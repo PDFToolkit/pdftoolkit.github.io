@@ -15,7 +15,7 @@ from urllib.parse import quote, unquote, urlsplit
 DOCUMENTATION_REPOSITORY = 'https://github.com/PDFToolkit/pdftoolkit.github.io'
 SITE_ORIGIN = 'https://pdftoolkit.github.io'
 MODULE_GUIDES = {
-    'reader': ['index', 'architecture', 'components', 'pages', 'authentication', 'source-mac', 'security', 'signalements', 'versions'],
+    'reader': ['index', 'architecture', 'components', 'pages', 'authentication', 'public-key-authentication', 'source-mac', 'security', 'signalements', 'versions'],
     'images': ['index', 'architecture', 'signalements', 'versions'],
     'fonts': ['index', 'true-type-to-pdf', 'signalements', 'versions'],
     'opentype': ['index', 'architecture', 'coverage', 'substitutions', 'positioning', 'signalements', 'versions'],

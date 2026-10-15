@@ -34,7 +34,7 @@ API changes appear in the [changelog](../../CHANGELOG.md) and the
 | [`pdftoolkit/pdf-images`](https://pdftoolkit.github.io/modules/images/index.html) | Inspect JPEG files and decode PNG files into core image objects. |
 | [`pdftoolkit/pdf-fonts`](https://pdftoolkit.github.io/modules/fonts/index.html) | Analyze a static TrueType font and prepare its metrics and mappings for core font objects. |
 
-The PDF reader **0.4.1** requires core `^0.9`; image/font modules **0.1.10** retain their earlier supported series through 0.9 on PHP 8.3 or later. Reader 0.4.1 supports PDF 1.0–2.0 syntax, PDF 2.0 UTF-8 strings, bounded indirect-reference chains, explicit native password authentication and source MAC verification; image conversion remains PNG/JPEG and font conversion remains static TrueType. All three packages are available on Packagist: [reader](https://packagist.org/packages/pdftoolkit/pdf-reader), [images](https://packagist.org/packages/pdftoolkit/pdf-images) and [fonts](https://packagist.org/packages/pdftoolkit/pdf-fonts). For example, to import image files with core 0.9.1:
+The PDF reader **0.5.0** requires core `^0.9`; image/font modules **0.1.10** retain their earlier supported series through 0.9 on PHP 8.3 or later. Reader 0.5.0 supports PDF 1.0–2.0 syntax, PDF 2.0 UTF-8 strings, bounded indirect-reference chains, explicit native password/public-key authentication and source MAC verification; image conversion remains PNG/JPEG and font conversion remains static TrueType. All three packages are available on Packagist: [reader](https://packagist.org/packages/pdftoolkit/pdf-reader), [images](https://packagist.org/packages/pdftoolkit/pdf-images) and [fonts](https://packagist.org/packages/pdftoolkit/pdf-fonts). For example, to import image files with core 0.9.1:
 
 ```sh
 composer require "roukmoute/pdf:^0.9.1" "pdftoolkit/pdf-images:^0.1.10"
@@ -162,8 +162,8 @@ The `tools/extract_spec.py` extractor retains the source and PDF locations. Usin
 
 ## Derive HTML
 
-For semantic HTML from tagged PDF, install `pdftoolkit/pdf-to-html:^0.4.0` and follow [tutorial 35](tutorials/35-derive-html.md). This optional conversion remains outside the core.
+For semantic HTML from tagged PDF, install `pdftoolkit/pdf-to-html:^0.4.1` and follow [tutorial 35](tutorials/35-derive-html.md). This optional conversion remains outside the core.
 
-Version 0.4.0 uses reader 0.4.1+ and requires 64-bit PHP 8.3+ with DOM and mbstring. Its [requirements ledger](https://pdftoolkit.github.io/modules/to-html/requirements.html) links rules to tests. [Profiles](https://pdftoolkit.github.io/modules/to-html/policies.html) distinguish semantic content, optional form actions and PDF scripts; none of those active operations is enabled by default. [Graphics rendering](https://pdftoolkit.github.io/modules/to-html/graphics.html) and authentication remain capabilities supplied explicitly by the application. Keep returned assets and read diagnostics before publication.
+Version 0.4.1 accepts reader 0.4.1 or 0.5 and requires 64-bit PHP 8.3+ with DOM and mbstring. Its [requirements ledger](https://pdftoolkit.github.io/modules/to-html/requirements.html) links rules to tests. [Profiles](https://pdftoolkit.github.io/modules/to-html/policies.html) distinguish semantic content, optional form actions and PDF scripts; none of those active operations is enabled by default. [Graphics rendering](https://pdftoolkit.github.io/modules/to-html/graphics.html) and authentication remain capabilities supplied explicitly by the application. Keep returned assets and read diagnostics before publication.
 
 [Packagist: pdftoolkit/pdf-to-html](https://packagist.org/packages/pdftoolkit/pdf-to-html).

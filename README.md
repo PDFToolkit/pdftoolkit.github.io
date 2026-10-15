@@ -35,8 +35,8 @@ The PHP libraries are available on Packagist. Install the core with Composer:
 composer require "roukmoute/pdf:^0.9.1"
 ```
 
-The documented releases are core **0.9.1**, PDF reader **0.4.1**, images/fonts **0.1.10**,
-independent OpenType **0.2.0** and PDF-to-HTML **0.4.0**. They require **PHP 8.3 or later** and are
+The documented releases are core **0.9.1**, PDF reader **0.5.0**, images/fonts **0.1.10**,
+independent OpenType **0.2.0** and PDF-to-HTML **0.4.1**. They require **PHP 8.3 or later** and are
 checked on PHP 8.3, 8.4 and 8.5. Core **0.9** and OpenType **0.2** require 64-bit PHP;
 OpenType remains independent of the PDF core.
 
@@ -52,7 +52,7 @@ Choose the optional modules according to the files your application handles:
 The image/font/reader modules install the core as a dependency. The PDF-to-HTML module adds semantic derivation from tagged PDF and installs the reader as well. OpenType provides its own object model and installs without PDF dependencies. The package guide explains
 their Composer commands and supported versions.
 
-PDF-to-HTML 0.4.0 derives semantic content from tagged PDFs with checked structure
+PDF-to-HTML 0.4.1 derives semantic content from tagged PDFs with checked structure
 associations, Unicode, images, tables, navigation and form fields. Its
 [clause ledger](https://pdftoolkit.github.io/modules/to-html/requirements.html)
 links the retained reference to executable decisions and independent tests.
@@ -67,6 +67,9 @@ Reader 0.4 and PDF-to-HTML 0.4 provide explicit native password authentication w
 verified user/owner permissions. The [reader guide](https://pdftoolkit.github.io/modules/reader/authentication.html)
 and [HTML guide](https://pdftoolkit.github.io/modules/to-html/authentication.html)
 explain credentials, crypt filters, rejection boundaries and viewer obligations.
+Reader 0.5 also provides explicit [Adobe.PubSec authentication](https://pdftoolkit.github.io/modules/reader/public-key-authentication.html),
+with independent filter keys, authenticated recipient rights and source MAC
+verification. Certificate decryption does not establish signature trust.
 OpenType 0.2 independently provides GSUB/GPOS/GDEF and explicit variation
 coordinates; see [positioning](https://pdftoolkit.github.io/modules/opentype/positioning.html)
 for native adjustments and the remaining shaping/outline boundaries.

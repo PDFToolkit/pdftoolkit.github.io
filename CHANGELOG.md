@@ -2,6 +2,22 @@
 
 [English](CHANGELOG.md) · [Français](CHANGELOG.fr.md)
 
+## [0.9.1] - 2026-10-15
+
+- Document reader 0.5.0 and PDF-to-HTML 0.4.1 from their published commits,
+  preserving the independently selected core, image/font and OpenType releases.
+- Publish the reader's public-key authentication guide in English and French,
+  with navigation, required-route checks and reciprocal language links.
+- Explain Adobe.PubSec s3/s4/s5, independent filter keys, deferred EFOpen access,
+  authenticated recipient permissions and the DefaultCryptFilter MAC boundary.
+  Correct obsolete source-MAC/public-key limitations while retaining explicit
+  signature trust, repair, rendering and permission-enforcement boundaries.
+- Run the independent reader CMS/key/MAC oracle, four physical-alias/metadata
+  cases, two implicit EFF cases and the six-source HTML public-key oracle during
+  the full build. Keep generated credentials and hostile PDFs private to validation.
+- Preserve the locked source-integrity dependency instructions in both build
+  guides and explicitly install the selected reader's hashed oracle requirements.
+
 ## [0.9.0] - 2026-10-15
 
 - Document published core 0.9.1, reader 0.4.1, image/font modules 0.1.10,

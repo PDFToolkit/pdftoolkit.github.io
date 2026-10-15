@@ -72,8 +72,11 @@ exacte du jeton. Son [guide MAC](https://pdftoolkit.github.io/fr/modules/reader/
 distingue la politique compatible acceptant les entrées non protégées de
 `RequirePdfMac`, l'authentification du fichier courant de la vérification de
 chaque ancienne révision, et l'intégrité MAC de la validité mathématique des
-signatures ou de la confiance des certificats. L'authentification par clé
-publique source reste indisponible.
+signatures ou de la confiance des certificats. Le lecteur 0.5 ajoute
+l'[authentification par clé publique](https://pdftoolkit.github.io/fr/modules/reader/public-key-authentication.html)
+explicite Adobe.PubSec s3/s4/s5, des clés indépendantes par filtre et l'accès
+EFOpen différé. Les droits effectifs viennent des payloads CMS authentifiés,
+pas de `Encrypt.P` ; le MAC PubSec moderne utilise la clé DefaultCryptFilter authentifiée.
 
 Le lecteur 0.4 traite aussi les valeurs nulles optionnelles de dictionnaires
 comme absentes, y compris les références terminant sur un objet indisponible.
@@ -120,10 +123,10 @@ Le vérificateur reproductible rejette clauses omises et fichiers de preuve abse
 Aucune certification WTPDF/PDF/UA-2 automatique ni conformité complète à la norme
 de base n’est revendiquée. Le lecteur 0.3 ajoute l'authentification R=2–7 sur
 activation explicite, les xrefs hybrides et d'autres filtres au périmètre PDF
-1.0–2.0. Son [guide d'authentification](https://github.com/PDFToolkit/pdf-reader/blob/v0.4.1/docs/authentication.md)
+1.0–2.0. Son [guide d'authentification](https://github.com/PDFToolkit/pdf-reader/blob/v0.5.0/docs/authentication.md)
 précise les filtres cryptographiques acceptés. Le lecteur 0.4 ajoute la frontière
-MAC source décrite ci-dessus ; l'authentification par clé publique en entrée
-reste indisponible. Ces mécanismes restent distincts de l'écriture et du rendu.
+MAC source décrite ci-dessus ; le lecteur 0.5 ajoute l'authentification
+par clé publique source bornée. Ces mécanismes restent distincts de l'écriture et du rendu.
 
 L’[original de la norme principale](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf)
 et les onze nouveaux originaux restent inchangés dans le dépôt public du core,

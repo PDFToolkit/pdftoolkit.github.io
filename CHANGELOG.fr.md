@@ -2,6 +2,24 @@
 
 [English](CHANGELOG.md) · [Français](CHANGELOG.fr.md)
 
+## [0.9.1] - 2026-10-15
+
+- Documenter le lecteur 0.5.0 et PDF vers HTML 0.4.1 depuis leurs commits publiés,
+  en conservant les sélections indépendantes du core, des images/fontes et d'OpenType.
+- Publier le guide d'authentification par clé publique du lecteur en anglais et
+  français, avec navigation, routes obligatoires et liens de langue réciproques.
+- Expliquer Adobe.PubSec s3/s4/s5, les clés indépendantes des filtres, l'accès EFOpen
+  différé, les permissions destinataire authentifiées et le MAC DefaultCryptFilter.
+  Corriger les limites obsolètes MAC source/clé publique tout en conservant les
+  frontières de confiance des signatures, réparation, rendu et application des droits.
+- Exécuter l'oracle indépendant CMS/clés/MAC du lecteur, quatre cas d'alias
+  physiques/métadonnées, deux cas EFF implicites et les six sources de l'oracle
+  HTML de clé publique pendant le build complet. Garder credentials générés et
+  PDF hostiles privés à la validation.
+- Préserver les instructions de dépendances d'intégrité source verrouillées dans
+  les deux guides de build et installer explicitement les dépendances hashées
+  des oracles du lecteur sélectionné.
+
 ## [0.9.0] - 2026-10-15
 
 - Documenter les versions publiées du core 0.9.1, du lecteur 0.4.1, des modules

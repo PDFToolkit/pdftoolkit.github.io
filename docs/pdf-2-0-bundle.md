@@ -28,10 +28,10 @@ de dictionnaires avec 1 709 entrées fixes ou variables. Les pages de continuati
 et les corrections d’extraction sont traçables. Cette couverture et les mécanismes
 complémentaires n’établissent pas la conformité à toutes les clauses de la norme.
 Le [guide PDF 2.0](pdf-2-0.md) et la [couverture](coverage.md)
-conservent cette distinction. Le lecteur 0.4 fournit séparément
-l'authentification par mot de passe, le décodage et la vérification du MAC PDF
-source. L'authentification par clé publique en entrée reste indisponible ; voir
-son [guide d'authentification](https://pdftoolkit.github.io/fr/modules/reader/authentication.html)
+conservent cette distinction. Le lecteur 0.5 fournit séparément l'authentification
+explicite par mot de passe ou [Adobe.PubSec](https://pdftoolkit.github.io/fr/modules/reader/public-key-authentication.html),
+le décodage et la vérification du MAC PDF source. Voir son
+[guide de mot de passe](https://pdftoolkit.github.io/fr/modules/reader/authentication.html)
 et son [guide du MAC source](https://pdftoolkit.github.io/fr/modules/reader/source-mac.html).
 
 ## Des algorithmes sélectionnés indépendamment
@@ -96,7 +96,8 @@ pas que tous les marqueurs de chiffrement et d'intégrité ont été supprimés.
 identifiants et limites. Une entrée protégée invalide ne provoque pas de repli
 vers un déchiffrement non authentifié.
 
-La vérification utilise la clé Standard R5–R7 authentifiée et couvre les octets
+La vérification utilise la clé Standard R5–R7 authentifiée ou la clé
+DefaultCryptFilter PubSec moderne et couvre les octets
 chiffrés originaux et la structure du fichier. Elle ne vérifie ni mathématiquement
 la signature, ni la confiance envers le certificat ou la TSA. Toute personne
 détenant cette clé de fichier peut créer un nouveau MAC. Aucune requête de
@@ -104,8 +105,8 @@ ressource externe, certificat ou révocation n'est effectuée. Le
 [guide du module](https://pdftoolkit.github.io/fr/modules/reader/source-mac.html)
 décrit les budgets CMS/octets, algorithmes pris en charge, quinze fichiers réels
 indépendants, cas hostiles et frontières de cadrage exactes. Les anciens MAC
-ne sont pas tous revérifiés indépendamment ; l'authentification par clé publique
-source reste distincte.
+ne sont pas tous revérifiés indépendamment. PubSec utilise la même frontière
+d'intégrité source après son authentification destinataire explicite.
 
 ## Les métadonnées et déclarations ont un propriétaire
 

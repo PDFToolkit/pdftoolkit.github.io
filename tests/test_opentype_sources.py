@@ -143,6 +143,7 @@ class OpenTypeSourcesTest(unittest.TestCase):
         for owner, route, title in (
             ("pdftoolkit/opentype", "positioning", "OpenType positioning and variations"),
             ("pdftoolkit/pdf-reader", "authentication", "Encrypted PDF authentication"),
+            ("pdftoolkit/pdf-reader", "public-key-authentication", "Public-key authentication"),
         ):
             slug = MODULES[owner][0]
             for language in ("en", "fr"):
