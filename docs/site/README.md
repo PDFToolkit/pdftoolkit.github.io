@@ -168,6 +168,7 @@ composer install --working-dir=_sources/pdf-to-html --no-interaction --prefer-di
 python -m pip install --require-hashes -r tools/site-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf/tools/public-key-validation-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf-to-html/tools/validation-requirements.txt
+python -m pip install --require-hashes -r _sources/pdf-to-html/tools/source-integrity-validation-requirements.txt
 python tools/build_docs.py --source-root _sources/pdf --opentype-root _sources/opentype --pdf-to-html-root _sources/pdf-to-html --docs-revision "$(git rev-parse HEAD)" --remote
 ```
 
@@ -191,6 +192,7 @@ composer install --working-dir=_sources/pdf-to-html --no-interaction --prefer-di
 python -m pip install --require-hashes -r tools/site-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf/tools/public-key-validation-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf-to-html/tools/validation-requirements.txt
+python -m pip install --require-hashes -r _sources/pdf-to-html/tools/source-integrity-validation-requirements.txt
 $docsRevision = git rev-parse HEAD
 python tools/build_docs.py --source-root _sources/pdf --opentype-root _sources/opentype --pdf-to-html-root _sources/pdf-to-html --docs-revision $docsRevision --remote
 ```
