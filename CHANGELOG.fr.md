@@ -2,7 +2,11 @@
 
 [English](CHANGELOG.md) · [Français](CHANGELOG.fr.md)
 
-## À paraître
+## [0.9.0] - 2026-10-15
+
+- Documenter les versions publiées du core 0.9.1, du lecteur 0.4.1, des modules
+  images/fontes 0.1.10, d’OpenType indépendant 0.2.0 et de PDF vers HTML 0.4.0
+  depuis leurs commits exacts ; actualiser les installations dans les deux langues.
 
 - Expliquer la préparation ordonnée des valeurs de codes-barres, la compression
   globale avant répartition, l'association exacte aux PMD et les apparences

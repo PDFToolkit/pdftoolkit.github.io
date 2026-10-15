@@ -1,6 +1,6 @@
 # 22. Fontes simples, Type3 et écriture verticale
 
-Le [script complet](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/native-fonts.php) réunit des glyphes Type3
+Le [script complet](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/native-fonts.php) réunit des glyphes Type3
 dessinés avec les opérateurs PDF, une police simple incorporée et une fonte
 composite dont les métriques placent les glyphes verticalement.
 
@@ -39,4 +39,4 @@ le rendu de l'exemple est vérifié séparément.
 
 Référence : ISO 9.5–9.10, tables 110–127, pages physiques 261–303 ; annexe D.
 
-[Index](README.md) · [Code complet](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/native-fonts.php)
+[Index](README.md) · [Code complet](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/native-fonts.php)

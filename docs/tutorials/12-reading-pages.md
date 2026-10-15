@@ -6,9 +6,9 @@ parcourt son arbre de pages, consulte ses attributs effectifs et demande
 séparément le décodage de ses flux. Les dictionnaires, nombres et rectangles
 restent des objets du core.
 
-Le [PDF d'entrée](https://github.com/PDFToolkit/pdf-reader/blob/v0.2.1/tests/Fixtures/page-tree/classic.pdf)
+Le [PDF d'entrée](https://github.com/PDFToolkit/pdf-reader/blob/v0.4.1/tests/Fixtures/page-tree/classic.pdf)
 est une fixture originale créée avec pypdf et qpdf, indépendamment du writer PHP.
-Le [script complet](https://github.com/PDFToolkit/pdf-reader/blob/v0.2.1/examples/pages.php)
+Le [script complet](https://github.com/PDFToolkit/pdf-reader/blob/v0.4.1/examples/pages.php)
 appartient au dépôt du lecteur. Sur le site, ses trois pages, sa sortie console
 réelle et son code commenté sont présentés après les explications.
 
@@ -18,7 +18,7 @@ Dans une application indépendante, installer le lecteur depuis Packagist avec
 le core 0.5, puis exécuter le script distribué avec le module :
 
 ```sh
-composer require "roukmoute/pdf:^0.5.5" "pdftoolkit/pdf-reader:^0.1.6"
+composer require "roukmoute/pdf:^0.9.1" "pdftoolkit/pdf-reader:^0.4.1"
 php vendor/pdftoolkit/pdf-reader/examples/pages.php vendor/pdftoolkit/pdf-reader/tests/Fixtures/page-tree/classic.pdf
 ```
 
@@ -157,7 +157,7 @@ une page. Les aperçus du site sont produits indépendamment avec Poppler.
 
 ## Vérification et limites
 
-Les [fixtures indépendantes](https://github.com/PDFToolkit/pdf-reader/blob/v0.2.1/tests/Fixtures/page-tree/README.md)
+Les [fixtures indépendantes](https://github.com/PDFToolkit/pdf-reader/blob/v0.4.1/tests/Fixtures/page-tree/README.md)
 ont des valeurs attendues vérifiées avec pypdf et qpdf, puis avec les tests PHP.
 La documentation conserve exactement les octets de l'entrée, exécute le script
 du module verrouillé et rend ses trois pages.
@@ -165,8 +165,8 @@ du module verrouillé et rend ses trois pages.
 Le parcours ne valide pas toutes les ressources, annotations ou actions du PDF.
 Le chiffrement, les références hybrides et les codecs non implémentés restent refusés. Le lecteur 0.2 accepte aussi la syntaxe PDF 2.0 et les chaînes UTF-8 PDF 2.0. L'import dans le writer, la fusion, la réécriture, l'extraction
 de texte et le rendu nécessitent leurs mécanismes dédiés. Le
-[guide du lecteur](https://github.com/PDFToolkit/pdf-reader/blob/v0.2.1/docs/pages.md)
-et ses [contrôles de sécurité](https://github.com/PDFToolkit/pdf-reader/blob/v0.2.1/docs/security.md)
+[guide du lecteur](https://github.com/PDFToolkit/pdf-reader/blob/v0.4.1/docs/pages.md)
+et ses [contrôles de sécurité](https://github.com/PDFToolkit/pdf-reader/blob/v0.4.1/docs/security.md)
 précisent les responsabilités et les budgets.
 
 Références : ISO 32000-1:2008, **7.7.3** et tableaux **29–30** pour l'arbre,

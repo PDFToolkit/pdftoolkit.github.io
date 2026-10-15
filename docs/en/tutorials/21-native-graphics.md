@@ -1,6 +1,6 @@
 # 21. Explicit images, transparency and layers
 
-The [complete script](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/native-graphics.php)
+The [complete script](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/native-graphics.php)
 produces two pages with seven images, masks, a transparency group and layers.
 The data are directly constructed PDF samples without external image files.
 
@@ -38,4 +38,4 @@ along with independent RGB and CMYK blending vectors.
 
 Reference: ISO 8.8–8.11 and 11, physical pages 215–261 and 321–380.
 
-[Index](README.md) · [Complete code](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/native-graphics.php)
+[Index](README.md) · [Complete code](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/native-graphics.php)

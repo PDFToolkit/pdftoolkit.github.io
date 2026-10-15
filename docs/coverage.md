@@ -96,7 +96,7 @@ leur validation indépendante et les limites des lecteurs de haut niveau.
 
 Le [guide PDF 2.0](pdf-2-0.md) documente les objets propres à l’édition : tableaux
 sur plusieurs pages, entrées fixes et variables, définitions communes et corrections
-vérifiées. L’[inventaire ISO2](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/iso32000-2-2020/coverage.json)
+vérifiées. L’[inventaire ISO2](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/iso32000-2-2020/coverage.json)
 consigne les compteurs exacts et la revue sémantique/EC3 restante. Il ne fusionne
 pas ISO1 et Adobe dans un pourcentage unique de conformité.
 
@@ -110,22 +110,22 @@ appariés, viewports, matrices affines et nuages de points typés.
 Les sorties initiales, incrémentales et linéarisées sont contrôlées à travers le
 graphe réellement émis et les snapshots immuables des révisions.
 
-Le [relevé de couverture par document](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/iso32000-2-bundle/coverage.json)
+Le [relevé de couverture par document](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/iso32000-2-bundle/coverage.json)
 relie fichiers d’implémentation, tests et oracles indépendants à chaque original.
-Le [relevé WTPDF](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/wtpdf-1.0/coverage.json)
+Le [relevé WTPDF](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/wtpdf-1.0/coverage.json)
 distingue échecs mécaniques, revue humaine et validation supplémentaire.
-Son [inventaire d’exigences](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/wtpdf-1.0/requirements.json)
+Son [inventaire d’exigences](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/wtpdf-1.0/requirements.json)
 consigne chaque aspect étudié, clause source, frontière d’exécution et chemin de preuve.
 Le vérificateur reproductible rejette clauses omises et fichiers de preuve absents.
 Aucune certification WTPDF/PDF/UA-2 automatique ni conformité complète à la norme
 de base n’est revendiquée. Le lecteur 0.3 ajoute l'authentification R=2–7 sur
 activation explicite, les xrefs hybrides et d'autres filtres au périmètre PDF
-1.0–2.0. Son [guide d'authentification](https://github.com/PDFToolkit/pdf-reader/blob/v0.3.1/docs/authentication.md)
+1.0–2.0. Son [guide d'authentification](https://github.com/PDFToolkit/pdf-reader/blob/v0.4.1/docs/authentication.md)
 précise les filtres cryptographiques acceptés. Le lecteur 0.4 ajoute la frontière
 MAC source décrite ci-dessus ; l'authentification par clé publique en entrée
 reste indisponible. Ces mécanismes restent distincts de l'écriture et du rendu.
 
-L’[original de la norme principale](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf)
+L’[original de la norme principale](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf)
 et les onze nouveaux originaux restent inchangés dans le dépôt public du core,
 avec identités de sources et pages physiques. Le fournisseur est la
 [PDF Association](https://www.pdfa.org/sponsored-standards/). Les téléchargements
@@ -135,9 +135,9 @@ Adobe ci-dessous restent disponibles sans modification.
 
 | Document | Inventaire | Source |
 | --- | --- | --- |
-| ISO 32000-1:2008, PDF 1.7 | 756 pages ; 392 tableaux ; 263 tableaux de dictionnaires ; 1 405 classes d'entrée ; 73 opérateurs de contenu | [PDF32000_2008.pdf](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/PDF32000_2008.pdf) |
-| Supplément Adobe, niveau d'extension 3 | 140 pages ; 66 tableaux, dont 61 tableaux de dictionnaires | [adobe_supplement_iso32000.pdf](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/adobe_supplement_iso32000.pdf) |
-| ISO 32000-2:2020 EC3, PDF 2.0 | 1 023 pages physiques ; inventaire des dictionnaires de base propre à l’édition et corrections EC3 vérifiées | [ISO_32000-2_sponsored_EC3.pdf](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf) |
+| ISO 32000-1:2008, PDF 1.7 | 756 pages ; 392 tableaux ; 263 tableaux de dictionnaires ; 1 405 classes d'entrée ; 73 opérateurs de contenu | [PDF32000_2008.pdf](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/PDF32000_2008.pdf) |
+| Supplément Adobe, niveau d'extension 3 | 140 pages ; 66 tableaux, dont 61 tableaux de dictionnaires | [adobe_supplement_iso32000.pdf](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/adobe_supplement_iso32000.pdf) |
+| ISO 32000-2:2020 EC3, PDF 2.0 | 1 023 pages physiques ; inventaire des dictionnaires de base propre à l’édition et corrections EC3 vérifiées | [ISO_32000-2_sponsored_EC3.pdf](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf) |
 
 Les fichiers originaux restent dans le dépôt du core. Les catalogues enregistrent leur
 SHA-256 et les numéros de pages physiques ; les corrections d'interprétation
@@ -162,8 +162,8 @@ différences de contrats entre les éditions pour les digests de signature.
 
 ## Comment lire la couverture
 
-L'[inventaire ISO](https://github.com/PDFToolkit/pdf/blob/v0.5.4/resources/iso32000-1/coverage.json) examine 98 familles de
-mécanismes. L'[inventaire Adobe](https://github.com/PDFToolkit/pdf/blob/v0.5.4/resources/adobe-supplement-iso32000/coverage.json)
+L'[inventaire ISO](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/iso32000-1/coverage.json) examine 98 familles de
+mécanismes. L'[inventaire Adobe](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/adobe-supplement-iso32000/coverage.json)
 distingue ses tableaux, algorithmes, prescriptions, notes de produit et standards
 externes. Leur référence initiale est la version 0.3.0 ; les ajouts ultérieurs
 doivent être accompagnés de fichiers d'implémentation et de preuves de validation.
@@ -235,12 +235,14 @@ le texte, le clipping et les sélections de liste restent dans la partie
 remplaçable. Sans ce marqueur, la procédure ISO autorise l'ajout du nouveau texte
 à l'ancien flux, ce qui explique la superposition observée dans Acrobat Reader.
 
-L'[oracle de régression](https://github.com/PDFToolkit/pdf/blob/v0.5.4/tools/validate_variable_text_appearances.py) analyse
+L'[oracle de régression](https://github.com/PDFToolkit/pdf/blob/v0.9.1/tools/validate_variable_text_appearances.py) analyse
 les vrais opérateurs avec pypdf et exerce deux remplacements successifs pour
 chaque apparence. Il vérifie la disparition des anciens textes, la conservation
 des cadres et le cas négatif sans marqueur. Ces contrôles passent sous les trois
 versions de PHP ; ils ne constituent pas une validation interactive d'Acrobat.
 Les dessins statiques, boutons et signatures restent des apparences libres.
+
+Le modèle OpenType indépendant ne fournit pas encore la normalisation d’axes utilisateur par `fvar`/`avar`, `STAT`, les modèles complets des tables `name`/`OS/2` et les autres tables en attente listées dans sa [couverture](https://pdftoolkit.github.io/fr/modules/opentype/coverage.html). Les extractions TrueType statiques existantes dans `pdf-fonts` n’impliquent pas ces modèles complets. Le shaping complet, l’instanciation des contours variables et CFF/CFF2 restent ouverts. Aucun inventaire de sources ne déclare une conformité exhaustive PDF ou OpenType.
 
 ## Frontière du core
 

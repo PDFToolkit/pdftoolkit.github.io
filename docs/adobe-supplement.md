@@ -2,8 +2,8 @@
 
 Le dépôt du core conserve deux documents de référence distincts :
 
-- [ISO 32000-1:2008, PDF 1.7](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/PDF32000_2008.pdf), 756 pages ;
-- [Adobe Supplement to the ISO 32000](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/adobe_supplement_iso32000.pdf), édition 1.0,
+- [ISO 32000-1:2008, PDF 1.7](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/PDF32000_2008.pdf), 756 pages ;
+- [Adobe Supplement to the ISO 32000](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/adobe_supplement_iso32000.pdf), édition 1.0,
   juin 2008, 140 pages, `BaseVersion 1.7`, `ExtensionLevel 3`.
 
 Tous les PDF Adobe fournis par le propriétaire du projet sont conservés avec leur
@@ -127,7 +127,7 @@ aucun JavaScript ni suivi automatique de saisie n'est exécuté. L'oracle
 indépendant utilise cinq PDF, dix widgets et 45 contrôles de pixels Poppler avec
 un **motif de test** annoncé : il prouve préparation des octets, association PMD
 et placement, sans prouver un symbole lisible par scanner. Le
-[registre des sources et preuves](https://github.com/PDFToolkit/pdf/blob/v0.9.0/resources/barcodes/README.fr.md)
+[registre des sources et preuves](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/barcodes/README.fr.md)
 du package décrit toutes les frontières et l'ambiguïté des pages 46/47.
 
 ## Chiffrement historique AES-256

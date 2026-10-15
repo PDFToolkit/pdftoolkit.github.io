@@ -1,6 +1,6 @@
 # 17. Colors, patterns and seven shading types
 
-The [complete script](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/colours-patterns.php)
+The [complete script](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/colours-patterns.php)
 presents color spaces, repeating patterns and all seven ISO shading types on two pages.
 
 ```sh
@@ -32,4 +32,4 @@ The test profile has its own provenance in the fixtures.
 
 Reference: ISO 8.6–8.7, physical pages 146–215.
 
-[Index](README.md) · [Complete code](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/colours-patterns.php)
+[Index](README.md) · [Complete code](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/colours-patterns.php)

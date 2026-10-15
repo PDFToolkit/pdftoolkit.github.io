@@ -20,8 +20,8 @@ objects, calibrated/ICC colour relationships, image samples and masks, annotatio
 geometry and choice options. They concern their declared dictionary domain;
 resource interpretation and all document-wide conditions remain separate.
 
-The [PDF 1.7 rule data](https://github.com/PDFToolkit/pdf/blob/v0.8.0/resources/iso32000-1/semantic-rules.json)
-and [PDF 2.0 rule data](https://github.com/PDFToolkit/pdf/blob/v0.8.0/resources/iso32000-2-2020/semantic-rules.json)
+The [PDF 1.7 rule data](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/iso32000-1/semantic-rules.json)
+and [PDF 2.0 rule data](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/iso32000-2-2020/semantic-rules.json)
 retain source tables and physical pages. Their generators reproduce the PHP
 definitions from those reviewed resources.
 
@@ -32,7 +32,7 @@ separately from the 197 intrinsic dictionary rules. They resolve references
 against the effective graph and retain the applicable PDF version, including
 objects inherited from an earlier native revision. The dedicated regression
 suite has 84 tests and 132 assertions; these are test counts, not normative-rule
-counts. The [source-bound record](https://github.com/PDFToolkit/pdf/blob/v0.9.0/resources/graph-semantics/coverage.json)
+counts. The [source-bound record](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/graph-semantics/coverage.json)
 retains source pages, counterexamples and implementation boundaries.
 
 Markup replies must identify an annotation on the same page. Group replies,
@@ -54,7 +54,7 @@ external target semantics retain their separate coverage boundaries.
 
 ## Preserve the exact EC3 correction
 
-The [EC3 review record](https://github.com/PDFToolkit/pdf/blob/v0.8.0/resources/iso32000-2-2020/ec3-semantic-reviews.json)
+The [EC3 review record](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/iso32000-2-2020/ec3-semantic-reviews.json)
 binds each reviewed annotation to the retained document hash, physical page,
 annotation identity and approval thread. The checker verifies those bindings.
 These six corrections do not establish a review of every EC3 annotation.
@@ -106,8 +106,9 @@ A supplied appearance dictionary requires its normal `N` entry. `N`, `R` and
 `D` identify Form XObject streams or state dictionaries containing such streams.
 When any entry uses a state dictionary, the annotation's `AS` must be a name.
 If that name has no matching
-stream, the PDF 2.0 consumer procedure on physical page 491 selects no appearance;
-the writer preserves that legal case. Declaring appearances does not execute
+stream, physical page 491 asks the consumer to attempt reasonable behavior,
+such as displaying nothing; it does not guarantee a particular fallback.
+The writer preserves that legal case. Declaring appearances does not execute
 actions or establish a particular viewer's rendering behavior.
 
 The [appearance source and evidence record](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/annotation-appearances/README.md)
@@ -118,7 +119,7 @@ appearance image.
 
 ## Review the Adobe errata without mixing editions
 
-The [Adobe errata review](https://github.com/PDFToolkit/pdf/blob/v0.8.0/resources/adobe-references/errata-review.json)
+The [Adobe errata review](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/adobe-references/errata-review.json)
 classifies **65 correction records**, covering every correction-bearing physical
 page from 3 through 18 of the retained 18-page document. Thirty-one records link
 native mechanisms, including ones implemented in earlier releases. Other records

@@ -2,8 +2,8 @@
 
 The core repository retains two distinct reference documents:
 
-- [ISO 32000-1:2008, PDF 1.7](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/PDF32000_2008.pdf), 756 pages;
-- [Adobe Supplement to the ISO 32000](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/adobe_supplement_iso32000.pdf), edition 1.0,
+- [ISO 32000-1:2008, PDF 1.7](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/PDF32000_2008.pdf), 756 pages;
+- [Adobe Supplement to the ISO 32000](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/adobe_supplement_iso32000.pdf), edition 1.0,
   June 2008, 140 pages, `BaseVersion 1.7`, `ExtensionLevel 3`.
 
 All Adobe PDFs supplied by the project owner are retained with their original
@@ -123,7 +123,7 @@ graphs. A changed value requires a newly constructed plan; no JavaScript or
 automatic input observation runs. The independent oracle uses five PDFs, ten
 widgets and 45 Poppler pixel checks with an announced **test pattern**, proving
 byte preparation, PMD association and placement rather than a scannable symbol.
-The package's [source and evidence record](https://github.com/PDFToolkit/pdf/blob/v0.9.0/resources/barcodes/README.md)
+The package's [source and evidence record](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/barcodes/README.md)
 documents every boundary and the page 46/47 ambiguity.
 
 ## Historical AES-256 encryption

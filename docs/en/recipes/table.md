@@ -6,7 +6,7 @@
 
 Draw a small table of five items with a dark header, alternating rows, a grid
 and two fonts. Layout remains in
-[examples/table.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/table.php):
+[examples/table.php](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/table.php):
 the core receives PDF operator objects.
 
 Read the [pages and text](../tutorials/02-pages-and-text.md) and
@@ -77,7 +77,7 @@ starts from the identity text matrix rather than accumulating previous cells' mo
 
 “Table” describes the visual result here. A semantic, accessible table requires
 additional PDF logical structure (§14.7), which this recipe does not build.
-The [specification preserved in the core](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/PDF32000_2008.pdf)
+The [specification preserved in the core](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/PDF32000_2008.pdf)
 and [architecture guide](../architecture.md) explain the framework for these objects.
 
 ## Adapt the recipe

@@ -99,7 +99,7 @@ des ressources de tutoriels publiées. Les motifs de test des codes-barres ne
 prouvent aucune symbologie ; le rapport Type 3 conserve la différence observée
 de Poppler en mode 7 sans la transformer en résultat de conformité.
 
-La sélection actuelle documente PDF vers HTML 0.3.2 et le lecteur 0.3.1. Le
+La sélection actuelle documente PDF vers HTML 0.4.0 et le lecteur 0.4.1. Le
 [registre des exigences](https://pdftoolkit.github.io/fr/modules/to-html/requirements.html),
 les [politiques](https://pdftoolkit.github.io/fr/modules/to-html/policies.html) et
 les [graphiques](https://pdftoolkit.github.io/fr/modules/to-html/graphics.html)

@@ -2,7 +2,7 @@
 
 [Index des tutoriels](README.md) · [Précédent : pages et texte](02-pages-and-text.md) · [Suivant : plan du document](04-navigation.md)
 
-Cette leçon dessine des rectangles, une courbe de Bézier et un segment pointillé. Elle applique ensuite une translation et une rotation au même rectangle local. Le script complet est [graphics.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/graphics.php).
+Cette leçon dessine des rectangles, une courbe de Bézier et un segment pointillé. Elle applique ensuite une translation et une rotation au même rectangle local. Le script complet est [graphics.php](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/graphics.php).
 
 ## Exécuter l'exemple
 

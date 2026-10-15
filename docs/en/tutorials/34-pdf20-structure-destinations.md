@@ -5,7 +5,7 @@ identifies a logical element, such as a section, whose content determines the
 page to display. These are separate PDF objects: choosing a semantic target does
 not require the application to duplicate its page number in every action.
 
-The [complete script](https://github.com/PDFToolkit/pdf/blob/v0.7.1/examples/pdf20-structure-destinations.php)
+The [complete script](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/pdf20-structure-destinations.php)
 constructs a tagged document with visible internal links, a structure target and
 explicit page fallbacks. It also publishes a named destination with an `SD` entry.
 The PDF preview shows the actual pages; support for following `SD` depends on the viewer.
@@ -86,6 +86,6 @@ written actions, named destinations, structure references and page fallbacks.
 The PHP regressions exercise local and remote forms, traversal order, fallback,
 invalid contexts and retained revisions. The source is ISO 32000-2:2020 clause
 12.3.2.3 and the associated action/destination dictionaries, retained in the
-[original EC3 reference](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf).
+[original EC3 reference](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf).
 
 [Tutorial path](README.md) · [Geospatial objects](33-pdf20-geospatial.md) · [Bundle guide](../pdf-2-0-bundle.md)

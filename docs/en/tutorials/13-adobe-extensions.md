@@ -1,6 +1,6 @@
 # Adobe extensions and Bates numbering
 
-The [June 2008 Adobe supplement](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/adobe_supplement_iso32000.pdf)
+The [June 2008 Adobe supplement](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/adobe_supplement_iso32000.pdf)
 extends PDF 1.7 to Adobe level 3. An extension retains the base PDF format and
 declares additional properties a reader may encounter.
 
@@ -14,7 +14,7 @@ are identifiers chosen by the application to index documents, for example
 php examples/adobe-extensions.php adobe-extensions.pdf
 ```
 
-The [complete script](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/adobe-extensions.php)
+The [complete script](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/adobe-extensions.php)
 is commented step by step. The result contains one page and two identifiers
 displayed in its footer. This tutorial depends only on the core.
 
@@ -80,6 +80,6 @@ order of the two strings and their visible presence.
 
 The declaration mechanism appears on pages 23–25 of the supplement and in
 ISO 32000-1, §7.12. The Bates artifact appears in Table 10.17, page 100 of the
-[supplement preserved in the core](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/adobe_supplement_iso32000.pdf#page=100).
+[supplement preserved in the core](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/adobe_supplement_iso32000.pdf#page=100).
 The [supplement guide](../adobe-supplement.md) details coverage of other extensions
 and provenance rules.

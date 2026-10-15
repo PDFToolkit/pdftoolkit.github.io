@@ -88,7 +88,7 @@ high-level reader limitations.
 
 The [PDF 2.0 guide](pdf-2-0.md) documents edition-specific dictionary objects,
 including continued tables, fixed and variable entries, common definitions and
-reviewed corrections. The [ISO2 inventory](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/iso32000-2-2020/coverage.json)
+reviewed corrections. The [ISO2 inventory](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/iso32000-2-2020/coverage.json)
 records exact counts and the remaining semantic/EC3 review. It is not merged
 with ISO1 or Adobe into a single conformance percentage.
 
@@ -102,22 +102,22 @@ viewports, affine matrices and typed point clouds.
 Initial, incremental and linearized output are checked through the actual
 emitted graph and immutable revision snapshots.
 
-The [per-document coverage record](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/iso32000-2-bundle/coverage.json)
+The [per-document coverage record](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/iso32000-2-bundle/coverage.json)
 links implementation files, tests and independent oracles to each original.
-The [WTPDF record](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/wtpdf-1.0/coverage.json)
+The [WTPDF record](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/wtpdf-1.0/coverage.json)
 distinguishes mechanical failures from human review and additional validation.
-Its [requirement inventory](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/wtpdf-1.0/requirements.json)
+Its [requirement inventory](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/wtpdf-1.0/requirements.json)
 records each assessed aspect, source clause, execution boundary and evidence path.
 The reproducible checker rejects omitted clauses and missing evidence files.
 No automatic WTPDF/PDF/UA-2 certification or complete base-standard conformance
 is claimed. Reader 0.3 adds opt-in R=2–7 password authentication, hybrid xrefs
 and further filter decoding to PDF 1.0–2.0 input. Its
-[authentication guide](https://github.com/PDFToolkit/pdf-reader/blob/v0.3.1/docs/authentication.md)
+[authentication guide](https://github.com/PDFToolkit/pdf-reader/blob/v0.4.1/docs/authentication.md)
 states the supported crypt filters. Reader 0.4 adds the source MAC boundary
 described above; public-key source authentication remains unsupported.
 These input mechanisms remain distinct from writing and rendering.
 
-The [original main standard](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf)
+The [original main standard](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf)
 and all eleven newly supplied originals remain unchanged in the public core
 repository, with source identities and physical pages. The provider is the
 [PDF Association](https://www.pdfa.org/sponsored-standards/). The Adobe downloads
@@ -127,9 +127,9 @@ below remain available unchanged.
 
 | Document | Inventory | Source |
 | --- | --- | --- |
-| ISO 32000-1:2008, PDF 1.7 | 756 pages; 392 tables; 263 dictionary tables; 1,405 entry classes; 73 content operators | [PDF32000_2008.pdf](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/PDF32000_2008.pdf) |
-| Adobe supplement, extension level 3 | 140 pages; 66 tables, including 61 dictionary tables | [adobe_supplement_iso32000.pdf](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/adobe_supplement_iso32000.pdf) |
-| ISO 32000-2:2020 EC3, PDF 2.0 | 1,023 physical pages; edition-specific base dictionary inventory and reviewed EC3 overlays | [ISO_32000-2_sponsored_EC3.pdf](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf) |
+| ISO 32000-1:2008, PDF 1.7 | 756 pages; 392 tables; 263 dictionary tables; 1,405 entry classes; 73 content operators | [PDF32000_2008.pdf](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/PDF32000_2008.pdf) |
+| Adobe supplement, extension level 3 | 140 pages; 66 tables, including 61 dictionary tables | [adobe_supplement_iso32000.pdf](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/adobe_supplement_iso32000.pdf) |
+| ISO 32000-2:2020 EC3, PDF 2.0 | 1,023 physical pages; edition-specific base dictionary inventory and reviewed EC3 overlays | [ISO_32000-2_sponsored_EC3.pdf](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf) |
 
 Original files remain in the core repository. Catalogues record their SHA-256
 hashes and physical page numbers; interpretation corrections retain the
@@ -153,8 +153,8 @@ between editions' signature digest contracts.
 
 ## Reading the coverage
 
-The [ISO inventory](https://github.com/PDFToolkit/pdf/blob/v0.5.4/resources/iso32000-1/coverage.json) examines 98 mechanism families.
-The [Adobe inventory](https://github.com/PDFToolkit/pdf/blob/v0.5.4/resources/adobe-supplement-iso32000/coverage.json)
+The [ISO inventory](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/iso32000-1/coverage.json) examines 98 mechanism families.
+The [Adobe inventory](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/adobe-supplement-iso32000/coverage.json)
 distinguishes its tables, algorithms, requirements, product notes and external
 standards. Their initial baseline is version 0.3.0; subsequent additions must
 include implementation files and validation evidence.
@@ -225,12 +225,14 @@ and list selections stay in the replaceable part. Without this marker, the
 ISO procedure allows new text to be appended to the old stream, explaining
 the overlap observed in Acrobat Reader.
 
-The [regression oracle](https://github.com/PDFToolkit/pdf/blob/v0.5.4/tools/validate_variable_text_appearances.py)
+The [regression oracle](https://github.com/PDFToolkit/pdf/blob/v0.9.1/tools/validate_variable_text_appearances.py)
 parses actual operators with pypdf and exercises two successive replacements
 for every appearance. It verifies that old text disappears, frames remain
 and the negative case without a marker behaves as expected. These checks
 pass on all three PHP versions; they are not interactive Acrobat validation.
 Static drawings, buttons and signatures retain freely constructed appearances.
+
+The independent OpenType model still lacks user-axis normalization through `fvar`/`avar`, `STAT`, complete `name`/`OS/2` table models and the other pending tables listed in its [coverage guide](https://pdftoolkit.github.io/modules/opentype/coverage.html). Existing static TrueType extraction in `pdf-fonts` does not imply those complete models. Full shaping, variable-outline instantiation and CFF/CFF2 remain open. None of the source inventories declares exhaustive PDF or OpenType conformance.
 
 ## Core boundary
 

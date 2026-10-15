@@ -2,7 +2,7 @@
 
 [Tutorial index](README.md) · [Previous: first document](01-first-document.md) · [Next: paths and colors](03-graphics.md)
 
-This lesson builds three A4 pages that share resources. It shows how to position text, choose leading and compose a footer. The complete script is [pages-and-text.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/pages-and-text.php).
+This lesson builds three A4 pages that share resources. It shows how to position text, choose leading and compose a footer. The complete script is [pages-and-text.php](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/pages-and-text.php).
 
 ## Run the example
 

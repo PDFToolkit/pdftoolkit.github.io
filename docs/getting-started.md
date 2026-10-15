@@ -16,10 +16,10 @@ Le core 0.8.0 étend l'[écriture PDF 2.0](pdf-2-0.md) avec les [spécifications
 
 ## Installation
 
-Le core **0.8.1** nécessite PHP 8.3 ou supérieur en 64 bits et les extensions `ctype`, `iconv` et `zlib`. Les backends AES et CMS sont optionnels et nécessitent `openssl`. Le package [`roukmoute/pdf`](https://packagist.org/packages/roukmoute/pdf) est disponible sur Packagist. Depuis le projet consommateur :
+Le core **0.9.1** nécessite PHP 8.3 ou supérieur en 64 bits et les extensions `ctype`, `iconv` et `zlib`. Les backends AES et CMS sont optionnels et nécessitent `openssl`. Le package [`roukmoute/pdf`](https://packagist.org/packages/roukmoute/pdf) est disponible sur Packagist. Depuis le projet consommateur :
 
 ```sh
-composer require "roukmoute/pdf:^0.8.1"
+composer require "roukmoute/pdf:^0.9.1"
 ```
 
 Les modifications d'API figurent dans le [changelog](../CHANGELOG.md) et le
@@ -34,10 +34,10 @@ projet consommateur pour fixer les versions installées.
 | [`pdftoolkit/pdf-images`](https://pdftoolkit.github.io/modules/images/index.html) | Inspecter des fichiers JPEG et décoder des fichiers PNG en objets image du core. |
 | [`pdftoolkit/pdf-fonts`](https://pdftoolkit.github.io/modules/fonts/index.html) | Analyser un TrueType statique et préparer ses métriques et correspondances pour les objets de police du core. |
 
-Le lecteur PDF **0.3.1** accepte le core `^0.7.1 || ^0.8` ; les modules images/fontes **0.1.9** conservent leurs anciennes séries prises en charge jusqu’à 0.8 sous PHP 8.3 ou supérieur. Le lecteur 0.3.1 accepte la syntaxe PDF 1.0–2.0, les chaînes UTF-8 PDF 2.0 et l’authentification native optionnelle par mot de passe ; la conversion d’images reste PNG/JPEG et celle des fontes reste TrueType statique. Les trois packages sont disponibles sur Packagist : [lecteur](https://packagist.org/packages/pdftoolkit/pdf-reader), [images](https://packagist.org/packages/pdftoolkit/pdf-images) et [fontes](https://packagist.org/packages/pdftoolkit/pdf-fonts). Par exemple, pour importer des fichiers image avec le core 0.8 :
+Le lecteur PDF **0.4.1** exige le core `^0.9` ; les modules images/fontes **0.1.10** conservent leurs anciennes séries prises en charge jusqu’à 0.9 sous PHP 8.3 ou supérieur. Le lecteur 0.4.1 prend en charge la syntaxe PDF 1.0–2.0, les chaînes UTF-8 PDF 2.0, les références indirectes chaînées bornées, l’authentification native explicite par mot de passe et la vérification du MAC source ; la conversion d’images reste PNG/JPEG et celle des fontes reste TrueType statique. Les trois packages sont disponibles sur Packagist : [lecteur](https://packagist.org/packages/pdftoolkit/pdf-reader), [images](https://packagist.org/packages/pdftoolkit/pdf-images) et [fontes](https://packagist.org/packages/pdftoolkit/pdf-fonts). Par exemple, pour importer des fichiers image avec le core 0.9.1 :
 
 ```sh
-composer require "roukmoute/pdf:^0.8.1" "pdftoolkit/pdf-images:^0.1.9"
+composer require "roukmoute/pdf:^0.9.1" "pdftoolkit/pdf-images:^0.1.10"
 ```
 
 Le module installe le core avec sa contrainte stable. Le [guide des packages](packages.md) explique leur frontière, les installations et le fonctionnement du lecteur. Conserver le `composer.lock` de l'application pour fixer les versions et les commits utilisés.
@@ -54,7 +54,7 @@ composer require "pdftoolkit/opentype:^0.2.0"
 Depuis un clone du dépôt [PDFToolkit/pdf](https://github.com/PDFToolkit/pdf) :
 
 ```sh
-export COMPOSER_ROOT_VERSION=0.8.x-dev
+export COMPOSER_ROOT_VERSION=0.9.x-dev
 composer install
 composer check
 php examples/hello-world.php hello-world.pdf
@@ -64,9 +64,9 @@ php examples/object-stream.php object-stream.pdf
 Le code de production dépend uniquement de PHP et de ces trois extensions. PHPUnit 12, PHPStan, PHP-CS-Fixer et les modules utilisés par les exemples et la documentation sont des dépendances de développement verrouillées dans `composer.lock`. Leur présence dans ce checkout n'ajoute aucune dépendance de production aux applications utilisant le core. La CI du core exécute les tests et valide les PDF d'exemple sous PHP 8.3, 8.4 et 8.5. Les tests échouent aussi sur les dépréciations et avertissements PHP. Le [changelog](../CHANGELOG.md) décrit chaque version publiée.
 
 Pour valider ce checkout, y compris depuis son tag, définir
-`COMPOSER_ROOT_VERSION=0.8.x-dev` avant `composer install`. Cette variable identifie
-le core courant comme appartenant à la série 0.7 attendue par les modules. Les
-dépendances de développement utilisent les modules stables 0.1, dont les versions
+`COMPOSER_ROOT_VERSION=0.9.x-dev` avant `composer install`. Cette variable identifie
+le core courant comme appartenant à la série 0.9 acceptée par les modules. Les
+dépendances de développement utilisent les modules PDF publiés, dont les versions
 et les sources exactes sont verrouillées dans `composer.lock`. Les CI définissent
 également cette variable pour les branches, les tags et les pull requests.
 
@@ -97,7 +97,7 @@ $file = new FileStructure(new FileHeader('1.7'), new FileBody($catalog));
 $file->writeTo('hello-world.pdf');
 ```
 
-L'exemple complet, avec les imports et les métadonnées, se trouve dans [`examples/hello-world.php`](https://github.com/PDFToolkit/pdf/blob/v0.8.0/examples/hello-world.php).
+L'exemple complet, avec les imports et les métadonnées, se trouve dans [`examples/hello-world.php`](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/hello-world.php).
 
 ## Tutoriels et recettes
 
@@ -148,7 +148,7 @@ Le writer assemble actuellement le fichier en mémoire. Le lecteur est fourni pa
 
 ## Sécurité
 
-La [politique de sécurité](https://github.com/PDFToolkit/pdf/blob/v0.8.0/SECURITY.md) décrit les signalements privés et les frontières de confiance. La [revue de sécurité](security.md) explique les protections de sérialisation et les responsabilités de l'application pour les chemins, les actions PDF et les limites de ressources.
+La [politique de sécurité](https://github.com/PDFToolkit/pdf/blob/v0.9.1/SECURITY.md) décrit les signalements privés et les frontières de confiance. La [revue de sécurité](security.md) explique les protections de sérialisation et les responsabilités de l'application pour les chemins, les actions PDF et les limites de ressources.
 
 ## Génération des définitions
 
@@ -162,8 +162,8 @@ L'extracteur `tools/extract_spec.py` conserve la source et les localisations dan
 
 ## Dériver du HTML
 
-Pour dériver du HTML sémantique depuis un PDF balisé, installer `pdftoolkit/pdf-to-html:^0.3.2` puis suivre le [tutoriel 35](tutorials/35-derive-html.md). Cette conversion optionnelle reste hors du core.
+Pour dériver du HTML sémantique depuis un PDF balisé, installer `pdftoolkit/pdf-to-html:^0.4.0` puis suivre le [tutoriel 35](tutorials/35-derive-html.md). Cette conversion optionnelle reste hors du core.
 
-La version 0.3.2 utilise le lecteur 0.3.1+ et exige PHP 8.3+ en 64 bits avec DOM et mbstring. Son [registre des exigences](https://pdftoolkit.github.io/fr/modules/to-html/requirements.html) rattache les règles aux tests. Les [profils](https://pdftoolkit.github.io/fr/modules/to-html/policies.html) distinguent contenu sémantique, actions de formulaire optionnelles et scripts PDF ; aucune de ces actions actives n'est autorisée par défaut. Le [rendu graphique](https://pdftoolkit.github.io/fr/modules/to-html/graphics.html) et l'authentification restent des capacités fournies explicitement par l'application. Conserver les ressources retournées et lire les diagnostics avant publication.
+La version 0.4.0 utilise le lecteur 0.4.1+ et exige PHP 8.3+ en 64 bits avec DOM et mbstring. Son [registre des exigences](https://pdftoolkit.github.io/fr/modules/to-html/requirements.html) rattache les règles aux tests. Les [profils](https://pdftoolkit.github.io/fr/modules/to-html/policies.html) distinguent contenu sémantique, actions de formulaire optionnelles et scripts PDF ; aucune de ces actions actives n'est autorisée par défaut. Le [rendu graphique](https://pdftoolkit.github.io/fr/modules/to-html/graphics.html) et l'authentification restent des capacités fournies explicitement par l'application. Conserver les ressources retournées et lire les diagnostics avant publication.
 
 [Packagist: pdftoolkit/pdf-to-html](https://packagist.org/packages/pdftoolkit/pdf-to-html).

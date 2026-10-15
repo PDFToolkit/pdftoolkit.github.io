@@ -2,7 +2,7 @@
 
 [Tutorial index](README.md) · [Previous: pages and text](02-pages-and-text.md) · [Next: document outline](04-navigation.md)
 
-This lesson draws rectangles, a Bézier curve and a dashed segment. It then applies a translation and rotation to the same local rectangle. The complete script is [graphics.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/graphics.php).
+This lesson draws rectangles, a Bézier curve and a dashed segment. It then applies a translation and rotation to the same local rectangle. The complete script is [graphics.php](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/graphics.php).
 
 ## Run the example
 

@@ -1,6 +1,6 @@
 # 31. PDF 2.0 : signatures modernes et intégrité
 
-Le [script complet](https://github.com/PDFToolkit/pdf/blob/v0.7.1/examples/pdf20-modern-signature.php) produit une page PDF 2.0 lisible et une véritable signature CMS utilisant P-256 et SHA3-256. La page explique les algorithmes choisis. Son champ de signature ne possède pas de widget : le texte visible décrit l’opération, tandis que la signature cryptographique couvre les octets réels du fichier.
+Le [script complet](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/pdf20-modern-signature.php) produit une page PDF 2.0 lisible et une véritable signature CMS utilisant P-256 et SHA3-256. La page explique les algorithmes choisis. Son champ de signature ne possède pas de widget : le texte visible décrit l’opération, tandis que la signature cryptographique couvre les octets réels du fichier.
 
 Le certificat et la clé privée sont des **données publiques de test**, conservées pour rendre les exemples reproductibles. Leur signature démontre l’opération mathématique sans établir une identité de confiance. L’application fournit explicitement ses propres données d’identité et sa politique de confiance.
 
@@ -12,7 +12,7 @@ Depuis une copie du core 0.7.1 avec ses dépendances de développement verrouill
 php examples/pdf20-modern-signature.php modern-signature.pdf
 ```
 
-L’exemple fournit Courier avec des [métriques explicites](https://github.com/PDFToolkit/pdf/blob/v0.7.1/examples/fixtures/pdf20-courier-font.php) : FirstChar/LastChar, largeurs ASCII et FontDescriptor. PDF 2.0 ne permet plus d’omettre ces entrées pour les quatorze polices standard. Cette construction n’incorpore pas de programme de fonte ; un profil exigeant l’incorporation demande une fonte explicitement incorporée.
+L’exemple fournit Courier avec des [métriques explicites](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/fixtures/pdf20-courier-font.php) : FirstChar/LastChar, largeurs ASCII et FontDescriptor. PDF 2.0 ne permet plus d’omettre ces entrées pour les quatorze polices standard. Cette construction n’incorpore pas de programme de fonte ; un profil exigeant l’incorporation demande une fonte explicitement incorporée.
 
 
 Cet exemple utilise l’extension OpenSSL de PHP pour ECDSA. Ed25519 et Ed448 utilisent un fournisseur distinct dont l’exécutable est choisi explicitement ; charger la bibliothèque ne démarre aucun processus. Le PDF reste non chiffré pour permettre son aperçu dans le navigateur.
@@ -92,6 +92,6 @@ Installez les dépendances de validation verrouillées par le dépôt avant d’
 
 ## Références
 
-Les originaux conservés d’[ISO/TS 32001 EC3](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/ISO_TS_32001-2022_sponsored_EC3.pdf), [ISO/TS 32002 EC3](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/ISO_TS_32002-2022_sponsored_EC3.pdf), [ISO/TS 32003](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/ISO_TS_32003-2023_sponsored.pdf) et [ISO/TS 32004](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/ISO-TS-32004-2024_sponsored.pdf) proviennent de la [PDF Association](https://www.pdfa.org/sponsored-standards/). Le [catalogue du bundle](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/iso32000-2-bundle/sources.json) consigne les identités des sources, les pages physiques et les annotations de correction.
+Les originaux conservés d’[ISO/TS 32001 EC3](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/ISO_TS_32001-2022_sponsored_EC3.pdf), [ISO/TS 32002 EC3](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/ISO_TS_32002-2022_sponsored_EC3.pdf), [ISO/TS 32003](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/ISO_TS_32003-2023_sponsored.pdf) et [ISO/TS 32004](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/ISO-TS-32004-2024_sponsored.pdf) proviennent de la [PDF Association](https://www.pdfa.org/sponsored-standards/). Le [catalogue du bundle](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/iso32000-2-bundle/sources.json) consigne les identités des sources, les pages physiques et les annotations de correction.
 
 [Parcours des tutoriels](README.md) · [Guide du bundle](../pdf-2-0-bundle.md) · [Sécurité](../security.md)

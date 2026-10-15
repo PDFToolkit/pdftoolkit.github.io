@@ -16,7 +16,7 @@ Ouvrir `examples/hello-world.pdf`. La page au format Letter porte la phrase « S
 
 ![Aperçu du premier document](previews/hello-world.png)
 
-Le [code complet](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/hello-world.php) contient les imports et les commentaires qui correspondent aux étapes ci-dessous.
+Le [code complet](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/hello-world.php) contient les imports et les commentaires qui correspondent aux étapes ci-dessous.
 
 ## 1. Donner un nom à une ressource de police
 

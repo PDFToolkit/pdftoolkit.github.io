@@ -96,7 +96,7 @@ private build directories, outside the published tutorial assets. Barcode test
 patterns do not prove a symbology; the Type 3 report preserves the observed
 Poppler mode-7 difference instead of treating it as a conformance result.
 
-The current selection documents PDF-to-HTML 0.3.2 and reader 0.3.1. The
+The current selection documents PDF-to-HTML 0.4.0 and reader 0.4.1. The
 [requirements ledger](https://pdftoolkit.github.io/modules/to-html/requirements.html),
 [policies](https://pdftoolkit.github.io/modules/to-html/policies.html) and
 [graphics](https://pdftoolkit.github.io/modules/to-html/graphics.html) guides

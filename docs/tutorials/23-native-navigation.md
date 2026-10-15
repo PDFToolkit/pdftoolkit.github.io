@@ -1,6 +1,6 @@
 # 23. Labels, articles et présentation
 
-Le [script complet](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/native-navigation.php) construit trois pages
+Le [script complet](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/native-navigation.php) construit trois pages
 identifiées par `i`, `AA` et `A-8`. Deux articles et une liste de présentation
 relient ces pages sans modifier leurs instructions de dessin. Les signets
 montrent une destination explicite, un nom PDF et une chaîne de destination.
@@ -151,4 +151,4 @@ fonctions de l'application PDF.
 Références : ISO 12.3.2, pages physiques 373–375 ; ISO 12.4.2–12.4.4,
 pages physiques 382–389 ; GoTo, ISO 12.6.4.2, page physique 426.
 
-[Index](README.md) · [Code complet](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/native-navigation.php)
+[Index](README.md) · [Code complet](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/native-navigation.php)

@@ -1,6 +1,6 @@
 # 14. AcroForm fields and appearances
 
-The [complete script](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/acroform-fields.php)
+The [complete script](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/acroform-fields.php)
 produces a page with a name, country list, checkbox, radio buttons, reset button
 and empty signature field.
 
@@ -58,4 +58,4 @@ notes 118–119: without `/MK`, Acrobat preserves content outside the `/Tx` sequ
 The presence of `/MK` requests complete appearance regeneration; it is not
 required for this script's custom appearances.
 
-[Index](README.md) · [Complete code](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/acroform-fields.php)
+[Index](README.md) · [Complete code](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/acroform-fields.php)

@@ -1,6 +1,6 @@
 # 26. Apply signature-field conditions
 
-The [complete script](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/signature-field-policy.php)
+The [complete script](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/signature-field-policy.php)
 produces one page, a text field `Reference` and a signature field `Approval`.
 The detached CMS signature is actually calculated and verified. The field's
 widget displays an explicit appearance while its FieldMDP lock selects `Reference`.
@@ -170,12 +170,12 @@ PHP 8.3, 8.4 and 8.5. It covers actually written conditions, certification with
 and without `Perms`, two signed revisions, `FieldMDP.Data`, an Adobe lock and an
 attached appearance. This script's rendering and form are inspected too.
 
-Preserved sources: [conditions and certificates, pages 455–459](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/PDF32000_2008.pdf#page=455),
-[transformations and signatures, pages 474–487](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/PDF32000_2008.pdf#page=474),
-[Adobe locks and appearances, pages 43–45](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/adobe_supplement_iso32000.pdf#page=43).
+Preserved sources: [conditions and certificates, pages 455–459](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/PDF32000_2008.pdf#page=455),
+[transformations and signatures, pages 474–487](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/PDF32000_2008.pdf#page=474),
+[Adobe locks and appearances, pages 43–45](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/adobe_supplement_iso32000.pdf#page=43).
 The `DigestMethod` DSA/SHA1 clause is applied when that seed entry exists; an
 empty seed or `Reasons` alone creates no additional restriction on Table 257's
 general DSA/SHA256 capability. This interpretation is located in both descriptions
 without being presented as an official erratum.
 
-[Tutorial path](README.md) · [Complete code](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/signature-field-policy.php)
+[Tutorial path](README.md) · [Complete code](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/signature-field-policy.php)

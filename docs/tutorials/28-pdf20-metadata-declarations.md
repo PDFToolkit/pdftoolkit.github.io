@@ -1,6 +1,6 @@
 # 28. Métadonnées XMP, déclarations et parties de document
 
-Le [script complet](https://github.com/PDFToolkit/pdf/blob/v0.7.1/examples/pdf20-metadata-declarations.php)
+Le [script complet](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/pdf20-metadata-declarations.php)
 produit un PDF 2.0 avec un titre bilingue, une déclaration de l'auteur, un rapport
 incorporé et des métadonnées distinctes pour le document, une partie documentaire
 et une séquence de dessin. Le rectangle coloré utilise la compensation du point
@@ -15,7 +15,7 @@ Depuis un checkout du core **0.7.1**, avec ses dépendances installées :
 php examples/pdf20-metadata-declarations.php metadata.pdf
 ```
 
-L’exemple fournit Courier avec des [métriques explicites](https://github.com/PDFToolkit/pdf/blob/v0.7.1/examples/fixtures/pdf20-courier-font.php) : FirstChar/LastChar, largeurs ASCII et FontDescriptor. PDF 2.0 ne permet plus d’omettre ces entrées pour les quatorze polices standard. Cette construction n’incorpore pas de programme de fonte ; un profil exigeant l’incorporation demande une fonte explicitement incorporée.
+L’exemple fournit Courier avec des [métriques explicites](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/fixtures/pdf20-courier-font.php) : FirstChar/LastChar, largeurs ASCII et FontDescriptor. PDF 2.0 ne permet plus d’omettre ces entrées pour les quatorze polices standard. Cette construction n’incorpore pas de programme de fonte ; un profil exigeant l’incorporation demande une fonte explicitement incorporée.
 
 
 PHP 8.3 ou supérieur suffit. Ce script utilise les objets natifs du core ; aucun
@@ -133,11 +133,11 @@ application qui construit manuellement un flux XML brut reste responsable de
 son contenu ; le graphe contrôle ses références et son type PDF. Cette leçon
 ne constitue pas une validation générale de toutes les règles ISO 32000-2.
 
-Sources conservées : [PDF Declarations, pages 7–10](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/PDF-Declarations.pdf#page=7),
-[compensation du point noir, page 4](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/PDF20_AN001-BPC.pdf#page=4),
-[fichiers associés, pages 7 et 12–13](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/PDF20_AN002-AF.pdf#page=7)
-et [emplacements des métadonnées, pages 4–10](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/PDF20_AN003-ObjectMetadataLocations.pdf#page=4).
-Les parties de document sont définies dans [ISO 32000-2, pages physiques 850–853](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf#page=850).
+Sources conservées : [PDF Declarations, pages 7–10](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/PDF-Declarations.pdf#page=7),
+[compensation du point noir, page 4](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/PDF20_AN001-BPC.pdf#page=4),
+[fichiers associés, pages 7 et 12–13](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/PDF20_AN002-AF.pdf#page=7)
+et [emplacements des métadonnées, pages 4–10](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/PDF20_AN003-ObjectMetadataLocations.pdf#page=4).
+Les parties de document sont définies dans [ISO 32000-2, pages physiques 850–853](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf#page=850).
 La provenance du bundle est l'[accès sponsorisé de la PDF Association](https://pdfa.org/sponsored-standards/).
 
 [Parcours des tutoriels](README.md) · [Guide PDF 2.0](../pdf-2-0.md)

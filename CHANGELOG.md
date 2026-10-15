@@ -2,7 +2,11 @@
 
 [English](CHANGELOG.md) · [Français](CHANGELOG.fr.md)
 
-## Unreleased
+## [0.9.0] - 2026-10-15
+
+- Document published core 0.9.1, reader 0.4.1, image/font modules 0.1.10,
+  independent OpenType 0.2.0 and PDF-to-HTML 0.4.0 from their exact commits.
+  Update installation commands, version boundaries and both language selections.
 
 - Explain ordered barcode value preparation, global compression before
   partitioning, exact PMD association and full-widget native appearances.

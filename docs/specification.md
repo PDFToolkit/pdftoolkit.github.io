@@ -11,9 +11,9 @@ distinct, comprenant le portfolio original et les relations de ses documents
 incorporés. Ils servent à la comparaison et aux audits ciblés ; leur
 conservation ne modifie pas les inventaires de définitions actifs et ne prouve
 pas l'implémentation de toutes leurs procédures.
-Le core **0.8.1**, le lecteur PDF **0.3.1**, les modules images/fontes **0.1.9** et OpenType indépendant
+Le core **0.9.1**, le lecteur PDF **0.4.1**, les modules images/fontes **0.1.10** et OpenType indépendant
 **0.2.0** nécessitent **PHP 8.3 ou supérieur** et sont vérifiés sous PHP 8.3,
-8.4 et 8.5. Le core **0.8** et OpenType **0.2** exigent PHP en 64 bits ; OpenType reste indépendant
+8.4 et 8.5. Le core **0.9** et OpenType **0.2** exigent PHP en 64 bits ; OpenType reste indépendant
 du core PDF. La version du runtime PHP et celle du format PDF sont indépendantes.
 Le [guide PDF 2.0](pdf-2-0.md) suit ISO 32000-2:2020 EC3 séparément des chiffres
 ISO1 ci-dessous. Le [guide des spécifications complémentaires](pdf-2-0-bundle.md)

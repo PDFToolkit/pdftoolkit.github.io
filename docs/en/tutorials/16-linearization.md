@@ -1,6 +1,6 @@
 # 16. Organize a PDF for progressive access
 
-The [complete script](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/linearized.php)
+The [complete script](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/linearized.php)
 writes three pages, two shared fonts, document information and bookmarks. The
 first page and its dependencies appear near the start of the file.
 
@@ -31,4 +31,4 @@ verification uses the separate oracle.
 
 Reference: ISO Annex F, physical pages 683–702.
 
-[Index](README.md) · [Complete code](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/linearized.php)
+[Index](README.md) · [Complete code](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/linearized.php)

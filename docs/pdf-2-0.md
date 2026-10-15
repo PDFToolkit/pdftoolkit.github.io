@@ -1,6 +1,6 @@
 # PDF 2.0 : objets, écriture et spécifications complémentaires
 
-Le core **0.8.1** implémente des objets et mécanismes ISO 32000-2:2020, avec des
+Le core **0.9.1** implémente des objets et mécanismes ISO 32000-2:2020, avec des
 corrections vérifiées d’Errata Collection 3 (EC3, 2026-06-01). Il nécessite PHP 8.3
 ou ultérieur en 64 bits et conserve une construction explicite, des objets propres
 au document et aucun registre global. La couverture des tableaux n’établit pas
@@ -150,15 +150,15 @@ La conformité conditionnelle et sémantique complète, la revue exhaustive EC3,
 le rendu et le traitement des couleurs externes ainsi que la certification
 automatique d’accessibilité ne sont pas établis par cet inventaire. Le
 [relevé de couverture](coverage.md) distingue mécanismes natifs, objets déclaratifs
-et travaux restants. Le lecteur optionnel 0.2 accepte la [syntaxe PDF 1.0–2.0 et les chaînes UTF-8 PDF 2.0](packages.md), avec ses autres limites explicites.
+et travaux restants. Le lecteur optionnel 0.4.1 accepte la [syntaxe PDF 1.0–2.0 et les chaînes UTF-8 PDF 2.0](packages.md), avec ses autres limites explicites.
 
 ## Source et vérifications
 
-L’[original `ISO_32000-2_sponsored_EC3.pdf`](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf)
+L’[original `ISO_32000-2_sponsored_EC3.pdf`](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf)
 est conservé dans le dépôt public du core avec son nom et ses octets d’origine,
 après autorisation de redistribution confirmée par le propriétaire du projet.
-Les [métadonnées du catalogue](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/iso32000-2-2020/metadata.json)
-et l’[inventaire de couverture](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/iso32000-2-2020/coverage.json)
+Les [métadonnées du catalogue](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/iso32000-2-2020/metadata.json)
+et l’[inventaire de couverture](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/iso32000-2-2020/coverage.json)
 consignent son identité, ses pages physiques et son empreinte. Le fichier fourni
 provient de la **PDF Association**, via son [accès sponsorisé officiel](https://www.pdfa.org/sponsored-standards/).
 Les deux copies fournies de la norme principale et tous les originaux complémentaires restent dans le dépôt.

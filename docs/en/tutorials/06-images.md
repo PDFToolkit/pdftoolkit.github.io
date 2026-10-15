@@ -12,7 +12,7 @@ From the root of a core checkout, after `composer install`:
 php examples/images.php images.pdf
 ```
 
-The output path is optional; it defaults to `examples/images.pdf`. The complete script is [examples/images.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/images.php).
+The output path is optional; it defaults to `examples/images.pdf`. The complete script is [examples/images.php](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/images.php).
 
 ## 1. Produce the samples
 
@@ -80,6 +80,6 @@ This example covers opaque `/DeviceRGB` images, without masks or color profiles.
 
 An inline image cannot contain a binary sequence that would be interpreted as an ambiguous `EI` terminator. `InlineImage` rejects this situation. The tutorial's palette avoids it; an image XObject suits arbitrary data and reused images.
 
-References in [ISO 32000-1:2008](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/PDF32000_2008.pdf): **7.3.8** (streams), **7.4.4** (FlateDecode), **8.3.3** (transformations), **8.8** (XObjects), **8.9.5 and Table 89** (image dictionary), **8.9.7** (inline images).
+References in [ISO 32000-1:2008](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/PDF32000_2008.pdf): **7.3.8** (streams), **7.4.4** (FlateDecode), **8.3.3** (transformations), **8.8** (XObjects), **8.9.5 and Table 89** (image dictionary), **8.9.7** (inline images).
 
 [← 5. Links](05-links.md) · [All tutorials](README.md) · [7. Axial shading →](07-gradient.md)

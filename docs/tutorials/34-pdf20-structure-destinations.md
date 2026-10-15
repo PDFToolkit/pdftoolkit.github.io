@@ -5,7 +5,7 @@ désigne un élément logique, par exemple une section, dont le contenu détermi
 la page à afficher. Ce sont des objets PDF distincts : choisir une cible sémantique
 ne demande pas de recopier son numéro de page dans chaque action.
 
-Le [script complet](https://github.com/PDFToolkit/pdf/blob/v0.7.1/examples/pdf20-structure-destinations.php)
+Le [script complet](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/pdf20-structure-destinations.php)
 construit un document balisé avec des liens internes visibles, une cible de
 structure et des destinations de page de repli explicites. Il publie aussi une
 destination nommée portant une entrée `SD`. L’aperçu montre les véritables pages ;
@@ -90,6 +90,6 @@ page écrits. Les régressions PHP couvrent les formes locales et distantes, l�
 de parcours, le repli, les contextes invalides et les révisions conservées. La
 source est la clause 12.3.2.3 d’ISO 32000-2:2020 et les dictionnaires d’actions et
 destinations associés, conservés dans
-l’[original EC3](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf).
+l’[original EC3](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf).
 
 [Parcours des tutoriels](README.md) · [Objets géospatiaux](33-pdf20-geospatial.md) · [Guide du bundle](../pdf-2-0-bundle.md)

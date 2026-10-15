@@ -7,18 +7,18 @@ TrueType and PNG/JPEG converter checks are now maintained in the optional
 [pdf-images](https://github.com/PDFToolkit/pdf-images) modules. PDF objects
 and their invariants remain in the core. The
 [pdf-reader](https://github.com/PDFToolkit/pdf-reader) module has its own
-[security documentation](https://github.com/PDFToolkit/pdf-reader/blob/v0.3.1/docs/security.md)
+[security documentation](https://github.com/PDFToolkit/pdf-reader/blob/v0.4.1/docs/security.md)
 for reading external files; this generator review does not replace it.
 
-The documented versions are core **0.8.1**, PDF reader **0.3.1**, image/font modules **0.1.9** and independent
-OpenType **0.2.0**, with PDF-to-HTML **0.3.2**. These packages require **PHP 8.3 or later** and are checked on
-PHP 8.3, 8.4 and 8.5. Core **0.8** and OpenType **0.2** require 64-bit PHP; OpenType
+The documented versions are core **0.9.1**, PDF reader **0.4.1**, image/font modules **0.1.10** and independent
+OpenType **0.2.0**, with PDF-to-HTML **0.4.0**. These packages require **PHP 8.3 or later** and are checked on
+PHP 8.3, 8.4 and 8.5. Core **0.9** and OpenType **0.2** require 64-bit PHP; OpenType
 remains independent of the PDF core. The review includes the [PDF 2.0 companion mechanisms](pdf-2-0-bundle.md);
 individual source definitions and conformance declarations are not security
 certificates. OpenType's independent parser has its own
 [security boundaries](https://github.com/PDFToolkit/opentype/blob/v0.2.0/SECURITY.md).
 
-The **0.3.2** PDF-to-HTML module with reader **0.3.1+** retains its own
+The **0.4.0** PDF-to-HTML module with reader **0.4.1+** retains its own
 [security checks](https://pdftoolkit.github.io/modules/to-html/security.html)
 and [explicit policies](https://pdftoolkit.github.io/modules/to-html/policies.html).
 Independent tests verify HTML/CSS/URL filtering, associations and IDs,
@@ -34,7 +34,7 @@ Reader 0.3.1 limits the `EncryptMetadata=false` exemption to the actual catalog
 metadata object; page and Form metadata remain encrypted unless they explicitly
 select Identity. It resolves indirect stream types before selecting `EFF`, uses
 the fixed 128-bit V4 file key and ignores attempts to redefine the standard
-Identity filter. Its [seven additional regression cases](https://github.com/PDFToolkit/pdf-reader/blob/v0.3.1/tools/validate_metadata_security.py)
+Identity filter. Its [seven additional regression cases](https://github.com/PDFToolkit/pdf-reader/blob/v0.4.1/tools/validate_metadata_security.py)
 use qpdf and cryptography with the specific oracle boundaries explained in the
 [authentication guide](https://pdftoolkit.github.io/modules/reader/authentication.html).
 
@@ -138,19 +138,19 @@ The download filename is fixed here. Request data must not be interpolated direc
 
 Numeric checks prevent identified overflows; operand validation avoids unnecessary revisits. They do not replace service quotas. A shared direct graph can represent very large output when expanded into PDF syntax. A filter chain can also greatly increase byte counts. An input-size limit alone therefore does not bound all serialization.
 
-[SecuritySerializationTest](https://github.com/PDFToolkit/pdf/blob/v0.8.0/tests/SecuritySerializationTest.php), [SecurityLimitsTest](https://github.com/PDFToolkit/pdf/blob/v0.8.0/tests/SecurityLimitsTest.php) and [FileOutputTest](https://github.com/PDFToolkit/pdf/blob/v0.8.0/tests/FileOutputTest.php) cover injection payloads, all 256 byte values, inline terminators, numeric bounds, shared graphs and output. [ImageObjectsTest](https://github.com/PDFToolkit/pdf/blob/v0.8.0/tests/ImageObjectsTest.php), [CrossReferenceSectionTest](https://github.com/PDFToolkit/pdf/blob/v0.8.0/tests/CrossReferenceSectionTest.php) and [IncrementalUpdateTest](https://github.com/PDFToolkit/pdf/blob/v0.8.0/tests/IncrementalUpdateTest.php) cover core PDF invariants. Image-decoding regressions are in the module's [ImageImportTest](https://github.com/PDFToolkit/pdf-images/blob/v0.1.9/tests/ImageImportTest.php). TrueType validation remains in [font module tests](https://github.com/PDFToolkit/pdf-fonts/tree/v0.1.9/tests). Independent pypdf reads confirmed binary vectors and reproduction of the inline ambiguity. qpdf checks every example in CI.
+[SecuritySerializationTest](https://github.com/PDFToolkit/pdf/blob/v0.9.1/tests/SecuritySerializationTest.php), [SecurityLimitsTest](https://github.com/PDFToolkit/pdf/blob/v0.9.1/tests/SecurityLimitsTest.php) and [FileOutputTest](https://github.com/PDFToolkit/pdf/blob/v0.9.1/tests/FileOutputTest.php) cover injection payloads, all 256 byte values, inline terminators, numeric bounds, shared graphs and output. [ImageObjectsTest](https://github.com/PDFToolkit/pdf/blob/v0.9.1/tests/ImageObjectsTest.php), [CrossReferenceSectionTest](https://github.com/PDFToolkit/pdf/blob/v0.9.1/tests/CrossReferenceSectionTest.php) and [IncrementalUpdateTest](https://github.com/PDFToolkit/pdf/blob/v0.9.1/tests/IncrementalUpdateTest.php) cover core PDF invariants. Image-decoding regressions are in the module's [ImageImportTest](https://github.com/PDFToolkit/pdf-images/blob/v0.1.10/tests/ImageImportTest.php). TrueType validation remains in [font module tests](https://github.com/PDFToolkit/pdf-fonts/tree/v0.1.10/tests). Independent pypdf reads confirmed binary vectors and reproduction of the inline ambiguity. qpdf checks every example in CI.
 
 This review is not an audit of PDF readers, PHP, the HTTP server or a future layout library. Generated definition files express standard constraints; they are not a general document-sanitization policy.
 
 Cross-review of new mechanisms identified two defects in development
 versions: a metadata exemption attached to an old identity and replacement
 of Encrypt by an object-stream member.
-[EncryptedRevisionInvariantTest](https://github.com/PDFToolkit/pdf/blob/v0.8.0/tests/EncryptedRevisionInvariantTest.php)
+[EncryptedRevisionInvariantTest](https://github.com/PDFToolkit/pdf/blob/v0.9.1/tests/EncryptedRevisionInvariantTest.php)
 checks their corrections, including actually written XML content.
 
-The [ISO](https://github.com/PDFToolkit/pdf/blob/v0.8.0/tools/validate_iso_security.py),
-[certificate](https://github.com/PDFToolkit/pdf/blob/v0.8.0/tools/validate_public_key_security.py)
-and [signature](https://github.com/PDFToolkit/pdf/blob/v0.8.0/tools/validate_pdf_signatures.py)
+The [ISO](https://github.com/PDFToolkit/pdf/blob/v0.9.1/tools/validate_iso_security.py),
+[certificate](https://github.com/PDFToolkit/pdf/blob/v0.9.1/tools/validate_public_key_security.py)
+and [signature](https://github.com/PDFToolkit/pdf/blob/v0.9.1/tools/validate_pdf_signatures.py)
 validators are development dependencies with locked versions and hashes.
 Every oracle states its reader's limitations: qpdf 12.4.2 also derives a
 per-object key for explicit Crypt; pyHanko verifies the ISO rule without
@@ -173,15 +173,15 @@ Simple signing rejects policies that require this dedicated contract.
 A certificate chain declared for a PKCS#1 signature must start with the
 certificate actually used by this backend.
 
-The [output verification](https://github.com/PDFToolkit/pdf/blob/v0.8.0/tests/SignatureOutputVerificationTest.php),
-[field-policy](https://github.com/PDFToolkit/pdf/blob/v0.8.0/tests/SignatureFieldPolicySigningTest.php)
-and [historical-permission](https://github.com/PDFToolkit/pdf/blob/v0.8.0/tests/SignaturePermissionHistoryTest.php)
+The [output verification](https://github.com/PDFToolkit/pdf/blob/v0.9.1/tests/SignatureOutputVerificationTest.php),
+[field-policy](https://github.com/PDFToolkit/pdf/blob/v0.9.1/tests/SignatureFieldPolicySigningTest.php)
+and [historical-permission](https://github.com/PDFToolkit/pdf/blob/v0.9.1/tests/SignaturePermissionHistoryTest.php)
 tests cover altered output, mismatched certificates, replayed facts, locks
-and permissions. The [policy oracle](https://github.com/PDFToolkit/pdf/blob/v0.8.0/tools/validate_signature_field_policies.py)
+and permissions. The [policy oracle](https://github.com/PDFToolkit/pdf/blob/v0.9.1/tools/validate_signature_field_policies.py)
 verifies eight PDFs and nine RSA/DSA signatures without modifying readers.
 General comparison of MDP/UR-permitted modifications remains separate.
 
-Core **0.8.1** also applies historical DocMDP/FieldMDP restrictions at the common
+Core **0.9.1** also applies historical DocMDP/FieldMDP restrictions at the common
 incremental writer boundary, even without `PreparedSignature`. It compares the
 entire frozen delta, not only the selected signature field. Supported protected
 operations are terminal signing and PDF 2.0 DSS/document timestamp maintenance.
@@ -196,14 +196,14 @@ bytes, `ByteRange`, `Contents`, signature dictionary and signing credential,
 including the final CMS/MAC when applicable. Opaque `finalize()` bytes alone do
 not establish this evidence. The checks establish mathematical integrity, not
 PKI trust or arbitrary external-PDF change classification. The
-[incremental-permission regressions](https://github.com/PDFToolkit/pdf/blob/v0.8.1/tests/IncrementalSignaturePermissionsTest.php)
-and [independent permission oracle](https://github.com/PDFToolkit/pdf/blob/v0.8.1/tools/validate_incremental_permissions.py)
+[incremental-permission regressions](https://github.com/PDFToolkit/pdf/blob/v0.9.1/tests/IncrementalSignaturePermissionsTest.php)
+and [independent permission oracle](https://github.com/PDFToolkit/pdf/blob/v0.9.1/tools/validate_incremental_permissions.py)
 exercise both permitted native operations and rejected unrelated changes.
-The [retained-source guide](https://github.com/PDFToolkit/pdf/blob/v0.8.1/resources/signature-revisions/README.md)
+The [retained-source guide](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/signature-revisions/README.md)
 records exact source pages, supported operations and migration choices.
 
-[AdobeEncryptionTest](https://github.com/PDFToolkit/pdf/blob/v0.8.0/tests/AdobeEncryptionTest.php)
-and [validate_adobe_encryption.py](https://github.com/PDFToolkit/pdf/blob/v0.8.0/tools/validate_adobe_encryption.py)
+[AdobeEncryptionTest](https://github.com/PDFToolkit/pdf/blob/v0.9.1/tests/AdobeEncryptionTest.php)
+and [validate_adobe_encryption.py](https://github.com/PDFToolkit/pdf/blob/v0.9.1/tools/validate_adobe_encryption.py)
 cover historical R=5. This protocol is explicitly selected for
 interoperability: its password derivation is old and AES-CBC does not
 authenticate content. SASLprep preparation does not strengthen a weak
@@ -230,7 +230,7 @@ provider with an explicit key and executable; other operations do not launch a
 process. The tests' certificates and private keys are public fixtures, not
 production credentials. Independent pyHanko, cryptography, ASN.1 and OpenSSL
 checks validate actual output; see
-[the crypto oracle](https://github.com/PDFToolkit/pdf/blob/v0.8.0/tools/validate_iso32000_crypto.py).
+[the crypto oracle](https://github.com/PDFToolkit/pdf/blob/v0.9.1/tools/validate_iso32000_crypto.py).
 
 RFC 3161 document timestamps require a caller-selected token provider and
 authority verifier. DSS/VRI objects store supplied certificate, CRL and OCSP
@@ -249,7 +249,7 @@ ranges and encrypted-wrapper discovery are checked against the effective graph.
 Caller-supplied opaque XML/content and embedded payload bytes are not parsed or
 trusted by this model. Declarations state an author's claim at the chosen scope;
 they do not prove that claim. The
-[metadata oracle](https://github.com/PDFToolkit/pdf/blob/v0.8.0/tools/validate_pdf20_metadata.py)
+[metadata oracle](https://github.com/PDFToolkit/pdf/blob/v0.9.1/tools/validate_pdf20_metadata.py)
 uses independent XML/PDF readers and decrypts the example's inner PDF separately.
 
 `WtPdfAudit` is a **partial mechanical audit, not certification**. Malformed
@@ -262,4 +262,4 @@ checks for reading order, useful descriptions, Unicode meaning or external
 font-program evidence. The [namespace tutorial](tutorials/30-pdf20-tagged-namespaces.md)
 shows both failures and remaining evidence requirements.
 
-[Policy and private reporting](https://github.com/PDFToolkit/pdf/blob/v0.8.0/SECURITY.md) · [Architecture](architecture.md) · [Standard coverage](specification.md)
+[Policy and private reporting](https://github.com/PDFToolkit/pdf/blob/v0.9.1/SECURITY.md) · [Architecture](architecture.md) · [Standard coverage](specification.md)

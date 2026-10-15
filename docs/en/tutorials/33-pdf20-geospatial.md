@@ -1,6 +1,6 @@
 # 33. PDF 2.0 geospatial objects
 
-The [complete script](https://github.com/PDFToolkit/pdf/blob/v0.7.1/examples/pdf20-geospatial.php) draws two illustrative panels and attaches geospatial measurement data to the page, a Form XObject and an image. One region declares a geographic reference system; the other declares a projected system. They are independent sample regions, not a conversion of the same surveyed map.
+The [complete script](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/pdf20-geospatial.php) draws two illustrative panels and attaches geospatial measurement data to the page, a Form XObject and an image. One region declares a geographic reference system; the other declares a projected system. They are independent sample regions, not a conversion of the same surveyed map.
 
 Drawing a grid does not create geographic semantics. The script separately constructs the coordinate systems, control-point pairs, measurement viewports, preferred units and point cloud that describe the PDF objects.
 
@@ -12,7 +12,7 @@ From a core 0.7.1 checkout:
 php examples/pdf20-geospatial.php geospatial.pdf
 ```
 
-The example supplies Courier through [explicit metrics](https://github.com/PDFToolkit/pdf/blob/v0.7.1/examples/fixtures/pdf20-courier-font.php): FirstChar/LastChar, ASCII widths and a FontDescriptor. PDF 2.0 no longer permits omitting these entries for the fourteen standard fonts. This construction does not embed a font program; profiles requiring embedding need an explicitly embedded font.
+The example supplies Courier through [explicit metrics](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/fixtures/pdf20-courier-font.php): FirstChar/LastChar, ASCII widths and a FontDescriptor. PDF 2.0 no longer permits omitting these entries for the fourteen standard fonts. This construction does not embed a font program; profiles requiring embedding need an explicitly embedded font.
 
 
 The example uses native PDF objects only. It needs no external image converter, font converter, GIS database or projection executable. A viewer may display the page without offering geographic measurement tools; the preview still shows the actual drawing.
@@ -70,6 +70,6 @@ To explore the model, move a viewport, change its unit preferences or add anothe
 
 ## References
 
-ISO 32000-2:2020 clauses 12.9 and 12.10, tables 265–272, physical pages 611–622, describe these objects. The [retained original](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf) includes EC3 annotations. The native profile explicitly records issue 358 as `Completed` and issues 533, 534 and 284 as `Accepted`; their distinct approval authorities remain visible in the catalogue.
+ISO 32000-2:2020 clauses 12.9 and 12.10, tables 265–272, physical pages 611–622, describe these objects. The [retained original](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf) includes EC3 annotations. The native profile explicitly records issue 358 as `Completed` and issues 533, 534 and 284 as `Accepted`; their distinct approval authorities remain visible in the catalogue.
 
 [Tutorial path](README.md) · [Bundle guide](../pdf-2-0-bundle.md) · [Coverage](../coverage.md)

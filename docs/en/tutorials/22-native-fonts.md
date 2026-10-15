@@ -1,6 +1,6 @@
 # 22. Simple fonts, Type3 and vertical writing
 
-The [complete script](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/native-fonts.php)
+The [complete script](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/native-fonts.php)
 combines Type3 glyphs drawn with PDF operators, an embedded simple font and a
 composite font whose metrics position glyphs vertically.
 
@@ -35,4 +35,4 @@ Some readers classify FontFile3/OpenType with glyf outlines as TrueType; Table
 
 Reference: ISO 9.5–9.10, Tables 110–127, physical pages 261–303; Annex D.
 
-[Index](README.md) · [Complete code](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/native-fonts.php)
+[Index](README.md) · [Complete code](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/native-fonts.php)

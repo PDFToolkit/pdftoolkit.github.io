@@ -21,8 +21,8 @@ plages et objets directs des flux xref, les couleurs calibrées/ICC, les
 choix. Ils portent sur le domaine déclaré du dictionnaire ; l'interprétation des
 ressources et toutes les conditions documentaires restent distinctes.
 
-Les [règles PDF 1.7](https://github.com/PDFToolkit/pdf/blob/v0.8.0/resources/iso32000-1/semantic-rules.json)
-et [règles PDF 2.0](https://github.com/PDFToolkit/pdf/blob/v0.8.0/resources/iso32000-2-2020/semantic-rules.json)
+Les [règles PDF 1.7](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/iso32000-1/semantic-rules.json)
+et [règles PDF 2.0](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/iso32000-2-2020/semantic-rules.json)
 conservent leurs tableaux et pages physiques. Les générateurs reproduisent les
 définitions PHP à partir de ces ressources vérifiées.
 
@@ -34,7 +34,7 @@ Ils résolvent les références dans le graphe effectif et conservent la version
 PDF applicable, y compris pour les objets hérités d'une révision native antérieure.
 La suite de régressions dédiée comporte 84 tests et 132 assertions ; ces nombres
 comptent des tests, pas des règles normatives. Le
-[registre relié aux sources](https://github.com/PDFToolkit/pdf/blob/v0.9.0/resources/graph-semantics/coverage.json)
+[registre relié aux sources](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/graph-semantics/coverage.json)
 conserve pages sources, contre-exemples et frontières d'implémentation.
 
 Une réponse de markup doit désigner une annotation de la même page. Les
@@ -58,7 +58,7 @@ leurs frontières de couverture distinctes.
 
 ## Conserver la correction EC3 exacte
 
-Le [registre de vérification EC3](https://github.com/PDFToolkit/pdf/blob/v0.8.0/resources/iso32000-2-2020/ec3-semantic-reviews.json)
+Le [registre de vérification EC3](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/iso32000-2-2020/ec3-semantic-reviews.json)
 relie chaque annotation examinée à l'empreinte du document conservé, sa page
 physique, son identité et son fil d'approbation. Un outil vérifie ces liens.
 Ces six corrections ne constituent pas une revue de toutes les annotations EC3.
@@ -111,8 +111,9 @@ Un dictionnaire d'apparences fourni exige son entrée normale `N`. `N`, `R` et
 `D` désignent des flux Form XObject ou des dictionnaires d'états contenant ces
 flux. Lorsqu'une entrée utilise un dictionnaire d'états, le `AS` de l'annotation
 doit être un nom. Si ce nom n'a aucun
-flux correspondant, la procédure du consommateur PDF 2.0, page physique 491,
-ne sélectionne aucune apparence ; le writer conserve ce cas licite. Déclarer
+flux correspondant, la page physique 491 demande au consommateur de tenter un
+comportement raisonnable, par exemple ne rien afficher, sans garantir un repli
+particulier. Le writer conserve ce cas licite. Déclarer
 des apparences n'exécute aucune action et ne prouve pas le rendu d'un lecteur donné.
 
 Le [registre des sources et preuves d'apparence](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/annotation-appearances/README.fr.md)
@@ -123,7 +124,7 @@ une image d'apparence garantie.
 
 ## Examiner les errata Adobe sans confondre les éditions
 
-Le [registre des errata Adobe](https://github.com/PDFToolkit/pdf/blob/v0.8.0/resources/adobe-references/errata-review.json)
+Le [registre des errata Adobe](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/adobe-references/errata-review.json)
 classe **65 corrections**, couvrant toutes les pages physiques portant des
 corrections, de 3 à 18, du document de 18 pages conservé. Trente et une entrées
 renvoient à des mécanismes natifs, dont certains existaient avant cette version.
