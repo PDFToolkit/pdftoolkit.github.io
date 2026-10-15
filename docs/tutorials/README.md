@@ -97,7 +97,7 @@ présente le PDF d'entrée, ses trois pages et les objets lus.
 | [34. Destinations de structure](34-pdf20-structure-destinations.md) | Cibles sémantiques, parcours du contenu, entrées SD nommées et replis de page explicites. | [pdf20-structure-destinations.php](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/pdf20-structure-destinations.php) |
 | [35. Dériver du HTML depuis un PDF balisé](35-derive-html.md) | Règles testées, rendu graphique objet, reset ciblé et HTML réel. | [01-derive-tagged-pdf.php](https://github.com/PDFToolkit/pdf-to-html/blob/v0.4.1/examples/01-derive-tagged-pdf.php) |
 | [36. Appliquer une caviardisation](36-applied-redaction.md) | Suppression réelle, ressources partagées et nouveau fichier sans historique. | [pdf17-secure-redaction.php](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/pdf17-secure-redaction.php) |
-| [37. Remplir un formulaire certifié](37-protected-form-fill.md) | Candidat 0.10.0 : remplissage natif P2, verrou FieldMDP historique et apparence Tx isolée. | [protected-form-fill.php](37-protected-form-fill.md#code-source) |
+| [37. Remplir un formulaire certifié](37-protected-form-fill.md) | Core 0.10.0 : remplissage natif P2, verrou FieldMDP historique et apparence Tx isolée. | [protected-form-fill.php](37-protected-form-fill.md#code-source) |
 
 Les leçons 03 à 07 peuvent se lire dans l'ordre des sujets qui vous intéressent, après le premier document. Les leçons 08 et 11 concernent l'organisation du fichier ; les leçons 09 et 10 ajoutent des programmes de police et des fichiers image réels au graphe. La leçon 12 consulte les structures d'un PDF existant avec les objets du lecteur.
 
