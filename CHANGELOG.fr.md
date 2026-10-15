@@ -13,6 +13,8 @@
   et 132 assertions des 197 règles intrinsèques et de la couverture normative incomplète.
 - Expliquer `AP` natif obligatoire en PDF 2.0, les exceptions de point et de
   sous-type, les apparences normales Form/états et le cas licite d'un `AS` sans état correspondant.
+  Ajouter les revues EC3 exactes approuvées #22/#124 aux quatre précédentes et
+  exécuter l'oracle indépendant huit PDF/neuf refus/28 pixels pendant la construction.
 - Expliquer l'inspection des véritables glyphes Type 3 natifs sélectionnés, les
   modes 3/7, les différences Poppler indépendantes et les constats contextuels
   de dépréciation WTPDF. Distinguer recommandations, erreurs et preuves opaques/de contexte en attente.

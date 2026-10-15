@@ -13,6 +13,8 @@
   the 197 intrinsic dictionary rules and incomplete normative coverage.
 - Explain PDF 2.0's required native `AP`, the point-only and subtype exceptions,
   Form/state normal appearances and the legal unmatched `AS` consumer behavior.
+  Add exact approved EC3 reviews #22/#124 to the four earlier reviews and run
+  the independent eight-PDF/nine-refusal/28-pixel appearance oracle in the build.
 - Explain actual selected native Type 3 glyph inspection, rendering modes 3/7,
   independent Poppler differences and contextual WTPDF deprecation findings.
   Distinguish recommendations, failures and pending opaque/file-context evidence.

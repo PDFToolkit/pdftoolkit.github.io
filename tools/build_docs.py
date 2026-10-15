@@ -124,6 +124,8 @@ def build(args) -> None:
          "--pdftoppm", args.pdftoppm, "--work-dir", work / "barcode-validation"], source)
     run([sys.executable, "tools/validate_wtpdf_type3_usage.py", "--php", args.php, "--qpdf", args.qpdf,
          "--pdftoppm", args.pdftoppm, "--work-dir", work / "wtpdf-type3-validation"], source)
+    run([sys.executable, "tools/validate_annotation_appearances.py", "--php", args.php, "--qpdf", args.qpdf,
+         "--pdftoppm", args.pdftoppm, "--work-dir", work / "annotation-appearance-validation"], source)
     run([sys.executable, content / "tools/build_site.py", "--content-root", content, "--source-root", source,
          "--opentype-root", opentype, "--pdf-to-html-root", html, "--sources", manifest, "--api", api, "--pdf-dir", pdfs, "--pdf-preview-dir", previews,
          "--output", args.output.resolve(), "--base-path", "/", "--docs-revision", args.docs_revision], content)

@@ -89,7 +89,9 @@ The reader's source-MAC guide is published at `/modules/reader/source-mac.html`
 and its French counterpart. The full build executes that selected reader's
 independent source-MAC oracle with its actual locked core, then checks native
 barcode partition/PMD/appearance placement and selected Type 3 glyph usage from
-the selected core checkout. Their reports and hostile/source fixtures stay in
+the selected core checkout. It also verifies required PDF 2.0 annotation appearances,
+state dictionaries and the legal unmatched-state case through the released
+eight-PDF oracle. Their reports and hostile/source fixtures stay in
 private build directories, outside the published tutorial assets. Barcode test
 patterns do not prove a symbology; the Type 3 report preserves the observed
 Poppler mode-7 difference instead of treating it as a conformance result.

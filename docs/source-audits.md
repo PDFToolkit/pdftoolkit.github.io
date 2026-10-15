@@ -61,7 +61,7 @@ leurs frontières de couverture distinctes.
 Le [registre de vérification EC3](https://github.com/PDFToolkit/pdf/blob/v0.8.0/resources/iso32000-2-2020/ec3-semantic-reviews.json)
 relie chaque annotation examinée à l'empreinte du document conservé, sa page
 physique, son identité et son fil d'approbation. Un outil vérifie ces liens.
-Ces quatre corrections ne constituent pas une revue de toutes les annotations EC3.
+Ces six corrections ne constituent pas une revue de toutes les annotations EC3.
 
 | Correction examinée | Comportement implémenté |
 | --- | --- |
@@ -69,8 +69,10 @@ Ces quatre corrections ne constituent pas une revue de toutes les annotations EC
 | #403, page physique 81 | Les flux xref refusent `Metadata` et `AF`. |
 | #444, pages physiques 506–507 | `Path` prévaut sur `Vertices` dans une annotation ; les sommets sont ignorés et leur présence simultanée n'est pas une erreur. |
 | #468, page physique 558 | Les indices de choix PDF 2.0 sont possibles sans `MultiSelect`. Des libellés différents partageant une valeur exportée imposent les indices. Une valeur `V` sous forme de tableau ne suffit plus à les imposer. |
+| #22, page physique 483 | `AP` est obligatoire, avec ses exceptions, pour les véritables annotations de page PDF 2.0 ; PDF 1.2–1.7 conserve son contrat d'apparence optionnelle. |
+| #124, page physique 483 | Les indices du rectangle partent de zéro : seuls `Rect[0]==Rect[2]` **et** `Rect[1]==Rect[3]` donnent l'exception de point. Une ligne horizontale ou verticale n'est pas exemptée. |
 
-Les trois premiers fils examinés se terminent au statut completed ; #468 est
+Cinq fils examinés se terminent au statut completed ; #468 est
 accepted. Le registre conserve cette distinction. La construction native
 `ChoiceField` choisit explicitement l'édition avec `ChoiceIndexSemantics::Pdf17`
 (par défaut) ou `ChoiceIndexSemantics::Pdf20Ec3`. Cette dernière exige une version
@@ -107,6 +109,12 @@ doit être un nom. Si ce nom n'a aucun
 flux correspondant, la procédure du consommateur PDF 2.0, page physique 491,
 ne sélectionne aucune apparence ; le writer conserve ce cas licite. Déclarer
 des apparences n'exécute aucune action et ne prouve pas le rendu d'un lecteur donné.
+
+Le [registre des sources et preuves d'apparence](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/annotation-appearances/README.fr.md)
+décrit la migration lors du passage d'un graphe PDF 1.7 conservé vers PDF 2.0.
+Son oracle indépendant examine huit PDF, neuf refus natifs et 28 pixels Poppler.
+Le repli d'un lecteur devant un état non correspondant n'est pas compté comme
+une image d'apparence garantie.
 
 ## Examiner les errata Adobe sans confondre les éditions
 

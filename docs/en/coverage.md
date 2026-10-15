@@ -5,10 +5,10 @@ Dictionary definitions, native algorithms, document relationships and conformanc
 are different dimensions. A complete table inventory does not establish every
 conditional rule, rendering operation or external profile requirement.
 
-## Executable source rules in core 0.8.0
+## Executable source rules and reviewed EC3 corrections
 
 The [source-audit guide](source-audits.md) distinguishes 197 executed intrinsic
-dictionary rules (98 PDF 1.7, 99 PDF 2.0), four reviewed EC3 corrections and a
+dictionary rules (98 PDF 1.7, 99 PDF 2.0), six reviewed EC3 corrections and a
 65-record classification covering all correction-bearing pages of the Adobe
 errata. Counts describe those exact domains, not a percentage of PDF conformance.
 The native appearance-placement algorithm and choice-index semantics preserve
@@ -45,6 +45,14 @@ reply/popup relationships, remote-action targets and rectilinear measure checks.
 The dedicated 84 tests and 132 assertions remain separate from the 197 intrinsic
 dictionary rules. They do not execute actions, open remote targets or implement
 every annotation/measurement condition.
+
+Core 0.9.1 also enforces PDF 2.0's required annotation `AP` on actual native
+and retained graphs. Exceptions are a point rectangle and `Popup`/`Projection`/
+`Link`; a horizontal or vertical zero-area rectangle still requires its
+appearance. Forms, states and a name-valued `AS` are checked without rejecting
+the legal unmatched-state case. The source ledger includes exact approved EC3
+issues #22 and #124. Eight PDFs, nine native refusals and 28 independent pixel
+checks exercise this domain; no implicit appearance is invented.
 
 WTPDF follows actual selected native Type 3 glyph programs and their auxiliary
 fonts, with ISO2 rendering-mode 3/7 semantics and explicit Poppler differences.

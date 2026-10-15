@@ -5,10 +5,10 @@ sources distinctes. Définitions, algorithmes natifs, relations documentaires et
 conformité sont des dimensions différentes. L’inventaire complet des tableaux
 n’établit pas toutes les conditions, opérations de rendu ou exigences de profils externes.
 
-## Règles de source exécutées dans le core 0.8.0
+## Règles de source exécutables et corrections EC3 examinées
 
 Le [guide des audits de source](source-audits.md) distingue 197 règles intrinsèques
-de dictionnaires exécutées (98 PDF 1.7, 99 PDF 2.0), quatre corrections EC3
+de dictionnaires exécutées (98 PDF 1.7, 99 PDF 2.0), six corrections EC3
 examinées et un classement de 65 corrections couvrant toutes les pages d'errata
 Adobe qui en contiennent. Ces nombres décrivent ces domaines précis, pas un
 pourcentage de conformité PDF. Le placement natif des apparences et la sémantique
@@ -48,6 +48,15 @@ contrôles de mesures rectilignes. Les 84 tests et 132 assertions dédiés reste
 séparés des 197 règles intrinsèques des dictionnaires. Ils n'exécutent pas
 d'actions, n'ouvrent pas les cibles distantes et n'implémentent pas toutes les
 conditions d'annotations ou de mesures.
+
+Le core 0.9.1 impose aussi `AP` aux véritables annotations PDF 2.0 des graphes
+natifs ou conservés. Les exceptions sont un rectangle réduit à un point et
+`Popup`/`Projection`/`Link` ; un rectangle horizontal ou vertical d'aire nulle
+demande encore son apparence. Forms, états et `AS` de type nom sont contrôlés
+sans refuser le cas licite d'un état non correspondant. Le registre source
+inclut les corrections EC3 exactes approuvées #22 et #124. Huit PDF, neuf refus
+natifs et 28 contrôles indépendants de pixels exercent ce domaine ; aucune
+apparence implicite n'est inventée.
 
 WTPDF suit les véritables programmes de glyphes Type 3 natifs sélectionnés et
 leurs fontes auxiliaires, avec la sémantique ISO2 des modes 3/7 et les

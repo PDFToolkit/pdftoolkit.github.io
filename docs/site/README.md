@@ -91,7 +91,9 @@ Le guide du MAC source du lecteur est publié sous `/modules/reader/source-mac.h
 et dans sa version française. La construction complète exécute l'oracle MAC
 source indépendant de ce lecteur sélectionné avec son véritable core verrouillé,
 puis vérifie répartition/PMD/placement d'apparences de codes-barres et usages des
-glyphes Type 3 sélectionnés depuis le checkout du core retenu. Les rapports et
+glyphes Type 3 sélectionnés depuis le checkout du core retenu. Elle vérifie aussi
+les apparences obligatoires PDF 2.0, dictionnaires d'états et cas licite d'un état
+non correspondant avec l'oracle de huit PDF publié. Les rapports et
 fixtures hostiles/sources restent dans les répertoires privés du build, hors
 des ressources de tutoriels publiées. Les motifs de test des codes-barres ne
 prouvent aucune symbologie ; le rapport Type 3 conserve la différence observée

@@ -57,7 +57,7 @@ external target semantics retain their separate coverage boundaries.
 The [EC3 review record](https://github.com/PDFToolkit/pdf/blob/v0.8.0/resources/iso32000-2-2020/ec3-semantic-reviews.json)
 binds each reviewed annotation to the retained document hash, physical page,
 annotation identity and approval thread. The checker verifies those bindings.
-These four corrections do not establish a review of every EC3 annotation.
+These six corrections do not establish a review of every EC3 annotation.
 
 | Reviewed correction | Implemented behaviour |
 | --- | --- |
@@ -65,8 +65,10 @@ These four corrections do not establish a review of every EC3 annotation.
 | #403, physical page 81 | Xref streams reject `Metadata` and `AF`. |
 | #444, physical pages 506–507 | Annotation `Path` takes precedence over accompanying `Vertices`; the vertices are ignored rather than making the pair invalid. |
 | #468, physical page 558 | PDF 2.0 choice indices can be supplied without `MultiSelect`. Different display names sharing an export value require indices. An array-valued `V` alone does not require them. |
+| #22, physical page 483 | `AP` is required with its stated exceptions for actual PDF 2.0 page annotations, while PDF 1.2–1.7 keeps its optional-appearance contract. |
+| #124, physical page 483 | Rectangle indices are zero-based: only `Rect[0]==Rect[2]` **and** `Rect[1]==Rect[3]` supplies the point exception. A horizontal or vertical line is not exempt. |
 
-The first three reviewed threads end as completed; #468 is accepted. The record
+Five reviewed threads end as completed; #468 is accepted. The record
 retains that distinction. Native `ChoiceField` construction selects its edition
 explicitly with `ChoiceIndexSemantics::Pdf17` (the default) or
 `ChoiceIndexSemantics::Pdf20Ec3`. The latter requires an effective PDF 2.0 version.
@@ -103,6 +105,12 @@ If that name has no matching
 stream, the PDF 2.0 consumer procedure on physical page 491 selects no appearance;
 the writer preserves that legal case. Declaring appearances does not execute
 actions or establish a particular viewer's rendering behavior.
+
+The [appearance source and evidence record](https://github.com/PDFToolkit/pdf/blob/v0.9.1/resources/annotation-appearances/README.md)
+describes migration when upgrading a retained PDF 1.7 graph to PDF 2.0. Its
+independent oracle examines eight PDFs, nine native refusals and 28 Poppler
+pixels. It does not count a viewer's unmatched-state fallback as a guaranteed
+appearance image.
 
 ## Review the Adobe errata without mixing editions
 
