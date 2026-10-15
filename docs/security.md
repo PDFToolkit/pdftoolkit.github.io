@@ -196,15 +196,19 @@ et les permissions. L'[oracle de politiques](https://github.com/PDFToolkit/pdf/b
 vérifie huit PDF et neuf signatures RSA/DSA sans modifier les lecteurs.
 La comparaison générale des modifications autorisées par MDP/UR demeure distincte.
 
-Le core **0.9.1** applique aussi les restrictions historiques DocMDP/FieldMDP à la
-frontière commune du writer incrémental, même sans `PreparedSignature`. Il compare
-toutes les différences des révisions figées, pas seulement le champ sélectionné.
-Les opérations protégées prises en charge sont la signature terminale et la
-maintenance DSS/horodatage documentaire PDF 2.0. Les verrous historiques restent
-applicables ; P2/P3 n’autorisent ni remplissage général, ni modification
-d’annotations, ni changements étrangers non classifiés. Les mises à jour UR sont
-refusées. Les entrées `/Lock` et `/Reference` existantes peuvent rester inchangées
-dans une opération autorisée.
+La frontière incrémentale native commune applique les restrictions historiques
+DocMDP/FieldMDP même sans `PreparedSignature` et compare toutes les différences
+figées. Le core 0.10.0 ajoute remplissage borné, remplacement isolé des
+apparences à texte variable et annotations P3 listées. Les historiques UR3 non
+chiffrés exigent une autorité explicite fondée sur les faits de signature vérifiés,
+une sélection d’opérations par mise à jour et des droits de sauvegarde par opération.
+Verrous historiques et autres handlers restent actifs ; objets étrangers et
+ressources partagées restent inchangés. UR ancien/chiffré et PDF 2.0 `P=false`/absent
+restent refusés. Signature terminale et maintenance DSS/horodatage PDF 2.0 gardent
+leurs preuves séparées ; les mélanges remplissage/annotation et signature/maintenance
+sont refusés. Le [guide des révisions protégées](protected-revisions.md) précise
+limites et écarts d’oracle ; le [tutoriel 37](tutorials/37-protected-form-fill.md)
+montre l’opération native sans revendiquer une approbation DocMDP de pyHanko.
 
 Utiliser la `FileRevision` native originale émise dans l’exécution courante. Les
 snapshots fournis, clones et sérialisations PHP ne conservent pas cette autorité.

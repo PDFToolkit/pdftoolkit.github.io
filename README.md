@@ -32,12 +32,12 @@ Public reference downloads keep their existing URLs.
 The PHP libraries are available on Packagist. Install the core with Composer:
 
 ```sh
-composer require "roukmoute/pdf:^0.9.1"
+composer require "roukmoute/pdf:^0.10.0"
 ```
 
-The documented releases are core **0.9.1**, PDF reader **0.5.0**, images/fonts **0.1.10**,
-independent OpenType **0.2.0** and PDF-to-HTML **0.4.1**. They require **PHP 8.3 or later** and are
-checked on PHP 8.3, 8.4 and 8.5. Core **0.9** and OpenType **0.2** require 64-bit PHP;
+The documented releases are core **0.10.0**, PDF reader **0.5.1**, images/fonts **0.1.11**,
+independent OpenType **0.2.0** and PDF-to-HTML **0.4.2**. They require **PHP 8.3 or later** and are
+checked on PHP 8.3, 8.4 and 8.5. Core **0.10** and OpenType **0.2** require 64-bit PHP;
 OpenType remains independent of the PDF core.
 
 Choose the optional modules according to the files your application handles:
@@ -52,7 +52,7 @@ Choose the optional modules according to the files your application handles:
 The image/font/reader modules install the core as a dependency. The PDF-to-HTML module adds semantic derivation from tagged PDF and installs the reader as well. OpenType provides its own object model and installs without PDF dependencies. The package guide explains
 their Composer commands and supported versions.
 
-PDF-to-HTML 0.4.1 derives semantic content from tagged PDFs with checked structure
+PDF-to-HTML 0.4.2 derives semantic content from tagged PDFs with checked structure
 associations, Unicode, images, tables, navigation and form fields. Its
 [clause ledger](https://pdftoolkit.github.io/modules/to-html/requirements.html)
 links the retained reference to executable decisions and independent tests.
@@ -81,7 +81,7 @@ The [PDF 2.0 guide](https://pdftoolkit.github.io/guides/pdf-2-0.html) and
 explain ISO 32000-2:2020 EC3, modern encryption and signatures, PDF MAC,
 metadata/declarations, associated files, document parts and qualified structure
 roles, document timestamps, DSS/VRI evidence, geospatial measurements and
-structure destinations. The [36 tutorials](https://pdftoolkit.github.io/tutorials/) include
+structure destinations. The [37 tutorials](https://pdftoolkit.github.io/tutorials/) include
 executable examples and actual PDF previews. WTPDF auditing reports mechanical
 checks and pending evidence; it does not certify accessibility or PDF/UA.
 
@@ -94,6 +94,10 @@ Core 0.8.1 adds verified native-history and complete-delta protections for
 bounded incremental signing/maintenance, plus font-domain validation during
 redaction. The [security guide](https://pdftoolkit.github.io/guides/security.html)
 explains supported operations, rejected changes and runtime provenance migration.
+Core 0.10.0 adds bounded native filling, P3 markup and per-update UR3
+authority; its [guide](https://pdftoolkit.github.io/guides/protected-revisions.html) and
+[tutorial 37](https://pdftoolkit.github.io/tutorials/37-protected-form-fill.html) explain
+the supported operations, frozen appearance boundaries and independent-oracle limits.
 
 Further source-bound additions cover ordered barcode messages and native
 widget appearances, effective annotation/action/rectilinear-measure relationships,

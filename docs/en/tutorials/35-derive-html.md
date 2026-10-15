@@ -10,7 +10,7 @@ from PDF 1.2**, the PDF Association publication retained with its source code.
 The [PDFToolkit/pdf-to-html repository](https://github.com/PDFToolkit/pdf-to-html/tree/v0.4.1)
 was created specifically to implement the rules in this
 [reference document](https://github.com/PDFToolkit/pdf-to-html/blob/v0.4.1/resources/reference-documents/Deriving_HTML_from_PDF_1-2.pdf).
-Version **0.4.1** distinguishes executable rules, security decisions,
+Version **0.4.2** distinguishes executable rules, security decisions,
 browser adaptations and capabilities supplied by the application. The
 [requirements ledger](https://github.com/PDFToolkit/pdf-to-html/blob/v0.4.1/docs/requirements.md)
 links the document's clauses to decisions and tests; the
@@ -25,7 +25,7 @@ during the documentation build; it is not a handwritten substitute for a result.
 ## Install the optional module
 
 ```sh
-composer require "roukmoute/pdf:^0.9.1" "pdftoolkit/pdf-to-html:^0.4.1"
+composer require "roukmoute/pdf:^0.10.0" "pdftoolkit/pdf-to-html:^0.4.2"
 ```
 
 This installs the core and reader dependencies. Core-only applications acquire
@@ -111,7 +111,7 @@ bytes. Wrong credentials fail; they do not trigger fallback authentication.
 The authenticated source's effective user/owner mask becomes `data-pdf-perms`
 and a diagnostic. The receiving viewer must enforce it; HTML attributes are not
 access control. Reusing a converter does not reuse a previous document's rights.
-Public-key authentication requires `pdftoolkit/pdf-reader:^0.5.0`. Inject
+Public-key authentication requires `pdftoolkit/pdf-reader:^0.5.1`. Inject
 `PublicKeyAuthentication` to select Adobe.PubSec source authentication explicitly. The HTML adapter propagates its effective recipient
 mask through the same permission contract; keys, CMS decryption and permission
 byte order remain application choices. Signature trust remains outside this

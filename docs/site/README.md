@@ -69,8 +69,10 @@ Leur provenance utilise le commit du lecteur fixé dans le manifeste ; le core
 conserve ses exemples de génération.
 
 Le checkout PDF vers HTML est fixé séparément sous `_sources/pdf-to-html`.
-Son lecteur verrouillé fournit le lecteur documenté sans changer le lock
-du core. Le tutoriel 35 exécute son vrai CLI sur la fixture balisée produite
+Les sources du lecteur sont choisies séparément dans le consumer core ou HTML
+installé : version et commits source/dist du lock et de l’installation doivent
+correspondre exactement au pin Reader. Le core est préféré ; HTML sert de repli
+pour les anciennes sélections. Aucun lock publié ne change. Le tutoriel 35 exécute son vrai CLI sur la fixture balisée produite
 indépendamment. La construction vérifie les octets de référence et de fixture,
 puis exécute l'oracle pypdf/HTML5 du package. Elle copie chaque ressource du JSON
 CLI en contrôlant noms, SHA-256 et collisions de sortie. `derivedHtml` reste hors
@@ -87,6 +89,16 @@ publiée comme résultat caviardé. Les identités d'annotations EC3 et fils
 d'approbation sont vérifiés contre le PDF canonique inchangé, indépendamment de
 la génération des dictionnaires.
 
+Le tutoriel 37 exécute `protected-form-fill.php` du core sélectionné : certification
+native P2, verrou FieldMDP historique et remplacement isolé d’apparence Tx.
+La construction complète lance aussi `validate_incremental_permissions.py` avec
+les exécutables PHP, qpdf et Poppler choisis. Refus natifs, mises à jour hostiles
+indépendantes, faits CMS UR3 et pixels restent dans
+`_build/incremental-permissions-validation/` ; ce ne sont pas des fixtures de
+tutoriel publiées. Le rapport conserve les limites pyHanko sur boutons/widgets,
+annotations P3, ReadOnly et hybrides stricts, séparément des mathématiques CMS et
+des décisions applicatives d’autorité accordant les droits.
+
 Le guide du MAC source du lecteur est publié sous `/modules/reader/source-mac.html`
 et dans sa version française. La construction complète exécute l'oracle MAC
 source indépendant de ce lecteur sélectionné avec son véritable core verrouillé,
@@ -102,14 +114,14 @@ de Poppler en mode 7 sans la transformer en résultat de conformité.
 Le guide de clé publique est publié sous `/modules/reader/public-key-authentication.html`
 et `/fr/modules/reader/public-key-authentication.html`. Le build exécute
 `validate_public_key_authentication.py` et `validate_public_key_aliases.py`
-contre le lecteur installé et le lock HTML. Les contrôles indépendants
+contre le lecteur installé sélectionné et le véritable autoloader de son consumer. Les contrôles indépendants
 pyHanko/cryptography couvrent CMS, clés des filtres, droits destinataire, MAC,
 quatre cas de métadonnées/alias physiques et deux flux EFF implicites à clés
 distinctes. Un mauvais credential de pièce jointe doit permettre l'ouverture
 du document puis échouer à son accès. Certificats générés et entrées adverses
 restent des données privées du build.
 
-La sélection actuelle documente PDF vers HTML 0.4.1 et le lecteur 0.5.0. Le
+La sélection actuelle documente PDF vers HTML 0.4.2 et le lecteur 0.5.1. Le
 [registre des exigences](https://pdftoolkit.github.io/fr/modules/to-html/requirements.html),
 les [politiques](https://pdftoolkit.github.io/fr/modules/to-html/policies.html) et
 les [graphiques](https://pdftoolkit.github.io/fr/modules/to-html/graphics.html)
@@ -182,7 +194,8 @@ python -m pip install --require-hashes -r tools/site-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf/tools/public-key-validation-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf-to-html/tools/validation-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf-to-html/tools/source-integrity-validation-requirements.txt
-python -m pip install --require-hashes -r _sources/pdf-to-html/vendor/pdftoolkit/pdf-reader/tools/source-mac-validation-requirements.txt
+reader_consumer=$(python tools/check_sources.py --source-root _sources/pdf --pdf-to-html-root _sources/pdf-to-html --reader-consumer)
+python -m pip install --require-hashes -r "$reader_consumer/vendor/pdftoolkit/pdf-reader/tools/source-mac-validation-requirements.txt"
 python tools/build_docs.py --source-root _sources/pdf --opentype-root _sources/opentype --pdf-to-html-root _sources/pdf-to-html --docs-revision "$(git rev-parse HEAD)" --remote
 ```
 
@@ -207,7 +220,8 @@ python -m pip install --require-hashes -r tools/site-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf/tools/public-key-validation-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf-to-html/tools/validation-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf-to-html/tools/source-integrity-validation-requirements.txt
-python -m pip install --require-hashes -r _sources/pdf-to-html/vendor/pdftoolkit/pdf-reader/tools/source-mac-validation-requirements.txt
+$readerConsumer = python tools/check_sources.py --source-root _sources/pdf --pdf-to-html-root _sources/pdf-to-html --reader-consumer
+python -m pip install --require-hashes -r "$readerConsumer/vendor/pdftoolkit/pdf-reader/tools/source-mac-validation-requirements.txt"
 $docsRevision = git rev-parse HEAD
 python tools/build_docs.py --source-root _sources/pdf --opentype-root _sources/opentype --pdf-to-html-root _sources/pdf-to-html --docs-revision $docsRevision --remote
 ```
@@ -223,7 +237,8 @@ de packages du manifeste. Les chemins des outils peuvent être précisés avec
 Pour reconstruire seulement le rendu depuis des entrées déjà validées :
 
 ```sh
-php tools/export_api.php _build/api.json _sources/pdf resources/sources.json _sources/opentype _sources/pdf-to-html
+reader_consumer=$(python tools/check_sources.py --source-root _sources/pdf --pdf-to-html-root _sources/pdf-to-html --reader-consumer)
+php tools/export_api.php _build/api.json _sources/pdf resources/sources.json _sources/opentype _sources/pdf-to-html "$reader_consumer"
 python tools/build_site.py --content-root . --source-root _sources/pdf --opentype-root _sources/opentype --pdf-to-html-root _sources/pdf-to-html --sources resources/sources.json --docs-revision "$(git rev-parse HEAD)" --api _build/api.json --pdf-dir _build/pdfs --pdf-preview-dir _build/pdf-pages --output _site --base-path /
 python tools/check_site.py _site
 ```
@@ -315,4 +330,4 @@ le `--pdftoppm` choisi. Le profil par défaut et les frames du site n'exécutent
 pas le runtime ; les cas activés explicitement sont contrôlés dans l'espace privé
 de validation. Tous les guides du module conservent leur variante EN/FR.
 
-Le checkout publié `_sources/pdf-to-html` est sélectionné indépendamment. Ses dépendances core/lecteur verrouillées correspondent à `resources/sources.json` ; le lecteur sélectionné vient de son vendor et le lock original du core reste inchangé. L’exporteur API enregistre uniquement les namespaces HTML et lecteur sélectionnés contre leurs arbres choisis. Les guides apparaissent sous `/modules/to-html/` dans les deux langues. Le tutoriel 35 copie le PDF d’entrée, rend toutes ses pages et exécute le CLI pour produire le vrai HTML et les diagnostics JSON. `derivedHtml` inventorie cette sortie séparément des routes documentaires avec package/SHA et frames sandboxées ; le vérificateur refuse le contenu actif dans ces aperçus. L’original fourni de 74 pages reste dans le package, lié au commit de la version retenue.
+Le checkout publié `_sources/pdf-to-html` est sélectionné indépendamment. Son core et son lecteur installés doivent correspondre exactement à son propre lock publié (versions et commits source/dist), séparément des pins core/Reader documentés. HTML 0.4.2 exécute ses oracles et le tutoriel 35 avec core 0.9.1 et Reader 0.5.0. Le Reader 0.5.1 documenté provient du vendor core 0.10.0 ; ses guides, API, tutoriel 12 et oracles utilisent tous cette sélection. Exemples et oracles Reader chargent le véritable core de ce consumer. `_build/validation-sources.json` consigne les deux environnements de validation et leurs commits de packages exacts. L’exporteur API enregistre uniquement les namespaces HTML et lecteur sélectionnés contre leurs arbres choisis. Les guides apparaissent sous `/modules/to-html/` dans les deux langues. Le tutoriel 35 copie le PDF d’entrée, rend toutes ses pages et exécute le CLI pour produire le vrai HTML et les diagnostics JSON. `derivedHtml` inventorie cette sortie séparément des routes documentaires avec package/SHA et frames sandboxées ; le vérificateur refuse le contenu actif dans ces aperçus. L’original fourni de 74 pages reste dans le package, lié au commit de la version retenue.

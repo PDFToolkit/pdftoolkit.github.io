@@ -4,29 +4,29 @@
     {
       "name": "roukmoute/pdf",
       "repository": "https://github.com/PDFToolkit/pdf",
-      "version": "0.9.1",
-      "revision": "2e3f2241985e8705c99df535f1ceca266036bc10",
+      "version": "0.10.0",
+      "revision": "3d5777ca3cc32e65a152ab080263b0cc5a6291ac",
       "optional": false
     },
     {
       "name": "pdftoolkit/pdf-reader",
       "repository": "https://github.com/PDFToolkit/pdf-reader",
-      "version": "0.5.0",
-      "revision": "9659316f1ff159a4706c34c4b1c6947f9afe3b91",
+      "version": "0.5.1",
+      "revision": "8c6a04f4090fe2d06e34d36af8eafcdbb98a3b27",
       "optional": true
     },
     {
       "name": "pdftoolkit/pdf-images",
       "repository": "https://github.com/PDFToolkit/pdf-images",
-      "version": "0.1.10",
-      "revision": "ae70879a73e2ab3b4d1d50a0a6343ff5bc3e031b",
+      "version": "0.1.11",
+      "revision": "df53fc01fcf030eff980be6b2e66f9691077bc65",
       "optional": true
     },
     {
       "name": "pdftoolkit/pdf-fonts",
       "repository": "https://github.com/PDFToolkit/pdf-fonts",
-      "version": "0.1.10",
-      "revision": "ef6ea0354bde46cf126a55f2aa3e9986cee0e750",
+      "version": "0.1.11",
+      "revision": "6327605eecdb213945bb45c0cd231468e4e5d9d0",
       "optional": true
     },
     {
@@ -39,8 +39,8 @@
     {
       "name": "pdftoolkit/pdf-to-html",
       "repository": "https://github.com/PDFToolkit/pdf-to-html",
-      "version": "0.4.1",
-      "revision": "5011e9c3a546856627264462c731f82161ab2ba6",
+      "version": "0.4.2",
+      "revision": "612aac45fd51c2d786d9a26df71d185d3b7becf6",
       "optional": true
     }
   ]

@@ -12,7 +12,7 @@ module with the core, at the published versions selected by the
 program, dictionaries and PDF mappings remain core objects. `composer install`
 in the core checkout installs the module as a development dependency; an
 application installs it from Packagist using
-`composer require "pdftoolkit/pdf-fonts:^0.1.10"`. The [package guide](../packages.md)
+`composer require "pdftoolkit/pdf-fonts:^0.1.11"`. The [package guide](../packages.md)
 also explains how to select the core release series.
 
 The demonstration font and its SIL Open Font License are preserved in the

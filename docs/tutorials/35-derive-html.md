@@ -10,7 +10,7 @@ publication PDF Association conservée avec son code source.
 Le dépôt [PDFToolkit/pdf-to-html](https://github.com/PDFToolkit/pdf-to-html/tree/v0.4.1) a été
 créé spécialement pour implémenter les règles de ce
 [document de référence](https://github.com/PDFToolkit/pdf-to-html/blob/v0.4.1/resources/reference-documents/Deriving_HTML_from_PDF_1-2.pdf).
-La version **0.4.1** distingue les règles exécutées, les décisions de sécurité,
+La version **0.4.2** distingue les règles exécutées, les décisions de sécurité,
 les adaptations nécessaires au navigateur et les capacités fournies par
 l'application. Le [registre des exigences](https://github.com/PDFToolkit/pdf-to-html/blob/v0.4.1/docs/fr/requirements.md)
 relie les clauses du document aux décisions et aux tests ; le
@@ -26,7 +26,7 @@ une illustration écrite à la main.
 ## Installer le module optionnel
 
 ```sh
-composer require "roukmoute/pdf:^0.9.1" "pdftoolkit/pdf-to-html:^0.4.1"
+composer require "roukmoute/pdf:^0.10.0" "pdftoolkit/pdf-to-html:^0.4.2"
 ```
 
 Cette commande installe le core et le lecteur comme dépendances. Une application
@@ -117,7 +117,7 @@ fournisseur de secours. Le masque effectif user/owner de la source authentifiée
 devient `data-pdf-perms` et un diagnostic. Le lecteur HTML destinataire doit
 l'appliquer ; des attributs HTML ne sont pas un contrôle d'accès. Réutiliser un
 convertisseur ne réutilise pas les droits d'un précédent document.
-L'authentification par clé publique exige `pdftoolkit/pdf-reader:^0.5.0`.
+L'authentification par clé publique exige `pdftoolkit/pdf-reader:^0.5.1`.
 Injecter `PublicKeyAuthentication` pour sélectionner explicitement
 l'authentification Adobe.PubSec source. L'adaptateur HTML transmet
 le masque destinataire effectif par le même contrat de permissions ; clés,

@@ -140,14 +140,15 @@ For the signing operation, an earlier DocMDP or Adobe `P1` lock forbids a new
 Adobe permissions remain the historical minimum: a new `P3` does not increase
 an old `P2`.
 
-Since core 0.8.1 every incremental entry point compares the **entire frozen
-delta** for protected native history, including a provisional signature or
-timestamp. It permits only proven terminal signing and PDF 2.0 DSS/timestamp
-maintenance; changing other fields, pages, resources, widgets or annotations is
-rejected when unclassified, even with P2/P3. Existing `/Lock` and `/Reference`
-entries may stay frozen. This conservative boundary is not a general permitted-
-change classifier. UR updates are refused; a mathematically valid UR signature
-does not establish a rights-granting authority.
+Every incremental entry point compares the **entire frozen delta** of protected
+native history, including a provisional signature or timestamp. Core 0.10.0 adds bounded form/P3 changes and explicit UR3 authority to the existing
+terminal-signing and PDF 2.0 maintenance proofs. These are separate operations:
+a signature or DSS cannot carry a hidden fill or annotation change. Existing
+`/Lock` and `/Reference` entries remain binding. A mathematical UR3 signature
+alone does not grant authority: actual operations need explicit per-update scope,
+signed saving rights and the intersection with historical restrictions. See
+[the operation allowlists](../protected-revisions.md) and
+[the certified-form example](37-protected-form-fill.md).
 
 Keep the original native `FileRevision` from the current runtime and use a
 verified signing path for protected continuation. Reconstructed/cloned snapshots

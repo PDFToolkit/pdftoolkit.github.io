@@ -9,7 +9,7 @@ La lecture de ces fichiers appartient au module optionnel
 échantillons, les images DCT et les flux XObject appartiennent au core.
 `composer install` dans le checkout du core installe le module pour les exemples ;
 une application l'installe depuis Packagist avec
-`composer require "pdftoolkit/pdf-images:^0.1.10"`. Le
+`composer require "pdftoolkit/pdf-images:^0.1.11"`. Le
 [guide des packages](../packages.md) explique comment sélectionner aussi
 la série du core.
 

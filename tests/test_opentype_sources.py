@@ -56,6 +56,11 @@ class OpenTypeSourcesTest(unittest.TestCase):
         (self.html / "vendor/pdftoolkit/pdf-reader/docs").mkdir(parents=True)
         (self.html / "composer.lock").write_text(json.dumps({"packages": html_modules, "packages-dev": []}), encoding="utf-8")
         (self.html / "vendor/composer/installed.json").write_text(json.dumps({"packages": html_modules}), encoding="utf-8")
+        for consumer in (self.core, self.html):
+            reader = consumer / "vendor/pdftoolkit/pdf-reader"
+            (reader / "src").mkdir()
+            (reader / "composer.json").write_text(json.dumps({"name": "pdftoolkit/pdf-reader"}), encoding="utf-8")
+            (consumer / "vendor/autoload.php").write_text("<?php // Synthetic unit fixture.\n", encoding="utf-8")
 
     def save_manifest(self):
         self.manifest.write_text(json.dumps({"schemaVersion": 1, "packages": self.records}), encoding="utf-8")

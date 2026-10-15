@@ -72,3 +72,7 @@ Les révisions prises en charge proviennent des objets `FileRevision` produits p
 Références : ISO 32000-1:2008, **7.5.4–7.5.8** pour xref, trailers, révisions et conteneurs d'objets, et **14.4** pour les identifiants de fichier.
 
 [← 10. Images JPEG et PNG](10-image-files.md) · [Tous les tutoriels](README.md)
+
+Pour le prochain remplissage borné d’une révision native réellement certifiée,
+continuer avec la [leçon 37](37-protected-form-fill.md) et le
+[guide des révisions protégées](../protected-revisions.md).

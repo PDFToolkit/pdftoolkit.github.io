@@ -22,14 +22,18 @@ d'autres relations conditionnelles/de ressources, l'autorisation générale des
 modifications DocMDP/FieldMDP/UR authentifiées, le rendu et les preuves externes
 ou humaines de conformité restent des travaux explicites.
 
-Le core 0.8.1 impose une garde du delta complet à chaque entrée incrémentale
-native pour l’historique émis vérifié. Seules la signature terminale et la
-maintenance DSS/horodatage documentaire PDF 2.0 sont classifiées ; les verrous
-restent actifs. Les changements généraux de formulaire, annotation et UR non
-classifiés sont refusés, même avec P2/P3. Les entrées de police du caviardage hors
-de leur domaine simple/composite/CID réel sont également refusées. La
-[revue de sécurité](security.md) et le [tutoriel de caviardisation](tutorials/36-applied-redaction.md)
-précisent les frontières de provenance, de vérification et des entrées acceptées.
+Le garde introduit en 0.8.1 exige la provenance native vérifiée et compare les
+révisions figées complètes à chaque entrée incrémentale. Le core 0.10.0 étend
+signature terminale et maintenance DSS/horodatage PDF 2.0 au remplissage borné
+`Tx`/`Ch`/case/radio, remplacement isolé d’AP à texte variable, annotations P3
+listées et historique UR3 non chiffré à autorité explicite par mise à jour.
+Verrous historiques, ressources partagées et contenus étrangers restent protégés.
+Les opérations inconnues, dont remplissage mêlé à signature/maintenance, sont
+refusées. Le [guide des révisions protégées](protected-revisions.md) précise la
+liste admise, l’intersection de sauvegarde et les écarts d’oracle. Le caviardage
+refuse aussi les entrées de police hors de leur domaine simple/composite/CID ;
+la [revue de sécurité](security.md) et le [tutoriel de caviardisation](tutorials/36-applied-redaction.md)
+conservent leurs limites propres d’entrée et de provenance.
 
 ## Apparences de codes-barres ordonnées, relations du graphe et intégrité source
 
@@ -202,7 +206,7 @@ les mécanismes vérifiés et le travail restant, plutôt qu'un chiffre de compl
 | Chiffrement par mot de passe | Algorithmes ISO R=2/3/4, RC4 et AESV2, avec filtres et mises à jour incrémentales ; R=5 Adobe reste disponible explicitement. |
 | Chiffrement par certificat | Groupes de destinataires CMS, clés de filtres distinctes et formats s3/s4/s5 ; contrôle des clés, données et interprétations de permissions. |
 | Signatures | Réservation de Contents, fixation de ByteRange avant signature et remplissage sans déplacement ; vérification indépendante des trois formats ISO et de signatures successives. |
-| Politiques de signature | Objets DocMDP, FieldMDP, droits d'usage, seeds et critères de certificat ; contrôles intrinsèques. L’orchestration de champs signés et la garde native restreinte 0.8.1 sont implémentées ; la classification générale des changements autorisés reste ouverte. |
+| Politiques de signature | Objets DocMDP, FieldMDP, droits d'usage, seeds et critères de certificat ; contrôles intrinsèques. L’orchestration des champs signés et les gardes natifs de provenance/delta sont implémentés. Le core 0.10.0 ajoute les opérations bornées formulaire/P3/UR3 du [guide dédié](protected-revisions.md) ; la classification générale reste ouverte. |
 | Références hybrides | Table classique et flux xref auxiliaire, références historiques, objets comprimés et lecture par lecteurs anciens et récents. |
 | Linéarisation | Ordonnancement natif, indices de pages et ressources partagées, vignettes et pièces jointes, objets comprimés, trois formats xref et variantes chiffrées. |
 
@@ -221,8 +225,9 @@ les mécanismes vérifiés et le travail restant, plutôt qu'un chiffre de compl
 
 Ces ajouts ne constituent pas encore une déclaration de couverture complète.
 La comparaison générale des modifications authentifiées permises par DocMDP,
-FieldMDP et UR reste ouverte : pages, contenu, ressources partagées, annotations,
-valeurs héritées et instanciation de templates demandent une analyse propre.
+FieldMDP et UR reste ouverte au-delà des formulaires et annotations natifs bornés
+du core 0.10.0 : pages/contenus/ressources arbitraires, autres relations d’annotations,
+texte enrichi, modèles et chaînes externes demandent une analyse propre.
 Les autres priorités sont les relations d'annotations et règles de mesure
 restantes, les graphes multimédia/RichMedia, certaines règles de fonctions
 et les codecs externes de symbologies de codes-barres.

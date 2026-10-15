@@ -142,15 +142,16 @@ un nouveau `V`. Un ancien `FieldMDP` interdit la signature d'un champ sélection
 y compris ses descendants. Les permissions Adobe restent le minimum historique :
 un nouveau `P3` n'augmente pas un ancien `P2`.
 
-Depuis le core 0.8.1, chaque entrée incrémentale compare **toutes les différences
-des révisions figées** d’un historique natif protégé, même avec une signature ou
-un horodatage provisoire. Seules la signature terminale prouvée et la maintenance
-DSS/horodatage PDF 2.0 sont permises ; modifier d’autres champs, pages, ressources,
-widgets ou annotations est refusé sans classification, même avec P2/P3. Les
-entrées `/Lock` et `/Reference` existantes peuvent rester figées. Cette frontière
-conservatrice n’est pas un classificateur général des changements autorisés.
-Les mises à jour UR sont refusées ; une signature UR mathématiquement valide
-ne prouve pas l’autorité à accorder des droits.
+Chaque entrée incrémentale compare **toutes les différences figées** de
+l’historique natif protégé, même avec une signature ou un horodatage provisoire.
+Le core 0.10.0 ajoute opérations formulaire/P3 bornées et autorité UR3 explicite
+aux preuves existantes de signature terminale et maintenance PDF 2.0. Ces opérations
+restent séparées : signature ou DSS ne peuvent dissimuler remplissage ou annotation.
+Les entrées `/Lock` et `/Reference` restent applicables. Une signature UR3
+mathématique ne suffit pas : les opérations exigent sélection explicite par mise
+à jour, sauvegarde signée et intersection avec les restrictions historiques.
+Voir [les listes d’opérations admises](../protected-revisions.md) et
+[l’exemple de formulaire certifié](37-protected-form-fill.md).
 
 Conserver la `FileRevision` native originale de l’exécution courante et utiliser
 une signature vérifiée pour poursuivre un historique protégé. Des snapshots

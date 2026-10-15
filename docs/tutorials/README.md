@@ -1,6 +1,6 @@
 # Tutoriels : construire et lire un PDF objet par objet
 
-Ces tutoriels expliquent comment un fichier PDF relie ses valeurs, dictionnaires, ressources et instructions de dessin. Chaque leçon accompagne un script complet, commenté et exécutable. Les exemples utilisent les versions publiées du core et des modules sélectionnées dans le [manifeste de sources](../../resources/sources.json). La construction vérifie leurs commits exacts et leur accord avec les `composer.lock` des checkouts préparés du core et de PDF vers HTML.
+Ces tutoriels expliquent comment un fichier PDF relie ses valeurs, dictionnaires, ressources et instructions de dessin. Chaque leçon accompagne un script complet, commenté et exécutable. Les exemples utilisent les versions publiées du core et des modules sélectionnées dans le [manifeste de sources](../../resources/sources.json). La construction vérifie leurs commits exacts et les dépendances installées contre le lock inchangé de chaque consumer. Reader 0.5.1 utilise le consumer core 0.10.0 ; HTML 0.4.2 conserve son environnement core 0.9.1/Reader 0.5.0 pour le tutoriel 35.
 
 Les leçons 09, 10 et 27 utilisent les modules optionnels `pdftoolkit/pdf-fonts` et
 `pdftoolkit/pdf-images`, installés comme dépendances de développement dans le
@@ -15,7 +15,7 @@ Le parcours s'inspire de l'organisation des [tutoriels FPDF](https://www.fpdf.or
 Le core et les modules sont disponibles sur Packagist. Depuis votre projet :
 
 ```sh
-composer require "roukmoute/pdf:^0.9.1"
+composer require "roukmoute/pdf:^0.10.0"
 ```
 
 Les leçons 09, 10 et 12 utilisent respectivement `pdftoolkit/pdf-fonts`,
@@ -29,16 +29,16 @@ donne leurs commandes d'installation. L'application charge son propre
 Il faut PHP 8.3 ou supérieur et les extensions `ctype`, `iconv` et `zlib`. Les commandes des leçons s'exécutent depuis la racine d'un checkout du core `PDFToolkit/pdf`. Les fichiers Markdown et la construction du site appartiennent à `PDFToolkit/pdftoolkit.github.io` ; voir les [instructions de construction](../site/README.md) pour préparer les sources aux versions documentées. Depuis le checkout du core :
 
 ```sh
-export COMPOSER_ROOT_VERSION=0.9.x-dev
+export COMPOSER_ROOT_VERSION=0.10.x-dev
 composer install
 php examples/hello-world.php
 ```
 
-Sous PowerShell, définir `$env:COMPOSER_ROOT_VERSION = '0.9.x-dev'` avant
+Sous PowerShell, définir `$env:COMPOSER_ROOT_VERSION = '0.10.x-dev'` avant
 `composer install`. Le checkout utilise son `composer.lock` pour installer
 les outils de développement et les modules PDF aux versions publiées verrouillées.
-Le lecteur sélectionné du site commun provient du checkout PDF vers HTML
-épinglé séparément.
+Le site commun sélectionne Reader 0.5.1 dans ce consumer core ; HTML conserve
+ses dépendances core/Reader épinglées séparément pour ses exemples et oracles.
 
 Les leçons 20 et 26 demandent aussi l'extension `openssl`, utilisée par son backend de
 signature. Le certificat et la clé de démonstration sont des fixtures publiques
@@ -97,6 +97,7 @@ présente le PDF d'entrée, ses trois pages et les objets lus.
 | [34. Destinations de structure](34-pdf20-structure-destinations.md) | Cibles sémantiques, parcours du contenu, entrées SD nommées et replis de page explicites. | [pdf20-structure-destinations.php](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/pdf20-structure-destinations.php) |
 | [35. Dériver du HTML depuis un PDF balisé](35-derive-html.md) | Règles testées, rendu graphique objet, reset ciblé et HTML réel. | [01-derive-tagged-pdf.php](https://github.com/PDFToolkit/pdf-to-html/blob/v0.4.1/examples/01-derive-tagged-pdf.php) |
 | [36. Appliquer une caviardisation](36-applied-redaction.md) | Suppression réelle, ressources partagées et nouveau fichier sans historique. | [pdf17-secure-redaction.php](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/pdf17-secure-redaction.php) |
+| [37. Remplir un formulaire certifié](37-protected-form-fill.md) | Candidat 0.10.0 : remplissage natif P2, verrou FieldMDP historique et apparence Tx isolée. | [protected-form-fill.php](37-protected-form-fill.md#code-source) |
 
 Les leçons 03 à 07 peuvent se lire dans l'ordre des sujets qui vous intéressent, après le premier document. Les leçons 08 et 11 concernent l'organisation du fichier ; les leçons 09 et 10 ajoutent des programmes de police et des fichiers image réels au graphe. La leçon 12 consulte les structures d'un PDF existant avec les objets du lecteur.
 

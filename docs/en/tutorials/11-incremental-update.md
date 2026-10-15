@@ -115,3 +115,7 @@ References: ISO 32000-1:2008, **7.5.4–7.5.8** for xref, trailers, revisions an
 object containers, and **14.4** for file identifiers.
 
 [← 10. JPEG and PNG images](10-image-files.md) · [All tutorials](README.md)
+
+For the forthcoming bounded filling of an actually certified native revision,
+continue with [lesson 37](37-protected-form-fill.md) and the
+[protected-revisions guide](../protected-revisions.md).

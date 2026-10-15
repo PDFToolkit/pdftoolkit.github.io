@@ -18,7 +18,7 @@ Dans une application indépendante, installer le lecteur depuis Packagist avec
 le core 0.5, puis exécuter le script distribué avec le module :
 
 ```sh
-composer require "roukmoute/pdf:^0.9.1" "pdftoolkit/pdf-reader:^0.5.0"
+composer require "roukmoute/pdf:^0.10.0" "pdftoolkit/pdf-reader:^0.5.1"
 php vendor/pdftoolkit/pdf-reader/examples/pages.php vendor/pdftoolkit/pdf-reader/tests/Fixtures/page-tree/classic.pdf
 ```
 

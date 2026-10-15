@@ -18,6 +18,7 @@ ENGLISH_ROUTES = {
     'guides/modules.html': 'guides/packages.html',
     'guides/couverture.html': 'guides/specification.html',
     'guides/securite.html': 'guides/security.html',
+    'guides/revisions-protegees.html': 'guides/protected-revisions.html',
     'guides/signalements.html': 'guides/reporting.html',
     'guides/versions.html': 'guides/changelog.html',
 }
@@ -235,6 +236,9 @@ TEXT = {
     'Couverture des éditions PDF': 'Coverage by PDF edition',
     'Règles de source et corrections vérifiées': 'Source rules and reviewed corrections',
     'Appliquer une caviardisation': 'Apply redaction',
+    'Révisions natives protégées': 'Protected native revisions',
+    'Remplir un formulaire certifié': 'Fill a certified form',
+    'DocMDP, FieldMDP et remplacement isolé de l’apparence à texte variable.': 'DocMDP, FieldMDP and isolated variable-text appearance replacement.',
     'Suppression conservatrice des données et écriture d’un nouveau fichier.': 'Conservative data removal and writing a fresh file.',
     'Authentification des PDF chiffrés': 'Encrypted PDF authentication',
     'Authentification par clé publique': 'Public-key authentication',

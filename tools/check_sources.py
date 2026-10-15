@@ -43,20 +43,67 @@ def load_manifest(path: Path) -> dict[str, dict]:
     return packages
 
 
+def composer_inputs(root: Path) -> tuple[dict[str, dict], dict[str, dict]]:
+    lock = json.loads((root / "composer.lock").read_text(encoding="utf-8"))
+    installed = json.loads((root / "vendor/composer/installed.json").read_text(encoding="utf-8"))
+    inventories = []
+    for records in (lock["packages"] + lock["packages-dev"], installed["packages"]):
+        inventory = {item["name"]: item for item in records}
+        require(len(inventory) == len(records), f"Duplicate Composer package identity: {root}")
+        inventories.append(inventory)
+    return inventories[0], inventories[1]
+
+
+def locked_dependency(root: Path, name: str) -> dict:
+    """Verify the actual consumer lock, independently of the documentation pins."""
+    locked, installed = composer_inputs(root)
+    identities = []
+    for label, inventory in (("lock", locked), ("installed", installed)):
+        record = inventory.get(name, {})
+        version = record.get("version", "").removeprefix("v")
+        revision = record.get("source", {}).get("reference", "")
+        require(re.fullmatch(r"\d+\.\d+\.\d+", version) is not None, f"Invalid {label} dependency release: {name} in {root}")
+        require(re.fullmatch(r"[0-9a-f]{40}", revision) is not None and record.get("dist", {}).get("reference") == revision,
+                f"Invalid {label} dependency source/distribution commit: {name} in {root}")
+        identities.append({"name": name, "version": version, "revision": revision})
+    require(identities[0] == identities[1], f"Installed dependency differs from its consumer lock: {name} in {root}")
+    return identities[0]
+
+
+def html_dependencies(root: Path) -> list[dict]:
+    return [locked_dependency(root, name) for name in ("roukmoute/pdf", "pdftoolkit/pdf-reader")]
+
+
+def select_reader(source_root: Path, html_root: Path, packages: dict[str, dict]) -> Path:
+    """Return one real consumer: core preferred, then HTML, with exact pinned Reader."""
+    html_dependencies(html_root)
+    selected = packages["pdftoolkit/pdf-reader"]
+    candidates = []
+    for consumer in (source_root, html_root):
+        locked, installed = composer_inputs(consumer)
+        if "pdftoolkit/pdf-reader" not in locked and "pdftoolkit/pdf-reader" not in installed:
+            continue
+        record = locked_dependency(consumer, "pdftoolkit/pdf-reader")
+        if all(record[key] == selected[key] for key in ("version", "revision")):
+            candidates.append(consumer)
+    require(bool(candidates), "No installed Reader matches the documented release and source/distribution commit")
+    consumer = candidates[0]
+    reader = consumer / "vendor/pdftoolkit/pdf-reader"
+    require((reader / "docs").is_dir() and (reader / "src").is_dir(), "Missing selected Reader source tree")
+    require((consumer / "vendor/autoload.php").is_file(), "Missing selected Reader consumer autoloader")
+    composer = json.loads((reader / "composer.json").read_text(encoding="utf-8"))
+    require(composer.get("name") == "pdftoolkit/pdf-reader", "Selected Reader package identity differs")
+    return consumer
+
+
 def check(source_root: Path, manifest: Path, remote: bool = False, opentype_root: Path | None = None, pdf_to_html_root: Path | None = None) -> dict[str, dict]:
     packages = load_manifest(manifest)
     core = packages["roukmoute/pdf"]
     require(git("rev-parse", "HEAD", root=source_root) == core["revision"], "Core checkout does not match the released source pin")
     require(git("rev-parse", f"v{core['version']}^{{commit}}", root=source_root) == core["revision"], "Core tag does not identify the pinned commit")
-    lock = json.loads((source_root / "composer.lock").read_text(encoding="utf-8"))
-    locked = {item["name"]: item for item in lock["packages"] + lock["packages-dev"]}
-    installed_manifest = json.loads((source_root / "vendor/composer/installed.json").read_text(encoding="utf-8"))
-    installed = {item["name"]: item for item in installed_manifest["packages"]}
+    locked, installed = composer_inputs(source_root)
     require(pdf_to_html_root is not None, "The released PDF-to-HTML source checkout is required")
-    html_lock = json.loads((pdf_to_html_root / "composer.lock").read_text(encoding="utf-8"))
-    html_locked = {item["name"]: item for item in html_lock["packages"] + html_lock["packages-dev"]}
-    html_installed_manifest = json.loads((pdf_to_html_root / "vendor/composer/installed.json").read_text(encoding="utf-8"))
-    html_installed = {item["name"]: item for item in html_installed_manifest["packages"]}
+    reader_consumer = select_reader(source_root, pdf_to_html_root, packages)
     for name, source in packages.items():
         if name == "pdftoolkit/pdf-to-html":
             require(git("rev-parse", "HEAD", root=pdf_to_html_root) == source["revision"], "PDF-to-HTML checkout differs from the released source pin")
@@ -64,11 +111,7 @@ def check(source_root: Path, manifest: Path, remote: bool = False, opentype_root
             composer = json.loads((pdf_to_html_root / "composer.json").read_text(encoding="utf-8"))
             require(composer["name"] == name, "PDF-to-HTML source package identity differs")
             require((pdf_to_html_root / "docs").is_dir(), "Missing PDF-to-HTML guides")
-            for dependency in ("roukmoute/pdf", "pdftoolkit/pdf-reader"):
-                for label, inventory in (("lock", html_locked), ("installed", html_installed)):
-                    record = inventory.get(dependency, {})
-                    require(record.get("version", "").removeprefix("v") == packages[dependency]["version"], f"PDF-to-HTML {label} release differs: {dependency}")
-                    require(record.get("source", {}).get("reference") == packages[dependency]["revision"] and record.get("dist", {}).get("reference") == packages[dependency]["revision"], f"PDF-to-HTML {label} commit differs: {dependency}")
+            html_dependencies(pdf_to_html_root)
         elif name == "pdftoolkit/opentype":
             require(opentype_root is not None, "The independent OpenType source checkout is required")
             require(git("rev-parse", "HEAD", root=opentype_root) == source["revision"], "OpenType checkout differs from the released source pin")
@@ -78,8 +121,8 @@ def check(source_root: Path, manifest: Path, remote: bool = False, opentype_root
             require(not any(dependency == "roukmoute/pdf" or dependency.startswith("pdftoolkit/pdf-") for dependency in composer.get("require", {})), "OpenType must remain independent from PDF packages")
             require((opentype_root / "docs").is_dir(), "Missing OpenType guides")
         elif name != "roukmoute/pdf":
-            selected_lock, selected_installed = (html_locked, html_installed) if name == "pdftoolkit/pdf-reader" else (locked, installed)
-            module_root = pdf_to_html_root if name == "pdftoolkit/pdf-reader" else source_root
+            selected_lock, selected_installed = composer_inputs(reader_consumer) if name == "pdftoolkit/pdf-reader" else (locked, installed)
+            module_root = reader_consumer if name == "pdftoolkit/pdf-reader" else source_root
             for label, inventory in (("lock", selected_lock), ("installed", selected_installed)):
                 require(name in inventory, f"Missing {label} source: {name}")
                 record = inventory[name]
@@ -103,6 +146,7 @@ if __name__ == "__main__":
     parser.add_argument("--manifest", type=Path, default=Path(__file__).resolve().parents[1] / "resources/sources.json")
     parser.add_argument("--remote", action="store_true", help="Also verify every published remote tag")
     parser.add_argument("--github-output", type=Path, help="Export the core checkout inputs for GitHub Actions")
+    parser.add_argument("--reader-consumer", action="store_true", help="Print the exact installed Reader's consumer root for build tools")
     args = parser.parse_args()
     if args.github_output:
         packages = load_manifest(args.manifest)
@@ -113,5 +157,8 @@ if __name__ == "__main__":
             stream.write(f"opentype_revision={opentype['revision']}\nopentype_version={opentype['version']}\n")
             stream.write(f"pdf_to_html_revision={html['revision']}\npdf_to_html_version={html['version']}\n")
             stream.write(f"core_revision={core['revision']}\ncore_version={core['version']}\ncore_alias={'.'.join(core['version'].split('.')[:2])}.x-dev\n")
+    elif args.reader_consumer:
+        require(args.pdf_to_html_root is not None, "The released PDF-to-HTML source checkout is required")
+        print(select_reader(args.source_root.resolve(), args.pdf_to_html_root.resolve(), load_manifest(args.manifest.resolve())))
     else:
         check(args.source_root.resolve(), args.manifest.resolve(), args.remote, args.opentype_root.resolve() if args.opentype_root else None, args.pdf_to_html_root.resolve() if args.pdf_to_html_root else None)

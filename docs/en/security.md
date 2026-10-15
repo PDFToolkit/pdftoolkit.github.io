@@ -186,13 +186,19 @@ and permissions. The [policy oracle](https://github.com/PDFToolkit/pdf/blob/v0.9
 verifies eight PDFs and nine RSA/DSA signatures without modifying readers.
 General comparison of MDP/UR-permitted modifications remains separate.
 
-Core **0.9.1** also applies historical DocMDP/FieldMDP restrictions at the common
-incremental writer boundary, even without `PreparedSignature`. It compares the
-entire frozen delta, not only the selected signature field. Supported protected
-operations are terminal signing and PDF 2.0 DSS/document timestamp maintenance.
-Historical field locks remain binding; P2/P3 do not authorize unclassified form
-filling, annotation edits or unrelated changes. UR updates are refused. Existing
-`/Lock` and `/Reference` entries may remain unchanged in a permitted operation.
+The common native incremental boundary applies historical DocMDP/FieldMDP
+restrictions even without `PreparedSignature` and compares the entire frozen
+delta. Core 0.10.0 adds bounded form filling, isolated variable-text
+appearance replacement and listed P3 markup. Clear UR3 histories require an
+explicit granting-authority decision over verified signature facts, per-update
+operation scope and per-operation saving rights. Historical locks and all other
+handlers remain binding; unrelated objects and shared resources stay unchanged.
+Legacy/encrypted UR and PDF 2.0 `P=false`/absent semantics remain refused.
+Terminal signing and PDF 2.0 DSS/timestamp maintenance retain their separate
+proofs; mixed fill/annotation and signing/maintenance changes are refused.
+The [protected-revisions guide](protected-revisions.md) records exact limits and
+independent oracle differences; [tutorial 37](tutorials/37-protected-form-fill.md)
+shows the native operation without claiming pyHanko DocMDP approval.
 
 Use the original native `FileRevision` emitted in the current runtime. Supplied
 snapshots, clones and PHP serialization cannot preserve its emission authority.

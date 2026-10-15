@@ -9,7 +9,7 @@ Reading these files belongs to the optional
 [`pdftoolkit/pdf-images`](https://github.com/PDFToolkit/pdf-images) module. Samples,
 DCT images and XObject streams belong to the core. `composer install` in the
 core checkout installs the module for examples; an application installs it from
-Packagist using `composer require "pdftoolkit/pdf-images:^0.1.10"`. The
+Packagist using `composer require "pdftoolkit/pdf-images:^0.1.11"`. The
 [package guide](../packages.md) also explains how to select the core release series.
 
 - **Complete example:** [image-files.php](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/image-files.php).

@@ -4,8 +4,9 @@ These tutorials explain how a PDF file connects its values, dictionaries,
 resources and drawing instructions. Each lesson accompanies a complete,
 commented, executable script. Examples use the published core and module
 versions selected by the [source manifest](../../../resources/sources.json).
-The build verifies their exact commits and agreement with the prepared core
-and PDF-to-HTML checkouts' `composer.lock` files.
+The build verifies their exact commits and the installed dependencies against
+each consumer’s unchanged lock. Reader 0.5.1 uses the core 0.10.0 consumer;
+HTML 0.4.2 keeps its own core 0.9.1/Reader 0.5.0 runtime for tutorial 35.
 
 Lessons 09, 10 and 27 use the optional `pdftoolkit/pdf-fonts` and
 `pdftoolkit/pdf-images` modules, installed as development dependencies in the
@@ -24,7 +25,7 @@ text is a sequence of operators.
 The core and modules are available on Packagist. From your project:
 
 ```sh
-composer require "roukmoute/pdf:^0.9.1"
+composer require "roukmoute/pdf:^0.10.0"
 ```
 
 Lessons 09, 10 and 12 use `pdftoolkit/pdf-fonts`, `pdftoolkit/pdf-images` and
@@ -42,15 +43,16 @@ see the [build instructions](../site/README.md) to prepare sources at the
 documented versions. From the core checkout:
 
 ```sh
-export COMPOSER_ROOT_VERSION=0.9.x-dev
+export COMPOSER_ROOT_VERSION=0.10.x-dev
 composer install
 php examples/hello-world.php
 ```
 
-Under PowerShell, set `$env:COMPOSER_ROOT_VERSION = '0.9.x-dev'` before
+Under PowerShell, set `$env:COMPOSER_ROOT_VERSION = '0.10.x-dev'` before
 `composer install`. The checkout uses its `composer.lock` to install development
-tools and the PDF modules at their locked released versions. The shared site's
-selected reader comes from the separately pinned PDF-to-HTML checkout.
+tools and the PDF modules at their locked released versions. The shared site
+selects Reader 0.5.1 from this core consumer; HTML keeps its separately pinned
+core/Reader dependencies for its own examples and oracles.
 
 Lessons 20 and 26 also require the `openssl` extension used by the signing
 backend. The demonstration certificate and key are public test fixtures; the
@@ -112,6 +114,7 @@ PDF, all three pages and the objects read.
 | [34. Structure destinations](34-pdf20-structure-destinations.md) | Semantic targets, content traversal, named SD entries and explicit page fallbacks. | [pdf20-structure-destinations.php](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/pdf20-structure-destinations.php) |
 | [35. Derive HTML from tagged PDF](35-derive-html.md) | Tested rules, object-based graphics rendering, targeted reset and actual HTML. | [01-derive-tagged-pdf.php](https://github.com/PDFToolkit/pdf-to-html/blob/v0.4.1/examples/01-derive-tagged-pdf.php) |
 | [36. Apply redaction](36-applied-redaction.md) | Actual deletion, shared resources and a fresh file without history. | [pdf17-secure-redaction.php](https://github.com/PDFToolkit/pdf/blob/v0.9.1/examples/pdf17-secure-redaction.php) |
+| [37. Fill a certified form](37-protected-form-fill.md) | Core 0.10.0: native P2 filling, historical FieldMDP lock and an isolated Tx appearance. | [protected-form-fill.php](37-protected-form-fill.md#code-source) |
 
 After the first document, lessons 03 to 07 can be read in any order matching
 your interests. Lessons 08 and 11 concern file organization; lessons 09 and 10

@@ -3,13 +3,14 @@
 from __future__ import annotations
 
 import argparse
+import json
 import os
 from pathlib import Path
 import shutil
 import subprocess
 import sys
 
-from check_sources import check
+from check_sources import check, html_dependencies, select_reader
 
 
 def run(command: list, cwd: Path, output: Path | None = None, env: dict[str, str] | None = None) -> None:
@@ -20,11 +21,11 @@ def run(command: list, cwd: Path, output: Path | None = None, env: dict[str, str
         subprocess.run(list(map(str, command)), cwd=cwd, check=True, env=env)
 
 
-def prepare_reader_oracle_autoload(reader: Path, html: Path) -> None:
+def prepare_reader_oracle_autoload(reader: Path, consumer: Path) -> None:
     """Bind installed-package CLI reporters to the real locked consumer loader."""
-    autoload = html / "vendor/autoload.php"
+    autoload = consumer / "vendor/autoload.php"
     if not autoload.is_file():
-        raise ValueError("The released HTML checkout must have its locked vendor autoloader")
+        raise ValueError("The selected Reader consumer must have its locked vendor autoloader")
     directory = reader / "vendor"
     directory.mkdir(exist_ok=True)
     bridge = directory / "autoload.php"
@@ -87,7 +88,16 @@ def build(args) -> None:
     manifest = args.sources.resolve() if args.sources else content / "resources/sources.json"
     opentype = args.opentype_root.resolve()
     html = args.pdf_to_html_root.resolve()
-    check(source, manifest, args.remote, opentype, html)
+    packages = check(source, manifest, args.remote, opentype, html)
+    reader_consumer = select_reader(source, html, packages)
+    reader = reader_consumer / "vendor/pdftoolkit/pdf-reader"
+    (work / "validation-sources.json").write_text(json.dumps({
+        "documentedReader": packages["pdftoolkit/pdf-reader"],
+        "readerConsumer": str(reader_consumer),
+        "readerCore": packages["roukmoute/pdf"] if reader_consumer == source else html_dependencies(html)[0],
+        "htmlPackage": packages["pdftoolkit/pdf-to-html"],
+        "htmlValidationDependencies": html_dependencies(html),
+    }, indent=2) + "\n", encoding="utf-8")
     run([sys.executable, "-m", "unittest", "discover", "-s", content / "tests", "-p", "test_*.py"], content)
     for command in (
         [sys.executable, "tools/generate_specification.py", "--check"],
@@ -103,8 +113,7 @@ def build(args) -> None:
         [sys.executable, "-m", "unittest", "discover", "-s", "tests", "-p", "test_wtpdf_requirements.py"],
     ):
         run(command, source)
-    reader = html / "vendor/pdftoolkit/pdf-reader"
-    prepare_reader_oracle_autoload(reader, html)
+    prepare_reader_oracle_autoload(reader, reader_consumer)
     run([sys.executable, "tools/validate_source_mac.py", "--php", args.php, "--qpdf", args.qpdf,
          "--work-dir", work / "source-mac-validation"], reader)
     run([sys.executable, "tools/validate_metadata_security.py", "--php", args.php, "--qpdf", args.qpdf], reader)
@@ -115,13 +124,13 @@ def build(args) -> None:
          "--fixtures-dir", work / "public-key-validation"], reader)
     validate_html_module(args, html, work, pdfs)
     api = work / "api.json"
-    run([args.php, content / "tools/export_api.php", api, source, manifest, opentype, html], source)
+    run([args.php, content / "tools/export_api.php", api, source, manifest, opentype, html, reader_consumer], source)
     for example in sorted((source / "examples").glob("*.php")):
         output = pdfs / (example.stem + ".pdf")
         run([args.php, example, output, *([args.openssl] if example.stem == 'pdf20-timestamp-dss' else [])], source)
         run([args.qpdf, "--check", output], source)
         run([args.pdftoppm, "-r", "96", "-png", output, previews / example.stem], source)
-    module = html / "vendor/pdftoolkit/pdf-reader"
+    module = reader
     output = pdfs / "reading-pages.pdf"
     shutil.copyfile(module / "tests/Fixtures/page-tree/classic.pdf", output)
     run([args.qpdf, "--check", output], source)
@@ -152,6 +161,8 @@ def build(args) -> None:
          "--pdftoppm", args.pdftoppm, "--work-dir", work / "wtpdf-type3-validation"], source)
     run([sys.executable, "tools/validate_annotation_appearances.py", "--php", args.php, "--qpdf", args.qpdf,
          "--pdftoppm", args.pdftoppm, "--work-dir", work / "annotation-appearance-validation"], source)
+    run([sys.executable, "tools/validate_incremental_permissions.py", "--php", args.php, "--qpdf", args.qpdf,
+         "--pdftoppm", args.pdftoppm, "--work-dir", work / "incremental-permissions-validation"], source)
     run([sys.executable, content / "tools/build_site.py", "--content-root", content, "--source-root", source,
          "--opentype-root", opentype, "--pdf-to-html-root", html, "--sources", manifest, "--api", api, "--pdf-dir", pdfs, "--pdf-preview-dir", previews,
          "--output", args.output.resolve(), "--base-path", "/", "--docs-revision", args.docs_revision], content)

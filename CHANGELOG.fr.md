@@ -2,6 +2,25 @@
 
 [English](CHANGELOG.md) · [Français](CHANGELOG.fr.md)
 
+## [0.9.2] - 2026-10-15
+
+- Sélectionner les versions publiées core 0.10.0, Reader 0.5.1, modules
+  images/fontes 0.1.11 et PDF vers HTML 0.4.2 ; conserver OpenType 0.2.0
+  indépendant et les commits de source exacts.
+- Ajouter le guide bilingue des révisions protégées et le tutoriel 37 depuis
+  le véritable exemple `protected-form-fill.php` : remplissage Tx/Ch/Btn borné,
+  verrous FieldMDP historiques, remplacement isolé de Tx, annotations P3 listées
+  et contrôles explicites d’autorité/sauvegarde UR3 par opération. Préserver les
+  limites modèles, texte enrichi, chaînes externes, nouvelles ressources et PKI.
+- Exécuter l’oracle indépendant des permissions incrémentales dans chaque build
+  complet ; conserver preuves CMS/pixels et divergences de politique pyHanko
+  dans les rapports privés sans en déduire conformité générale ni confiance.
+- Sélectionner un seul Reader installé par version et commits source/dist
+  exacts du lock et de l’installation, avec préférence core et repli HTML pour
+  les anciens pins. Réutiliser cette source pour API, guides, tutoriel et oracles.
+  Vérifier HTML séparément contre son lock inchangé core 0.9.1/Reader 0.5.0 ;
+  consigner les deux provenances réelles sans réécrire les locks publiés.
+
 ## [0.9.1] - 2026-10-15
 
 - Documenter le lecteur 0.5.0 et PDF vers HTML 0.4.1 depuis leurs commits publiés,

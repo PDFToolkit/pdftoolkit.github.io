@@ -133,13 +133,15 @@ source identities and their applicable editions.
 
 ## Read the remaining boundaries
 
-Core 0.8.1 adds a conservative guard on every native incremental writer path.
-It requires actual emitted-revision provenance and verified signature history,
-then classifies the entire delta for terminal signing or PDF 2.0 DSS/timestamp
-maintenance. Existing field restrictions still bind. General form filling,
-annotation changes and UR authority are not inferred from P2/P3 and remain
-rejected when unclassified. See the [security review](security.md) for migration
-from opaque finalization or caller-supplied snapshots and the PKI boundary.
+The native incremental guard requires actual emitted-revision provenance,
+verified historical signatures and a complete frozen-delta proof. Core 0.10.0 adds bounded form filling, isolated variable-text appearances, listed
+P3 markup and clear UR3 operations with per-update granting authority and saving
+checks. These grants never override historical field locks or unrelated content
+preservation. Signing and PDF 2.0 maintenance remain separate operations.
+The [protected-revisions guide](protected-revisions.md) records the allowlists,
+unsupported cases and unchanged pyHanko comparison limits. The
+[security review](security.md) retains migration from opaque finalization or
+caller-supplied snapshots and the explicit PKI boundary.
 
 The [coverage guide](coverage.md) and source ledgers still identify unreviewed EC3
 annotations, additional conditional/resource relationships and incomplete

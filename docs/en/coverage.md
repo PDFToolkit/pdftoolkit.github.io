@@ -21,13 +21,18 @@ Unreviewed EC3 annotations, other conditional/resource relationships, general
 authenticated DocMDP/FieldMDP/UR change authorization, rendering and external or
 human conformance evidence remain explicit work.
 
-Core 0.8.1 enforces a complete-delta guard at every native incremental entry
-point for verified emitted history. Only terminal signing and PDF 2.0
-DSS/document timestamp maintenance are classified; existing field locks apply.
-Unclassified form, annotation and UR changes are refused even under P2/P3.
-It also rejects redaction font entries outside their actual simple/composite/CID
-domain. The [security review](security.md) and [redaction tutorial](tutorials/36-applied-redaction.md)
-describe the exact runtime provenance, verification and input boundaries.
+The guard introduced in 0.8.1 requires verified native provenance and compares
+the complete frozen delta at every incremental entry point. Core 0.10.0
+extends terminal signing and PDF 2.0 DSS/timestamp maintenance with bounded
+`Tx`/`Ch`/checkbox/radio filling, isolated variable-text AP replacement, listed P3
+markup and clear UR3 history with explicit per-update authority. Historical field
+locks, shared resources and unrelated content stay protected. Unknown operations,
+including mixed filling/signing/maintenance updates, fail closed. See the
+[protected-revisions guide](protected-revisions.md) for the exact allowlist,
+saving intersection and independent oracle differences. Redaction also rejects
+font entries outside their actual simple/composite/CID domain; the
+[security review](security.md) and [redaction tutorial](tutorials/36-applied-redaction.md)
+retain their separate input and provenance boundaries.
 
 ## Ordered barcode appearances, graph relations and source integrity
 
@@ -193,7 +198,7 @@ list verified mechanisms and remaining work rather than a completeness figure.
 | Password encryption | ISO R=2/3/4 algorithms, RC4 and AESV2, with filters and incremental updates; Adobe R=5 remains explicitly available. |
 | Certificate encryption | CMS recipient groups, distinct filter keys and s3/s4/s5 formats; key, data and permission-interpretation checks. |
 | Signatures | Contents reservation, ByteRange fixed before signing and filling without shifting; independent verification of the three ISO formats and successive signatures. |
-| Signature policies | DocMDP, FieldMDP, usage-rights, seed and certificate-criteria objects; intrinsic checks. Signed-field orchestration and the narrow native 0.8.1 guard are implemented; general permitted-change classification remains open. |
+| Signature policies | DocMDP, FieldMDP, usage-rights, seed and certificate-criteria objects; intrinsic checks. Signed-field orchestration and native provenance/delta guards are implemented. Core 0.10.0 adds the bounded form/P3/UR3 operations in [the dedicated guide](protected-revisions.md); general classification remains open. |
 | Hybrid references | Classic table and auxiliary xref stream, historical references, compressed objects and reading by older and newer readers. |
 | Linearization | Native ordering, page and shared-resource hints, thumbnails and attachments, compressed objects, three xref formats and encrypted variants. |
 
@@ -212,8 +217,9 @@ list verified mechanisms and remaining work rather than a completeness figure.
 
 These additions are not yet a declaration of complete coverage. General
 comparison of authenticated changes permitted by DocMDP, FieldMDP and UR
-remains open: pages, content, shared resources, annotations, inherited values
-and template instantiation need their own analysis. Other priorities include
+remains open beyond the bounded native forms and markup in 0.10.0: arbitrary
+page/content/resource edits, other annotation relationships, rich text, template
+instantiation and external revision chains need their own analysis. Other priorities include
 the remaining annotation relationships and measurement rules,
 multimedia/RichMedia graphs, some function rules and external barcode
 symbology codecs. Conditions, version thresholds and resources must

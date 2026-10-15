@@ -35,12 +35,12 @@ Les bibliothèques PHP sont disponibles sur Packagist. Installer le core avec
 Composer :
 
 ```sh
-composer require "roukmoute/pdf:^0.9.1"
+composer require "roukmoute/pdf:^0.10.0"
 ```
 
-Les versions documentées sont le core **0.9.1**, le lecteur **0.5.0**, les modules
-images/fontes **0.1.10**, OpenType indépendant **0.2.0** et PDF vers HTML **0.4.1**. Elles nécessitent **PHP 8.3 ou supérieur**
-et sont vérifiées sous PHP 8.3, 8.4 et 8.5. Le core **0.9** et OpenType **0.2** exigent PHP en
+Les versions documentées sont le core **0.10.0**, le lecteur **0.5.1**, les modules
+images/fontes **0.1.11**, OpenType indépendant **0.2.0** et PDF vers HTML **0.4.2**. Elles nécessitent **PHP 8.3 ou supérieur**
+et sont vérifiées sous PHP 8.3, 8.4 et 8.5. Le core **0.10** et OpenType **0.2** exigent PHP en
 64 bits ; OpenType reste indépendant du core PDF.
 
 Choisir les modules optionnels selon les fichiers traités par l'application :
@@ -55,7 +55,7 @@ Choisir les modules optionnels selon les fichiers traités par l'application :
 Les modules images/fontes/lecteur installent le core comme dépendance. PDF vers HTML ajoute la dérivation sémantique et installe aussi le lecteur. OpenType possède son propre modèle objet et s’installe sans dépendance PDF. Le guide des packages explique
 leurs commandes Composer et les versions prises en charge.
 
-PDF vers HTML 0.4.1 dérive le contenu sémantique des PDF balisés avec vérification
+PDF vers HTML 0.4.2 dérive le contenu sémantique des PDF balisés avec vérification
 des associations structurelles, Unicode, images, tableaux, navigation et champs.
 Son [registre des clauses](https://pdftoolkit.github.io/fr/modules/to-html/requirements.html)
 relie la référence conservée aux décisions exécutables et aux tests indépendants.
@@ -87,7 +87,7 @@ expliquent ISO 32000-2:2020 EC3, les chiffrements et signatures modernes, PDF MA
 les métadonnées/déclarations, les fichiers associés, les parties de document et
 les rôles de structure qualifiés, les horodatages documentaires, les preuves
 DSS/VRI, les mesures géospatiales et les destinations de structure.
-Les [36 tutoriels](https://pdftoolkit.github.io/fr/tutorials/)
+Les [37 tutoriels](https://pdftoolkit.github.io/fr/tutorials/)
 comprennent des exemples exécutables et leurs véritables aperçus PDF. L'audit
 WTPDF distingue les contrôles mécaniques et les preuves encore nécessaires ;
 il ne certifie ni l'accessibilité ni PDF/UA.
@@ -102,6 +102,10 @@ Le core 0.8.1 ajoute des protections de provenance native et du delta complet
 pour la signature/maintenance incrémentale bornée, ainsi que le contrôle du
 domaine des fontes du caviardage. Le [guide de sécurité](https://pdftoolkit.github.io/fr/guides/securite.html)
 précise les opérations permises, refus et migration de provenance dans l’exécution.
+Le core 0.10.0 ajoute remplissage natif borné, annotations P3 et autorité UR3
+par mise à jour ; son [guide](https://pdftoolkit.github.io/fr/guides/revisions-protegees.html) et le
+[tutoriel 37](https://pdftoolkit.github.io/fr/tutorials/37-remplissage-protege.html) expliquent
+les opérations couvertes, frontières figées des apparences et limites des oracles indépendants.
 
 Les ajouts reliés aux sources couvrent aussi les messages ordonnés des
 codes-barres et leurs apparences natives, les relations effectives entre

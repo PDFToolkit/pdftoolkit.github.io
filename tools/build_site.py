@@ -15,6 +15,7 @@ import subprocess
 from urllib.parse import quote, unquote, urlsplit
 
 import markdown
+from check_sources import select_reader
 from localization import LANGUAGES, ENGLISH_ROUTES, canonical_source, localized_source, route_for, translate, translate_interface, ISO2_DESCRIPTIONS_FR, iso2_description
 
 
@@ -69,6 +70,7 @@ GUIDES = [
     ('docs/migration-0.4.md', 'guides/migration-0-4.html', 'Migration vers le core 0.4', 'Guides'),
     ('docs/specification.md', 'guides/couverture.html', 'Couverture de la norme', 'Guides'),
     ('docs/security.md', 'guides/securite.html', 'Sécurité', 'Guides'),
+    ('docs/protected-revisions.md', 'guides/revisions-protegees.html', 'Révisions natives protégées', 'Guides'),
     ('SECURITY.md', 'guides/signalements.html', 'Signaler une vulnérabilité', 'Guides'),
     ('CHANGELOG.md', 'guides/versions.html', 'Versions et changements', 'Guides'),
     ('docs/tutorials/README.md', 'tutorials/index.html', 'Parcours des tutoriels', 'Tutoriels'),
@@ -112,6 +114,7 @@ LESSONS = [
     ('34-pdf20-structure-destinations', '34-pdf20-destinations-structure', 'Destinations vers la structure logique', 'pdf20-structure-destinations', 'Cibles sémantiques, parcours du contenu et destinations de page de repli.'),
     ('35-derive-html', '35-deriver-html', 'Dériver du HTML depuis un PDF balisé', 'derive-html', 'Structure logique, contenu Unicode et HTML sémantique avec diagnostics explicites.'),
     ('36-applied-redaction', '36-caviardisation', 'Appliquer une caviardisation', 'pdf17-secure-redaction', 'Suppression conservatrice des données et écriture d’un nouveau fichier.'),
+    ('37-protected-form-fill', '37-remplissage-protege', 'Remplir un formulaire certifié', 'protected-form-fill', 'DocMDP, FieldMDP et remplacement isolé de l’apparence à texte variable.'),
 ]
 EXTERNAL_EXAMPLES = {
     'reading-pages': {
@@ -270,13 +273,8 @@ class Site:
         html_revision = subprocess.run(['git', '-C', str(pdf_to_html_root), 'rev-parse', 'HEAD'], check=True, capture_output=True, text=True).stdout.strip()
         if html_revision != self.packages['pdftoolkit/pdf-to-html']['revision']:
             raise ValueError('PDF-to-HTML checkout differs from the released-source manifest')
-        html_lock = json.loads((pdf_to_html_root / 'composer.lock').read_text(encoding='utf-8'))
-        html_locked = {item['name']: item for item in html_lock['packages'] + html_lock['packages-dev']}
-        for name in (CORE_PACKAGE, 'pdftoolkit/pdf-reader'):
-            item = html_locked.get(name, {})
-            if item.get('version', '').removeprefix('v') != self.packages[name]['version'] or item.get('source', {}).get('reference') != self.packages[name]['revision']:
-                raise ValueError('PDF-to-HTML Composer lock differs from the selected release: ' + name)
-        self.package_roots = {CORE_PACKAGE: root, **{name: root / 'vendor' / name for name in MODULES if name not in {'pdftoolkit/opentype', 'pdftoolkit/pdf-to-html', 'pdftoolkit/pdf-reader'}}, 'pdftoolkit/opentype': opentype_root, 'pdftoolkit/pdf-to-html': pdf_to_html_root, 'pdftoolkit/pdf-reader': pdf_to_html_root / 'vendor/pdftoolkit/pdf-reader'}
+        reader_consumer = select_reader(root, pdf_to_html_root, self.packages)
+        self.package_roots = {CORE_PACKAGE: root, **{name: root / 'vendor' / name for name in MODULES if name not in {'pdftoolkit/opentype', 'pdftoolkit/pdf-to-html', 'pdftoolkit/pdf-reader'}}, 'pdftoolkit/opentype': opentype_root, 'pdftoolkit/pdf-to-html': pdf_to_html_root, 'pdftoolkit/pdf-reader': reader_consumer / 'vendor/pdftoolkit/pdf-reader'}
         self.html_reference = json.loads((pdf_to_html_root / 'resources/reference.json').read_text(encoding='utf-8'))
         reference_path = self.html_reference['source']
         if reference_path != 'resources/reference-documents/Deriving_HTML_from_PDF_1-2.pdf':
@@ -480,7 +478,7 @@ class Site:
         groups = [
             ('Découvrir', [('index.html', 'Accueil'), ('guides/demarrer.html', 'Démarrer'), ('guides/modules.html', 'Core et modules'), ('guides/pdf-2-0.html', 'PDF 2.0'), ('guides/composants.html', 'Les composants'), ('guides/architecture.html', 'Architecture')]),
             ('Packages', [('modules/core/index.html', 'Core : objets et écriture'), *[(f'modules/{slug}/index.html', title) for slug, title, _ in MODULES.values()]]),
-            ('Explorer', [('reference/index.html', 'Référence des composants'), ('guides/couverture.html', 'Couverture de la norme'), ('guides/mecanismes.html', 'Couverture des éditions PDF'), ('guides/source-audits.html', 'Règles de source et corrections vérifiées'), ('guides/pdf-2-0-bundle.html', 'Spécifications complémentaires PDF 2.0'), ('guides/supplement-adobe.html', 'Supplément Adobe'), ('guides/references-adobe.html', 'Références Adobe conservées'), ('guides/securite.html', 'Sécurité'), ('guides/versions.html', 'Versions')]),
+            ('Explorer', [('reference/index.html', 'Référence des composants'), ('guides/couverture.html', 'Couverture de la norme'), ('guides/mecanismes.html', 'Couverture des éditions PDF'), ('guides/source-audits.html', 'Règles de source et corrections vérifiées'), ('guides/pdf-2-0-bundle.html', 'Spécifications complémentaires PDF 2.0'), ('guides/supplement-adobe.html', 'Supplément Adobe'), ('guides/references-adobe.html', 'Références Adobe conservées'), ('guides/securite.html', 'Sécurité'), ('guides/revisions-protegees.html', 'Révisions natives protégées'), ('guides/versions.html', 'Versions')]),
             ('Apprendre', [('tutorials/index.html', 'Tous les tutoriels'), *[(f'tutorials/{slug}.html', f'{i:02d}. {title}') for i, (_, slug, title, _, _) in enumerate(LESSONS, 1)], ('recipes/table.html', 'Recette : tableau')]),
         ]
         html = ''

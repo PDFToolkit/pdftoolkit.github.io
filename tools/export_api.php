@@ -336,8 +336,33 @@ function componentRecord(ReflectionClass $reflection, array $packages): array
     ];
 }
 
+/** @return array{version: string, revision: string} */
+function lockedDependency(string $consumer, string $name): array
+{
+    $lock = json_decode(file_get_contents($consumer . '/composer.lock') ?: '{}', true, flags: JSON_THROW_ON_ERROR);
+    $installed = json_decode(file_get_contents($consumer . '/vendor/composer/installed.json') ?: '{}', true, flags: JSON_THROW_ON_ERROR);
+    $identities = [];
+    foreach ([[...($lock['packages'] ?? []), ...($lock['packages-dev'] ?? [])], $installed['packages'] ?? []] as $inventory) {
+        $records = array_column($inventory, null, 'name');
+        if (count($records) !== count($inventory)) {
+            throw new \RuntimeException('Duplicate Composer package identity.');
+        }
+        $record = $records[$name] ?? [];
+        $version = preg_replace('/^v/', '', $record['version'] ?? '');
+        $revision = $record['source']['reference'] ?? '';
+        if (preg_match('/^\d+\.\d+\.\d+$/D', $version) !== 1 || preg_match('/^[0-9a-f]{40}$/D', $revision) !== 1 || ($record['dist']['reference'] ?? null) !== $revision) {
+            throw new \RuntimeException('Invalid locked/installed dependency identity: ' . $name);
+        }
+        $identities[] = ['version' => $version, 'revision' => $revision];
+    }
+    if ($identities[0] !== $identities[1]) {
+        throw new \RuntimeException('Installed dependency differs from its consumer lock: ' . $name);
+    }
+    return $identities[0];
+}
+
 /** @return array<string, array<string, mixed>> */
-function documentationPackages(string $root, string $sourcesPath, string $opentypeRoot, string $pdfToHtmlRoot): array
+function documentationPackages(string $root, string $sourcesPath, string $opentypeRoot, string $pdfToHtmlRoot, string $readerConsumer): array
 {
     $root = realpath($root) ?: throw new \RuntimeException('Cannot resolve the core source tree.');
     $manifestBytes = file_get_contents($sourcesPath);
@@ -459,23 +484,43 @@ function documentationPackages(string $root, string $sourcesPath, string $openty
     if (($composer['name'] ?? null) !== 'pdftoolkit/pdf-to-html') {
         throw new \RuntimeException('Incorrect PDF-to-HTML package identity.');
     }
-    $htmlLock = json_decode(file_get_contents($pdfToHtmlRoot . '/composer.lock') ?: '{}', true, flags: JSON_THROW_ON_ERROR);
-    $htmlInstalled = json_decode(file_get_contents($pdfToHtmlRoot . '/vendor/composer/installed.json') ?: '{}', true, flags: JSON_THROW_ON_ERROR);
-    foreach ([array_merge($htmlLock['packages'] ?? [], $htmlLock['packages-dev'] ?? []), $htmlInstalled['packages'] ?? []] as $inventory) {
-        $records = array_column($inventory, null, 'name');
-        foreach (['roukmoute/pdf', 'pdftoolkit/pdf-reader'] as $name) {
-            $record = $records[$name] ?? [];
-            if (ltrim($record['version'] ?? '', 'v') !== $selected[$name]['version'] || ($record['source']['reference'] ?? null) !== $selected[$name]['revision'] || ($record['dist']['reference'] ?? null) !== $selected[$name]['revision']) {
-                throw new \RuntimeException('PDF-to-HTML dependency differs from the released source pin: ' . $name);
-            }
-        }
+    // HTML validation keeps its own published lock, which may predate the documented core/Reader.
+    foreach (['roukmoute/pdf', 'pdftoolkit/pdf-reader'] as $name) {
+        lockedDependency($pdfToHtmlRoot, $name);
     }
-    $readerRoot = realpath($pdfToHtmlRoot . '/vendor/pdftoolkit/pdf-reader') ?: throw new \RuntimeException('Missing released PDF reader.');
-    // Select one source tree per namespace; the core lock may retain an older reader.
+    $readerConsumer = realpath($readerConsumer) ?: throw new \RuntimeException('Cannot resolve the selected Reader consumer.');
+    if (!in_array($readerConsumer, [$root, $pdfToHtmlRoot], true)) {
+        throw new \RuntimeException('Reader must come from an actual released documentation consumer.');
+    }
+    $reader = lockedDependency($readerConsumer, 'pdftoolkit/pdf-reader');
+    if ($reader['version'] !== $selected['pdftoolkit/pdf-reader']['version'] || $reader['revision'] !== $selected['pdftoolkit/pdf-reader']['revision']) {
+        throw new \RuntimeException('Selected Reader differs from the documented release and source/distribution commit.');
+    }
+    $readerRoot = realpath($readerConsumer . '/vendor/pdftoolkit/pdf-reader') ?: throw new \RuntimeException('Missing released PDF reader.');
+    $readerComposer = json_decode(file_get_contents($readerRoot . '/composer.json') ?: '{}', true, flags: JSON_THROW_ON_ERROR);
+    if (($readerComposer['name'] ?? null) !== 'pdftoolkit/pdf-reader') {
+        throw new \RuntimeException('Incorrect selected Reader package identity.');
+    }
     $loader = new \Composer\Autoload\ClassLoader();
     $loader->addPsr4('PDF\\Html\\', $pdfToHtmlRoot . '/src');
-    $loader->addPsr4('PDF\\Reading\\', $readerRoot . '/src');
     $loader->register(true);
+    // Guard the entire namespace: a missing selected class must never fall back to an older vendor.
+    foreach ([...get_declared_classes(), ...get_declared_interfaces(), ...get_declared_traits()] as $name) {
+        if (str_starts_with($name, 'PDF\\Reading\\')) {
+            throw new \RuntimeException('Reader declarations were loaded before source selection.');
+        }
+    }
+    spl_autoload_register(static function (string $name) use ($readerRoot): void {
+        $prefix = 'PDF\\Reading\\';
+        if (!str_starts_with($name, $prefix)) {
+            return;
+        }
+        $path = $readerRoot . '/src/' . str_replace('\\', '/', substr($name, strlen($prefix))) . '.php';
+        if (!is_file($path)) {
+            throw new \RuntimeException('Declaration missing from the selected Reader: ' . $name);
+        }
+        require $path;
+    }, true, true);
     $packages['pdftoolkit/pdf-to-html'] = ['root' => $pdfToHtmlRoot, ...$html];
     $packages['pdftoolkit/pdf-reader'] = ['root' => $readerRoot, ...$selected['pdftoolkit/pdf-reader']];
     return $packages;
@@ -505,15 +550,15 @@ function sourceLocation(string $file, array $packages): array
 }
 
 $arguments = $_SERVER['argv'] ?? [];
-if (!is_array($arguments) || count($arguments) !== 6 || !isset($arguments[1], $arguments[2], $arguments[3], $arguments[4], $arguments[5]) || !is_string($arguments[1]) || $arguments[1] === '') {
-    fwrite(STDERR, "Usage: php tools/export_api.php <output.json> <source-root> <sources.json> <opentype-root> <pdf-to-html-root>\n");
+if (!is_array($arguments) || count($arguments) !== 7 || !isset($arguments[1], $arguments[2], $arguments[3], $arguments[4], $arguments[5], $arguments[6]) || !is_string($arguments[1]) || $arguments[1] === '') {
+    fwrite(STDERR, "Usage: php tools/export_api.php <output.json> <source-root> <sources.json> <opentype-root> <pdf-to-html-root> <reader-consumer-root>\n");
     exit(1);
 }
 
 try {
     $root = realpath($arguments[2]) ?: throw new \RuntimeException('Cannot resolve the core source tree.');
     require $root . '/vendor/autoload.php';
-    $packages = documentationPackages($root, $arguments[3], $arguments[4], $arguments[5]);
+    $packages = documentationPackages($root, $arguments[3], $arguments[4], $arguments[5], $arguments[6]);
     $files = [];
     foreach ($packages as $package) {
         $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($package['root'] . '/src', \FilesystemIterator::SKIP_DOTS));

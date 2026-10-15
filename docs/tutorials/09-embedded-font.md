@@ -11,7 +11,7 @@ Ce tutoriel utilise le module optionnel
 TrueType. Le programme incorporé, les dictionnaires et les correspondances PDF
 restent des objets du core. `composer install` dans le checkout du core installe le
 module comme dépendance de développement ; une application l'installe depuis
-Packagist avec `composer require "pdftoolkit/pdf-fonts:^0.1.10"`.
+Packagist avec `composer require "pdftoolkit/pdf-fonts:^0.1.11"`.
 Le [guide des packages](../packages.md) explique comment sélectionner aussi
 la série du core.
 
