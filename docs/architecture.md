@@ -121,7 +121,16 @@ Une bibliothèque de confort peut transformer ses propres objets de mise en page
 
 Dans `pdftoolkit/pdf-fonts`, les polices TrueType se composent d'un programme, de tables et métriques, d'une correspondance caractère/CID et d'un programme CIDFont incorporable. Ces données alimentent les objets du core : FontFile2, descripteur, fonte CID, fonte Type0, métriques et ToUnicode. L'encodage du texte reste un service distinct. Le module fournit des octets ; il ne sélectionne pas une police système et ne compose pas les scripts complexes.
 
-Le modèle indépendant [OpenType](https://github.com/PDFToolkit/opentype) conserve ses propres objets de tables, glyphes, métriques et substitutions GSUB. Il ne dépend ni du core PDF ni du convertisseur de fontes. Les fonctionnalités typographiques sélectionnées sont explicites ; la composition complète des scripts, GPOS et les fontes variables restent à construire. Ses objets ne produisent pas directement de dictionnaires PDF. Consulter sa [couverture](https://github.com/PDFToolkit/opentype/blob/v0.1.0/docs/coverage.md).
+Le modèle indépendant [OpenType](https://github.com/PDFToolkit/opentype) conserve
+ses propres objets de tables, glyphes, métriques, substitutions GSUB et
+positionnement GPOS. Il ne dépend ni du core PDF ni du convertisseur de fontes.
+La version 0.2 ajoute GDEF, ajustements device, positionnement contextuel et
+variations de layout natives à coordonnées normalisées explicites. Les résultats
+restent des séquences immuables. Composition Unicode complète, bidi, retour à la
+ligne et instanciation de contours variables restent distincts. Ces objets ne
+produisent pas directement de dictionnaires PDF. Consulter le
+[positionnement](https://github.com/PDFToolkit/opentype/blob/v0.2.0/docs/fr/positioning.md)
+et la [couverture](https://github.com/PDFToolkit/opentype/blob/v0.2.0/docs/fr/coverage.md).
 
 Dans `pdftoolkit/pdf-images`, les lecteurs d'images reçoivent un `ImageFileBytes`. Le PNG devient des échantillons couleur et éventuellement alpha ; le JPEG devient un `DCTImage` du core avec ses octets encodés et sa transformation de couleur. `ImageXObjectFactory`, dans le core, compose leurs dictionnaires et leurs flux sans connaître le fichier d'origine. Les noms de ressources et matrices de peinture restent explicites. Les limites de lecture sont fournies par un `ImageImportLimits` du module.
 

@@ -40,6 +40,14 @@ is ambiguous; `/I` retains selected indices in `/Opt`. The initial appearance
 draws `France` and `Belgique` on two lines, with both selections inside the variable
 sequence. It does not draw export codes `FR` and `BE`, which belong to field data.
 
+Core 0.8 keeps the default `ChoiceIndexSemantics::Pdf17` contract for this PDF
+1.7 example. Select `ChoiceIndexSemantics::Pdf20Ec3` explicitly for the corrected
+PDF 2.0 rules: indices can be used without `MultiSelect`; distinct display names
+sharing an export value require them; an array-valued `V` alone does not. The
+effective document version must then be PDF 2.0. This constructor argument comes
+before variadic extra entries. The [source-audit guide](../source-audits.md)
+explains correction #468 and its exact retained source thread.
+
 Change values, options, rectangles or states in the script to observe each link.
 The signature field stays empty here; [tutorial 20](20-signed-document.md) creates
 a signature. Barcode codecs, scripts and XFA execution require their own engines.

@@ -69,7 +69,7 @@ Leur provenance utilise le commit du lecteur fixé dans le manifeste ; le core
 conserve ses exemples de génération.
 
 Le checkout PDF vers HTML est fixé séparément sous `_sources/pdf-to-html`.
-Son lecteur verrouillé fournit la version 0.2.3 documentée sans changer le lock
+Son lecteur verrouillé fournit la version 0.3.0 documentée sans changer le lock
 du core. Le tutoriel 35 exécute son vrai CLI sur la fixture balisée produite
 indépendamment. La construction vérifie les octets de référence et de fixture,
 puis exécute l'oracle pypdf/HTML5 du package. Elle copie chaque ressource du JSON
@@ -77,12 +77,27 @@ CLI en contrôlant noms, SHA-256 et collisions de sortie. `derivedHtml` reste ho
 de l'inventaire des pages documentaires bilingues et apparaît dans un sandbox
 sans permission. Les guides/API du module sont sous `/modules/to-html/`.
 
-La sélection actuelle documente PDF vers HTML 0.2.1 et le lecteur 0.2.3. Le
+Le guide d'authentification est accessible sous `/modules/reader/` et
+`/modules/to-html/` ; le guide GPOS/variations natif est sous
+`/modules/opentype/positioning.html`. Tous ont une version française réciproque.
+Le tutoriel 36 exécute le véritable `pdf17-secure-redaction.php` du core et publie
+ses deux pages de résultat. La construction vérifie séparément octets et pixels
+source/résultat avec qpdf, pypdf et Poppler ; sa copie source privée n'est jamais
+publiée comme résultat caviardé. Les identités d'annotations EC3 et fils
+d'approbation sont vérifiés contre le PDF canonique inchangé, indépendamment de
+la génération des dictionnaires.
+
+La sélection actuelle documente PDF vers HTML 0.3.0 et le lecteur 0.3.0. Le
 [registre des exigences](https://pdftoolkit.github.io/fr/modules/to-html/requirements.html),
 les [politiques](https://pdftoolkit.github.io/fr/modules/to-html/policies.html) et
 les [graphiques](https://pdftoolkit.github.io/fr/modules/to-html/graphics.html)
 distinguent règles natives, adaptations HTML et capacités explicites de
 rasterisation, d'authentification et de codecs supplémentaires.
+
+L'authentification R=2–7 native est une sélection explicite du lecteur. L'oracle
+indépendant du package HTML déchiffre de vraies fixtures qpdf et analyse le HTML
+dérivé pour vérifier permissions user/owner, mauvais credentials et réutilisation
+du convertisseur. Ses fixtures temporaires restent dans l'espace de validation.
 
 `tools/build_docs.py` reproduit les tables de glyphes et les fixtures inline/fax,
 puis exécute les oracles HTML5/pypdf, les comparaisons de pixels Poppler pour

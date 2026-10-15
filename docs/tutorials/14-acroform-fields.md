@@ -43,6 +43,15 @@ L'apparence initiale dessine `France` et `Belgique` sur deux lignes, avec les de
 sélections dans la séquence variable. Elle ne dessine pas les codes exportés
 `FR` et `BE`, qui appartiennent aux données du champ.
 
+Le core 0.8 conserve par défaut le contrat `ChoiceIndexSemantics::Pdf17` pour cet
+exemple PDF 1.7. Choisir explicitement `ChoiceIndexSemantics::Pdf20Ec3` pour les
+règles PDF 2.0 corrigées : indices possibles sans `MultiSelect`, obligatoires si
+des libellés distincts partagent une valeur exportée, mais plus imposés par une
+valeur `V` sous forme de tableau à elle seule. La version effective doit alors
+être PDF 2.0. Cet argument de constructeur précède les entrées supplémentaires
+variadiques. Le [guide des audits de source](../source-audits.md) explique la
+correction #468 et le fil exact conservé dans la source.
+
 Modifier valeurs, options, rectangles ou états dans le script permet d'observer
 chaque lien. Le champ de signature reste vide ici ; le
 [tutoriel 20](20-signed-document.md) réalise une signature. Les codecs barcode,

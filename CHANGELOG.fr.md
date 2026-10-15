@@ -4,6 +4,21 @@
 
 ## [Non publié]
 
+- Documenter le core 0.8.0, le lecteur 0.3.0, les modules images/fontes 0.1.9,
+  OpenType indépendant 0.2.0 et PDF vers HTML 0.3.0 dans les deux langues.
+- Ajouter un guide des audits de source avec les 197 règles de dictionnaires
+  exécutables, quatre revues EC3 exactes, le placement corrigé des apparences et
+  le classement de 65 errata Adobe. Préserver différences d'édition et mécanismes incomplets.
+- Ajouter le tutoriel 36 avec le véritable exemple de caviardisation conservatrice,
+  ses deux pages PDF, la destruction dans un nouveau fichier, les ressources
+  partagées et les frontières des entrées refusées.
+- Exposer l'authentification lecteur/HTML et le positionnement/variations OpenType
+  dans les menus ; expliquer permissions vérifiées et domaines de fontes/composition incomplets.
+- Documenter la comparaison XML native optionnelle WTPDF et son parseur borné.
+- Exécuter les oracles des liens EC3, de caviardisation destructive et
+  d'authentification HTML native pendant la construction complète, en séparant
+  les sorties de validation privées des ressources de tutoriels publiées.
+
 ## [0.7.0] - 2026-10-15
 
 - Documenter PDF-to-HTML 0.2.1 et le lecteur PDF 0.2.3 depuis leurs tags publiés

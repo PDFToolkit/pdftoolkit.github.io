@@ -4,6 +4,20 @@
 
 ## [Unreleased]
 
+- Document core 0.8.0, reader 0.3.0, image/font modules 0.1.9, independent
+  OpenType 0.2.0 and PDF-to-HTML 0.3.0 in both languages.
+- Add a source-audit guide with the 197 executable dictionary rules, four exact
+  EC3 reviews, corrected appearance placement and 65-record Adobe errata review.
+  Preserve edition differences and explicit incomplete mechanisms.
+- Add tutorial 36 with the actual conservative redaction example, both PDF pages,
+  fresh-file destruction, shared-resource handling and rejected input boundaries.
+- Expose reader/HTML authentication and OpenType positioning/variation guides in
+  module menus; explain verified permissions and incomplete shaping/font domains.
+- Document optional native WTPDF XML rich-text comparison and its bounded parser.
+- Run EC3 source-binding, destructive-redaction and native HTML authentication
+  oracles in the full documentation build, keeping private validation outputs
+  separate from published tutorial artifacts.
+
 ## [0.7.0] - 2026-10-15
 
 - Document PDF-to-HTML 0.2.1 and PDF reader 0.2.3 from their published tags and

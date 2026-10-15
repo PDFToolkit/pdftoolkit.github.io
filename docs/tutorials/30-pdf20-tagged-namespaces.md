@@ -94,6 +94,13 @@ Le choix sémantique des types, la pertinence d’une description, l’ordre de 
 
 ## Vérifier les octets générés
 
+Le core 0.8 peut aussi comparer le texte XML enrichi `RV` d'un champ à sa valeur
+canonique héritée `V`, avec `WtPdfRichTextChecks` et le backend natif
+`WtPdfXmlRichTextParser` choisis explicitement. Le
+[guide du bundle](../pdf-2-0-bundle.md#comparer-explicitement-le-texte-enrichi-des-champs)
+montre la construction et ses limites de sécurité. Un XML/CSS non pris en charge
+ou l'absence de preuve d'analyse reste en attente et ne devient pas une réussite.
+
 `tools/validate_pdf20_tagging.py` inspecte les références indirectes, le mapping personnalisé, le ParentTree, les MCID, Ref et le XML XMP avec pypdf et qpdf. Il vérifie aussi chaque glyphe montré dans cet exemple : présence de son GID, correspondance Unicode et accord entre largeur PDF et métrique du programme TrueType réellement incorporé. Poppler fournit une extraction de texte indépendante. Les trois formats xref sont exercés.
 
 On peut modifier les textes, créer un second namespace personnalisé ou remplacer la table des matières par une liste. Chaque modification doit conserver les associations entre opérateurs, MCID, conteneurs, parents et types résolus. Le fichier visible et le rapport sont deux résultats complémentaires à examiner.

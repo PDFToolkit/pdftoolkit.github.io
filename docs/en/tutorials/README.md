@@ -24,7 +24,7 @@ text is a sequence of operators.
 The core and modules are available on Packagist. From your project:
 
 ```sh
-composer require "roukmoute/pdf:^0.7.1"
+composer require "roukmoute/pdf:^0.8.0"
 ```
 
 Lessons 09, 10 and 12 use `pdftoolkit/pdf-fonts`, `pdftoolkit/pdf-images` and
@@ -42,12 +42,12 @@ see the [build instructions](../site/README.md) to prepare sources at the
 documented versions. From the core checkout:
 
 ```sh
-export COMPOSER_ROOT_VERSION=0.7.x-dev
+export COMPOSER_ROOT_VERSION=0.8.x-dev
 composer install
 php examples/hello-world.php
 ```
 
-Under PowerShell, set `$env:COMPOSER_ROOT_VERSION = '0.7.x-dev'` before
+Under PowerShell, set `$env:COMPOSER_ROOT_VERSION = '0.8.x-dev'` before
 `composer install`. The checkout uses its `composer.lock` to install development
 tools and all three modules at the documented versions.
 
@@ -86,7 +86,7 @@ PDF, all three pages and the objects read.
 | [09. TrueType font and Unicode](09-embedded-font.md) | Embedded program, CIDs, widths and ToUnicode mapping. | [embedded-font.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/embedded-font.php) |
 | [10. JPEG and PNG images](10-image-files.md) | JPEG inspection, PNG decoding, samples and transparency. | [image-files.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/image-files.php) |
 | [11. Incremental revisions](11-incremental-update.md) | Preserved bytes, replacements and xref chaining. | [incremental-update.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/incremental-update.php) |
-| [12. Read an external PDF](12-reading-pages.md) | Verified tree, inherited values and content streams inspected then decoded. | [reader module's pages.php](https://github.com/PDFToolkit/pdf-reader/blob/v0.2.3/examples/pages.php) |
+| [12. Read an external PDF](12-reading-pages.md) | Verified tree, inherited values and content streams inspected then decoded. | [reader module's pages.php](https://github.com/PDFToolkit/pdf-reader/blob/v0.3.0/examples/pages.php) |
 | [13. Adobe extensions and Bates numbering](13-adobe-extensions.md) | Extension declarations, artifact properties and Bates footer. | [adobe-extensions.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/adobe-extensions.php) |
 | [14. AcroForm fields](14-acroform-fields.md) | Tree, values, widgets and appearances. | [acroform-fields.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/acroform-fields.php) |
 | [15. Logical structure](15-tagged-structure.md) | Marked content, ParentTree, IDTree and annotations. | [tagged-structure.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/tagged-structure.php) |
@@ -102,14 +102,15 @@ PDF, all three pages and the objects read.
 | [25. Object generations](25-object-lifecycle.md) | Deletion, free list and reuse. | [object-lifecycle.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/object-lifecycle.php) |
 | [26. Signature policy](26-signature-field-policy.md) | Field, seeds, lock and an actually signed result. | [signature-field-policy.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/signature-field-policy.php) |
 | [27. PDF 2.0 and associated files](27-pdf20-associated-files.md) | Unicode metadata, AF relationships and corrected named MCAF resources. | [pdf20-associated-files.php](https://github.com/PDFToolkit/pdf/blob/v0.6.2/examples/pdf20-associated-files.php) |
-| [28. Metadata, declarations and document parts](28-pdf20-metadata-declarations.md) | XMP scope, AF, black point compensation and DPart relationships. | [pdf20-metadata-declarations.php](https://github.com/PDFToolkit/pdf/blob/v0.7.1/examples/pdf20-metadata-declarations.php) |
-| [29. An encrypted-payload wrapper](29-pdf20-encrypted-payload.md) | A readable outer document, hidden collection and independently encrypted inner PDF. | [pdf20-encrypted-payload.php](https://github.com/PDFToolkit/pdf/blob/v0.7.1/examples/pdf20-encrypted-payload.php) |
-| [30. Namespaces and WTPDF checks](30-pdf20-tagged-namespaces.md) | Qualified roles, PDF 1.7/2.0 types, reciprocal ParentTree and mechanical-audit boundaries. | [pdf20-tagged-namespaces.php](https://github.com/PDFToolkit/pdf/blob/v0.7.1/examples/pdf20-tagged-namespaces.php) |
-| [31. Modern signatures and integrity](31-pdf20-modern-signature.md) | Named curves, SHA-3, exact byte ranges and PDF MAC. | [pdf20-modern-signature.php](https://github.com/PDFToolkit/pdf/blob/v0.7.1/examples/pdf20-modern-signature.php) |
-| [32. Document timestamps and DSS](32-pdf20-timestamp-dss.md) | RFC3161, explicit validation policy, VRI and preserved historical signatures. | [pdf20-timestamp-dss.php](https://github.com/PDFToolkit/pdf/blob/v0.7.1/examples/pdf20-timestamp-dss.php) |
-| [33. Geospatial objects and measurements](33-pdf20-geospatial.md) | Coordinate systems, paired control points, viewports, matrices and point clouds. | [pdf20-geospatial.php](https://github.com/PDFToolkit/pdf/blob/v0.7.1/examples/pdf20-geospatial.php) |
-| [34. Structure destinations](34-pdf20-structure-destinations.md) | Semantic targets, content traversal, named SD entries and explicit page fallbacks. | [pdf20-structure-destinations.php](https://github.com/PDFToolkit/pdf/blob/v0.7.1/examples/pdf20-structure-destinations.php) |
-| [35. Derive HTML from tagged PDF](35-derive-html.md) | Tested rules, object-based graphics rendering, targeted reset and actual HTML. | [01-derive-tagged-pdf.php](https://github.com/PDFToolkit/pdf-to-html/blob/v0.2.1/examples/01-derive-tagged-pdf.php) |
+| [28. Metadata, declarations and document parts](28-pdf20-metadata-declarations.md) | XMP scope, AF, black point compensation and DPart relationships. | [pdf20-metadata-declarations.php](https://github.com/PDFToolkit/pdf/blob/v0.8.0/examples/pdf20-metadata-declarations.php) |
+| [29. An encrypted-payload wrapper](29-pdf20-encrypted-payload.md) | A readable outer document, hidden collection and independently encrypted inner PDF. | [pdf20-encrypted-payload.php](https://github.com/PDFToolkit/pdf/blob/v0.8.0/examples/pdf20-encrypted-payload.php) |
+| [30. Namespaces and WTPDF checks](30-pdf20-tagged-namespaces.md) | Qualified roles, PDF 1.7/2.0 types, reciprocal ParentTree and mechanical-audit boundaries. | [pdf20-tagged-namespaces.php](https://github.com/PDFToolkit/pdf/blob/v0.8.0/examples/pdf20-tagged-namespaces.php) |
+| [31. Modern signatures and integrity](31-pdf20-modern-signature.md) | Named curves, SHA-3, exact byte ranges and PDF MAC. | [pdf20-modern-signature.php](https://github.com/PDFToolkit/pdf/blob/v0.8.0/examples/pdf20-modern-signature.php) |
+| [32. Document timestamps and DSS](32-pdf20-timestamp-dss.md) | RFC3161, explicit validation policy, VRI and preserved historical signatures. | [pdf20-timestamp-dss.php](https://github.com/PDFToolkit/pdf/blob/v0.8.0/examples/pdf20-timestamp-dss.php) |
+| [33. Geospatial objects and measurements](33-pdf20-geospatial.md) | Coordinate systems, paired control points, viewports, matrices and point clouds. | [pdf20-geospatial.php](https://github.com/PDFToolkit/pdf/blob/v0.8.0/examples/pdf20-geospatial.php) |
+| [34. Structure destinations](34-pdf20-structure-destinations.md) | Semantic targets, content traversal, named SD entries and explicit page fallbacks. | [pdf20-structure-destinations.php](https://github.com/PDFToolkit/pdf/blob/v0.8.0/examples/pdf20-structure-destinations.php) |
+| [35. Derive HTML from tagged PDF](35-derive-html.md) | Tested rules, object-based graphics rendering, targeted reset and actual HTML. | [01-derive-tagged-pdf.php](https://github.com/PDFToolkit/pdf-to-html/blob/v0.3.0/examples/01-derive-tagged-pdf.php) |
+| [36. Apply redaction](36-applied-redaction.md) | Actual deletion, shared resources and a fresh file without history. | [pdf17-secure-redaction.php](https://github.com/PDFToolkit/pdf/blob/v0.8.0/examples/pdf17-secure-redaction.php) |
 
 After the first document, lessons 03 to 07 can be read in any order matching
 your interests. Lessons 08 and 11 concern file organization; lessons 09 and 10
@@ -176,8 +177,8 @@ PDF can still have text outside the page or poor layout.
 
 ## Go to the specification
 
-Guides cite sections of [PDF 1.7 / ISO 32000-1:2008](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/PDF32000_2008.pdf)
-and the [Adobe supplement](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/adobe_supplement_iso32000.pdf).
+Guides cite sections of [PDF 1.7 / ISO 32000-1:2008](https://github.com/PDFToolkit/pdf/blob/v0.8.0/resources/reference-documents/PDF32000_2008.pdf)
+and the [Adobe supplement](https://github.com/PDFToolkit/pdf/blob/v0.8.0/resources/reference-documents/adobe_supplement_iso32000.pdf).
 [Coverage](../coverage.md) distinguishes definitions, constructions and rules
 actually verified. Signatures are part of the learning path;
 [encryption](../components.md) objects have their own documentation. Font-program

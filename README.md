@@ -32,12 +32,12 @@ Public reference downloads keep their existing URLs.
 The PHP libraries are available on Packagist. Install the core with Composer:
 
 ```sh
-composer require "roukmoute/pdf:^0.7.1"
+composer require "roukmoute/pdf:^0.8.0"
 ```
 
-The documented releases are core **0.7.1**, PDF reader **0.2.3**, images/fonts **0.1.8**,
-independent OpenType **0.1.0** and PDF-to-HTML **0.2.1**. They require **PHP 8.3 or later** and are
-checked on PHP 8.3, 8.4 and 8.5. Core **0.7** additionally requires 64-bit PHP;
+The documented releases are core **0.8.0**, PDF reader **0.3.0**, images/fonts **0.1.9**,
+independent OpenType **0.2.0** and PDF-to-HTML **0.3.0**. They require **PHP 8.3 or later** and are
+checked on PHP 8.3, 8.4 and 8.5. Core **0.8** and OpenType **0.2** require 64-bit PHP;
 OpenType remains independent of the PDF core.
 
 Choose the optional modules according to the files your application handles:
@@ -52,7 +52,7 @@ Choose the optional modules according to the files your application handles:
 The image/font/reader modules install the core as a dependency. The PDF-to-HTML module adds semantic derivation from tagged PDF and installs the reader as well. OpenType provides its own object model and installs without PDF dependencies. The package guide explains
 their Composer commands and supported versions.
 
-PDF-to-HTML 0.2.1 derives semantic content from tagged PDFs with checked structure
+PDF-to-HTML 0.3.0 derives semantic content from tagged PDFs with checked structure
 associations, Unicode, images, tables, navigation and form fields. Its
 [clause ledger](https://pdftoolkit.github.io/modules/to-html/requirements.html)
 links the retained reference to executable decisions and independent tests.
@@ -63,6 +63,14 @@ explains isolated PDF export and the application-supplied rendering engine.
 Rendering, authentication and unsupported codecs remain explicit capabilities;
 the default profile executes no PDF scripts or form actions.
 
+Reader 0.3 and PDF-to-HTML 0.3 provide opt-in native password authentication with
+verified user/owner permissions. The [reader guide](https://pdftoolkit.github.io/modules/reader/authentication.html)
+and [HTML guide](https://pdftoolkit.github.io/modules/to-html/authentication.html)
+explain credentials, crypt filters, rejection boundaries and viewer obligations.
+OpenType 0.2 independently provides GSUB/GPOS/GDEF and explicit variation
+coordinates; see [positioning](https://pdftoolkit.github.io/modules/opentype/positioning.html)
+for native adjustments and the remaining shaping/outline boundaries.
+
 ## PDF 2.0 guides and examples
 
 The [PDF 2.0 guide](https://pdftoolkit.github.io/guides/pdf-2-0.html) and
@@ -70,9 +78,15 @@ The [PDF 2.0 guide](https://pdftoolkit.github.io/guides/pdf-2-0.html) and
 explain ISO 32000-2:2020 EC3, modern encryption and signatures, PDF MAC,
 metadata/declarations, associated files, document parts and qualified structure
 roles, document timestamps, DSS/VRI evidence, geospatial measurements and
-structure destinations. The [35 tutorials](https://pdftoolkit.github.io/tutorials/) include
+structure destinations. The [36 tutorials](https://pdftoolkit.github.io/tutorials/) include
 executable examples and actual PDF previews. WTPDF auditing reports mechanical
 checks and pending evidence; it does not certify accessibility or PDF/UA.
+
+Core 0.8 adds [197 executed dictionary rules and reviewed source corrections](https://pdftoolkit.github.io/guides/source-audits.html),
+conservative [applied redaction](https://pdftoolkit.github.io/tutorials/36-applied-redaction.html)
+with fresh PDF output, and optional WTPDF XML rich-text comparison. The guides
+distinguish the 65-record Adobe errata classification from complete implementation
+and retain the unreviewed EC3, document-policy and external/human requirements.
 
 ## Reproducible sources
 

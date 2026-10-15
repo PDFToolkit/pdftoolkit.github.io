@@ -10,9 +10,9 @@ have a separate archival catalogue, including the original portfolio and its
 embedded-document relationships. They support comparison and targeted audits;
 their preservation does not alter the active definition inventories or establish
 implementation of all their procedures.
-Core **0.7.1**, PDF reader **0.2.1**, image/font modules **0.1.8** and independent OpenType **0.1.0**
-require **PHP 8.3 or later** and are checked on PHP 8.3, 8.4 and 8.5. Core **0.7**
-additionally requires 64-bit PHP; OpenType remains independent of the PDF core.
+Core **0.8.0**, PDF reader **0.3.0**, image/font modules **0.1.9** and independent OpenType **0.2.0**
+require **PHP 8.3 or later** and are checked on PHP 8.3, 8.4 and 8.5. Core **0.8** and OpenType **0.2**
+require 64-bit PHP; OpenType remains independent of the PDF core.
 The PHP runtime version and PDF format version are independent. The [PDF 2.0 guide](pdf-2-0.md)
 tracks ISO 32000-2:2020 EC3 separately from the ISO1 counts below. The
 [companion-specifications guide](pdf-2-0-bundle.md) describes ISO/TS 32001–32005,
@@ -97,6 +97,8 @@ the core, which has no production dependency on them. See the
 
 | Mechanism | Executable behavior | Explicit limits |
 | --- | --- | --- |
+| Source dictionary rules | 197 immutable intrinsic relations across PDF 1.7/2.0 tables, executed by schema validation/serialization; reviewed EC3 source bindings and corrected appearance placement. | Other contextual/resource rules and unreviewed EC3 annotations remain explicit; see [source audits](source-audits.md). |
+| Applied redaction | Native conservative deletion from normalized PDF graphs; affected shared resources removed across uses, ancillary channels dropped and fresh output without history. | Unsupported/opaque content rejected; trusted geometry and resource sanitization are explicit. Excess deletion is permitted; see [tutorial 36](tutorials/36-applied-redaction.md). |
 | PDF fonts — core | Explicit font programs and metrics, simple and composite fonts, encodings, horizontal/vertical CID widths, CMaps, UseCMap and Unicode mappings. | The core receives normalized programs and values; external font parsing, subsetting and shaping need their own processors. |
 | TrueType conversion — pdf-fonts | Static sfnt/glyf validation, Unicode cmap 4/12, metrics, full-glyph CIDFont program and conversion factories producing core font objects. | No font collections, CFF/variable fonts, glyph subsetting, vertical writing, kerning or complex-script shaping. The derived CIDFontProgram removes cmap as required by 9.9 and the invalidated DSIG. The original font's embedding permissions are checked. |
 | PDF images — core | Explicit dimensions, sample layouts, colour spaces, Decode, image stencils, colour-key/explicit/soft masks and declarations of encoded image data. | Encoded data and its colour/alpha semantics are caller-declared. External codecs and file inspection belong to optional converters. |
@@ -109,7 +111,7 @@ the core, which has no production dependency on them. See the
 | PDF 2.0 metadata and associations | Escaped native XMP, declarations with explicit scope, named marked-content resource validation, associated-file discovery, document parts/DPM and encrypted payload wrappers. | Opaque caller XML/content needs separate validation. An author assertion does not prove conformance; an outer wrapper does not decrypt its payload. |
 | Qualified structure and WTPDF | Namespace objects, qualified role maps, TS 32005 inclusion rules and bounded mechanical audit findings for structure, metadata, annotations and actual typed text use. | Human reading order, meaningful descriptions, faithful Unicode semantics and external font-program evidence remain pending; no automatic certification. |
 | Modern PDF security | R=6 AES-CBC, R=7 AES-GCM, SHA-3/SHAKE, supported modern curves/EdDSA, PDF MAC over actual initial/incremental/linearized bytes and signature-attached MAC. | Explicit algorithm/provider/extension selection. AES-CBC alone is unauthenticated; signature mathematics does not establish PKI trust. |
-| External PDF reading — pdf-reader | PDF 1.0–2.0 object syntax and PDF 2.0 UTF-8 strings, traditional and stream xrefs, Prev revisions, object streams, explicit reference resolution, encoded stream retention and bounded Flate/ASCIIHex/ASCII85/RunLength decoding with eight-bit TIFF/PNG predictors. Ordered page-tree traversal checks counts, parents and unique identities; effective Resources, MediaBox, CropBox and Rotate preserve PDF objects. Page-local Contents streams are resolved separately in order. | No encrypted documents, hybrid XRefStm, repair, content interpretation, rendering or text extraction. Unknown codecs can be retained encoded but cannot be decoded. Page traversal does not inspect all resource contents. Contents inspection does not concatenate or decode streams. Reading does not implement import or remapping into the writer. |
+| External PDF reading — pdf-reader | PDF 1.0–2.0 object syntax/strings, classic/stream/hybrid xrefs, Prev histories, object streams, explicit references and bounded lossless decoding including LZW and TIFF/PNG predictors. Opt-in Standard password authentication R=2–7 and named crypt filters expose verified user/owner permissions. | No source PDF MAC/public-key authentication, repair, content interpretation, rendering, text extraction, graph import or remapping. DCT/JPX/CCITT/JBIG2 codecs remain unsupported. The application enforces permissions. |
 
 The initial writer emits free records for every unused object number below Size.
 Incremental sections emit changed records and newly introduced free holes, keeping

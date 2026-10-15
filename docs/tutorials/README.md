@@ -15,7 +15,7 @@ Le parcours s'inspire de l'organisation des [tutoriels FPDF](https://www.fpdf.or
 Le core et les modules sont disponibles sur Packagist. Depuis votre projet :
 
 ```sh
-composer require "roukmoute/pdf:^0.7.1"
+composer require "roukmoute/pdf:^0.8.0"
 ```
 
 Les leçons 09, 10 et 12 utilisent respectivement `pdftoolkit/pdf-fonts`,
@@ -29,12 +29,12 @@ donne leurs commandes d'installation. L'application charge son propre
 Il faut PHP 8.3 ou supérieur et les extensions `ctype`, `iconv` et `zlib`. Les commandes des leçons s'exécutent depuis la racine d'un checkout du core `PDFToolkit/pdf`. Les fichiers Markdown et la construction du site appartiennent à `PDFToolkit/pdftoolkit.github.io` ; voir les [instructions de construction](../site/README.md) pour préparer les sources aux versions documentées. Depuis le checkout du core :
 
 ```sh
-export COMPOSER_ROOT_VERSION=0.7.x-dev
+export COMPOSER_ROOT_VERSION=0.8.x-dev
 composer install
 php examples/hello-world.php
 ```
 
-Sous PowerShell, définir `$env:COMPOSER_ROOT_VERSION = '0.7.x-dev'` avant
+Sous PowerShell, définir `$env:COMPOSER_ROOT_VERSION = '0.8.x-dev'` avant
 `composer install`. Le checkout utilise son `composer.lock` pour installer
 les outils de développement et les trois modules aux versions documentées.
 
@@ -70,7 +70,7 @@ présente le PDF d'entrée, ses trois pages et les objets lus.
 | [09. Police TrueType et Unicode](09-embedded-font.md) | Programme incorporé, CID, largeurs et correspondance ToUnicode. | [embedded-font.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/embedded-font.php) |
 | [10. Images JPEG et PNG](10-image-files.md) | Inspection JPEG, décodage PNG, échantillons et transparence. | [image-files.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/image-files.php) |
 | [11. Révisions incrémentales](11-incremental-update.md) | Conservation des octets, remplacements et chaînage des xref. | [incremental-update.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/incremental-update.php) |
-| [12. Lire un PDF externe](12-reading-pages.md) | Arbre vérifié, valeurs héritées et flux de contenu inspectés puis décodés. | [pages.php du module lecteur](https://github.com/PDFToolkit/pdf-reader/blob/v0.2.3/examples/pages.php) |
+| [12. Lire un PDF externe](12-reading-pages.md) | Arbre vérifié, valeurs héritées et flux de contenu inspectés puis décodés. | [pages.php du module lecteur](https://github.com/PDFToolkit/pdf-reader/blob/v0.3.0/examples/pages.php) |
 | [13. Extensions Adobe et numérotation Bates](13-adobe-extensions.md) | Déclaration des extensions, propriétés d'artefact et pied de page Bates. | [adobe-extensions.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/adobe-extensions.php) |
 | [14. Champs AcroForm](14-acroform-fields.md) | Arbre, valeurs, widgets et apparences. | [acroform-fields.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/acroform-fields.php) |
 | [15. Structure logique](15-tagged-structure.md) | Contenu marqué, ParentTree, IDTree et annotations. | [tagged-structure.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/tagged-structure.php) |
@@ -86,14 +86,15 @@ présente le PDF d'entrée, ses trois pages et les objets lus.
 | [25. Générations des objets](25-object-lifecycle.md) | Suppression, liste libre et réutilisation. | [object-lifecycle.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/object-lifecycle.php) |
 | [26. Politique de signature](26-signature-field-policy.md) | Champ, seeds, verrou et résultat effectivement signé. | [signature-field-policy.php](https://github.com/PDFToolkit/pdf/blob/v0.5.4/examples/signature-field-policy.php) |
 | [27. PDF 2.0 et fichiers associés](27-pdf20-associated-files.md) | Métadonnées Unicode, relations AF et ressources MCAF nommées corrigées. | [pdf20-associated-files.php](https://github.com/PDFToolkit/pdf/blob/v0.6.2/examples/pdf20-associated-files.php) |
-| [28. Métadonnées, déclarations et parties documentaires](28-pdf20-metadata-declarations.md) | Portée XMP, AF, compensation du point noir et relations DPart. | [pdf20-metadata-declarations.php](https://github.com/PDFToolkit/pdf/blob/v0.7.1/examples/pdf20-metadata-declarations.php) |
-| [29. Une enveloppe de contenu chiffré](29-pdf20-encrypted-payload.md) | Document extérieur lisible, collection masquée et PDF intérieur chiffré séparément. | [pdf20-encrypted-payload.php](https://github.com/PDFToolkit/pdf/blob/v0.7.1/examples/pdf20-encrypted-payload.php) |
-| [30. Espaces de noms et vérification WTPDF](30-pdf20-tagged-namespaces.md) | Rôles qualifiés, types PDF 1.7 et 2.0, ParentTree réciproque et limites d’un audit mécanique. | [pdf20-tagged-namespaces.php](https://github.com/PDFToolkit/pdf/blob/v0.7.1/examples/pdf20-tagged-namespaces.php) |
-| [31. Signatures modernes et intégrité](31-pdf20-modern-signature.md) | Courbes nommées, SHA-3, plages d’octets exactes et PDF MAC. | [pdf20-modern-signature.php](https://github.com/PDFToolkit/pdf/blob/v0.7.1/examples/pdf20-modern-signature.php) |
-| [32. Horodatages de document et DSS](32-pdf20-timestamp-dss.md) | RFC3161, politique de validation explicite, VRI et signatures historiques conservées. | [pdf20-timestamp-dss.php](https://github.com/PDFToolkit/pdf/blob/v0.7.1/examples/pdf20-timestamp-dss.php) |
-| [33. Objets géospatiaux et mesures](33-pdf20-geospatial.md) | Systèmes de coordonnées, points de contrôle appariés, viewports, matrices et nuages de points. | [pdf20-geospatial.php](https://github.com/PDFToolkit/pdf/blob/v0.7.1/examples/pdf20-geospatial.php) |
-| [34. Destinations de structure](34-pdf20-structure-destinations.md) | Cibles sémantiques, parcours du contenu, entrées SD nommées et replis de page explicites. | [pdf20-structure-destinations.php](https://github.com/PDFToolkit/pdf/blob/v0.7.1/examples/pdf20-structure-destinations.php) |
-| [35. Dériver du HTML depuis un PDF balisé](35-derive-html.md) | Règles testées, rendu graphique objet, reset ciblé et HTML réel. | [01-derive-tagged-pdf.php](https://github.com/PDFToolkit/pdf-to-html/blob/v0.2.1/examples/01-derive-tagged-pdf.php) |
+| [28. Métadonnées, déclarations et parties documentaires](28-pdf20-metadata-declarations.md) | Portée XMP, AF, compensation du point noir et relations DPart. | [pdf20-metadata-declarations.php](https://github.com/PDFToolkit/pdf/blob/v0.8.0/examples/pdf20-metadata-declarations.php) |
+| [29. Une enveloppe de contenu chiffré](29-pdf20-encrypted-payload.md) | Document extérieur lisible, collection masquée et PDF intérieur chiffré séparément. | [pdf20-encrypted-payload.php](https://github.com/PDFToolkit/pdf/blob/v0.8.0/examples/pdf20-encrypted-payload.php) |
+| [30. Espaces de noms et vérification WTPDF](30-pdf20-tagged-namespaces.md) | Rôles qualifiés, types PDF 1.7 et 2.0, ParentTree réciproque et limites d’un audit mécanique. | [pdf20-tagged-namespaces.php](https://github.com/PDFToolkit/pdf/blob/v0.8.0/examples/pdf20-tagged-namespaces.php) |
+| [31. Signatures modernes et intégrité](31-pdf20-modern-signature.md) | Courbes nommées, SHA-3, plages d’octets exactes et PDF MAC. | [pdf20-modern-signature.php](https://github.com/PDFToolkit/pdf/blob/v0.8.0/examples/pdf20-modern-signature.php) |
+| [32. Horodatages de document et DSS](32-pdf20-timestamp-dss.md) | RFC3161, politique de validation explicite, VRI et signatures historiques conservées. | [pdf20-timestamp-dss.php](https://github.com/PDFToolkit/pdf/blob/v0.8.0/examples/pdf20-timestamp-dss.php) |
+| [33. Objets géospatiaux et mesures](33-pdf20-geospatial.md) | Systèmes de coordonnées, points de contrôle appariés, viewports, matrices et nuages de points. | [pdf20-geospatial.php](https://github.com/PDFToolkit/pdf/blob/v0.8.0/examples/pdf20-geospatial.php) |
+| [34. Destinations de structure](34-pdf20-structure-destinations.md) | Cibles sémantiques, parcours du contenu, entrées SD nommées et replis de page explicites. | [pdf20-structure-destinations.php](https://github.com/PDFToolkit/pdf/blob/v0.8.0/examples/pdf20-structure-destinations.php) |
+| [35. Dériver du HTML depuis un PDF balisé](35-derive-html.md) | Règles testées, rendu graphique objet, reset ciblé et HTML réel. | [01-derive-tagged-pdf.php](https://github.com/PDFToolkit/pdf-to-html/blob/v0.3.0/examples/01-derive-tagged-pdf.php) |
+| [36. Appliquer une caviardisation](36-applied-redaction.md) | Suppression réelle, ressources partagées et nouveau fichier sans historique. | [pdf17-secure-redaction.php](https://github.com/PDFToolkit/pdf/blob/v0.8.0/examples/pdf17-secure-redaction.php) |
 
 Les leçons 03 à 07 peuvent se lire dans l'ordre des sujets qui vous intéressent, après le premier document. Les leçons 08 et 11 concernent l'organisation du fichier ; les leçons 09 et 10 ajoutent des programmes de police et des fichiers image réels au graphe. La leçon 12 consulte les structures d'un PDF existant avec les objets du lecteur.
 
@@ -140,8 +141,8 @@ La seconde commande réécrit le PDF dans une forme utile pour examiner ses obje
 
 ## Aller vers la norme
 
-Les guides citent les sections de [PDF 1.7 / ISO 32000-1:2008](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/PDF32000_2008.pdf)
-et du [supplément Adobe](https://github.com/PDFToolkit/pdf/blob/v0.7.1/resources/reference-documents/adobe_supplement_iso32000.pdf). La
+Les guides citent les sections de [PDF 1.7 / ISO 32000-1:2008](https://github.com/PDFToolkit/pdf/blob/v0.8.0/resources/reference-documents/PDF32000_2008.pdf)
+et du [supplément Adobe](https://github.com/PDFToolkit/pdf/blob/v0.8.0/resources/reference-documents/adobe_supplement_iso32000.pdf). La
 [couverture](../coverage.md) distingue les définitions, constructions et règles
 effectivement vérifiées. Les signatures font partie du parcours ; les objets de
 [chiffrement](../components.md) disposent de leur propre

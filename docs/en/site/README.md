@@ -68,7 +68,7 @@ Their provenance uses the reader commit pinned in the manifest; the core
 retains its generation examples.
 
 The PDF-to-HTML checkout is separately pinned under `_sources/pdf-to-html`.
-Its locked reader supplies the documented reader 0.2.3 without changing the core
+Its locked reader supplies the documented reader 0.3.0 without changing the core
 lock. Tutorial 35 runs its real CLI against the independently generated tagged
 fixture. The build checks the retained reference and fixture bytes, then executes
 the package's pypdf/HTML5 oracle. It copies every asset listed in the CLI JSON,
@@ -76,12 +76,26 @@ checking filenames, SHA-256 and output collisions. `derivedHtml` stays outside
 the bilingual documentation-page inventory and is previewed in an empty sandbox.
 Module guides/API are published under `/modules/to-html/`.
 
-The current selection documents PDF-to-HTML 0.2.1 and reader 0.2.3. The
+The authentication guide is reachable under both `/modules/reader/` and
+`/modules/to-html/`; OpenType's native GPOS/variation guide is under
+`/modules/opentype/positioning.html`. All have reciprocal French counterparts.
+Tutorial 36 runs the core's actual `pdf17-secure-redaction.php` and publishes its
+two result pages. The build separately validates source/result bytes and pixels
+with qpdf, pypdf and Poppler; its private source copy is never published as the
+redacted result. EC3 annotation identities and approval threads are checked
+against the unchanged canonical PDF, separately from dictionary generation.
+
+The current selection documents PDF-to-HTML 0.3.0 and reader 0.3.0. The
 [requirements ledger](https://pdftoolkit.github.io/modules/to-html/requirements.html),
 [policies](https://pdftoolkit.github.io/modules/to-html/policies.html) and
 [graphics](https://pdftoolkit.github.io/modules/to-html/graphics.html) guides
 distinguish native rules, HTML adaptations and explicit capabilities for
 rasterization, authentication and additional codecs.
+
+Native R=2–7 authentication is an explicit reader selection. The HTML package's
+independent authentication oracle decrypts actual qpdf fixtures and parses the
+derived HTML, checking user/owner permissions, wrong credentials and converter
+reuse. Its transient fixtures remain in the validation workspace.
 
 `tools/build_docs.py` reproduces glyph tables and inline/fax fixtures, then runs
 the HTML5/pypdf oracles, Poppler pixel comparisons for graphics/contexts/fax,
