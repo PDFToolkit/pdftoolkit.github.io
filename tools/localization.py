@@ -37,6 +37,12 @@ for module in ('reader', 'images', 'fonts', 'opentype', 'to-html'):
 
 # Project-authored pilot summaries, translated independently of original normative prose.
 ISO2_DESCRIPTIONS_FR = {'Identifies the document catalog.': 'Identifie le catalogue du document.',
+ '(Required except for the stated conditions in PDF 2.0; optional in PDF 1.2 through 1.7) An appearance dictionary. In PDF 2.0 it is required except for Rect[0]==Rect[2] AND Rect[1]==Rect[3], or Subtype Popup, Projection or Link. AP.N defines the normal appearance; state dictionaries require a name AS. An unmatched state retains the processor fallback defined in 12.5.5.':
+     '(Obligatoire sauf dans les cas indiqués en PDF 2.0 ; optionnel en PDF 1.2 à 1.7) '
+     'Dictionnaire d’apparences. En PDF 2.0, il est obligatoire sauf si '
+     'Rect[0]==Rect[2] ET Rect[1]==Rect[3], ou si Subtype vaut Popup, Projection ou Link. '
+     'AP.N définit l’apparence normale ; les dictionnaires d’états exigent un nom AS. '
+     'Un état sans correspondance conserve le comportement de repli du lecteur décrit en 12.5.5.',
  'A catalog-level PDF version declaration later than the file header.': 'Déclare dans le catalogue une version '
                                                                         'PDF plus récente que celle de l’en-tête.',
  'Developer extension declarations, held in a direct dictionary.': 'Déclarations d’extensions des développeurs, '
