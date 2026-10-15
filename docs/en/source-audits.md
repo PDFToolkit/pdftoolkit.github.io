@@ -72,6 +72,10 @@ are distinct records.
 | #86/#290/#609/#612, DParts | Flat child arrays with explicit parents, XMP metadata on DPartRoot and UTF-8 DPM names; see [0.11 migration](migration-0.11.md) and [tutorial 28](tutorials/28-pdf20-metadata-declarations.md). |
 | #11/#128, Type3 | Optional Type3 descriptor FontName, agreement with Name when both exist, and explicit or contextual resources; see [tutorial 22](tutorials/22-native-fonts.md). |
 | #152/#474, FontWeight | Integral values from 1 to 1000 in PDF 2.0; historical steps of 100 remain required for PDF 1.x. |
+| #549, empty paths | Path-painting operators without a current path are accepted outside text objects; independent rendered comparisons check that they add no marks. |
+| #156, physical page 153 | RichMedia embedded assets require a MIME Subtype, including a primary asset outside the Assets name tree. |
+| #296, XMP encoding | PDF 2.0 metadata uses decoded UTF-8 bytes and immutable encoding evidence in retained native revisions; this is separate from XML/XMP schema conformance. |
+| #482, output-profile references | Each non-embedded alternative requires `FS=URL` and a PDFDocEncoded RFC3986 reference. This validates the declaration without fetching a profile or validating ICC data. |
 
 The record retains the accepted status of #468. Native `ChoiceField` construction selects its edition
 explicitly with `ChoiceIndexSemantics::Pdf17` (the default) or

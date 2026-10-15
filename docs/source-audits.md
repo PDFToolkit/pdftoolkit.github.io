@@ -76,6 +76,10 @@ annotations et les contraintes effectivement exécutées sont deux données dist
 | #86/#290/#609/#612, DParts | Tableaux enfants plats avec parents explicites, métadonnées XMP sur DPartRoot et noms UTF-8 dans DPM ; voir [migration 0.11](migration-0.11.md) et [tutoriel 28](tutorials/28-pdf20-metadata-declarations.md). |
 | #11/#128, Type3 | FontName facultatif du descripteur Type3, accord avec Name lorsqu'ils existent et ressources explicites ou fournies par le contexte ; voir [tutoriel 22](tutorials/22-native-fonts.md). |
 | #152/#474, FontWeight | Valeur entière de 1 à 1000 en PDF 2.0 ; les pas historiques de 100 restent exigés pour PDF 1.x. |
+| #549, chemins vides | Les opérateurs de peinture sans chemin courant sont acceptés hors objets texte ; les comparaisons de rendu indépendantes vérifient qu'ils n'ajoutent aucune marque. |
+| #156, page physique 153 | Les pièces jointes RichMedia exigent un Subtype MIME, y compris la pièce principale absente de l'arbre de noms Assets. |
+| #296, encodage XMP | Les métadonnées PDF 2.0 utilisent des octets UTF-8 décodés et une preuve immuable dans les révisions natives conservées ; ce contrôle reste distinct de la conformité aux schémas XML/XMP. |
+| #482, références de profils de sortie | Chaque alternative non embarquée exige `FS=URL` et une référence RFC3986 en PDFDocEncoding. Le contrôle valide la déclaration sans télécharger de profil ni analyser les données ICC. |
 
 Le registre conserve notamment le statut accepted de #468. La construction native
 `ChoiceField` choisit explicitement l'édition avec `ChoiceIndexSemantics::Pdf17`

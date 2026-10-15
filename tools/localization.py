@@ -301,6 +301,24 @@ ISO2_DESCRIPTIONS_FR.update({
         'EC3 #290 interdit Metadata dans les dictionnaires DPart. L’entrée du tableau original est conservée pour la traçabilité ; la contrainte DPart exécutable rejette toute valeur non nulle. Les métadonnées XMP de la hiérarchie appartiennent à DPartRoot.',
 })
 
+ISO2_DESCRIPTIONS_FR.update({
+    'Historical Web Capture identifier name tree; deprecated in PDF 2.0.':
+        'Arbre de noms des identifiants Web Capture historiques ; déprécié en PDF 2.0.',
+    'Historical Web Capture URL name tree; deprecated in PDF 2.0.':
+        'Arbre de noms des URL Web Capture historiques ; déprécié en PDF 2.0.',
+    'An optional array of 3D node dictionaries; its applicability does not require NR to be present.':
+        'Tableau optionnel de dictionnaires de nœuds 3D ; son application n’exige pas la présence de NR.',
+    'A nonempty array of embedded file-specification dictionaries or URL file-specification dictionaries with FS equal to URL and F a PDFDocEncoded text string limited to RFC3986 characters.':
+        'Tableau non vide de dictionnaires de spécification de fichiers incorporés ou de fichiers URL, avec FS égal à URL et F une chaîne texte en PDFDocEncoding limitée aux caractères RFC3986.',
+    'An ASCII string identifying the type of data in D; it shall conform to the RFC2045 content-type specification.':
+        'Chaîne ASCII identifiant le type des données de D ; elle doit respecter la spécification content-type de la RFC2045.',
+    'The indirect page reference for the marked-content sequence takes precedence over the containing structure element Pg and is required when that structure element has no Pg.':
+        'La référence indirecte à la page de la séquence de contenu marqué prend priorité sur Pg de l’élément de structure parent ; elle est obligatoire lorsque ce parent n’a pas de Pg.',
+    'The indirect page reference for the object takes precedence over the containing structure element Pg and is required when that structure element has no Pg.':
+        'La référence indirecte à la page de l’objet prend priorité sur Pg de l’élément de structure parent ; elle est obligatoire lorsque ce parent n’a pas de Pg.',
+})
+
+
 def iso2_description(value, language):
     if language == 'fr' and value in ISO2_DESCRIPTIONS_FR:
         return ISO2_DESCRIPTIONS_FR[value], 'fr'

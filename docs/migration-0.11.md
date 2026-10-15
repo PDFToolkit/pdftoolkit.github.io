@@ -44,6 +44,21 @@ vérifie à nouveau l'édition réelle. La sélection intrinsèque du digest EdD
 la règle historique DSA/SHA1 restent distinctes ; le backend prouve toujours sa
 sortie réelle.
 
+## Fournir du XMP UTF-8 décodé en PDF 2.0
+
+Fournir le XMP comme octets UTF-8 décodés, avec d'éventuels filtres de compression
+explicites. Une déclaration XML annonçant un autre encodage est refusée. Des
+métadonnées pré-encodées opaques ne prouvent pas cet encodage et sont refusées
+en PDF 2.0. La construction habituelle de `MetadataStream` avec un `XmpPacket`
+explicite est conservée.
+
+Les révisions natives gardent une preuve d'encodage immuable liée aux octets du
+flux émis. Conserver un flux comprimé ne relit pas un builder mutable et ne traite
+pas les octets comprimés comme du texte. Le passage d'un document PDF 1.7 conservé
+à PDF 2.0 vérifie aussi ses métadonnées selon la nouvelle exigence. Ce contrôle
+porte sur l'encodage demandé par EC3 #296 ; il ne prouve pas la conformité aux
+schémas XML ou XMP.
+
 ## Authentifier chaque mise à jour UR3 chiffrée
 
 Fournir un `PasswordUsageRightsAuthentication` ou `CertificateUsageRightsAuthentication`

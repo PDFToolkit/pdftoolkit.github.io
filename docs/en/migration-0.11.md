@@ -40,6 +40,19 @@ capability and Adobe declaration rules. The frozen signing path checks the actua
 edition again. Intrinsic EdDSA digest selection and the historical DSA/SHA1 rule
 remain distinct; a backend must still prove its actual output.
 
+## Supply decoded UTF-8 XMP in PDF 2.0
+
+Supply XMP as decoded UTF-8 bytes, optionally followed by explicit compression
+filters. A declaration naming another XML encoding is rejected. Opaque
+pre-encoded metadata cannot prove this encoding and is refused in PDF 2.0.
+`MetadataStream` with an explicit `XmpPacket` retains its normal construction.
+
+Native revisions retain immutable encoding evidence bound to the emitted stream
+bytes. Keeping a compressed stream does not re-read a mutable builder or treat
+compressed bytes as text. Upgrading a retained PDF 1.7 document to PDF 2.0 also
+checks its metadata against the new requirement. This verifies the encoding
+required by EC3 #296; it does not establish XML schema or XMP conformance.
+
 ## Authenticate every encrypted UR3 update
 
 Pass one `PasswordUsageRightsAuthentication` or `CertificateUsageRightsAuthentication`
