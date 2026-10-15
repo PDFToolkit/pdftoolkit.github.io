@@ -65,6 +65,16 @@ chaque ancienne révision, et l'intégrité MAC de la validité mathématique de
 signatures ou de la confiance des certificats. L'authentification par clé
 publique source reste indisponible.
 
+Le lecteur 0.4 traite aussi les valeurs nulles optionnelles de dictionnaires
+comme absentes, y compris les références terminant sur un objet indisponible.
+`ReadDocument::resolve()` suit les chaînes physiques de références indirectes
+avec limites communes de profondeur et de cycles. PDF 2.0 autorise ces chaînes
+hors flux d'objets ; un membre compressé contenant uniquement une autre référence
+reste refusé. Les entrées MAC optionnelles nulles sont absentes ; les véritables
+valeurs de sécurité non nulles conservent leurs obligations d'objets directs.
+Ces règles n'impliquent ni parcours arbitraire du graphe ni réparation implicite
+d'une source malformée.
+
 ## ISO 32000-2:2020 EC3 et bundle complémentaire dans 0.7.1
 
 Le [guide PDF 2.0](pdf-2-0.md) documente les objets propres à l’édition : tableaux

@@ -60,6 +60,14 @@ latest-file authentication from historical per-revision verification, and MAC
 integrity from signature mathematics or certificate trust. Public-key source
 authentication remains unsupported.
 
+Reader 0.4 also treats optional dictionary null values as absent, including
+unavailable reference terminals. `ReadDocument::resolve()` follows physical
+indirect-reference chains with shared depth and cycle bounds. PDF 2.0 permits
+these chains outside object streams; a compressed member containing only another
+reference remains rejected. Optional null MAC entries are absent, while actual
+non-null security values retain their required directness. These rules do not
+turn arbitrary graph traversal or malformed source recovery into an implicit operation.
+
 ## ISO 32000-2:2020 EC3 and companion bundle in 0.7.1
 
 The [PDF 2.0 guide](pdf-2-0.md) documents edition-specific dictionary objects,

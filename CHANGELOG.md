@@ -17,6 +17,8 @@
 - Add the reader's bilingual source PDF MAC guide to module navigation and
   required-route checks. Document exact current-file coverage, required integrity
   policy, immutable policy composition, framing limits and the signature/PKI boundary.
+- Explain optional null dictionary values and bounded physical indirect-reference
+  chains, retaining object-stream restrictions and non-null security directness.
 - Run independent barcode, Type 3 usage and source-MAC oracles during the full
   documentation build, keeping their verification artifacts private to the build.
 

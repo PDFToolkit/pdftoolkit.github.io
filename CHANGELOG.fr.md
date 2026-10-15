@@ -17,6 +17,9 @@
 - Ajouter le guide bilingue du MAC PDF source à la navigation du lecteur et aux
   routes obligatoires. Décrire couverture exacte du fichier courant, politique
   d'intégrité requise, composition immuable, limites de cadrage et frontière signature/PKI.
+- Expliquer valeurs nulles optionnelles et chaînes physiques bornées de
+  références indirectes, avec restrictions des flux d'objets et maintien du
+  caractère direct des valeurs de sécurité non nulles.
 - Exécuter les oracles indépendants des codes-barres, usages Type 3 et MAC source
   pendant la construction complète de la documentation, avec résultats privés au build.
 
