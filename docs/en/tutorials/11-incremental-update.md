@@ -102,20 +102,13 @@ qpdf --check incremental-update.pdf
 qpdf --show-xref incremental-update.pdf
 ```
 
-Supported revisions come from `FileRevision` objects produced by the library.
-The optional `pdftoolkit/pdf-reader` module can already inspect external PDFs,
-as [lesson 12](12-reading-pages.md) demonstrates. Importing their objects into
-the writer, remapping them and converting them into editable revisions remain
-to be built. Object deletion
-and reuse, xref-format changes, hybrid references, encrypted files, signatures
-and linearization require their own mechanisms. An incremental update does not
-remove old content from the file: it must not be used to erase confidential information.
+Editable revisions come from the library’s own `FileRevision` objects. Reader 0.7 inspects external PDFs and can import/remap an explicitly selected graph into a new document. Import does not convert source history into editable native revisions or transfer signature authority. Object release/reuse, xref/hybrid formats, encryption, signatures and linearization have their own core mechanisms. Incremental updates retain old bytes and must not be used to erase confidential information.
 
 References: ISO 32000-1:2008, **7.5.4–7.5.8** for xref, trailers, revisions and
 object containers, and **14.4** for file identifiers.
 
 [← 10. JPEG and PNG images](10-image-files.md) · [All tutorials](README.md)
 
-For the forthcoming bounded filling of an actually certified native revision,
+For bounded filling of an actually certified native revision,
 continue with [lesson 37](37-protected-form-fill.md) and the
 [protected-revisions guide](../protected-revisions.md).

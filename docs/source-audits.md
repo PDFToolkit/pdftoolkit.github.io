@@ -146,6 +146,16 @@ exemple, la suppression en 2007 du drapeau de seed `DigestMethod` ne doit pas
 effacer le contrat distinct de l'extension Adobe level 3 ultérieure. Le registre
 préserve les identités des sources et leurs éditions applicables.
 
+## Relations PDF et calculs du core 0.12
+
+Le core contrôle les valeurs effectives héritées des pages (`Rotate`, `UserUnit`, `Tabs`, boîtes de production), les liens/comptes/styles des signets et les vingt familles d’actions standard. Les entrées requises, flags, cibles et versions sont vérifiés, y compris les emplacements réservés aux actions JavaScript ; aucune action n’est exécutée. RichMedia contrôle ressources, instances, configurations, animation et fenêtres d’activation sans devenir un moteur multimédia.
+
+Les programmes de fonction Type 4 sont compilés en objets immuables et évaluent les 42 opérateurs avec budgets de travail/pile/profondeur et contrôles des domaines/plages numériques. Les erreurs de syntaxe et erreurs de type/pile démontrables en séquence directe sont refusées ; les branches dépendantes de l’exécution sont contrôlées pendant l’évaluation. Les oracles comparent les PDF avec des lecteurs indépendants et les calculs avec Ghostscript. Le core 0.12 conserve aussi l’intention de rendu des images importées et les DCT inversés dans les espaces ICC à quatre composantes. Ces règles ne certifient ni tout graphe PDF ni l’exécution d’un viewer.
+
+## Preuves entre packages
+
+La [couverture actuelle des modules](coverage.md#mecanismes-de-formats-externes-dans-les-modules-actuels) distingue parseurs de fichiers, exécution des tables, adaptateurs PDF et politiques des consommateurs. Les images combinent échantillons/profils exacts, libpng/ImageMagick/Pillow indépendants et rendu Poppler. Les fontes comparent données fontTools/HarfBuzz, correspondances PDF, Unicode extrait et placement réel des glyphes. Reader combine sélection des profils natifs/PHP, plans JPX/JBIG2 exacts, tolérances JPEG explicites, données globales filtrées/chiffrées et lecteurs PDF indépendants. Les CI des packages conservent commandes, versions et rapports ; un corpus fini réussi ne garantit pas l’acceptation de toute entrée.
+
 ## Comprendre les limites restantes
 
 Le garde incrémental natif exige provenance réelle des révisions émises,

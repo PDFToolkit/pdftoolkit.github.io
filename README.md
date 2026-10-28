@@ -17,6 +17,7 @@ or the module you need:
 - [Images](https://pdftoolkit.github.io/modules/images/)
 - [Fonts](https://pdftoolkit.github.io/modules/fonts/)
 - [OpenType](https://pdftoolkit.github.io/modules/opentype/)
+- [Codecs](https://pdftoolkit.github.io/modules/codecs/)
 - [PDF to HTML](https://pdftoolkit.github.io/modules/to-html/)
 
 This repository contains the shared prose, site assets, generator and deployment
@@ -27,20 +28,17 @@ The core groups its eighteen original reference PDFs under
 `resources/reference-documents/`, preserving their original names and bytes.
 Public reference downloads keep their existing URLs.
 
-Core 0.11 adds authenticated encrypted UR3 revisions, historical page templates and bounded rich text; Reader 0.6 inspects physical revision boundaries without creating native writer authority. OpenType 0.3 adds explicit axes, metadata, metrics and variable outlines. The [migration guide](https://pdftoolkit.github.io/guides/migration-0-11.html) and coverage guides distinguish verified mechanisms from remaining boundaries.
+Reader 0.7 adds explicit graph import, bounded CCITT and native/PHP image decoding. Images 0.2 adds all legal static PNG depths and Adam7, calibrated/ICC colour and JPEG YCCK. Fonts 0.2 connects static TrueType/CFF programs to explicit OpenType layout; OpenType 0.4 adds collections, Unicode cmap formats and feature ranges. The [coverage guides](https://pdftoolkit.github.io/guides/coverage.html) distinguish these mechanisms from rendering, automatic Unicode shaping and signature trust.
 
 ## Install the libraries
 
 The PHP libraries are available on Packagist. Install the core with Composer:
 
 ```sh
-composer require "roukmoute/pdf:^0.11.0"
+composer require "roukmoute/pdf:^0.12"
 ```
 
-The documented releases are core **0.11.0**, PDF reader **0.6.0**, images/fonts **0.1.12**,
-independent OpenType **0.3.0** and PDF-to-HTML **0.6.0**. They require **PHP 8.3 or later** and are
-checked on PHP 8.3, 8.4 and 8.5. Core **0.11** and OpenType **0.3** require 64-bit PHP;
-OpenType remains independent of the PDF core.
+The documented release series are core **0.12**, Reader **0.7**, Images and Fonts **0.2**, OpenType **0.4**, Codecs **0.1** and PDF-to-HTML **0.7**. They require **64-bit PHP 8.3 or later**; qualification covers PHP 8.3, 8.4 and 8.5. The source manifest pins exact versions and revisions. OpenType and Codecs have no PDF core dependency.
 
 Choose the optional modules according to the files your application handles:
 
@@ -49,12 +47,12 @@ Choose the optional modules according to the files your application handles:
 - [Images: pdftoolkit/pdf-images](https://packagist.org/packages/pdftoolkit/pdf-images)
 - [Fonts: pdftoolkit/pdf-fonts](https://packagist.org/packages/pdftoolkit/pdf-fonts)
 - [OpenType: pdftoolkit/opentype](https://packagist.org/packages/pdftoolkit/opentype)
+- [Codecs: pdftoolkit/pdf-codecs](https://packagist.org/packages/pdftoolkit/pdf-codecs)
 - [PDF to HTML: pdftoolkit/pdf-to-html](https://packagist.org/packages/pdftoolkit/pdf-to-html)
 
-The image/font/reader modules install the core as a dependency. The PDF-to-HTML module adds semantic derivation from tagged PDF and installs the reader as well. OpenType provides its own object model and installs without PDF dependencies. The package guide explains
-their Composer commands and supported versions.
+The image/font/reader modules install the core. Fonts also installs the independent OpenType model; PDF-to-HTML installs Reader. Codecs is a separate pure-PHP decoder library. On explicit image decoding, Reader selects a qualified Ghostscript/prlimit native profile first, then the installed PHP library for unavailable capabilities. If neither is available, it gives an actionable Composer command; it never installs a dependency silently. The [image codec guide](https://pdftoolkit.github.io/modules/reader/image-codecs.html) documents exact profiles, budgets and metadata.
 
-PDF-to-HTML 0.6.0 derives semantic content from tagged PDFs with checked structure
+PDF-to-HTML 0.7 derives semantic content from tagged PDFs with checked structure
 associations, Unicode, images, tables, navigation and form fields. Its
 [clause ledger](https://pdftoolkit.github.io/modules/to-html/requirements.html)
 links the retained reference to executable decisions and independent tests.
@@ -65,7 +63,7 @@ explains isolated PDF export and the application-supplied rendering engine.
 Rendering, authentication and unsupported codecs remain explicit capabilities;
 the default profile executes no PDF scripts or form actions.
 
-PDF-to-HTML 0.6.0 preserves native MathML layout when mapping Layout placement,
+PDF-to-HTML 0.7 preserves native MathML layout when mapping Layout placement,
 including shared classes. Explicit author CSS and MathML display remain authoritative.
 The [MathML coverage guide](https://pdftoolkit.github.io/modules/to-html/coverage.html#mathml-placement-and-browser-integration)
 explains the rules and independent Chromium/Firefox checks.

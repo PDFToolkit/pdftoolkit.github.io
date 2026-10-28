@@ -124,7 +124,7 @@ The reproducible checker rejects omitted clauses and missing evidence files.
 No automatic WTPDF/PDF/UA-2 certification or complete base-standard conformance
 is claimed. Reader 0.3 adds opt-in R=2–7 password authentication, hybrid xrefs
 and further filter decoding to PDF 1.0–2.0 input. Its
-[authentication guide](https://github.com/PDFToolkit/pdf-reader/blob/v0.6.0/docs/authentication.md)
+[authentication guide](https://github.com/PDFToolkit/pdf-reader/blob/v0.7.0/docs/authentication.md)
 states the supported crypt filters. Reader 0.4 adds the source MAC boundary
 described above; Reader 0.5 adds bounded public-key source authentication.
 These input mechanisms remain distinct from writing and rendering.
@@ -242,16 +242,17 @@ and the negative case without a marker behaves as expected. These checks
 pass on all three PHP versions; they are not interactive Acrobat validation.
 Static drawings, buttons and signatures retain freely constructed appearances.
 
-OpenType 0.3 provides fvar/avar 1.0 normalization, name/OS/2/STAT metadata,
-unhinted TrueType outlines, Type 2 CFF/CFF2 programs and
-HVAR/VVAR/MVAR/gvar/cvar variations. Its [complete table ledger](https://pdftoolkit.github.io/modules/opentype/coverage.html)
-records 27 implemented scopes, four partial tables and 19 pending. Remaining
-cmap formats, avar 2.0, a TrueType VM, color/bitmap/BASE/JSTF/MATH tables,
-TTC/OTC/WOFF/WOFF2 containers and font writing/subsetting remain explicit.
-Rasterization, complete Unicode shaping, bidi and line breaking belong to
-separate consumers. `pdf-fonts` continues to convert supported static TrueType
-programs. Evaluating an OpenType instance does not create an embeddable static
-font file.
+## External-format mechanisms in the current modules
+
+Images 0.2 reconstructs every legal static PNG colour/depth combination, including Adam7, with exact sixteen-bit colour/alpha. It preserves bounded ICC profiles and maps gAMA/cHRM/sRGB metadata through explicit colour policies. JPEG import retains the original DCT bytes, including qualified Adobe CMYK/YCCK and ICC profiles. APNG, HDR metadata and ambiguous colour semantics remain rejected; EXIF orientation is not applied.
+
+Reader 0.7 adds explicit graph import/remapping, external stream capabilities and CCITT decoding. Its [image codec guide](https://pdftoolkit.github.io/modules/reader/image-codecs.html) separates native Ghostscript profiles from the optional pure-PHP Codecs library. JPEG 2000 planes retain precision, signedness, sampling, ICC/colour choices and alpha/channel associations; the PDF consumer applies `ColorSpace`, `Decode` and `SMaskInData`. Parsing alone does not execute image codecs. A malformed stream or exhausted budget never causes fallback to a second engine.
+
+Codecs 0.1 implements eight-bit sequential/progressive Huffman JPEG, bounded JPEG 2000 profiles and JBIG2 segment algorithms. Its [module guides](https://pdftoolkit.github.io/modules/codecs/) enumerate exact mechanisms, unsupported features and independent/normative vector evidence. This does not provide image encoding, a colour-management engine or universal conformance. Native profiles known to alter samples or mishandle particular JBIG2 mechanisms are routed to PHP before processing.
+
+OpenType 0.4 adds TTC/OTC face selection/serialization, all Unicode cmap formats, optical/style parameters and source-range feature masks that preserve run context. Fonts 0.2 connects static TrueType and CFF1 to explicit GSUB/GPOS and PDF placement, preserving aliases and ligature extraction. The [font guide](https://pdftoolkit.github.io/modules/fonts/opentype-layout.html) distinguishes name-keyed and CID-keyed CFF and documents the Poppler CID/OpenType rendering difference. CFF2/variable embedding, static-instance generation, subsetting, a TrueType VM and automatic Unicode shaping/bidi remain absent. `avar` 2 is a proposal outside the retained published OpenType 1.9.1 scope.
+
+The supplied Adobe OTGuide is a 13-page usage guide, not the binary specification. OpenType's [page-by-page map](https://pdftoolkit.github.io/modules/opentype/collections-and-feature-parameters.html) separates supported font features from application UI, font discovery and installation. Retaining uninterpreted tables does not count as implementing them.
 
 ## Core boundary
 

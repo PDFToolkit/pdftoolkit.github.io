@@ -9,12 +9,12 @@ Reading these files belongs to the optional
 [`pdftoolkit/pdf-images`](https://github.com/PDFToolkit/pdf-images) module. Samples,
 DCT images and XObject streams belong to the core. `composer install` in the
 core checkout installs the module for examples; an application installs it from
-Packagist using `composer require "pdftoolkit/pdf-images:^0.1.12"`. The
+Packagist using `composer require "pdftoolkit/pdf-images:^0.2.0"`. The
 [package guide](../packages.md) also explains how to select the core release series.
 
 - **Complete example:** [image-files.php](https://github.com/PDFToolkit/pdf/blob/v0.11.0/examples/image-files.php).
 - **Result:** four images on a Letter page, with a checkerboard revealing transparency.
-- **Data:** [MIT-licensed synthetic patterns](https://github.com/PDFToolkit/pdf-images/blob/v0.1.12/examples/assets/images/README.md), distributed with the module in `vendor/pdftoolkit/pdf-images/examples/assets/images/`.
+- **Data:** [MIT-licensed synthetic patterns](https://github.com/PDFToolkit/pdf-images/blob/v0.2.0/examples/assets/images/README.md), distributed with the module in `vendor/pdftoolkit/pdf-images/examples/assets/images/`.
 - **Prerequisites:** [first document](01-first-document.md), [drawing](03-graphics.md) and [images](06-images.md).
 
 ## 1. Supply bytes without delegating file access
@@ -48,23 +48,13 @@ components, tables and scan headers. It accepts baseline and progressive 8-bit
 Huffman DCT JPEG. It does not decode DCT coefficients or claim to check every
 entropy-coded bit: that step belongs to the PDF reader. The encoded file remains unchanged.
 
-The core's `DCTImage` result exposes dimensions, `SampleLayout`, color transform
-and bytes. Grayscale uses `/DeviceGray`. RGB JPEG uses `/DeviceRGB` and an explicit
-`/ColorTransform`: YCbCr for JFIF, or the Adobe marker's value. Without a marker,
-only known component identifiers `1,2,3` or `R,G,B` are accepted.
+The core’s `DCTImage` exposes dimensions, sample layout, colour transform, optional ICC space and unchanged bytes. Without a profile, gray/RGB use DeviceGray/DeviceRGB. RGB has an explicit `/ColorTransform`: JFIF implies YCbCr, Adobe provides its marker value, and otherwise recognized component identifiers distinguish `1,2,3` from `R,G,B`. Gray/RGB/CMYK ICC APP2 chunks are reassembled by sequence number with bounded size and exact profile-byte retention.
 
-CMYK requires an Adobe marker with transform 0. Adobe components are inverted,
-so the dictionary contains `/Decode [1 0 1 0 1 0 1 0]`. YCCK, depths other than
-8 bits, arithmetic coding, lossless frames and embedded ICC profiles are explicitly
-rejected. EXIF metadata, including orientation, are not applied automatically.
+Adobe CMYK transform 0 retains CMYK; Adobe YCCK transform 2 selects PDF `/ColorTransform 1`. Both retain the Adobe inversion convention through `/Decode [1 0 1 0 1 0 1 0]`. Non-eight-bit, arithmetic and lossless JPEG processes remain rejected by this importer. Ambiguous component/colour declarations fail explicitly. EXIF orientation is not applied.
 
 ## 3. PNG: reconstruct samples
 
-`PngImageDecoder` checks the signature, framing, CRC, critical chunks, order of
-`IHDR`, `PLTE`, `tRNS`, `IDAT` and `IEND`, and absence of data after the file ends.
-Consecutive `IDAT` chunks form one zlib stream. Decompression is bounded by the
-exact expected scanline length. Missing zlib endings, extra bytes and unknown
-filters are rejected.
+`PngImageDecoder` checks signature, framing, CRC, critical chunks, order and absence of data after IEND. Consecutive IDAT chunks form one zlib stream, bounded by the exact expected scanline length. Missing endings, excessive decoded output and unknown filters are rejected. Unused encoded bytes after the final IDAT zlib stream are ignored as PNG permits; trailing iCCP compressed data remains invalid.
 
 `PngScanlineDecoder` reconstructs the None, Sub, Up, Average and Paeth filters.
 The result is a `SampledImage`: color `ImageSamples` and, when needed, opacity
@@ -72,15 +62,9 @@ The result is a `SampledImage`: color `ImageSamples` and, when needed, opacity
 bytes. Rows follow file order from the top of the image. Colors are not premultiplied
 by alpha.
 
-The decoder supports static **non-interlaced 8-bit** PNG: grayscale, RGB, palette,
-gray with alpha and RGBA. Palette indices become RGB samples; `tRNS` becomes an
-alpha channel, including color keys for gray and RGB PNG. Alpha 0 is transparent,
-255 opaque.
+The decoder accepts every legal static combination: gray 1/2/4/8/16, indexed 1/2/4/8, and RGB/gray-alpha/RGBA 8/16 bits. Non-interlaced and Adam7 paths reconstruct filters independently for each pass. Palette indices become eight-bit RGB; sixteen-bit colour/intrinsic alpha remain sixteen-bit. `tRNS` compares original samples at full precision after masking unused high key bits and produces an eight-bit opacity mask. Zero alpha is transparent; the maximum sample value is opaque.
 
-Interlaced PNG, depths of 1, 2, 4 or 16 bits, APNG and ICC profiles are rejected.
-Gamma, chromaticity and sRGB indications are not transformed into calibrated PDF
-spaces: samples are represented in Device spaces. Other ancillary metadata are
-not imported into the PDF.
+Embedded ICC has priority over sRGB, then gAMA/cHRM. ICC bytes are retained in ICCBased; sRGB uses the exact piecewise transfer curve and retains rendering intent; gAMA/cHRM produce CalGray/CalRGB. The [colour policy](https://pdftoolkit.github.io/modules/images/png-colour.html) documents explicit defaults for missing metadata. Completely untagged samples remain device-dependent. APNG and HDR metadata are rejected; the importer does not rotate from EXIF or execute a device-specific colour transform.
 
 ## 4. Compose the image XObject and its mask
 
@@ -101,7 +85,7 @@ level can be injected per object.
 `SampledImage` values; it parses no PNG or JPEG files. Another library or the
 application can construct these objects without installing the module.
 
-Alpha becomes another image stream, eight bits and `/DeviceGray`. An
+Alpha becomes another image stream, eight or sixteen bits according to its source, in `/DeviceGray`. An
 `IndirectReference` under `/SMask` links it to the main image. The writer discovers
 it in the graph and assigns its number without a global registry. The mask must
 have matching dimensions; the constructor checks this.

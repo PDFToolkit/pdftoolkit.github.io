@@ -11,12 +11,12 @@ Ce tutoriel utilise le module optionnel
 TrueType. Le programme incorporé, les dictionnaires et les correspondances PDF
 restent des objets du core. `composer install` dans le checkout du core installe le
 module comme dépendance de développement ; une application l'installe depuis
-Packagist avec `composer require "pdftoolkit/pdf-fonts:^0.1.12"`.
+Packagist avec `composer require "pdftoolkit/pdf-fonts:^0.2.0"`.
 Le [guide des packages](../packages.md) explique comment sélectionner aussi
 la série du core.
 
 La fonte de démonstration et sa licence SIL Open Font License sont conservées
-dans les [ressources du module de fontes](https://github.com/PDFToolkit/pdf-fonts/blob/v0.1.12/examples/assets/fonts/README.md).
+dans les [ressources du module de fontes](https://github.com/PDFToolkit/pdf-fonts/blob/v0.2.0/examples/assets/fonts/README.md).
 Composer les installe avec le module ; le core ne distribue pas le fichier TrueType.
 
 ## Exécuter l'exemple
@@ -35,7 +35,7 @@ et le grec grâce aux correspondances Unicode construites par le script.
 ## 1. Le programme de fonte est un objet distinct
 
 L'application lit le fichier et donne ses **octets** à
-[`FontProgram`](https://github.com/PDFToolkit/pdf-fonts/blob/v0.1.12/src/TrueType/FontProgram.php).
+[`FontProgram`](https://github.com/PDFToolkit/pdf-fonts/blob/v0.2.0/src/TrueType/FontProgram.php).
 Le modèle ne lit aucun chemin et ne contacte aucune URL. Le programme conserve
 les octets complets, son nom PostScript, son `cmap`, ses métriques horizontales
 et les boîtes de ses glyphes.
@@ -50,14 +50,14 @@ $body = new UnicodeText('Français : été, cœur, Noël. Ελληνικά : Α�
 ```
 
 Le budget d'entrée est un objet explicite
-[`FontProgramLimits`](https://github.com/PDFToolkit/pdf-fonts/blob/v0.1.12/src/TrueType/FontProgramLimits.php),
+[`FontProgramLimits`](https://github.com/PDFToolkit/pdf-fonts/blob/v0.2.0/src/TrueType/FontProgramLimits.php),
 par défaut 32 MiB. L'application peut imposer une limite plus basse, par exemple :
 
 ```php
 $program = new FontProgram($fontBytes, new FontProgramLimits(maxBytes: 1048576));
 ```
 
-[`UnicodeText`](https://github.com/PDFToolkit/pdf-fonts/blob/v0.1.12/src/TrueType/UnicodeText.php) valide UTF-8
+[`UnicodeText`](https://github.com/PDFToolkit/pdf-fonts/blob/v0.2.0/src/TrueType/UnicodeText.php) valide UTF-8
 et conserve une liste de valeurs scalaires Unicode. Il ne normalise pas le
 texte et ne transforme pas sa direction ou sa composition typographique.
 
@@ -71,7 +71,7 @@ glyphes.
 
 Le programme CID est d'abord préparé et incorporé dans un
 [`FontFile2`](https://github.com/PDFToolkit/pdf/blob/v0.11.0/src/Document/Fonts/FontFile2.php) du core. Le service
-[`CharacterMapFactory`](https://github.com/PDFToolkit/pdf-fonts/blob/v0.1.12/src/TrueType/CharacterMapFactory.php)
+[`CharacterMapFactory`](https://github.com/PDFToolkit/pdf-fonts/blob/v0.2.0/src/TrueType/CharacterMapFactory.php)
 reçoit le programme CID puis produit un
 [`CharacterMap`](https://github.com/PDFToolkit/pdf/blob/v0.11.0/src/Document/Fonts/CharacterMap.php) du core à partir du
 flux incorporé et de tous les caractères qui seront encodés avec cette instance.
@@ -102,7 +102,7 @@ par `.notdef`, ni état partagé entre les documents.
 
 ## 3. Assembler les objets définis par PDF
 
-[`CIDFontProgram`](https://github.com/PDFToolkit/pdf-fonts/blob/v0.1.12/src/TrueType/CIDFontProgram.php) prépare
+[`CIDFontProgram`](https://github.com/PDFToolkit/pdf-fonts/blob/v0.2.0/src/TrueType/CIDFontProgram.php) prépare
 le programme destiné à une fonte CID. ISO 32000-1, 9.9, exige de retirer la table
 `cmap` d'un programme TrueType incorporé par `/FontFile2` pour une fonte CID :
 la correspondance vers les glyphes vient de `/CIDToGIDMap`. Tous les glyphes
@@ -168,7 +168,7 @@ CID attribué dans le répertoire, pas le point de code Unicode et pas le GID.
 new ShowText($encoder->encode($heading));
 ```
 
-[`TextEncoder`](https://github.com/PDFToolkit/pdf-fonts/blob/v0.1.12/src/TrueType/TextEncoder.php) retourne un
+[`TextEncoder`](https://github.com/PDFToolkit/pdf-fonts/blob/v0.2.0/src/TrueType/TextEncoder.php) retourne un
 `HexadecimalString`. Les objets `Tf`, `Td`, `Tj`, `/Resources`, `/Page`, `/Pages`
 et `/Catalog` s'assemblent ensuite comme dans les premiers tutoriels. Aucun
 moteur de mise en page ne s'intercale dans ce graphe.
@@ -180,14 +180,7 @@ syntaxe CMap utilisée par la norme.
 
 ## 5. Limites explicites de cette première incorporation
 
-Le module incorpore **tous les glyphes de la fonte** ; il ne produit
-pas de sous-ensemble. Le binaire sfnt est reconstruit pour les contraintes de
-la fonte CID décrites ci-dessus. Elle accepte un programme sfnt TrueType statique avec contours
-`glyf`, `cmap` Unicode format 4 ou 12 et métriques horizontales. Les fontes CFF,
-CFF2, variables, les collections TTC, WOFF et WOFF2 sont refusées. Les séquences
-de variation Unicode, le shaping OpenType, le crénage automatique, les
-ligatures automatiques et la composition bidirectionnelle restent à construire.
-Les caractères sont présentés dans l'ordre fourni à l'encodeur.
+Le parcours TrueType de cet exemple incorpore **tous les glyphes**, sans sous-ensemble. Il accepte un programme sfnt statique avec contours `glyf`, cmap Unicode 4/12 et métriques horizontales ; son `TextEncoder` conserve l’ordre fourni sans exécuter GSUB/GPOS. Ce périmètre de l’exemple ne représente plus tout le module : Fonts 0.2 ajoute [layout OpenType et incorporation CFF](https://pdftoolkit.github.io/fr/modules/fonts/opentype-layout.html), avec ligatures, crénage, marques et plages de fonctionnalités explicites, aussi pour TrueType. CFF1 peut provenir d’une face de collection choisie ; une face TrueType est d’abord sélectionnée/sérialisée par OpenType. CFF2/variables, génération d’instance statique, WOFF et composition Unicode/bidi automatique restent absents.
 
 Les tables, segments, groupes, métriques, délimitations `loca` et structures
 des contours sont bornés. Les références des glyphes composés sont vérifiées,
@@ -213,6 +206,8 @@ par l'incorporation complète. Les modes `Preview & Print` et `Editable` permett
 l'incorporation et restent exposés dans `embeddingRights` ; l'application doit
 respecter les usages autorisés et la licence de la fonte. Ce champ ne remplace
 pas la licence de redistribution des fichiers de fonte.
+
+L’interprétation de `fsType` suit la version OS/2 : v0/v1 ignorent les bits hauts réservés ; v0–v2 choisissent la permission déclarée la moins restrictive, tandis que v3+ exigent des bits de permission exclusifs. Ces contrôles ne remplacent pas la licence de la fonte.
 
 ## Références
 

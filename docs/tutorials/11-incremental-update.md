@@ -67,12 +67,12 @@ qpdf --check incremental-update.pdf
 qpdf --show-xref incremental-update.pdf
 ```
 
-Les révisions prises en charge proviennent des objets `FileRevision` produits par la bibliothèque. Le module optionnel `pdftoolkit/pdf-reader` permet déjà d'inspecter un PDF externe, comme le montre la [leçon 12](12-reading-pages.md). L'import de ses objets dans le writer, leur remappage et leur conversion en révisions modifiables restent à construire. La suppression et le réemploi d'objets, les changements de format xref, les références hybrides, les fichiers chiffrés, les signatures et la linéarisation demandent leurs mécanismes propres. Une mise à jour incrémentale ne retire pas les contenus anciens du fichier : elle ne doit pas servir à effacer une information confidentielle.
+Les révisions modifiables proviennent des objets `FileRevision` produits par la bibliothèque. Reader 0.7 inspecte les PDF externes et peut importer/remapper un graphe explicitement choisi dans un nouveau document. Cet import ne convertit pas l’historique source en révisions natives modifiables et ne transfère aucune autorité de signature. Suppression/réemploi d’objets, formats xref/hybrides, chiffrement, signatures et linéarisation ont leurs mécanismes propres dans le core. Une mise à jour incrémentale conserve les anciens octets : elle ne doit pas servir à effacer une information confidentielle.
 
 Références : ISO 32000-1:2008, **7.5.4–7.5.8** pour xref, trailers, révisions et conteneurs d'objets, et **14.4** pour les identifiants de fichier.
 
 [← 10. Images JPEG et PNG](10-image-files.md) · [Tous les tutoriels](README.md)
 
-Pour le prochain remplissage borné d’une révision native réellement certifiée,
+Pour le remplissage borné d’une révision native réellement certifiée,
 continuer avec la [leçon 37](37-protected-form-fill.md) et le
 [guide des révisions protégées](../protected-revisions.md).

@@ -132,7 +132,7 @@ Le vérificateur reproductible rejette clauses omises et fichiers de preuve abse
 Aucune certification WTPDF/PDF/UA-2 automatique ni conformité complète à la norme
 de base n’est revendiquée. Le lecteur 0.3 ajoute l'authentification R=2–7 sur
 activation explicite, les xrefs hybrides et d'autres filtres au périmètre PDF
-1.0–2.0. Son [guide d'authentification](https://github.com/PDFToolkit/pdf-reader/blob/v0.6.0/docs/authentication.md)
+1.0–2.0. Son [guide d'authentification](https://github.com/PDFToolkit/pdf-reader/blob/v0.7.0/docs/authentication.md)
 précise les filtres cryptographiques acceptés. Le lecteur 0.4 ajoute la frontière
 MAC source décrite ci-dessus ; le lecteur 0.5 ajoute l'authentification
 par clé publique source bornée. Ces mécanismes restent distincts de l'écriture et du rendu.
@@ -252,16 +252,17 @@ des cadres et le cas négatif sans marqueur. Ces contrôles passent sous les tro
 versions de PHP ; ils ne constituent pas une validation interactive d'Acrobat.
 Les dessins statiques, boutons et signatures restent des apparences libres.
 
-OpenType 0.3 fournit normalisation fvar/avar 1.0, métadonnées name/OS/2/STAT,
-contours TrueType non hintés, programmes Type 2 CFF/CFF2 et variations
-HVAR/VVAR/MVAR/gvar/cvar. La [couverture exhaustive des tables](https://pdftoolkit.github.io/fr/modules/opentype/coverage.html)
-compte 27 périmètres implémentés, quatre partiels et 19 en attente. Les variantes
-cmap restantes, avar 2.0, la VM TrueType, les tables couleur/bitmap/BASE/JSTF/MATH,
-les conteneurs TTC/OTC/WOFF/WOFF2 et l'écriture/sous-ensemble de fontes restent
-explicites. Rastérisation, shaping Unicode complet, bidi et retour à la ligne
-sont des responsabilités de consommateurs séparés. `pdf-fonts` continue de
-convertir seulement les fontes TrueType statiques prises en charge. Évaluer
-une instance OpenType ne crée pas une fonte incorporable statique.
+## Mécanismes de formats externes dans les modules actuels
+
+Images 0.2 reconstruit chaque combinaison couleur/profondeur PNG statique légale, y compris Adam7, avec conservation des couleurs/alpha seize bits. Il conserve les profils ICC bornés et traduit gAMA/cHRM/sRGB selon des politiques couleur explicites. L’import JPEG conserve les octets DCT d’origine, dont Adobe CMYK/YCCK qualifiés et profils ICC. APNG, métadonnées HDR et sémantiques couleur ambiguës restent refusés ; l’orientation EXIF n’est pas appliquée.
+
+Reader 0.7 ajoute import/remappage explicite de graphes, capacités de flux externes et décodage CCITT. Son [guide des codecs image](https://pdftoolkit.github.io/fr/modules/reader/image-codecs.html) sépare les profils natifs Ghostscript de la bibliothèque optionnelle Codecs en PHP pur. Les plans JPEG 2000 conservent précision, signe, échantillonnage, choix ICC/couleur et associations alpha/canaux ; le consommateur PDF applique `ColorSpace`, `Decode` et `SMaskInData`. L’analyse seule ne lance pas de codec image. Un flux malformé ou un budget épuisé ne provoque jamais de repli vers un second moteur.
+
+Codecs 0.1 implémente JPEG Huffman séquentiel/progressif huit bits, les profils JPEG 2000 bornés et les algorithmes de segments JBIG2. Ses [guides de module](https://pdftoolkit.github.io/fr/modules/codecs/) inventorient mécanismes exacts, fonctions absentes et preuves indépendantes/vecteurs normatifs. Cela ne fournit ni encodage d’images, ni moteur de gestion des couleurs, ni conformité universelle. Les profils natifs connus pour modifier les échantillons ou mal traiter certains mécanismes JBIG2 sont dirigés vers PHP avant traitement.
+
+OpenType 0.4 ajoute sélection/sérialisation de faces TTC/OTC, tous les formats cmap Unicode, paramètres optiques/de style et masques de fonctionnalités par plage source préservant le contexte. Fonts 0.2 relie TrueType et CFF1 statiques aux étapes GSUB/GPOS et au placement PDF explicites, en préservant extraction des alias et ligatures. Le [guide des fontes](https://pdftoolkit.github.io/fr/modules/fonts/opentype-layout.html) distingue CFF à noms et CFF à CID, et documente la différence de rendu Poppler CID/OpenType. Incorporation CFF2/variable, génération d’instances statiques, sous-ensembles, VM TrueType et shaping Unicode/bidi automatiques restent absents. `avar` 2 est une proposition hors du périmètre OpenType 1.9.1 publié retenu.
+
+Le document Adobe OTGuide fourni est un guide d’usage de 13 pages, pas la spécification binaire. La [carte page par page](https://pdftoolkit.github.io/fr/modules/opentype/collections-and-feature-parameters.html) sépare les fonctionnalités de fonte prises en charge de l’interface applicative, la découverte et l’installation des fontes. Conserver des tables non interprétées ne compte pas comme leur implémentation.
 
 ## Frontière du core
 

@@ -140,6 +140,16 @@ example, the 2007 removal of signature seed flag `DigestMethod` must not erase
 the distinct later Adobe level 3 extension contract. The ledger preserves both
 source identities and their applicable editions.
 
+## Core 0.12 PDF relationships and calculations
+
+The core checks effective inherited page values (`Rotate`, `UserUnit`, `Tabs`, production boxes), outline links/counts/styles and all twenty standard action families. Required entries, flags, targets and version gates are checked, including JavaScript-only trigger locations; no action executes. RichMedia checks assets, instances, configurations, animation and activation windows without becoming a multimedia engine.
+
+Type 4 calculator programs compile into immutable objects and evaluate all 42 operators with work/stack/depth budgets and numeric domain/range checks. Invalid syntax and proven straight-line type/stack errors are rejected; runtime-dependent branches are checked during evaluation. Oracles compare PDFs with independent readers and calculations with Ghostscript. Core 0.12 also preserves imported image rendering intents and inverted DCT samples in four-component ICC spaces. These rules do not certify every PDF graph or execute a viewer.
+
+## Cross-package evidence
+
+The current [module coverage](coverage.md#external-format-mechanisms-in-the-current-modules) distinguishes file parsers, table execution, PDF adapters and consumer policies. Image checks combine exact samples/profile bytes with independent libpng/ImageMagick/Pillow and Poppler rendering. Font checks compare fontTools/HarfBuzz data, PDF mappings, extracted Unicode and actual glyph placement. Reader checks combine native/PHP profile selection, exact JPX/JBIG2 planes, explicit JPEG tolerances, filtered/encrypted globals and independent PDF readers. Package CI retains commands, versions and reports; a successful finite corpus is not universal input acceptance.
+
 ## Read the remaining boundaries
 
 The native incremental guard requires actual emitted-revision provenance,

@@ -52,6 +52,8 @@ pypdf et Poppler. Certains lecteurs classent le FontFile3/OpenType à contours
 glyf comme un TrueType ; cette déclaration est permise par la table 126 et
 le rendu de l'exemple est vérifié séparément.
 
+Fonts 0.2 fournit un [exemple de layout OpenType](https://github.com/PDFToolkit/pdf-fonts/blob/v0.2.0/examples/opentype-layout.php) distinct pour TrueType/CFF1 statiques, ligatures/crénage/marques choisis et placement PDF réel. Son [guide](https://pdftoolkit.github.io/fr/modules/fonts/opentype-layout.html) distingue CID/GID, alias et interopérabilité des conteneurs CFF. Il n’ajoute ni itemisation, ni bidi automatique, ni compositeur vertical à cet exemple natif.
+
 Référence : ISO 9.5–9.10, tables 110–127, pages physiques 261–303 ; annexe D.
 
 [Index](README.md) · [Code complet](https://github.com/PDFToolkit/pdf/blob/v0.11.0/examples/native-fonts.php)

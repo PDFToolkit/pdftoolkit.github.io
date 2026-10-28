@@ -1,11 +1,8 @@
 # Core and optional modules
 
-PDFToolkit separates the PDF model from external-file processing. The
-**0.11.0 core**, **0.6.0 PDF reader**, **0.1.12 image/font modules**, independent **0.3.0 OpenType model** and **0.6.0 PDF-to-HTML module**
-require PHP 8.3 or later and are checked on PHP 8.3, 8.4 and 8.5.
-Core **0.11** and OpenType **0.3** require 64-bit PHP; OpenType remains independent of the
-PDF core. The core retains its Composer name `roukmoute/pdf`
-after transfer to the organization; new modules use the `pdftoolkit/` prefix.
+PDFToolkit separates the PDF model from external-file processing.
+The documented release series are core **0.12**, Reader **0.7**, Images and Fonts **0.2**, OpenType **0.4**, Codecs **0.1** and PDF-to-HTML **0.7**. They require **64-bit PHP 8.3 or later**; qualification covers PHP 8.3, 8.4 and 8.5. The source manifest pins exact versions and revisions. OpenType and Codecs have no PDF core dependency.
+The core retains its Composer name `roukmoute/pdf`; modules use `pdftoolkit/`.
 
 ## The core boundary
 
@@ -38,66 +35,63 @@ verified before finalization.
 | --- | --- | --- |
 | [PDFToolkit/pdf](https://github.com/PDFToolkit/pdf) — `roukmoute/pdf` | PDF objects assembled by the application | PDF file, cross-references and revisions |
 | [PDFToolkit/pdf-images](https://github.com/PDFToolkit/pdf-images) — `pdftoolkit/pdf-images` | PNG or JPEG bytes and explicit limits | Color/alpha samples or core DCT representation |
-| [PDFToolkit/pdf-fonts](https://github.com/PDFToolkit/pdf-fonts) — `pdftoolkit/pdf-fonts` | TrueType bytes, text and explicit parameters | Embeddable program, metrics and mappings for the core |
+| [PDFToolkit/pdf-fonts](https://github.com/PDFToolkit/pdf-fonts) — `pdftoolkit/pdf-fonts` | Static TrueType/CFF bytes, text and explicit layout stages | Embeddable programs, Unicode/CID/GID mappings and positioned PDF text |
 | [PDFToolkit/pdf-reader](https://github.com/PDFToolkit/pdf-reader) — `pdftoolkit/pdf-reader` | PDF bytes and reading budgets | Read graph, pages and inherited attributes, references to resolve and encoded or decoded streams |
-| [PDFToolkit/opentype](https://github.com/PDFToolkit/opentype) — `pdftoolkit/opentype` | OpenType SFNT bytes and explicit limits | Tables, metrics, Unicode mappings, GSUB substitutions and GPOS positioning |
+| [PDFToolkit/opentype](https://github.com/PDFToolkit/opentype) — `pdftoolkit/opentype` | OpenType SFNT/TTC/OTC bytes and explicit limits | Tables, outlines, metrics, GSUB substitutions and GPOS positioning |
+| [PDFToolkit/pdf-codecs](https://github.com/PDFToolkit/pdf-codecs) — `pdftoolkit/pdf-codecs` | JPEG, JPEG 2000 or JBIG2 bytes | Component planes and exact colour/alpha metadata within the supported profiles |
 | [PDFToolkit/pdf-to-html](https://github.com/PDFToolkit/pdf-to-html) — `pdftoolkit/pdf-to-html` | Tagged PDF bytes or an explicit logical source model | Semantic HTML, CSS, assets and diagnostics |
 
-The reader, images and fonts modules depend on the core without depending on one another. PDF-to-HTML additionally depends on the reader. The core knows none of their parsers: an application can directly
-construct its PDF objects or feed them through another converter. The object
-model is shared, without parallel copies of primitives or a global registry.
+The reader, images and fonts modules depend on the core without depending on one another. Fonts additionally uses OpenType; PDF-to-HTML uses Reader. OpenType and Codecs are independent libraries. Reader discovers the optional PHP codecs only when image decoding is requested. The core knows none of their parsers: applications can construct its PDF objects directly. The object model is shared, without duplicate primitives or global registries.
 
-The [OpenType model](https://github.com/PDFToolkit/opentype) is independent of the core and `pdf-fonts`. OpenType 0.3 retains GSUB 1–8, GPOS 1–9 and GDEF and adds fvar/avar axes, name/OS/2/STAT metadata, HVAR/VVAR/MVAR metrics and variable outlines. `glyf`/`loca` assembles unhinted quadratic outlines; gvar/cvar applies variations, including phantom points. The Type 2 CFF/CFF2 interpreter executes cubic programs, subroutines and blends within explicit budgets. Results remain immutable objects.
+The [OpenType model](https://github.com/PDFToolkit/opentype) implements explicit GSUB 1–8, GPOS 1–9 and GDEF, variation axes/metrics and unhinted TrueType/CFF/CFF2 geometry. Version 0.4 reads TTC/OTC collections, serializes a selected complete face, executes all defined Unicode cmap formats and exposes optical/style feature parameters. Source-scalar feature ranges retain the entire shaping context. Applications still choose scripts, languages, stages, normalization and bidi.
 
-The [OpenType guides](https://pdftoolkit.github.io/modules/opentype/index.html) distinguish reading, geometry and execution. The [coverage ledger](https://github.com/PDFToolkit/opentype/blob/v0.3.0/docs/coverage.md) records 27 implemented table scopes, four partial tables and 19 pending. It does not claim a TrueType VM, rasterization, complete Unicode shaping, color/bitmap/math tables, TTC/OTC/WOFF/WOFF2 containers, writing or subsetting. Evaluating geometry does not produce a static font file. `pdf-fonts` remains the adapter from static TrueType programs to PDF dictionaries; it still rejects variable fonts and CFF/CFF2.
+The [OpenType coverage ledger](https://pdftoolkit.github.io/modules/opentype/coverage.html) distinguishes 27 implemented table scopes, four partial tables and 19 uninterpreted tables. Raw bytes do not implement a TrueType VM, colour/bitmap/math consumers or WOFF decoding. `pdf-fonts` 0.2 embeds static TrueType and CFF1 and emits explicitly shaped/positioned text with Unicode aliases and ligatures preserved. The [layout guide](https://pdftoolkit.github.io/modules/fonts/opentype-layout.html) details CID/GID mappings and CFF container interoperability. CFF2/variable PDF embedding, static-instance generation and subsetting remain absent.
 
 Core 0.8.0 retains PDF 2.0 writing with modern cryptography and PDF MAC, metadata, document parts, encrypted payload wrappers and qualified structure. It adds [executed source rules and reviewed corrections](source-audits.md), conservative native [redaction](tutorials/36-applied-redaction.md) and optional WTPDF XML rich-text comparison. WTPDF remains a partial mechanical audit without certification. Reader authentication and OpenType layout have their own input boundaries; these core changes do not implement PNG/JPEG conversion or variable-font embedding.
 
 ## Installing what the application needs
 
-All six packages are available on Packagist:
-[core](https://packagist.org/packages/roukmoute/pdf),
-[reader](https://packagist.org/packages/pdftoolkit/pdf-reader),
-[images](https://packagist.org/packages/pdftoolkit/pdf-images),
-[PDF fonts](https://packagist.org/packages/pdftoolkit/pdf-fonts) and
-[OpenType](https://packagist.org/packages/pdftoolkit/opentype) and
-[PDF to HTML](https://packagist.org/packages/pdftoolkit/pdf-to-html).
-Stable constraints are `roukmoute/pdf:^0.11.0` for the core and
-`pdftoolkit/pdf-reader:^0.6.0`, `pdftoolkit/pdf-images:^0.1.12` or
-`pdftoolkit/pdf-fonts:^0.1.12` for PDF modules, and `pdftoolkit/opentype:^0.3.0` for the independent font model. Older core tags `v0.1.0` and
-`v0.1.1` retain their PHP 8.5 constraint.
+All seven libraries are available on Packagist under `roukmoute/pdf` or the `pdftoolkit/` names above. The documented constraints are core `^0.12`, Reader/HTML `^0.7`, Images/Fonts `^0.2`, OpenType `^0.4` and Codecs `^0.1`. Older core tags `v0.1.0` and `v0.1.1` retain their PHP 8.5 constraint.
 
 To generate PDFs only:
 
 ```sh
-composer require "roukmoute/pdf:^0.11.0"
+composer require "roukmoute/pdf:^0.12"
 ```
 
 To add reading of existing PDFs:
 
 ```sh
-composer require "roukmoute/pdf:^0.11.0" "pdftoolkit/pdf-reader:^0.6.0"
+composer require "roukmoute/pdf:^0.12" "pdftoolkit/pdf-reader:^0.7.0"
 ```
 
 To convert images:
 
 ```sh
-composer require "roukmoute/pdf:^0.11.0" "pdftoolkit/pdf-images:^0.1.12"
+composer require "roukmoute/pdf:^0.12" "pdftoolkit/pdf-images:^0.2.0"
 ```
 
-To analyze TrueType fonts:
+To embed TrueType/CFF fonts and select layout:
 
 ```sh
-composer require "roukmoute/pdf:^0.11.0" "pdftoolkit/pdf-fonts:^0.1.12"
+composer require "roukmoute/pdf:^0.12" "pdftoolkit/pdf-fonts:^0.2.0"
 ```
 
 To analyze a font independently of PDF:
 
 ```sh
-composer require "pdftoolkit/opentype:^0.3.0"
+composer require "pdftoolkit/opentype:^0.4.0"
 ```
 
 This command installs only OpenType, without the PDF core or converters.
+
+To make the pure-PHP image fallback available:
+
+```sh
+composer require "pdftoolkit/pdf-codecs:^0.1"
+```
+
+Ghostscript and `prlimit` are optional system tools, supplied separately. Reader uses only native profiles qualified to preserve the requested samples and metadata. Malformed input and resource-limit failures do not trigger another decoder.
 
 Composer resolves these packages from Packagist and downloads their published
 distributions. The three PDF modules require the stable core transitively; installing the
@@ -108,12 +102,12 @@ Applications that added GitHub repositories under `repositories` can remove
 those entries from `composer.json`. Composer package names remain identical.
 
 Before 1.0, a new minor release may change names and signatures. The
-`^0.11.0`, `^0.6.0` and `^0.1.12` constraints allow patches within their series and
+`^0.12`, `^0.7` and `^0.2` constraints allow patches within their series and
 exclude the next minor release. Consult changelogs before switching series.
 To work with upcoming development, explicitly request `dev-master` for the
 relevant packages.
 
-Reader 0.6.0 accepts core `^0.9 || ^0.10 || ^0.11`; image/font modules 0.1.12 retain their earlier series and add `^0.11`. The commands above select core 0.11.0 or a compatible patch. The [migration guide](migration-0.11.md) explains 0.11 API changes. The core requires `ctype`, `iconv` and `zlib`. Selected AES, CMS and signature backends additionally require `openssl`.
+Images 0.2 requires core `^0.12`; Reader 0.7 requires `^0.11 || ^0.12`. Fonts 0.2 accepts its documented core 0.4–0.12 series and requires OpenType `^0.4`. The commands above select core 0.12. The [migration guide](migration-0.11.md) remains relevant to 0.11 API changes. Core needs `ctype`, `iconv` and `zlib`; selected AES, CMS and signature providers also need `openssl`. Exact compatibility is recorded in each published Composer manifest.
 
 ## Reading an external PDF
 
@@ -166,7 +160,7 @@ without concatenation or decoding. Traversal and stream-count limits are
 explicit objects; cumulative `ReadDocument` budgets continue to apply.
 To obtain decoded bytes, separately request
 `$document->streamData($stream)`. The
-[page-reading guide](https://github.com/PDFToolkit/pdf-reader/blob/v0.6.0/docs/pages.md)
+[page-reading guide](https://github.com/PDFToolkit/pdf-reader/blob/v0.7.0/docs/pages.md)
 explains every step and supplies an executable example with three inherited
 pages.
 
@@ -175,14 +169,7 @@ and `resolve()` requests its loading within this document. Read objects
 are retained in a document-specific cache; there is no singleton or hidden
 resolution inside values.
 
-The reader supports xref tables and streams, hybrid references, `/Prev`
-revisions, object streams and explicitly bounded filter decoding.
-Loading a stream preserves its encoded bytes; `streamData()` requests
-decoding. It does not render a page or interpret operators to extract text.
-PDF 1.0–2.0 syntax and PDF 2.0 UTF-8 strings remain supported. Reader 0.3 adds
-LZW and further TIFF/PNG predictor decoding alongside existing lossless filters.
-DCT, JPX, CCITT and JBIG2 codecs remain explicitly unsupported by this reader;
-the HTML adapter's separately selected decoders have their own boundary.
+The reader supports xref tables/streams, hybrid references, `/Prev` histories and object streams. Parsing preserves encoded data without image-decoder execution. Explicit `streamData()` handles bounded filters, predictors and CCITT; `imageData()` preserves exact component planes and colour/alpha metadata for DCT/JPX/JBIG2. Qualified native decoding takes priority, then installed PHP codecs provide the fallback. The [image codec guide](https://pdftoolkit.github.io/modules/reader/image-codecs.html) explains profiles, globals, budgets and lossless interleaving limits. Reader does not render pages or interpret content operators to extract text.
 
 ### Select password authentication
 
@@ -199,7 +186,7 @@ $permissions = $document->permissions();
 
 R=5–7 receives explicitly prepared Unicode credentials; historical R=2–4 instead
 uses `PdfDocEncodedPassword` with PDFDocEncoding bytes. The
-[authentication guide](https://github.com/PDFToolkit/pdf-reader/blob/v0.6.0/docs/authentication.md)
+[authentication guide](https://github.com/PDFToolkit/pdf-reader/blob/v0.7.0/docs/authentication.md)
 details R=2–7, named `StrF`/`StmF`/`EFF` filters and AES-GCM tag checks. The default
 reader opens no encrypted input without that selection. Reader 0.4 verifies
 indicated source PDF MACs before returning protected content. Select
@@ -216,19 +203,13 @@ access. `DocumentPermissions::effectiveMask()` covers Standard user/owner and
 authenticated recipient rights; the receiving application enforces them.
 Authentication does not validate signature mathematics or confer certificate trust.
 
-Read values cannot be directly passed back to the writer: their references
-belong to the original file. Graph import and remapping, rewriting, merging
-and repair remain to be built. Consult the
-[reader documentation](https://github.com/PDFToolkit/pdf-reader#readme)
-and [its security checks](https://github.com/PDFToolkit/pdf-reader/blob/v0.6.0/docs/security.md)
-when choosing budgets. By default, retained binary bytes and total decoded
-stream bytes are each bounded to 128 MiB, in addition to other limits.
+Read references remain tied to their source document. Reader 0.7 supplies [ImportSession](https://pdftoolkit.github.io/modules/reader/import.html) to copy an explicitly selected graph into new writer objects with remapped identities. The application chooses preserved encoded streams or bounded decoding. Shared identity and cycles survive; transport containers, signatures and source encryption authority do not transfer. This is neither automatic page merging, semantic repair nor an incremental edit of the original. Explicit [external-stream capabilities](https://pdftoolkit.github.io/modules/reader/external-streams.html) supply bytes without implicit file/network access. Reader and import budgets continue to apply.
 
 Reader 0.6 adds [physical revision history](https://pdftoolkit.github.io/modules/reader/revision-history.html): exact prefixes, xrefs and object spans within shared budgets. This view preserves source bytes without authenticating them or verifying signatures. To interpret an encrypted prefix, read it separately with `DocumentReader` and explicit credentials/integrity policies. A physical history does not become a native `FileRevision` authorized for incremental writing.
 
 ## Central documentation, independent installations
 
-This documentation presents the API of all six packages. Module pages carry
+This documentation presents the API of all seven libraries. Module pages carry
 an **optional** badge, and their source links use the module commit pinned
 by the build lock, or by the separate release tag and checkout for OpenType. This adds no dependency to applications installing only
 the core.
@@ -248,10 +229,10 @@ and [coverage guide](coverage.md).
 
 ## Derive HTML from a tagged PDF
 
-The optional [PDF-to-HTML module](https://pdftoolkit.github.io/modules/to-html/index.html) follows the retained PDF Association **Deriving HTML from PDF 1.2** usage specification. Version 0.6.0 requires Reader `^0.6` and core `^0.9 || ^0.10 || ^0.11`, with 64-bit PHP 8.3+, DOM and mbstring. This site selects core 0.11.0 and Reader 0.6.0. It derives semantic HTML from logical structure; it does not infer untagged structure, run OCR or reproduce PDF page layout. Model coverage, file-adapter coverage and browser integration remain distinct.
+The optional [PDF-to-HTML module](https://pdftoolkit.github.io/modules/to-html/index.html) follows the retained PDF Association **Deriving HTML from PDF 1.2** usage specification. Version 0.7 uses Reader 0.7, with 64-bit PHP 8.3+, DOM and mbstring; the source manifest fixes its exact core and module revisions. It derives semantic HTML from logical structure without inferring absent structure, OCR or PDF page layout. Model coverage, file adaptation and browser integration remain distinct.
 
 ```sh
-composer require "roukmoute/pdf:^0.11.0" "pdftoolkit/pdf-to-html:^0.6.0"
+composer require "roukmoute/pdf:^0.12" "pdftoolkit/pdf-to-html:^0.7"
 ```
 
 [Follow the executable tutorial](tutorials/35-derive-html.md) and inspect diagnostics before publishing HTML. ParentTree associations, table-header identities, destinations, Unicode mappings, inline images and form actions have tests and independent oracles. The [requirements ledger](https://pdftoolkit.github.io/modules/to-html/requirements.html) links each rule to decisions and evidence; it does not certify universal PDF acceptance.
@@ -259,6 +240,8 @@ composer require "roukmoute/pdf:^0.11.0" "pdftoolkit/pdf-to-html:^0.6.0"
 The [default profile](https://pdftoolkit.github.io/modules/to-html/policies.html) executes neither PDF scripts nor ResetForm/SubmitForm actions and fetches no external resources. `FormActionPolicy` enables targeted reset to `/DV` or supported HTML submissions separately, without enabling PDF ECMAScript. Keep every returned asset with the HTML.
 
 [Graphics](https://pdftoolkit.github.io/modules/to-html/graphics.html) retain their programs and resources: `GraphicPdfExporter` produces an isolated PDF, then `RasterContentRenderer` calls the application's `GraphicsRasterizer`. Rendering engines, encrypted-input authentication, additional codecs and HTML-viewer permission enforcement remain explicit capabilities. A requested visual profile fails explicitly when its engine is unavailable.
+
+HTML 0.7 consumes Reader’s decoded planes and interprets PDF colour/alpha precedence before producing browser PNG assets. Exact-depth promotion, ICC bytes, `Decode` and `SMaskInData` are kept separate from page rendering. Signed/distinct-grid or unsupported colour/precision cases require the explicit renderer or produce diagnostics/placeholders; no silent eight-bit reduction is claimed. The [image codec guide](https://pdftoolkit.github.io/modules/to-html/image-codecs.html) records browser comparison and colour-engine limits.
 
 Native password or certificate authentication is selected through an explicit reader
 passed to `PdfToHtml`; the [authentication guide](https://pdftoolkit.github.io/modules/to-html/authentication.html)

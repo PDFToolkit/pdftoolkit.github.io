@@ -116,22 +116,13 @@ The model requires 64-bit PHP 8.3 or later, with typed constants, `readonly` cla
 
 A convenience library can transform its own layout objects into this model. A new standardized entry can receive a specialized type and validation while retaining its definition and source. A new filter must perform the encoding it declares; a filter name or dictionary definition is not enough to claim a codec.
 
-In `pdftoolkit/pdf-fonts`, TrueType fonts consist of a program, tables and metrics, a character/CID mapping and an embeddable CIDFont program. These data feed the core objects: FontFile2, descriptor, CID font, Type0 font, metrics and ToUnicode. Text encoding remains a separate service. The module supplies bytes; it does not select a system font or shape complex scripts.
+In `pdftoolkit/pdf-fonts`, the existing TrueType program/CID pipeline remains explicit. The OpenType adapter also accepts static CFF1 and supplies `TextLayout`, `ShapedText`, `GlyphText` and `PositionedText` for selected GSUB/GPOS stages and PDF placement. TrueType and CFF use the same layout contract; embedding maps their GIDs to the appropriate CIDs and extraction sequences. Collection selection is explicit. The module does not discover system fonts, perform automatic script itemization/bidi or create a static instance from a variable font.
 
-The independent [OpenType](https://github.com/PDFToolkit/opentype) model retains
-its own table, glyph, metric, GSUB and GPOS objects without depending on the PDF
-core or its font converter. Version 0.3 normalizes fvar/avar axes, interprets
-name/OS/2/STAT and evaluates HVAR/VVAR/MVAR metrics. It assembles quadratic
-TrueType outlines, applies gvar/cvar and executes bounded Type 2 CFF/CFF2 cubic
-programs, subroutines and blends. Geometric results remain immutable and do not
-produce a font file or PDF dictionaries. A TrueType VM, rasterization, complete
-Unicode shaping, bidi, line breaking and subsetting remain distinct tasks.
-The [coverage ledger](https://github.com/PDFToolkit/opentype/blob/v0.3.0/docs/coverage.md)
-distinguishes 27 implemented table scopes, four partial tables and 19 pending.
+The independent [OpenType](https://github.com/PDFToolkit/opentype) model owns immutable tables, outlines, metrics and execution inputs. It reads SFNT and TTC/OTC and serializes a selected complete face; feature ranges retain source-cluster context. Axes, metrics and TrueType/Type 2 CFF/CFF2 geometry are evaluated with explicit bounds. Geometric results do not create a static variable-font instance or PDF dictionaries. The [coverage ledger](https://pdftoolkit.github.io/modules/opentype/coverage.html) distinguishes 27 implemented table scopes, four partial tables and 19 uninterpreted tables; VM execution, rasterization and complete Unicode shaping remain separate.
 
-In `pdftoolkit/pdf-images`, image readers receive an `ImageFileBytes`. PNG becomes color samples and, where present, alpha; JPEG becomes a core `DCTImage` with its encoded bytes and color transform. `ImageXObjectFactory`, in the core, composes their dictionaries and streams without knowing the original file. Resource names and painting matrices remain explicit. An `ImageImportLimits` from the module supplies read limits.
+In `pdftoolkit/pdf-images`, readers receive `ImageFileBytes` and per-call import budgets. PNG becomes exact-depth colour/alpha samples after non-interlaced or Adam7 reconstruction, with explicit ICC/calibrated colour declarations. JPEG becomes a core `DCTImage` retaining encoded bytes, ICC and colour-transform/Decode policy. The core `ImageXObjectFactory` composes dictionaries and streams without parsing the original file. Resource names and painting matrices remain explicit.
 
-In `pdftoolkit/pdf-reader`, `DocumentReader` reads a `FileBytes` with `ReaderLimits` budgets. A `ReadDocument` owns its references, xref index and cache; the application explicitly calls `resolve()` and `streamData()`. PDF values reuse core primitives. External references and streams cannot be serialized into a new document without import and remapping, mechanisms that remain distinct from reading.
+In `pdftoolkit/pdf-reader`, `DocumentReader` reads `FileBytes` with `ReaderLimits`. A `ReadDocument` owns references, xrefs, cached values and cumulative budgets. The application requests `resolve()`, `streamData()` or `imageData()` separately. Qualified native image decoding runs in a bounded process; unavailable capabilities fall back to the optional PHP library. Exact planes and metadata cross a Reader-owned interface without requiring that dependency to parse PDFs. `ImportSession` separately copies a selected graph into new writer identities with an explicit stream policy. It does not convert source revisions into native signature-edit authority.
 
 `FileRevision` freezes a document's bytes and identity bindings. `RevisionObject` retains its historical aliases and a copy of its dictionary entries, so a mutable builder is not traversed again after writing. `IncrementalUpdate` selects changes in a `FileBody`; `IncrementalWriter` appends new bytes, inherits the trailer and links xref sections. A historical reference does not trigger new serialization. Old structural containers are preserved, and replaced compressed members use a new container or a standalone object.
 

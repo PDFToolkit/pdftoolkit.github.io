@@ -178,6 +178,8 @@ PHP 8.3 ou supérieur en 64 bits, Composer, Python 3.13, Node 24.22.1, OpenSSL, 
 sont utilisés par le workflow. Les dépendances Python sont verrouillées avec
 leurs empreintes. Le site publié est statique.
 
+La construction complète des oracles demande aussi Ghostscript, `prlimit` (util-linux), ImageMagick/libpng, libjbig2dec, FreeType et les bibliothèques/outils de compilation utilisés par l’oracle couleur Poppler épinglé. La liste des paquets Linux est maintenue dans `.github/workflows/pages.yml`. Poppler 26.10.0 est construit séparément pour les contrôles couleur : les anciennes implémentations CalGray diffèrent de la référence indépendante, sans élargissement des tolérances. `--codecs-root` sélectionne le checkout Codecs exact et `--image-pdftoppm` ce moteur. Les commandes PowerShell ci-dessous décrivent préparation des dépôts/dépendances ; les prérequis natifs des oracles doivent aussi être disponibles dans cet environnement.
+
 Depuis la racine de ce dépôt, préparer le checkout du core au commit du
 manifeste, puis exécuter la même construction complète que la CI :
 
@@ -194,6 +196,11 @@ COMPOSER_ROOT_VERSION="$core_alias" composer install --working-dir=_sources/pdf 
 git clone "$opentype_repository" _sources/opentype
 git -C _sources/opentype checkout --detach "$opentype_revision"
 composer install --working-dir=_sources/opentype --no-interaction --prefer-dist
+codecs_repository=$(python -c "import json; print(next(p for p in json.load(open('resources/sources.json'))['packages'] if p['name']=='pdftoolkit/pdf-codecs')['repository'])")
+codecs_revision=$(python -c "import json; print(next(p for p in json.load(open('resources/sources.json'))['packages'] if p['name']=='pdftoolkit/pdf-codecs')['revision'])")
+git clone "$codecs_repository" _sources/pdf-codecs
+git -C _sources/pdf-codecs checkout --detach "$codecs_revision"
+composer install --working-dir=_sources/pdf-codecs --no-interaction --prefer-dist
 html_repository=$(python -c "import json; print(next(p for p in json.load(open('resources/sources.json'))['packages'] if p['name']=='pdftoolkit/pdf-to-html')['repository'])")
 html_revision=$(python -c "import json; print(next(p for p in json.load(open('resources/sources.json'))['packages'] if p['name']=='pdftoolkit/pdf-to-html')['revision'])")
 git clone "$html_repository" _sources/pdf-to-html
@@ -212,9 +219,15 @@ python -m pip install --require-hashes -r _sources/pdf/tools/public-key-validati
 python -m pip install --require-hashes -r _sources/pdf-to-html/tools/validation-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf-to-html/tools/source-integrity-validation-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf-to-html-demo/tools/validation-requirements.txt
+python -m pip install --require-hashes -r _sources/pdf/vendor/pdftoolkit/pdf-images/tools/validation-requirements.txt
+python -m pip install --require-hashes -r _sources/pdf/vendor/pdftoolkit/pdf-fonts/tools/validation-requirements.txt
+python -m pip install --require-hashes -r _sources/opentype/tools/validation-requirements.txt
+python -m pip install --require-hashes -r _sources/pdf-codecs/tools/jpeg-validation-requirements.txt
 reader_consumer=$(python tools/check_sources.py --source-root _sources/pdf --pdf-to-html-root _sources/pdf-to-html --reader-consumer)
 python -m pip install --require-hashes -r "$reader_consumer/vendor/pdftoolkit/pdf-reader/tools/source-mac-validation-requirements.txt"
-python tools/build_docs.py --source-root _sources/pdf --opentype-root _sources/opentype --pdf-to-html-root _sources/pdf-to-html --demo-root _sources/pdf-to-html-demo --docs-revision "$(git rev-parse HEAD)" --remote
+python -m pip check
+python _sources/pdf/vendor/pdftoolkit/pdf-images/tools/build_poppler.py --output _build/poppler
+python tools/build_docs.py --source-root _sources/pdf --opentype-root _sources/opentype --codecs-root _sources/pdf-codecs --pdf-to-html-root _sources/pdf-to-html --demo-root _sources/pdf-to-html-demo --docs-revision "$(git rev-parse HEAD)" --image-pdftoppm _build/poppler/build/utils/pdftoppm --remote
 ```
 
 Sous PowerShell :
@@ -230,6 +243,10 @@ composer install --working-dir=_sources/pdf --no-interaction --prefer-dist
 git clone $opentypeSource.repository _sources/opentype
 git -C _sources/opentype checkout --detach $opentypeSource.revision
 composer install --working-dir=_sources/opentype --no-interaction --prefer-dist
+$codecsSource = $sourceManifest.packages | Where-Object name -eq 'pdftoolkit/pdf-codecs'
+git clone $codecsSource.repository _sources/pdf-codecs
+git -C _sources/pdf-codecs checkout --detach $codecsSource.revision
+composer install --working-dir=_sources/pdf-codecs --no-interaction --prefer-dist
 $htmlSource = $sourceManifest.packages | Where-Object name -eq 'pdftoolkit/pdf-to-html'
 git clone $htmlSource.repository _sources/pdf-to-html
 git -C _sources/pdf-to-html checkout --detach $htmlSource.revision
@@ -246,10 +263,16 @@ python -m pip install --require-hashes -r _sources/pdf/tools/public-key-validati
 python -m pip install --require-hashes -r _sources/pdf-to-html/tools/validation-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf-to-html/tools/source-integrity-validation-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf-to-html-demo/tools/validation-requirements.txt
+python -m pip install --require-hashes -r _sources/pdf/vendor/pdftoolkit/pdf-images/tools/validation-requirements.txt
+python -m pip install --require-hashes -r _sources/pdf/vendor/pdftoolkit/pdf-fonts/tools/validation-requirements.txt
+python -m pip install --require-hashes -r _sources/opentype/tools/validation-requirements.txt
+python -m pip install --require-hashes -r _sources/pdf-codecs/tools/jpeg-validation-requirements.txt
 $readerConsumer = python tools/check_sources.py --source-root _sources/pdf --pdf-to-html-root _sources/pdf-to-html --reader-consumer
 python -m pip install --require-hashes -r "$readerConsumer/vendor/pdftoolkit/pdf-reader/tools/source-mac-validation-requirements.txt"
+python -m pip check
+python _sources/pdf/vendor/pdftoolkit/pdf-images/tools/build_poppler.py --output _build/poppler
 $docsRevision = git rev-parse HEAD
-python tools/build_docs.py --source-root _sources/pdf --opentype-root _sources/opentype --pdf-to-html-root _sources/pdf-to-html --demo-root _sources/pdf-to-html-demo --docs-revision $docsRevision --remote
+python tools/build_docs.py --source-root _sources/pdf --opentype-root _sources/opentype --codecs-root _sources/pdf-codecs --pdf-to-html-root _sources/pdf-to-html --demo-root _sources/pdf-to-html-demo --docs-revision $docsRevision --image-pdftoppm _build/poppler/build/utils/pdftoppm --remote
 ```
 
 `tools/build_docs.py` vérifie les commits et tags publiés, les sources conservées
@@ -264,8 +287,8 @@ Pour reconstruire seulement le rendu depuis des entrées déjà validées :
 
 ```sh
 reader_consumer=$(python tools/check_sources.py --source-root _sources/pdf --pdf-to-html-root _sources/pdf-to-html --reader-consumer)
-php tools/export_api.php _build/api.json _sources/pdf resources/sources.json _sources/opentype _sources/pdf-to-html "$reader_consumer"
-python tools/build_site.py --content-root . --source-root _sources/pdf --opentype-root _sources/opentype --pdf-to-html-root _sources/pdf-to-html --demo-root _sources/pdf-to-html-demo --demo-build _build/html-demo --sources resources/sources.json --docs-revision "$(git rev-parse HEAD)" --api _build/api.json --pdf-dir _build/pdfs --pdf-preview-dir _build/pdf-pages --output _site --base-path /
+php tools/export_api.php _build/api.json _sources/pdf resources/sources.json _sources/opentype _sources/pdf-to-html "$reader_consumer" _sources/pdf-codecs
+python tools/build_site.py --content-root . --source-root _sources/pdf --opentype-root _sources/opentype --codecs-root _sources/pdf-codecs --pdf-to-html-root _sources/pdf-to-html --demo-root _sources/pdf-to-html-demo --demo-build _build/html-demo --sources resources/sources.json --docs-revision "$(git rev-parse HEAD)" --api _build/api.json --pdf-dir _build/pdfs --pdf-preview-dir _build/pdf-pages --output _site --base-path /
 python tools/check_site.py _site
 ```
 
