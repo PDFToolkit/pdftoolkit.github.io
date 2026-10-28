@@ -48,7 +48,7 @@ class DemoPublicationTest(unittest.TestCase):
             runtime_files[path] = {key: artifact[key] for key in ('bytes', 'sha256')}
         worker = self.assets[2]
         runtime_files['conversion-worker.js'] = {key: worker[key] for key in ('bytes', 'sha256')}
-        packages = [{'name': name, 'version': 'v0.6.0', 'source': {'reference': 'b' * 40}, 'dist': {'reference': 'b' * 40}} for name in ('pdftoolkit/pdf-to-html', 'pdftoolkit/pdf-reader', 'roukmoute/pdf')]
+        packages = [{'name': name, 'version': 'v0.6.0', 'source': {'reference': 'b' * 40}, 'dist': {'reference': 'b' * 40}} for name in ('pdftoolkit/pdf-to-html', 'pdftoolkit/pdf-reader', 'roukmoute/pdf', 'pdftoolkit/pdf-codecs')]
         self.runtime = {'schema': 1, 'phpIntegerBytes': 8, 'maximumInputBytes': 8 * 1024 * 1024,
                         'maximumDurationMs': 30000, 'phpMemoryLimitBytes': 128 * 1024 * 1024,
                         'packages': packages, 'files': runtime_files, 'application': 'runtime/application.zip',
@@ -98,6 +98,27 @@ class DemoPublicationTest(unittest.TestCase):
 
     def load(self):
         return DemoGallery(self.pin, self.source, self.build, self.html)
+
+    def test_runtime_requires_codecs_once_without_unknown_package_substitution(self):
+        self.load()
+        complete = deepcopy(self.runtime['packages'])
+        for packages in (complete[:-1], complete + [complete[-1]],
+                         complete[:-1] + [{**complete[-1], 'name': 'unexpected/package'}]):
+            with self.subTest(packages=[item['name'] for item in packages]):
+                self.runtime['packages'] = packages
+                runtime = self.asset('assets/runtime-manifest.json', json.dumps(self.runtime).encode(), 'application/json')
+                self.assets = [item for item in self.assets if item['path'] != runtime['path']] + [runtime]
+                self.save()
+                with self.assertRaisesRegex(ValueError, 'four locked package identities'):
+                    self.load()
+
+    def test_runtime_codecs_requires_matching_released_source_and_distribution(self):
+        self.runtime['packages'][-1]['dist']['reference'] = 'c' * 40
+        runtime = self.asset('assets/runtime-manifest.json', json.dumps(self.runtime).encode(), 'application/json')
+        self.assets = [item for item in self.assets if item['path'] != runtime['path']] + [runtime]
+        self.save()
+        with self.assertRaisesRegex(ValueError, 'released source and distribution'):
+            self.load()
 
     def test_only_the_exact_public_der_fixture_accepts_a_binary_mime_alias(self):
         gallery = DemoArtifact('signature/signer.der', 784,

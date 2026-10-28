@@ -322,8 +322,8 @@ class DemoGallery:
             if type(runtime.get(key)) is not int or not 0 < runtime[key] <= maximum:
                 raise ValueError('Missing or excessive browser runtime limit: ' + key)
         packages = runtime.get('packages', [])
-        if not isinstance(packages, list) or len(packages) != 3 or {package.get('name') for package in packages} != {'pdftoolkit/pdf-to-html', 'pdftoolkit/pdf-reader', 'roukmoute/pdf'}:
-            raise ValueError('Browser runtime must retain its three locked package identities')
+        if not isinstance(packages, list) or len(packages) != 4 or {package.get('name') for package in packages} != {'pdftoolkit/pdf-to-html', 'pdftoolkit/pdf-reader', 'pdftoolkit/pdf-codecs', 'roukmoute/pdf'}:
+            raise ValueError('Browser runtime must retain its four locked package identities')
         for package in packages:
             version = package.get('version', '').removeprefix('v')
             revision = package.get('source', {}).get('reference', '')
