@@ -56,6 +56,11 @@
     };
     updateLanguageLinks();
     window.addEventListener("hashchange", updateLanguageLinks);
+    for (const link of languageLinks) {
+        for (const event of ["click", "pointerdown", "focus", "contextmenu"]) {
+            link.addEventListener(event, updateLanguageLinks);
+        }
+    }
     const menuButton = document.getElementById("menu-button");
     const navigation = document.getElementById("site-nav");
 

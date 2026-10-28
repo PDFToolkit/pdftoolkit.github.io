@@ -155,6 +155,17 @@ async function check(name, test) {
 }
 
 async function run() {
+  await check("Language switching preserves a demo selection changed through history.replaceState", async () => {
+    for (const event of ["click", "pointerdown", "focus", "contextmenu"]) {
+      const demo = page({
+        url: "https://pdftoolkit.github.io/modules/to-html/demo/index.html?sample=structure",
+        links: [{ href: "/fr/modules/to-html/demo/index.html" }],
+      });
+      demo.setAddress("https://pdftoolkit.github.io/modules/to-html/demo/index.html?sample=mathml#preview");
+      await demo.links[0].emit(event);
+      assert.equal(demo.links[0].href, "https://pdftoolkit.github.io/fr/modules/to-html/demo/index.html?sample=mathml#preview");
+    }
+  });
   await check("Switch languages on the corresponding page without losing filters or an encoded anchor", async () => {
     const en = page({
       url: "https://pdftoolkit.github.io/guides/components.html?q=A%2BB&kind=class&x=1&x=2#string-bytes-and-unicode-text",
