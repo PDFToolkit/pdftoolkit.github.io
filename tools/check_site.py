@@ -11,6 +11,8 @@ import re
 import struct
 from urllib.parse import quote, unquote, urlsplit
 
+from html_demo import DemoGallery
+
 
 DOCUMENTATION_REPOSITORY = 'https://github.com/PDFToolkit/pdftoolkit.github.io'
 SITE_ORIGIN = 'https://pdftoolkit.github.io'
@@ -38,6 +40,11 @@ class Document(HTMLParser):
         self.redirect_targets = []
         self.search_indexes = []
         self.specification_panels = []
+        self.demo_roots = []
+        self.demo_cases = []
+        self.frames = []
+        self.policies = []
+        self.scripts = []
         self.feed(text)
 
     def handle_starttag(self, tag, attributes):
@@ -46,6 +53,16 @@ class Document(HTMLParser):
             if attrs['id'] in self.ids:
                 self.duplicates.add(attrs['id'])
             self.ids.add(attrs['id'])
+        if 'data-demo-case' in attrs:
+            self.demo_cases.append(attrs['data-demo-case'])
+        if 'data-demo-root' in attrs:
+            self.demo_roots.append(attrs)
+        if tag == 'iframe':
+            self.frames.append(attrs)
+        if tag == 'script':
+            self.scripts.append(attrs)
+        if tag == 'meta' and attrs.get('http-equiv', '').lower() == 'content-security-policy':
+            self.policies.append(attrs.get('content', ''))
         if tag == 'h1':
             self.heading_count += 1
         if tag == 'html':
@@ -383,6 +400,51 @@ def check(root):
                 page = localized(f'modules/{slug}/{route}.html', language)
                 if page not in guides or guides[page].get('package') != ('pdftoolkit/opentype' if slug == 'opentype' else 'pdftoolkit/pdf-' + slug):
                     errors.append('Missing local module guide and provenance: ' + str(page))
+    demo = manifest.get('htmlDemo', {})
+    try:
+        DemoGallery.validate_published(root, demo, packages.get('pdftoolkit/pdf-to-html', {}))
+    except (ValueError, KeyError, TypeError, OSError) as error:
+        errors.append('Invalid browser demo: ' + str(error))
+    for language in ('en', 'fr'):
+        demo_page = ('fr/' if language == 'fr' else '') + DemoGallery.route
+        document = documents.get(demo_page)
+        if document is None or len(document.demo_roots) != 1:
+            errors.append('Missing localized browser demo application: ' + demo_page)
+            continue
+        attributes = document.demo_roots[0]
+        if attributes.get('data-demo-base') != '/' + DemoGallery.prefix or attributes.get('data-demo-language') != language:
+            errors.append('Incorrect browser demo locale or asset root: ' + demo_page)
+        if any(frame.get('sandbox') != '' or frame.get('src') or frame.get('srcdoc') for frame in document.frames):
+            errors.append('Initial browser demo preview must be empty and sandboxed: ' + demo_page)
+        scripts = [item for item in document.scripts if item.get('src', '').startswith('/' + DemoGallery.prefix)]
+        if len(scripts) != 1 or scripts[0].get('type') != 'module' or urlsplit(scripts[0].get('src', '')).path != '/' + DemoGallery.prefix + 'app.js':
+            errors.append('Missing local browser demo module script: ' + demo_page)
+        policy = document.policies[0] if len(document.policies) == 1 else ''
+        required = ("worker-src 'self'", "connect-src 'self'", "object-src 'none'", "form-action 'none'")
+        scripts = next((directive.split()[1:] for directive in policy.split('; ') if directive.startswith('script-src ')), [])
+        expected_scripts = ["'self'", 'blob:', "'wasm-unsafe-eval'", *["'" + value + "'" for value in demo.get('trustedScriptHashes', [])]]
+        if any(directive not in policy.split('; ') for directive in required) or scripts != expected_scripts:
+            errors.append('Browser demo must use its scoped local runtime policy: ' + demo_page)
+        teaser_cases = {'index': ['structure', 'mathml', 'formulaire-reset'], 'graphics': ['graphique', 'apparences'], 'signatures': ['signature']}
+        gallery_cases = {}
+        if demo.get('gallery') == DemoGallery.prefix + 'gallery/gallery-manifest.json':
+            gallery_cases = {case['id']: case for case in DemoGallery.read_json(root / demo['gallery'])['cases']}
+        for guide, expected_cases in teaser_cases.items():
+            page = ('fr/' if language == 'fr' else '') + 'modules/to-html/' + guide + '.html'
+            if page not in documents or '/' + demo_page not in documents[page].links:
+                errors.append('Missing visible browser demo guide link: ' + page)
+                continue
+            if documents[page].demo_cases != expected_cases:
+                errors.append('Guide must show its selected visual comparison cards: ' + page)
+            for identifier in expected_cases:
+                case = gallery_cases.get(identifier, {})
+                files = case.get('files', {})
+                expected_links = ['/' + demo_page + '?sample=' + identifier, *['/' + DemoGallery.prefix + 'gallery/' + files.get(key, {}).get('path', '') for key in ('preview', 'htmlPreview', 'pdf', 'code')]]
+                if any(link not in documents[page].links for link in expected_links):
+                    errors.append('Guide must retain source/HTML previews and reproduction links: ' + page + '/' + identifier)
+    for page, document in documents.items():
+        if page not in demo.get('pages', {}).values() and (document.demo_roots or any('wasm-unsafe-eval' in policy for policy in document.policies) or any(script.get('src', '').startswith('/' + DemoGallery.prefix) for script in document.scripts)):
+            errors.append('Browser demo runtime must stay on its explicit pages: ' + page)
     html_reference = manifest.get('htmlDerivationReference', {})
     html_package = packages.get('pdftoolkit/pdf-to-html', {})
     expected_reference = html_package.get('repository', '') + '/blob/' + html_package.get('revision', '') + '/resources/reference-documents/Deriving_HTML_from_PDF_1-2.pdf'

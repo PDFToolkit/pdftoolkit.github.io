@@ -353,6 +353,10 @@ def canonical_source(owner, source):
 
 
 TEXT = {
+    'Galerie et démo HTML': 'HTML gallery and demo',
+    'Dérivation HTML': 'HTML derivation',
+    'Démo HTML': 'HTML demo',
+    'Explorer les exemples et essayer la conversion locale →': 'Explore examples and try local conversion →',
     'Dériver du HTML depuis un PDF': 'Derive HTML from PDF',
     'Dériver du HTML depuis un PDF balisé': 'Derive HTML from tagged PDF',
     'Structure logique, contenu Unicode et HTML sémantique avec diagnostics explicites.': 'Logical structure, Unicode content and semantic HTML with explicit diagnostics.',

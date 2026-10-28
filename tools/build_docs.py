@@ -11,6 +11,7 @@ import subprocess
 import sys
 
 from check_sources import check, html_dependencies, select_reader
+from html_demo import DemoBuild, DemoSource
 
 
 def run(command: list, cwd: Path, output: Path | None = None, env: dict[str, str] | None = None) -> None:
@@ -132,6 +133,12 @@ def build(args) -> None:
     run([sys.executable, "tools/validate_revision_history.py", "--php", args.php, "--qpdf", args.qpdf,
          "--work-dir", work / "reader-revision-history-validation"], reader)
     validate_html_module(args, html, work, pdfs)
+    demo = args.demo_root.resolve()
+    demo_build = work / 'html-demo'
+    demo_source = DemoSource.load(content / 'resources/demo-source.json')
+    DemoBuild(demo_source, demo, sys.executable, args.php, args.pdftoppm, args.node).run(demo_build, html, args.remote)
+    run([sys.executable, "tools/validate_demo.py", demo_build, "--report", work / "html-demo-validation.json",
+         "--pdftoppm", args.pdftoppm, "--require-release"], demo)
     api = work / "api.json"
     run([args.php, content / "tools/export_api.php", api, source, manifest, opentype, html, reader_consumer], source)
     for example in sorted((source / "examples").glob("*.php")):
@@ -178,7 +185,7 @@ def build(args) -> None:
     run([sys.executable, "tools/validate_encrypted_usage_rights.py", "--php", args.php, "--qpdf", args.qpdf,
          "--work-dir", work / "encrypted-usage-rights-validation"], source)
     run([sys.executable, content / "tools/build_site.py", "--content-root", content, "--source-root", source,
-         "--opentype-root", opentype, "--pdf-to-html-root", html, "--sources", manifest, "--api", api, "--pdf-dir", pdfs, "--pdf-preview-dir", previews,
+         "--opentype-root", opentype, "--pdf-to-html-root", html, "--demo-root", demo, "--demo-build", demo_build, "--sources", manifest, "--api", api, "--pdf-dir", pdfs, "--pdf-preview-dir", previews,
          "--output", args.output.resolve(), "--base-path", "/", "--docs-revision", args.docs_revision], content)
     run([sys.executable, content / "tools/check_site.py", args.output.resolve()], content)
 
@@ -189,6 +196,7 @@ if __name__ == "__main__":
     parser.add_argument("--source-root", type=Path, required=True)
     parser.add_argument("--opentype-root", type=Path, required=True, help="Independent released OpenType checkout")
     parser.add_argument("--pdf-to-html-root", type=Path, required=True, help="Released PDF-to-HTML checkout and its locked reader")
+    parser.add_argument("--demo-root", type=Path, required=True, help="Separately released browser demo checkout")
     parser.add_argument("--sources", type=Path)
     parser.add_argument("--work-dir", type=Path, default=Path("_build"))
     parser.add_argument("--output", type=Path, default=Path("_site"))

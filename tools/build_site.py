@@ -16,6 +16,7 @@ from urllib.parse import quote, unquote, urlsplit
 
 import markdown
 from check_sources import select_reader
+from html_demo import DemoGallery, DemoSource
 from localization import LANGUAGES, ENGLISH_ROUTES, canonical_source, localized_source, route_for, translate, translate_interface, ISO2_DESCRIPTIONS_FR, iso2_description
 
 
@@ -56,6 +57,7 @@ def publish_derivation_assets(report_path: Path, html_path: Path, target: Path) 
 
 
 GUIDES = [
+    ('docs/html-demo.md', DemoGallery.route, 'Galerie et démo HTML', 'Dérivation HTML'),
     ('docs/coverage.md', 'guides/mecanismes.html', 'Couverture des éditions PDF', 'Guides'),
     ('docs/source-audits.md', 'guides/source-audits.html', 'Règles de source et corrections vérifiées', 'Guides'),
     ('docs/pdf-2-0.md', 'guides/pdf-2-0.html', 'PDF 2.0 : objets et mécanismes', 'Guides'),
@@ -233,7 +235,7 @@ def group_for(component: dict) -> str:
 
 
 class Site:
-    def __init__(self, content_root: Path, source_root: Path, output: Path, api: Path, pdfs: Path, pdf_previews: Path, base: str, docs_revision: str, sources: Path, opentype_root: Path | None = None, pdf_to_html_root: Path | None = None):
+    def __init__(self, content_root: Path, source_root: Path, output: Path, api: Path, pdfs: Path, pdf_previews: Path, base: str, docs_revision: str, sources: Path, opentype_root: Path | None = None, pdf_to_html_root: Path | None = None, demo_root: Path | None = None, demo_build: Path | None = None):
         self.root, self.content_root, self.output, self.pdfs = source_root, content_root, output, pdfs
         root = source_root
         self.pdf_previews = pdf_previews
@@ -246,6 +248,11 @@ class Site:
         self.stylesheet_revision = hashlib.sha256((content_root / 'docs/site/assets/site.css').read_bytes()).hexdigest()[:12]
         self.script_revision = hashlib.sha256((content_root / 'docs/site/assets/site.js').read_bytes()).hexdigest()[:12]
         self.packages = load_sources(sources)
+        if demo_root is None or demo_build is None:
+            raise ValueError('The released browser demo checkout and generated assets are required')
+        demo_source = DemoSource.load(content_root / 'resources/demo-source.json')
+        demo_source.check(demo_root)
+        self.demo = DemoGallery(demo_source, demo_root, demo_build, self.packages['pdftoolkit/pdf-to-html'])
         self.revision = self.packages[CORE_PACKAGE]['revision']
         self.release = self.packages[CORE_PACKAGE]['version']
         checkout_revision = subprocess.run(['git', '-C', str(root), 'rev-parse', 'HEAD'], check=True, capture_output=True, text=True).stdout.strip()
@@ -481,7 +488,7 @@ class Site:
             ('Découvrir', [('index.html', 'Accueil'), ('guides/demarrer.html', 'Démarrer'), ('guides/modules.html', 'Core et modules'), ('guides/pdf-2-0.html', 'PDF 2.0'), ('guides/composants.html', 'Les composants'), ('guides/architecture.html', 'Architecture')]),
             ('Packages', [('modules/core/index.html', 'Core : objets et écriture'), *[(f'modules/{slug}/index.html', title) for slug, title, _ in MODULES.values()]]),
             ('Explorer', [('reference/index.html', 'Référence des composants'), ('guides/couverture.html', 'Couverture de la norme'), ('guides/mecanismes.html', 'Couverture des éditions PDF'), ('guides/source-audits.html', 'Règles de source et corrections vérifiées'), ('guides/pdf-2-0-bundle.html', 'Spécifications complémentaires PDF 2.0'), ('guides/supplement-adobe.html', 'Supplément Adobe'), ('guides/references-adobe.html', 'Références Adobe conservées'), ('guides/securite.html', 'Sécurité'), ('guides/revisions-protegees.html', 'Révisions natives protégées'), ('guides/versions.html', 'Versions')]),
-            ('Apprendre', [('tutorials/index.html', 'Tous les tutoriels'), *[(f'tutorials/{slug}.html', f'{i:02d}. {title}') for i, (_, slug, title, _, _) in enumerate(LESSONS, 1)], ('recipes/table.html', 'Recette : tableau')]),
+            ('Apprendre', [(DemoGallery.route, 'Galerie et démo HTML'), ('tutorials/index.html', 'Tous les tutoriels'), *[(f'tutorials/{slug}.html', f'{i:02d}. {title}') for i, (_, slug, title, _, _) in enumerate(LESSONS, 1)], ('recipes/table.html', 'Recette : tableau')]),
         ]
         html = ''
         for label, links in groups:
@@ -493,7 +500,7 @@ class Site:
             html += '</div>'
         return html
 
-    def page(self, route: str, title: str, category: str, body: str, toc: list[dict] | None = None, description: str = '') -> None:
+    def page(self, route: str, title: str, category: str, body: str, toc: list[dict] | None = None, description: str = '', extra_head: str = '', browser_demo: bool = False, demo_script_hashes: tuple[str, ...] = ()) -> None:
         self.translations[route] = {language: route_for(route, language) for language in LANGUAGES}
         alternates = ''.join(f'<link rel="alternate" hreflang="{language}" href="{e(SITE_ORIGIN + self.base + route_for(route, language))}">' for language in LANGUAGES)
         alternates += f'<link rel="alternate" hreflang="x-default" href="{e(SITE_ORIGIN + self.base + route_for(route, "en"))}">'
@@ -506,17 +513,23 @@ class Site:
             if links:
                 toc_html = f'<aside class="toc" aria-label="Sur cette page"><h2>Sur cette page</h2><ul>{links}</ul></aside>'
         header = '' if route == 'index.html' else f'<header class="page-header"><p class="eyebrow">{e(category)}</p><h1>{e(title)}</h1></header>'
+        csp = "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; frame-src 'self'; object-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'"
+        if browser_demo:
+            if any(not re.fullmatch(r'sha256-[A-Za-z0-9+/]{43}=', value) for value in demo_script_hashes):
+                raise ValueError('Demo scripts require exact SHA-256 content hashes')
+            trusted_scripts = ''.join(" '" + value + "'" for value in demo_script_hashes)
+            csp = f"default-src 'self'; script-src 'self' blob: 'wasm-unsafe-eval'{trusted_scripts}; worker-src 'self'; style-src 'self' data: blob: 'unsafe-inline'; font-src 'self' data: blob:; img-src 'self' data: blob:; frame-src 'self' blob:; object-src 'none'; connect-src 'self'; base-uri 'none'; form-action 'none'"
         html = f'''<!doctype html>
 <html lang="{self.language}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{e(title)} · PDFToolkit</title><meta name="description" content="{e(description or title + ' — modèle objet PDF pour PHP 8.3+.')}">
 <link rel="canonical" href="{e(SITE_ORIGIN + self.url(route))}">
 {alternates}
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; frame-src 'self'; object-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="{e(csp)}">
 <link rel="icon" href="{e(self.url('assets/favicon.svg'))}" type="image/svg+xml">
-<link rel="stylesheet" href="{e(self.url('assets/site.css') + '?v=' + self.stylesheet_revision)}"><script defer src="{e(self.url('assets/site.js') + '?v=' + self.script_revision)}"></script></head>
-<body><a class="skip-link" href="#main">Aller au contenu</a>
+<link rel="stylesheet" href="{e(self.url('assets/site.css') + '?v=' + self.stylesheet_revision)}"><script defer src="{e(self.url('assets/site.js') + '?v=' + self.script_revision)}"></script>{extra_head}</head>
+<body{' class="demo-document"' if browser_demo else ''}><a class="skip-link" href="#main">Aller au contenu</a>
 <header class="site-header"><a class="brand" href="{e(self.url('index.html'))}"><span class="brand-mark" aria-hidden="true">◈</span> PDFToolkit <small>objet par objet</small></a>
-<nav class="top-nav" aria-label="Navigation principale"><a href="{e(self.url('guides/modules.html'))}">Packages</a><a href="{e(self.url('guides/pdf-2-0.html'))}">PDF 2.0</a><a href="{e(self.url('tutorials/index.html'))}">Tutoriels</a><a href="{e(self.url('reference/index.html'))}">Référence</a><a href="{DOCUMENTATION_REPOSITORY}">GitHub ↗</a></nav>
+<nav class="top-nav" aria-label="Navigation principale"><a href="{e(self.url('guides/modules.html'))}">Packages</a><a href="{e(self.url('guides/pdf-2-0.html'))}">PDF 2.0</a><a href="{e(self.url('tutorials/index.html'))}">Tutoriels</a><a href="{e(self.url('reference/index.html'))}">Référence</a><a href="{e(self.url(DemoGallery.route))}">Démo HTML</a><a href="{DOCUMENTATION_REPOSITORY}">GitHub ↗</a></nav>
 {switch}
 <button id="menu-button" class="menu-button" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button></header>
 <div class="site-shell"><aside id="site-nav" class="sidebar" aria-label="Documentation">{self.sidebar(route)}<p class="sidebar-version">Core <strong>{e(self.release)}</strong> · modules {e(self.module_versions)}<br>PHP 8.3+ 64 bits · PDF 1.7 et 2.0</p></aside>
@@ -763,6 +776,8 @@ class Site:
     def module_navigation(self, name: str) -> str:
         slug, title, guides = MODULES[name]
         links = [(f'modules/{slug}/index.html', 'Présentation'), *[(f'modules/{slug}/{route}.html', label) for _, route, label in guides], (self.package_route(name), 'Référence API'), (f'modules/{slug}/signalements.html', 'Signalements privés'), (f'modules/{slug}/versions.html', 'Changelog')]
+        if name == 'pdftoolkit/pdf-to-html':
+            links.insert(1, (DemoGallery.route, 'Galerie et démo HTML'))
         return '<nav class="module-navigation" aria-label="Guides du module"><h2>' + e(title) + '</h2><ul>' + ''.join(f'<li><a href="{e(self.url(route))}">{e(label)}</a></li>' for route, label in links) + '</ul></nav>'
 
     def core_hub(self) -> None:
@@ -1166,6 +1181,7 @@ class Site:
                 shutil.copyfile(image, target)
                 self.pdf_pages[example].append({'file': filename, 'width': width, 'height': height})
         self.write('assets/favicon.svg', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="7" fill="#0a7166"/><path d="M9 7h10l5 5v13H9z" fill="none" stroke="white" stroke-width="2"/><path d="M19 7v6h5" fill="none" stroke="white" stroke-width="2"/></svg>')
+        demo_manifest = self.demo.publish(self.output)
         self.prepare_anchors()
         for language in LANGUAGES:
             self.language = language
@@ -1177,6 +1193,7 @@ class Site:
         for record in sources.values():
             record['pages'] = {language: route_for(record['page'], language) for language in LANGUAGES}
         manifest = {'basePath': self.base, 'revision': self.revision, 'docsRevision': self.docs_revision, 'documentation': self.documentation, 'documentationSources': self.documentation_sources, 'packages': packages, 'components': len(self.components), 'examples': sorted(expected), 'exampleSources': sources, 'pdfPages': {example: ['assets/pdf-pages/' + image['file'] for image in images] for example, images in self.pdf_pages.items()}, 'pages': sorted(route for route in self.written if route.endswith('.html'))}
+        manifest['htmlDemo'] = demo_manifest
         manifest['derivedHtml'] = [{'example': name, 'path': record['html'], 'sha256': record['htmlSha256'], 'package': record['package'], 'revision': self.packages[record['package']]['revision']} for name, record in sources.items() if record['kind'] == 'conversion']
         html_package = self.packages['pdftoolkit/pdf-to-html']
         manifest['htmlDerivationReference'] = {**self.html_reference, 'repository': html_package['repository'], 'revision': html_package['revision'], 'sourceUrl': self.source_url(self.html_reference['source'], owner=html_package), 'metadataUrl': self.source_url('resources/reference.json', owner=html_package)}
@@ -1235,10 +1252,16 @@ class Site:
             root = self.content_root if owner == 'documentation' else self.package_roots[owner]
             source_url = self.source_url(source, owner=package)
             self.documentation_sources.append({'page': route_for(route, self.language), 'language': self.language, 'package': owner, 'source': source, 'repository': package['repository'], 'revision': package['revision'], 'sourceUrl': source_url, 'sourceSha256': hashlib.sha256((root / source).read_bytes()).hexdigest()})
+            teaser_cases = {'modules/to-html/index.html': ('structure', 'mathml', 'formulaire-reset'), 'modules/to-html/graphics.html': ('graphique', 'apparences'), 'modules/to-html/signatures.html': ('signature',)}
+            teaser = self.demo.teaser(self.language, self.base, teaser_cases[route]) if route in teaser_cases else ''
             if owner in MODULES:
-                body = f'<p><span class="badge">Module optionnel · {e(owner)} {e(package["version"])}</span></p>' + self.module_navigation(owner) + body
+                body = f'<p><span class="badge">Module optionnel · {e(owner)} {e(package["version"])}</span></p>' + teaser + self.module_navigation(owner) + body
                 if route == f'modules/{MODULES[owner][0]}/index.html':
                     body = f'<p>{self.packagist_link(owner)}</p>' + body
+            if route in {'modules/to-html/index.html', 'modules/to-html/graphics.html', 'modules/to-html/signatures.html'}:
+                body += f'<p class="pdf-actions"><a class="button" href="{e(self.url(DemoGallery.route))}">Explorer les exemples et essayer la conversion locale →</a></p>'
+            if route == DemoGallery.route:
+                body = self.demo.body(self.language, self.base) + body
             if route == 'tutorials/index.html':
                 body = self.tutorial_cards() + body
             example = next((name for name, target in self.examples.items() if target == route), None)
@@ -1252,7 +1275,7 @@ class Site:
                     toc += [{'id': 'resultat-pdf', 'name': 'Résultat PDF', 'level': 2}]
                 toc += [{'id': 'code-source', 'name': 'Code source', 'level': 2}]
             body += f'<p class="search-hint"><a href="{e(source_url)}">Source de ce guide au commit documenté ↗</a></p>'
-            self.page(route, title, category, body, toc)
+            self.page(route, title, category, body, None if route == DemoGallery.route else toc, extra_head=self.demo.head(self.base) if route == DemoGallery.route else '', browser_demo=route == DemoGallery.route, demo_script_hashes=self.demo.script_hashes if route == DemoGallery.route else ())
         self.api_pages()
         self.page('404.html', 'Page introuvable', 'Documentation', f'<p>Cette adresse ne correspond pas à une page publiée.</p><p><a href="{e(self.url("reference/index.html"))}">Rechercher un composant</a> ou <a href="{e(self.url("index.html"))}">revenir à l’accueil</a>.</p>')
 
@@ -1279,6 +1302,8 @@ if __name__ == '__main__':
     parser.add_argument('--source-root', type=Path, required=True)
     parser.add_argument('--opentype-root', type=Path, required=True, help='Independent released OpenType checkout')
     parser.add_argument('--pdf-to-html-root', type=Path, required=True, help='Released PDF-to-HTML checkout and its locked reader')
+    parser.add_argument('--demo-root', type=Path, required=True, help='Separately released browser demo checkout')
+    parser.add_argument('--demo-build', type=Path, required=True, help='Verified browser demo build directory')
     parser.add_argument('--sources', type=Path, help='Released-source manifest; defaults to content-root/resources/sources.json')
     parser.add_argument('--api', type=Path, required=True)
     parser.add_argument('--pdf-dir', type=Path, required=True)
@@ -1293,4 +1318,4 @@ if __name__ == '__main__':
         parser.error('base-path must contain only URL path segments')
     content_root = args.content_root.resolve()
     sources = args.sources.resolve() if args.sources else content_root / 'resources' / 'sources.json'
-    Site(content_root, args.source_root.resolve(), args.output.resolve(), args.api.resolve(), args.pdf_dir.resolve(), args.pdf_preview_dir.resolve(), args.base_path, args.docs_revision, sources, args.opentype_root.resolve(), args.pdf_to_html_root.resolve()).build()
+    Site(content_root, args.source_root.resolve(), args.output.resolve(), args.api.resolve(), args.pdf_dir.resolve(), args.pdf_preview_dir.resolve(), args.base_path, args.docs_revision, sources, args.opentype_root.resolve(), args.pdf_to_html_root.resolve(), args.demo_root.resolve(), args.demo_build.resolve()).build()

@@ -59,6 +59,7 @@ img { height: auto; }
 main { min-width: 0; padding: 42px clamp(24px, 4.2vw, 68px) 60px; }
 .content-grid { display: grid; grid-template-columns: minmax(0, 860px) minmax(140px, 190px); gap: 44px; }
 .content-grid > article { min-width: 0; }
+.demo-document .content-grid { grid-template-columns: minmax(0, 1fr); }
 .content-grid:has(> article:only-child) { grid-template-columns: minmax(0, 920px); }
 .toc { position: sticky; top: 106px; align-self: start; max-height: calc(100vh - 130px); overflow-y: auto; padding-left: 16px; border-left: 1px solid var(--line); font-size: 12px; }
 .toc h2, .toc-title { margin: 0 0 12px; font: 650 10px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
@@ -283,4 +284,19 @@ a.card { color: var(--ink); text-decoration: none; }
     h1, h2, h3 { break-after: avoid; }
     .site-footer { margin-top: 24pt; }
     a { color: inherit; }
+}
+
+.demo-teaser { margin: 24px 0 32px; }
+.demo-teaser-cards { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; }
+.demo-teaser-card { min-width: 0; padding: 15px; border: 1px solid var(--line); border-radius: 10px; background: var(--paper, #fff); }
+.demo-teaser-card h3 { margin: 0 0 12px; font-size: 17px; }
+.demo-teaser-card p { font-size: 14px; }
+.demo-teaser-comparison { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.demo-teaser-comparison figure { margin: 0; min-width: 0; }
+.demo-teaser-comparison img { display: block; width: 100%; height: auto; max-height: 400px; object-fit: contain; object-position: top; background: #f3f6f9; border: 1px solid var(--line); }
+.demo-teaser-comparison figcaption { margin-top: 8px; font-size: 13px; font-weight: 650; }
+.demo-teaser-links { display: flex; flex-wrap: wrap; gap: 7px 13px; }
+
+@media (max-width: 600px) {
+  .demo-teaser-comparison { grid-template-columns: minmax(0, 1fr); gap: 18px; }
 }

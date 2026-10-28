@@ -22,7 +22,9 @@ jobs:
       - uses: actions/checkout@v6
       - name: Select released source inputs
         id: sources
-        run: python tools/check_sources.py --source-root _sources/pdf --github-output "$GITHUB_OUTPUT"
+        run: |
+          python tools/check_sources.py --source-root _sources/pdf --github-output "$GITHUB_OUTPUT"
+          python tools/html_demo.py --github-output "$GITHUB_OUTPUT"
       - uses: actions/checkout@v6
         with:
           repository: PDFToolkit/pdf
@@ -41,6 +43,12 @@ jobs:
           ref: ${{ steps.sources.outputs.pdf_to_html_revision }}
           fetch-depth: 0
           path: _sources/pdf-to-html
+      - uses: actions/checkout@v6
+        with:
+          repository: PDFToolkit/pdf-to-html-demo
+          ref: ${{ steps.sources.outputs.demo_revision }}
+          fetch-depth: 0
+          path: _sources/pdf-to-html-demo
       - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.3'
@@ -52,7 +60,7 @@ jobs:
           python-version: '3.13'
       - uses: actions/setup-node@v7
         with:
-          node-version: '24'
+          node-version: '24.22.1'
           package-manager-cache: false
       - name: Install the released packages' locked build inputs
         env:
@@ -81,25 +89,58 @@ jobs:
           COMPOSER_ROOT_VERSION="$CORE_ROOT_VERSION" install_locked_inputs _sources/pdf
           install_locked_inputs _sources/opentype
           install_locked_inputs _sources/pdf-to-html
+      - name: Install the released browser demo's locked inputs
+        run: |
+          composer install --working-dir _sources/pdf-to-html-demo --no-dev --no-interaction --prefer-dist
+          composer check-platform-reqs --working-dir _sources/pdf-to-html-demo --no-dev
+          composer audit --working-dir _sources/pdf-to-html-demo --locked --no-dev
+          npm ci --ignore-scripts --prefix _sources/pdf-to-html-demo
+          npm audit --prefix _sources/pdf-to-html-demo
+      - name: Install demo browser validation engines
+        working-directory: _sources/pdf-to-html-demo
+        run: npx playwright install --with-deps chromium firefox
       - run: python -m pip install --require-hashes -r tools/site-requirements.txt
       - run: python -m pip install --require-hashes -r _sources/pdf/tools/public-key-validation-requirements.txt
       - run: python -m pip install --require-hashes -r _sources/pdf-to-html/tools/validation-requirements.txt
       - run: python -m pip install --require-hashes -r _sources/pdf-to-html/tools/source-integrity-validation-requirements.txt
+      - run: python -m pip install --require-hashes -r _sources/pdf-to-html-demo/tools/validation-requirements.txt
       - name: Install the selected Reader oracle requirements
         run: |
           reader_consumer=$(python tools/check_sources.py --source-root _sources/pdf --pdf-to-html-root _sources/pdf-to-html --reader-consumer)
           python -m pip install --require-hashes -r "$reader_consumer/vendor/pdftoolkit/pdf-reader/tools/source-mac-validation-requirements.txt"
+      - run: python -m pip check
       - uses: ./_sources/pdf/.github/actions/setup-qpdf
       - run: sudo apt-get update && sudo apt-get install -y poppler-utils ghostscript
+      - name: Verify documentation build contracts
+        run: python -m unittest discover -s tests -p 'test_*.py'
       - name: Verify bilingual navigation and search behavior
         run: node tests/site_locales.cjs
       - name: Build real examples and verify every documentation page
-        run: python tools/build_docs.py --source-root _sources/pdf --opentype-root _sources/opentype --pdf-to-html-root _sources/pdf-to-html --docs-revision "$GITHUB_SHA" --openssl /usr/bin/openssl --remote
+        run: python tools/build_docs.py --source-root _sources/pdf --opentype-root _sources/opentype --pdf-to-html-root _sources/pdf-to-html --demo-root _sources/pdf-to-html-demo --docs-revision "$GITHUB_SHA" --openssl /usr/bin/openssl --remote
       - name: Verify the old project-site compatibility output
         run: |
           python tools/build_legacy_site.py --site-url https://pdftoolkit.github.io/ --site-dir _site --legacy-base /pdf --legacy-manifest resources/legacy-site-manifest.json --output _legacy
           python tools/check_legacy_site.py _legacy
           node tests/legacy_redirect.cjs _legacy
+      - name: Verify browser demo on the generated bilingual site
+        run: |
+          python -m http.server 8080 --bind 127.0.0.1 --directory _site > _build/demo-http.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid"' EXIT
+          ready=0
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:8080/site-manifest.json > /dev/null; then ready=1; break; fi
+            sleep 1
+          done
+          test "$ready" -eq 1
+          node _sources/pdf-to-html-demo/tests/browser.cjs --base-url http://127.0.0.1:8080 --output _build/demo-browsers --site
+      - name: Retain browser demo validation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-demo-evidence
+          path: _build/demo-browsers
+          if-no-files-found: warn
       - uses: actions/upload-pages-artifact@v4
         with:
           path: _site

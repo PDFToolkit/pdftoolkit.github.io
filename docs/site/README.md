@@ -131,8 +131,8 @@ rasterisation, d'authentification et de codecs supplémentaires.
 HTML 0.6.0 publie aussi ses [règles de placement MathML et sa procédure de validation navigateur](https://pdftoolkit.github.io/fr/modules/to-html/coverage.html#placement-mathml-et-rendu-navigateur).
 La qualification de sa version et un job CI dédié vérifient la sortie dérivée
 dans Chromium et Firefox et conservent rapports et captures. HTML 0.6 vérifie aussi les widgets, les attributs dérivés et les popovers de statut des signatures dans les deux moteurs. Le build du site
-rend ces guides publiés et vérifie leurs liens ; les moteurs navigateur restent
-des dépendances de validation du package HTML.
+rend ces guides publiés et vérifie leurs liens. Le build indépendant de la démo
+capture aussi sa galerie dans Chromium et contrôle ses pages intégrées dans les deux moteurs.
 
 L'authentification R=2–7 native est une sélection explicite du lecteur. L'oracle
 indépendant du package HTML déchiffre de vraies fixtures qpdf et analyse le HTML
@@ -174,7 +174,7 @@ anglaises/françaises et de véritables rendus PDF.
 
 ## Construction locale
 
-PHP 8.3 ou supérieur en 64 bits, Composer, Python 3.13, Node 24, OpenSSL, Poppler (`pdftoppm`) et qpdf 12.4.2
+PHP 8.3 ou supérieur en 64 bits, Composer, Python 3.13, Node 24.22.1, OpenSSL, Poppler (`pdftoppm`) et qpdf 12.4.2
 sont utilisés par le workflow. Les dépendances Python sont verrouillées avec
 leurs empreintes. Le site publié est statique.
 
@@ -199,13 +199,22 @@ html_revision=$(python -c "import json; print(next(p for p in json.load(open('re
 git clone "$html_repository" _sources/pdf-to-html
 git -C _sources/pdf-to-html checkout --detach "$html_revision"
 composer install --working-dir=_sources/pdf-to-html --no-interaction --prefer-dist
+demo_repository=$(python -c "import json; print(json.load(open('resources/demo-source.json'))['repository'])")
+demo_revision=$(python -c "import json; print(json.load(open('resources/demo-source.json'))['revision'])")
+git clone "$demo_repository" _sources/pdf-to-html-demo
+git -C _sources/pdf-to-html-demo checkout --detach "$demo_revision"
+composer install --working-dir=_sources/pdf-to-html-demo --no-dev --no-interaction --prefer-dist
+npm ci --ignore-scripts --prefix _sources/pdf-to-html-demo
+npm audit --prefix _sources/pdf-to-html-demo
+npx --prefix _sources/pdf-to-html-demo playwright install --with-deps chromium firefox
 python -m pip install --require-hashes -r tools/site-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf/tools/public-key-validation-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf-to-html/tools/validation-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf-to-html/tools/source-integrity-validation-requirements.txt
+python -m pip install --require-hashes -r _sources/pdf-to-html-demo/tools/validation-requirements.txt
 reader_consumer=$(python tools/check_sources.py --source-root _sources/pdf --pdf-to-html-root _sources/pdf-to-html --reader-consumer)
 python -m pip install --require-hashes -r "$reader_consumer/vendor/pdftoolkit/pdf-reader/tools/source-mac-validation-requirements.txt"
-python tools/build_docs.py --source-root _sources/pdf --opentype-root _sources/opentype --pdf-to-html-root _sources/pdf-to-html --docs-revision "$(git rev-parse HEAD)" --remote
+python tools/build_docs.py --source-root _sources/pdf --opentype-root _sources/opentype --pdf-to-html-root _sources/pdf-to-html --demo-root _sources/pdf-to-html-demo --docs-revision "$(git rev-parse HEAD)" --remote
 ```
 
 Sous PowerShell :
@@ -225,14 +234,22 @@ $htmlSource = $sourceManifest.packages | Where-Object name -eq 'pdftoolkit/pdf-t
 git clone $htmlSource.repository _sources/pdf-to-html
 git -C _sources/pdf-to-html checkout --detach $htmlSource.revision
 composer install --working-dir=_sources/pdf-to-html --no-interaction --prefer-dist
+$demoSource = Get-Content resources/demo-source.json -Raw | ConvertFrom-Json
+git clone $demoSource.repository _sources/pdf-to-html-demo
+git -C _sources/pdf-to-html-demo checkout --detach $demoSource.revision
+composer install --working-dir=_sources/pdf-to-html-demo --no-dev --no-interaction --prefer-dist
+npm ci --ignore-scripts --prefix _sources/pdf-to-html-demo
+npm audit --prefix _sources/pdf-to-html-demo
+npx --prefix _sources/pdf-to-html-demo playwright install --with-deps chromium firefox
 python -m pip install --require-hashes -r tools/site-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf/tools/public-key-validation-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf-to-html/tools/validation-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf-to-html/tools/source-integrity-validation-requirements.txt
+python -m pip install --require-hashes -r _sources/pdf-to-html-demo/tools/validation-requirements.txt
 $readerConsumer = python tools/check_sources.py --source-root _sources/pdf --pdf-to-html-root _sources/pdf-to-html --reader-consumer
 python -m pip install --require-hashes -r "$readerConsumer/vendor/pdftoolkit/pdf-reader/tools/source-mac-validation-requirements.txt"
 $docsRevision = git rev-parse HEAD
-python tools/build_docs.py --source-root _sources/pdf --opentype-root _sources/opentype --pdf-to-html-root _sources/pdf-to-html --docs-revision $docsRevision --remote
+python tools/build_docs.py --source-root _sources/pdf --opentype-root _sources/opentype --pdf-to-html-root _sources/pdf-to-html --demo-root _sources/pdf-to-html-demo --docs-revision $docsRevision --remote
 ```
 
 `tools/build_docs.py` vérifie les commits et tags publiés, les sources conservées
@@ -248,7 +265,7 @@ Pour reconstruire seulement le rendu depuis des entrées déjà validées :
 ```sh
 reader_consumer=$(python tools/check_sources.py --source-root _sources/pdf --pdf-to-html-root _sources/pdf-to-html --reader-consumer)
 php tools/export_api.php _build/api.json _sources/pdf resources/sources.json _sources/opentype _sources/pdf-to-html "$reader_consumer"
-python tools/build_site.py --content-root . --source-root _sources/pdf --opentype-root _sources/opentype --pdf-to-html-root _sources/pdf-to-html --sources resources/sources.json --docs-revision "$(git rev-parse HEAD)" --api _build/api.json --pdf-dir _build/pdfs --pdf-preview-dir _build/pdf-pages --output _site --base-path /
+python tools/build_site.py --content-root . --source-root _sources/pdf --opentype-root _sources/opentype --pdf-to-html-root _sources/pdf-to-html --demo-root _sources/pdf-to-html-demo --demo-build _build/html-demo --sources resources/sources.json --docs-revision "$(git rev-parse HEAD)" --api _build/api.json --pdf-dir _build/pdfs --pdf-preview-dir _build/pdf-pages --output _site --base-path /
 python tools/check_site.py _site
 ```
 
@@ -340,3 +357,65 @@ pas le runtime ; les cas activés explicitement sont contrôlés dans l'espace p
 de validation. Tous les guides du module conservent leur variante EN/FR.
 
 Le checkout publié `_sources/pdf-to-html` est sélectionné indépendamment. Son core et son lecteur installés doivent correspondre exactement à son propre lock publié (versions et commits source/dist), séparément des pins core/Reader documentés. HTML 0.6.0 exécute ses oracles et le tutoriel 35 avec son lock publié, qui sélectionne Reader 0.6.0. Le Reader 0.6.0 documenté provient du vendor core 0.11.0 ; ses guides, API, tutoriel 12 et oracles utilisent tous cette sélection. Exemples et oracles Reader chargent le véritable core de ce consumer. `_build/validation-sources.json` consigne les deux environnements de validation et leurs commits de packages exacts. L’exporteur API enregistre uniquement les namespaces HTML et lecteur sélectionnés contre leurs arbres choisis. Les guides apparaissent sous `/modules/to-html/` dans les deux langues. Le tutoriel 35 copie le PDF d’entrée, rend toutes ses pages et exécute le CLI pour produire le vrai HTML et les diagnostics JSON. `derivedHtml` inventorie cette sortie séparément des routes documentaires avec package/SHA et frames sandboxées ; le vérificateur refuse le contenu actif dans ces aperçus. L’original fourni de 74 pages reste dans le package, lié au commit de la version retenue.
+
+## Démo dans le navigateur et galerie visuelle
+
+La [page de démo](https://pdftoolkit.github.io/fr/modules/to-html/demo/index.html)
+native et sa contrepartie anglaise intègrent une application publiée séparément.
+`resources/demo-source.json` sélectionne sa version stable, son tag annoté et le
+commit désigné. Cette sélection d’application est distincte :
+`resources/sources.json` décrit toujours les seuls packages PHP. Les exemples
+exécutables, la génération des fixtures, les fragments d’interface, le JavaScript,
+l’assemblage du moteur et les licences restent dans le dépôt de la démo.
+
+`tools/html_demo.py` utilise des objets explicites pour la source, les fichiers,
+la galerie et la construction. Le build vérifie le checkout sélectionné et le
+tag publié, appelle `tools/build_demo.py` avec PHP, Node, Poppler et le checkout
+HTML publié choisis, et refuse une provenance de brouillon. Chaque fichier est
+comparé à un inventaire borné de chemins, tailles et SHA-256. L’application copiée
+figure dans `htmlDemo` du manifeste du site, séparément des identités des packages
+et du `derivedHtml` des tutoriels. Les sources HTML et PHP des exemples portent
+les extensions `.html.txt` et `.php.txt` ; aucune sortie brute de l’application
+ne devient une page de documentation exécutable.
+
+Les fichiers sont publiés sous `/assets/html-demo/` et partagés entre les langues.
+Seules les pages de démo chargent le module JavaScript de l’application et
+adaptent leur CSP au WebAssembly local, aux Workers isolés et aux ressources blob.
+Le résultat importé s’affiche dans une sandbox vide ; le seul profil explicite
+de réinitialisation de la galerie peut activer le moteur vérifié de la
+bibliothèque dans une sandbox sans permission de même origine. La permission de
+son script inline est une empreinte CSP SHA-256 exacte, recalculée depuis le fichier
+de reset sélectionné ; aucun script inline arbitraire n’est autorisé. Les fichiers
+compressés du moteur sont aussi vérifiés par tailles décodées bornées et empreintes.
+Les autres pages
+de documentation conservent leur politique de sécurité actuelle.
+
+La présentation, les guides graphique et signatures affichent des comparaisons
+statiques entre les aperçus PDF sources et de vraies captures Chromium du HTML
+dérivé. Chaque carte relie l’exemple interactif sélectionné et ses téléchargements
+PDF/PHP, sans charger le moteur de démo ni modifier la CSP de ces guides. La galerie
+conserve la version du navigateur et les dimensions des images ; le contrôle
+complet vérifie ces faits, les octets PNG exacts, les routes bilingues, la provenance,
+les inventaires des cas et tous les liens de comparaison. La CI installe aussi la
+dépendance Playwright verrouillée de la démo et lance son oracle Chromium/Firefox
+sur le site effectivement construit. Rapports et captures sont conservés dans
+l’artifact `browser-demo-evidence`. Pour reproduire :
+
+```sh
+(cd _sources/pdf-to-html-demo && npx playwright install --with-deps chromium firefox)
+python -m http.server 8080 --bind 127.0.0.1 --directory _site
+# Dans un autre terminal, une fois le serveur prêt :
+node _sources/pdf-to-html-demo/tests/browser.cjs --base-url http://127.0.0.1:8080 --output _build/demo-browsers --site
+```
+
+Le contrat existant du manifeste de compatibilité couvre les redirections des
+pages natives de démo et copie à l’identique les fichiers `.txt`, JSON, JS, CSS,
+WASM, ZIP, PDF et PNG inventoriés. L’application possède sa propre release ; le
+site central ne la sélectionne qu’après publication et qualification de cette
+release. Le tag annoté du site suit les contrôles du commit exact, du déploiement
+et de la compatibilité.
+
+Le build complet exécute aussi `tools/validate_demo.py` de la démo publiée avec
+`--require-release` : les contrôles indépendants PDF, HTML5 et PNG conservent leur
+rapport dans `_build/html-demo-validation.json`. Installer ses dépendances de
+validation hashées dans le même environnement d’oracles avant la construction.
