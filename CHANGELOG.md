@@ -2,6 +2,12 @@
 
 [English](CHANGELOG.md) · [Français](CHANGELOG.fr.md)
 
+## [0.10.1] - 2026-10-28
+
+- Select published PDF-to-HTML 0.5.1 at its exact annotated tag commit and update the English/French installation, package, tutorial and source links.
+- Publish the corrected MathML placement guidance: generated Layout display declarations preserve native mathematical layout; root block Placement uses `math[display="block"]`, with explicit author CSS and MathML display kept authoritative.
+- Link the module's clause evidence and Chromium/Firefox validation procedure, retaining the distinction between exercised layout cases and general rendering or accessibility conformance. Keep the other package pins and all legacy routes/downloads unchanged.
+
 ## [0.10.0] - 2026-10-15
 
 - Select published core 0.11.0, Reader 0.6.0, images/fonts 0.1.12, HTML 0.5.0 and independent OpenType 0.3.0 from exact annotated tag commits.

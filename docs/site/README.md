@@ -121,12 +121,18 @@ distinctes. Un mauvais credential de pièce jointe doit permettre l'ouverture
 du document puis échouer à son accès. Certificats générés et entrées adverses
 restent des données privées du build.
 
-La sélection actuelle documente PDF vers HTML 0.5.0 et le lecteur 0.6.0. Le
+La sélection actuelle documente PDF vers HTML 0.5.1 et le lecteur 0.6.0. Le
 [registre des exigences](https://pdftoolkit.github.io/fr/modules/to-html/requirements.html),
 les [politiques](https://pdftoolkit.github.io/fr/modules/to-html/policies.html) et
 les [graphiques](https://pdftoolkit.github.io/fr/modules/to-html/graphics.html)
 distinguent règles natives, adaptations HTML et capacités explicites de
 rasterisation, d'authentification et de codecs supplémentaires.
+
+HTML 0.5.1 publie aussi ses [règles de placement MathML et sa procédure de validation navigateur](https://pdftoolkit.github.io/fr/modules/to-html/coverage.html#placement-mathml-et-rendu-navigateur).
+La qualification de sa version et un job CI dédié vérifient la sortie dérivée
+dans Chromium et Firefox et conservent rapports et captures. Le build du site
+rend ces guides publiés et vérifie leurs liens ; les moteurs navigateur restent
+des dépendances de validation du package HTML.
 
 L'authentification R=2–7 native est une sélection explicite du lecteur. L'oracle
 indépendant du package HTML déchiffre de vraies fixtures qpdf et analyse le HTML
@@ -330,4 +336,4 @@ le `--pdftoppm` choisi. Le profil par défaut et les frames du site n'exécutent
 pas le runtime ; les cas activés explicitement sont contrôlés dans l'espace privé
 de validation. Tous les guides du module conservent leur variante EN/FR.
 
-Le checkout publié `_sources/pdf-to-html` est sélectionné indépendamment. Son core et son lecteur installés doivent correspondre exactement à son propre lock publié (versions et commits source/dist), séparément des pins core/Reader documentés. HTML 0.5.0 exécute ses oracles et le tutoriel 35 avec son lock publié, qui sélectionne Reader 0.6.0. Le Reader 0.6.0 documenté provient du vendor core 0.11.0 ; ses guides, API, tutoriel 12 et oracles utilisent tous cette sélection. Exemples et oracles Reader chargent le véritable core de ce consumer. `_build/validation-sources.json` consigne les deux environnements de validation et leurs commits de packages exacts. L’exporteur API enregistre uniquement les namespaces HTML et lecteur sélectionnés contre leurs arbres choisis. Les guides apparaissent sous `/modules/to-html/` dans les deux langues. Le tutoriel 35 copie le PDF d’entrée, rend toutes ses pages et exécute le CLI pour produire le vrai HTML et les diagnostics JSON. `derivedHtml` inventorie cette sortie séparément des routes documentaires avec package/SHA et frames sandboxées ; le vérificateur refuse le contenu actif dans ces aperçus. L’original fourni de 74 pages reste dans le package, lié au commit de la version retenue.
+Le checkout publié `_sources/pdf-to-html` est sélectionné indépendamment. Son core et son lecteur installés doivent correspondre exactement à son propre lock publié (versions et commits source/dist), séparément des pins core/Reader documentés. HTML 0.5.1 exécute ses oracles et le tutoriel 35 avec son lock publié, qui sélectionne Reader 0.6.0. Le Reader 0.6.0 documenté provient du vendor core 0.11.0 ; ses guides, API, tutoriel 12 et oracles utilisent tous cette sélection. Exemples et oracles Reader chargent le véritable core de ce consumer. `_build/validation-sources.json` consigne les deux environnements de validation et leurs commits de packages exacts. L’exporteur API enregistre uniquement les namespaces HTML et lecteur sélectionnés contre leurs arbres choisis. Les guides apparaissent sous `/modules/to-html/` dans les deux langues. Le tutoriel 35 copie le PDF d’entrée, rend toutes ses pages et exécute le CLI pour produire le vrai HTML et les diagnostics JSON. `derivedHtml` inventorie cette sortie séparément des routes documentaires avec package/SHA et frames sandboxées ; le vérificateur refuse le contenu actif dans ces aperçus. L’original fourni de 74 pages reste dans le package, lié au commit de la version retenue.

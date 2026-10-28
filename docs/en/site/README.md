@@ -116,12 +116,18 @@ cases and two implicitly selected EFF streams with distinct keys. Wrong
 attachment credentials must preserve document opening and fail on attachment
 access. Generated certificates and adversarial inputs remain private build data.
 
-The current selection documents PDF-to-HTML 0.5.0 and reader 0.6.0. The
+The current selection documents PDF-to-HTML 0.5.1 and reader 0.6.0. The
 [requirements ledger](https://pdftoolkit.github.io/modules/to-html/requirements.html),
 [policies](https://pdftoolkit.github.io/modules/to-html/policies.html) and
 [graphics](https://pdftoolkit.github.io/modules/to-html/graphics.html) guides
 distinguish native rules, HTML adaptations and explicit capabilities for
 rasterization, authentication and additional codecs.
+
+HTML 0.5.1 also publishes its [MathML placement rules and browser validation procedure](https://pdftoolkit.github.io/modules/to-html/coverage.html#mathml-placement-and-browser-integration).
+Its release qualification and dedicated CI job validate generated output in
+Chromium and Firefox and retain their reports and screenshots. The site build
+renders those released guides and checks their links; browser engines remain
+validation dependencies of the HTML package.
 
 Native R=2–7 authentication is an explicit reader selection. The HTML package's
 independent authentication oracle decrypts actual qpdf fixtures and parses the
@@ -320,4 +326,4 @@ use the selected `--pdftoppm`. The default profile and site frames execute no
 runtime; explicitly enabled cases are checked in the private validation
 workspace. Every module guide retains its EN/FR counterpart.
 
-The released PDF-to-HTML checkout under `_sources/pdf-to-html` is selected independently. Its installed core and reader must exactly match its own published lock (versions and both source/dist commits), independently of the documented core/Reader pins. HTML 0.5.0 runs its oracles and tutorial 35 with its published lock, which selects Reader 0.6.0. The documented Reader 0.6.0 comes from core 0.11.0’s vendor; its guides, API, tutorial 12 and oracles all use that selection. Reader examples/oracles load that consumer’s actual core. `_build/validation-sources.json` records both validation environments and their exact package commits. The API exporter registers only the selected HTML and reader namespaces against their chosen trees. Module guides appear under `/modules/to-html/` in both languages. Tutorial 35 copies the input PDF, renders every page and runs the module CLI to produce actual HTML plus JSON diagnostics. `derivedHtml` inventories output HTML separately from documentation routes, with package/SHA provenance and sandboxed frames; the site checker rejects active content in these previews. The supplied 74-page original remains in the package and is linked at its selected release commit.
+The released PDF-to-HTML checkout under `_sources/pdf-to-html` is selected independently. Its installed core and reader must exactly match its own published lock (versions and both source/dist commits), independently of the documented core/Reader pins. HTML 0.5.1 runs its oracles and tutorial 35 with its published lock, which selects Reader 0.6.0. The documented Reader 0.6.0 comes from core 0.11.0’s vendor; its guides, API, tutorial 12 and oracles all use that selection. Reader examples/oracles load that consumer’s actual core. `_build/validation-sources.json` records both validation environments and their exact package commits. The API exporter registers only the selected HTML and reader namespaces against their chosen trees. Module guides appear under `/modules/to-html/` in both languages. Tutorial 35 copies the input PDF, renders every page and runs the module CLI to produce actual HTML plus JSON diagnostics. `derivedHtml` inventories output HTML separately from documentation routes, with package/SHA provenance and sandboxed frames; the site checker rejects active content in these previews. The supplied 74-page original remains in the package and is linked at its selected release commit.

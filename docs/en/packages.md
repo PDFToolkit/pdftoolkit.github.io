@@ -1,7 +1,7 @@
 # Core and optional modules
 
 PDFToolkit separates the PDF model from external-file processing. The
-**0.11.0 core**, **0.6.0 PDF reader**, **0.1.12 image/font modules**, independent **0.3.0 OpenType model** and **0.5.0 PDF-to-HTML module**
+**0.11.0 core**, **0.6.0 PDF reader**, **0.1.12 image/font modules**, independent **0.3.0 OpenType model** and **0.5.1 PDF-to-HTML module**
 require PHP 8.3 or later and are checked on PHP 8.3, 8.4 and 8.5.
 Core **0.11** and OpenType **0.3** require 64-bit PHP; OpenType remains independent of the
 PDF core. The core retains its Composer name `roukmoute/pdf`
@@ -248,10 +248,10 @@ and [coverage guide](coverage.md).
 
 ## Derive HTML from a tagged PDF
 
-The optional [PDF-to-HTML module](https://pdftoolkit.github.io/modules/to-html/index.html) follows the retained PDF Association **Deriving HTML from PDF 1.2** usage specification. Version 0.5.0 requires Reader `^0.6` and core `^0.9 || ^0.10 || ^0.11`, with 64-bit PHP 8.3+, DOM and mbstring. This site selects core 0.11.0 and Reader 0.6.0. It derives semantic HTML from logical structure; it does not infer untagged structure, run OCR or reproduce PDF page layout. Model coverage, file-adapter coverage and browser integration remain distinct.
+The optional [PDF-to-HTML module](https://pdftoolkit.github.io/modules/to-html/index.html) follows the retained PDF Association **Deriving HTML from PDF 1.2** usage specification. Version 0.5.1 requires Reader `^0.6` and core `^0.9 || ^0.10 || ^0.11`, with 64-bit PHP 8.3+, DOM and mbstring. This site selects core 0.11.0 and Reader 0.6.0. It derives semantic HTML from logical structure; it does not infer untagged structure, run OCR or reproduce PDF page layout. Model coverage, file-adapter coverage and browser integration remain distinct.
 
 ```sh
-composer require "roukmoute/pdf:^0.11.0" "pdftoolkit/pdf-to-html:^0.5.0"
+composer require "roukmoute/pdf:^0.11.0" "pdftoolkit/pdf-to-html:^0.5.1"
 ```
 
 [Follow the executable tutorial](tutorials/35-derive-html.md) and inspect diagnostics before publishing HTML. ParentTree associations, table-header identities, destinations, Unicode mappings, inline images and form actions have tests and independent oracles. The [requirements ledger](https://pdftoolkit.github.io/modules/to-html/requirements.html) links each rule to decisions and evidence; it does not certify universal PDF acceptance.

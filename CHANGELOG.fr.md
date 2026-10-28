@@ -2,6 +2,12 @@
 
 [English](CHANGELOG.md) · [Français](CHANGELOG.fr.md)
 
+## [0.10.1] - 2026-10-28
+
+- Sélectionner PDF vers HTML 0.5.1 publié au commit exact de son tag annoté et actualiser les installations, packages, tutoriels et liens source anglais/français.
+- Publier le guide corrigé du placement MathML : les déclarations display dérivées de Layout préservent la mise en forme mathématique native ; Placement Block sur la racine utilise `math[display="block"]`, en conservant la priorité du CSS explicite et du display MathML de l’auteur.
+- Relier les preuves par clause et la procédure Chromium/Firefox du module, sans assimiler les cas de placement vérifiés à une conformité générale du rendu ou de l’accessibilité. Conserver les autres versions sélectionnées et toutes les anciennes routes et téléchargements.
+
 ## [0.10.0] - 2026-10-15
 
 - Sélectionner core 0.11.0, Reader 0.6.0, images/fontes 0.1.12, HTML 0.5.0 et OpenType indépendant 0.3.0 publiés, aux commits exacts des tags annotés.

@@ -41,7 +41,7 @@ composer require "roukmoute/pdf:^0.11.0"
 ```
 
 Les versions documentées sont le core **0.11.0**, le lecteur **0.6.0**, les modules
-images/fontes **0.1.12**, OpenType indépendant **0.3.0** et PDF vers HTML **0.5.0**. Elles nécessitent **PHP 8.3 ou supérieur**
+images/fontes **0.1.12**, OpenType indépendant **0.3.0** et PDF vers HTML **0.5.1**. Elles nécessitent **PHP 8.3 ou supérieur**
 et sont vérifiées sous PHP 8.3, 8.4 et 8.5. Le core **0.11** et OpenType **0.3** exigent PHP en
 64 bits ; OpenType reste indépendant du core PDF.
 
@@ -57,7 +57,7 @@ Choisir les modules optionnels selon les fichiers traités par l'application :
 Les modules images/fontes/lecteur installent le core comme dépendance. PDF vers HTML ajoute la dérivation sémantique et installe aussi le lecteur. OpenType possède son propre modèle objet et s’installe sans dépendance PDF. Le guide des packages explique
 leurs commandes Composer et les versions prises en charge.
 
-PDF vers HTML 0.5.0 dérive le contenu sémantique des PDF balisés avec vérification
+PDF vers HTML 0.5.1 dérive le contenu sémantique des PDF balisés avec vérification
 des associations structurelles, Unicode, images, tableaux, navigation et champs.
 Son [registre des clauses](https://pdftoolkit.github.io/fr/modules/to-html/requirements.html)
 relie la référence conservée aux décisions exécutables et aux tests indépendants.
@@ -67,6 +67,11 @@ PDF de confiance. Le [guide des graphiques](https://pdftoolkit.github.io/fr/modu
 explique l'export PDF isolé et le moteur de rendu fourni par l'application.
 Rendu, authentification et codecs non pris en charge restent des capacités
 explicites ; le profil par défaut n'exécute aucun script PDF ni action de formulaire.
+
+PDF vers HTML 0.5.1 préserve la mise en forme MathML native lors du mapping de
+Placement Layout, y compris pour les classes partagées. Le CSS explicite et le
+display MathML de l’auteur gardent leur priorité. Le [guide de couverture MathML](https://pdftoolkit.github.io/fr/modules/to-html/coverage.html#placement-mathml-et-rendu-navigateur)
+explique les règles et les contrôles indépendants Chromium/Firefox.
 
 Le lecteur 0.4 et PDF vers HTML 0.4 proposent une authentification native par mot
 de passe sur activation explicite, avec permissions user/owner vérifiées. Les
