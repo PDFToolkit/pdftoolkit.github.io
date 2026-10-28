@@ -2,6 +2,13 @@
 
 [English](CHANGELOG.md) · [Français](CHANGELOG.fr.md)
 
+## [0.12.0] - 2026-10-28
+
+- Intégrer la démo PDF vers HTML publiée indépendamment et sept exemples reproductibles, en conservant les versions des packages PHP. Sélectionner la démo par son propre tag annoté et son commit source exact.
+- Ajouter les captures comparées du PDF source et du HTML dérivé directement aux guides anglais/français de présentation, graphiques et signatures, avec liens vers les exemples interactifs, PDF et code PHP. Consigner la provenance réelle des captures Chromium.
+- Convertir les PDF locaux dans un Worker PHP/WASM borné, avec des ressources inventoriées et servies localement. Conserver les documents importés dans la mémoire du navigateur, isoler les aperçus et autoriser uniquement le script de bibliothèque adressé par contenu de l’exemple de réinitialisation vérifié, via son hash CSP exact.
+- Vérifier les ressources et hashes du runtime, ses deux variantes navigateur, la navigation bilingue, les comparaisons des guides et les comportements Chromium/Firefox, en complément des contrôles complets API, PDF, liens et compatibilité des anciennes adresses.
+
 ## [0.11.0] - 2026-10-28
 
 - Sélectionner PDF vers HTML 0.6.0 publié au commit exact de son tag annoté, en conservant les versions indépendantes du core, Reader, images/fontes et OpenType.

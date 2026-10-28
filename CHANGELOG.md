@@ -2,6 +2,13 @@
 
 [English](CHANGELOG.md) · [Français](CHANGELOG.fr.md)
 
+## [0.12.0] - 2026-10-28
+
+- Integrate the independently released PDF-to-HTML browser demo and seven reproducible examples, while keeping the PHP package releases unchanged. Select the demo with its own annotated tag and exact source commit.
+- Add paired source-PDF and derived-HTML screenshots directly to the English/French overview, graphics and signature guides, with links to the interactive examples, source PDFs and PHP code. Record the real Chromium screenshot provenance.
+- Run local PDF conversion in a bounded PHP/WASM Worker using inventoried, locally served assets. Keep selected documents in browser memory, isolate previews and permit only the verified reset example's content-addressed library script through its exact CSP hash.
+- Verify all demo assets and runtime hashes, both browser engine variants, bilingual navigation, guide comparisons and Chromium/Firefox behavior alongside the complete API, PDF, link and legacy compatibility checks.
+
 ## [0.11.0] - 2026-10-28
 
 - Select published PDF-to-HTML 0.6.0 at its exact annotated tag commit, preserving the independently selected core, Reader, image/font and OpenType versions.
