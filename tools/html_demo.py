@@ -112,6 +112,17 @@ class DemoArtifact:
     def record(self, prefix: str = '') -> dict:
         return {**asdict(self), 'path': prefix + self.path}
 
+    def matches_gallery_file(self, gallery: DemoArtifact) -> bool:
+        if self.record() == gallery.record('gallery/'):
+            return True
+        # Python's MIME database can classify this published DER fixture as a
+        # generic binary download. Its exact public certificate remains fixed.
+        return (self.path == 'gallery/signature/signer.der'
+                and gallery.path == 'signature/signer.der'
+                and self.bytes == gallery.bytes == 784
+                and self.sha256 == gallery.sha256 == '61ecaec8b4fc69746718148aedaec21ee853c583a8e5e05967dd494dc54ed1d6'
+                and {self.mediaType, gallery.mediaType} == {'application/octet-stream', 'application/pkix-cert'})
+
 
 class DemoFragment(HTMLParser):
     """A released UI fragment may reference assets, never inline executable code."""
@@ -223,7 +234,7 @@ class DemoGallery:
         gallery_assets = self.inventory(self.gallery.get('assets'))
         for path, artifact in gallery_assets.items():
             global_asset = self.artifacts.get('gallery/' + path)
-            if global_asset is None or global_asset.record() != artifact.record('gallery/'):
+            if global_asset is None or not global_asset.matches_gallery_file(artifact):
                 raise ValueError('Gallery asset differs from the complete demo inventory: ' + path)
         seen = set()
         for case in cases:

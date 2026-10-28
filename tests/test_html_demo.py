@@ -1,5 +1,6 @@
 """Verify published demo boundaries independently of browser application behavior."""
 from copy import deepcopy
+from dataclasses import replace
 import base64
 import gzip
 from hashlib import sha256
@@ -97,6 +98,21 @@ class DemoPublicationTest(unittest.TestCase):
 
     def load(self):
         return DemoGallery(self.pin, self.source, self.build, self.html)
+
+    def test_only_the_exact_public_der_fixture_accepts_a_binary_mime_alias(self):
+        gallery = DemoArtifact('signature/signer.der', 784,
+            '61ecaec8b4fc69746718148aedaec21ee853c583a8e5e05967dd494dc54ed1d6', 'application/pkix-cert')
+        published = replace(gallery, path='gallery/' + gallery.path, mediaType='application/octet-stream')
+        self.assertTrue(published.matches_gallery_file(gallery))
+        self.assertTrue(replace(published, mediaType='application/pkix-cert').matches_gallery_file(
+            replace(gallery, mediaType='application/octet-stream')))
+        for field, value in (('path', 'gallery/signature/other.der'), ('bytes', 785),
+                             ('sha256', 'f' * 64), ('mediaType', 'text/javascript'), ('mediaType', 'text/html')):
+            with self.subTest(field=field, value=value):
+                self.assertFalse(replace(published, **{field: value}).matches_gallery_file(gallery))
+        self.assertFalse(replace(published, path='gallery/signature/script.js').matches_gallery_file(
+            replace(gallery, path='signature/script.js')))
+        self.assertFalse(replace(published, sha256='f' * 64).matches_gallery_file(replace(gallery, sha256='f' * 64)))
 
     def test_exact_publication_bilingual_fallback_and_manifest_revalidation(self):
         gallery = self.load()
