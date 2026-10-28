@@ -1,7 +1,7 @@
 # Core et modules optionnels
 
 PDFToolkit sépare le modèle PDF des traitements de fichiers externes. Le core
-**0.11.0**, le lecteur PDF **0.6.0**, les modules images/fontes **0.1.12**, le modèle OpenType indépendant **0.3.0** et PDF vers HTML **0.5.1**
+**0.11.0**, le lecteur PDF **0.6.0**, les modules images/fontes **0.1.12**, le modèle OpenType indépendant **0.3.0** et PDF vers HTML **0.6.0**
 nécessitent PHP 8.3 ou supérieur et sont vérifiés sous PHP 8.3, 8.4 et 8.5.
 Le core **0.11** et OpenType **0.3** exigent PHP en 64 bits ; OpenType reste indépendant du core PDF.
 Le core conserve son nom Composer `roukmoute/pdf` après son transfert dans
@@ -248,10 +248,10 @@ politique de confiance d'une signature. Ces frontières sont détaillées dans l
 
 ## Dériver du HTML depuis un PDF balisé
 
-Le [module PDF vers HTML](https://pdftoolkit.github.io/fr/modules/to-html/index.html), optionnel, suit la spécification d'usage PDF Association **Deriving HTML from PDF 1.2** conservée. La version 0.5.1 demande Reader `^0.6` et le core `^0.9 || ^0.10 || ^0.11`, avec PHP 8.3+ en 64 bits, DOM et mbstring. Le site sélectionne le core 0.11.0 et Reader 0.6.0. Le module dérive le HTML sémantique de la structure logique, sans inférer de structure absente, faire d'OCR ni reproduire la mise en page. Couverture du modèle, de l'adaptateur et intégration navigateur restent distinctes.
+Le [module PDF vers HTML](https://pdftoolkit.github.io/fr/modules/to-html/index.html), optionnel, suit la spécification d'usage PDF Association **Deriving HTML from PDF 1.2** conservée. La version 0.6.0 demande Reader `^0.6` et le core `^0.9 || ^0.10 || ^0.11`, avec PHP 8.3+ en 64 bits, DOM et mbstring. Le site sélectionne le core 0.11.0 et Reader 0.6.0. Le module dérive le HTML sémantique de la structure logique, sans inférer de structure absente, faire d'OCR ni reproduire la mise en page. Couverture du modèle, de l'adaptateur et intégration navigateur restent distinctes.
 
 ```sh
-composer require "roukmoute/pdf:^0.11.0" "pdftoolkit/pdf-to-html:^0.5.1"
+composer require "roukmoute/pdf:^0.11.0" "pdftoolkit/pdf-to-html:^0.6.0"
 ```
 
 [Suivre le tutoriel exécutable](tutorials/35-derive-html.md) et examiner les diagnostics avant publication du HTML. Les associations ParentTree, identités des en-têtes de tableaux, destinations, correspondances Unicode, images inline et actions de formulaire disposent de tests et d'oracles indépendants. Le [registre des exigences](https://pdftoolkit.github.io/fr/modules/to-html/requirements.html) relie chaque règle aux décisions et preuves ; il ne certifie pas l'acceptation de tout PDF.
@@ -267,3 +267,12 @@ montre l'opération et la propagation des permissions vérifiées. Le credential
 reste explicite et le navigateur doit appliquer les droits exportés.
 
 [Packagist: pdftoolkit/pdf-to-html](https://packagist.org/packages/pdftoolkit/pdf-to-html).
+
+`ContentAppearanceRenderer` réutilise ce moteur de contenu explicite pour les
+apparences normales, enfoncées et survolées complètes des boutons. Le [guide des signatures](https://pdftoolkit.github.io/fr/modules/to-html/signatures.html)
+montre le certificat choisi par l’application et les résultats liés à la source ;
+intégrité mathématique, confiance et permissions des modifications ultérieures
+restent distinctes. HTML 0.6 corrige aussi les propriétés marquées combinées, le
+repli Unicode partiel, les artifacts des Forms imbriqués et le comportement des
+formulaires/listes/attributs. Sa CI exacte vérifie PHP 8.3/8.4/8.5 et les moteurs
+Chromium et Firefox.

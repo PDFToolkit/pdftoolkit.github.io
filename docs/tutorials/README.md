@@ -1,6 +1,6 @@
 # Tutoriels : construire et lire un PDF objet par objet
 
-Ces tutoriels expliquent comment un fichier PDF relie ses valeurs, dictionnaires, ressources et instructions de dessin. Chaque leçon accompagne un script complet, commenté et exécutable. Les exemples utilisent les versions publiées du core et des modules sélectionnées dans le [manifeste de sources](../../resources/sources.json). La construction vérifie leurs commits exacts et les dépendances installées contre le lock inchangé de chaque consumer. Reader 0.6.0 utilise le consumer core sélectionné ; HTML 0.5.1 conserve son propre lock publié pour le tutoriel 35. Le manifeste de validation consigne les deux environnements.
+Ces tutoriels expliquent comment un fichier PDF relie ses valeurs, dictionnaires, ressources et instructions de dessin. Chaque leçon accompagne un script complet, commenté et exécutable. Les exemples utilisent les versions publiées du core et des modules sélectionnées dans le [manifeste de sources](../../resources/sources.json). La construction vérifie leurs commits exacts et les dépendances installées contre le lock inchangé de chaque consumer. Reader 0.6.0 utilise le consumer core sélectionné ; HTML 0.6.0 conserve son propre lock publié pour le tutoriel 35. Le manifeste de validation consigne les deux environnements.
 
 Les leçons 09, 10 et 27 utilisent les modules optionnels `pdftoolkit/pdf-fonts` et
 `pdftoolkit/pdf-images`, installés comme dépendances de développement dans le
@@ -95,7 +95,7 @@ présente le PDF d'entrée, ses trois pages et les objets lus.
 | [32. Horodatages de document et DSS](32-pdf20-timestamp-dss.md) | RFC3161, politique de validation explicite, VRI et signatures historiques conservées. | [pdf20-timestamp-dss.php](https://github.com/PDFToolkit/pdf/blob/v0.11.0/examples/pdf20-timestamp-dss.php) |
 | [33. Objets géospatiaux et mesures](33-pdf20-geospatial.md) | Systèmes de coordonnées, points de contrôle appariés, viewports, matrices et nuages de points. | [pdf20-geospatial.php](https://github.com/PDFToolkit/pdf/blob/v0.11.0/examples/pdf20-geospatial.php) |
 | [34. Destinations de structure](34-pdf20-structure-destinations.md) | Cibles sémantiques, parcours du contenu, entrées SD nommées et replis de page explicites. | [pdf20-structure-destinations.php](https://github.com/PDFToolkit/pdf/blob/v0.11.0/examples/pdf20-structure-destinations.php) |
-| [35. Dériver du HTML depuis un PDF balisé](35-derive-html.md) | Règles testées, rendu graphique objet, reset ciblé et HTML réel. | [01-derive-tagged-pdf.php](https://github.com/PDFToolkit/pdf-to-html/blob/v0.5.1/examples/01-derive-tagged-pdf.php) |
+| [35. Dériver du HTML depuis un PDF balisé](35-derive-html.md) | Règles testées, rendu graphique objet, reset ciblé et HTML réel. | [01-derive-tagged-pdf.php](https://github.com/PDFToolkit/pdf-to-html/blob/v0.6.0/examples/01-derive-tagged-pdf.php) |
 | [36. Appliquer une caviardisation](36-applied-redaction.md) | Suppression réelle, ressources partagées et nouveau fichier sans historique. | [pdf17-secure-redaction.php](https://github.com/PDFToolkit/pdf/blob/v0.11.0/examples/pdf17-secure-redaction.php) |
 | [37. Remplir un formulaire certifié](37-protected-form-fill.md) | Core 0.11.0 : remplissage natif P2, verrou FieldMDP historique et apparence Tx isolée. | [protected-form-fill.php](37-protected-form-fill.md#code-source) |
 

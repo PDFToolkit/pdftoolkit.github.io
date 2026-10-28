@@ -116,16 +116,16 @@ cases and two implicitly selected EFF streams with distinct keys. Wrong
 attachment credentials must preserve document opening and fail on attachment
 access. Generated certificates and adversarial inputs remain private build data.
 
-The current selection documents PDF-to-HTML 0.5.1 and reader 0.6.0. The
+The current selection documents PDF-to-HTML 0.6.0 and reader 0.6.0. The
 [requirements ledger](https://pdftoolkit.github.io/modules/to-html/requirements.html),
 [policies](https://pdftoolkit.github.io/modules/to-html/policies.html) and
 [graphics](https://pdftoolkit.github.io/modules/to-html/graphics.html) guides
 distinguish native rules, HTML adaptations and explicit capabilities for
 rasterization, authentication and additional codecs.
 
-HTML 0.5.1 also publishes its [MathML placement rules and browser validation procedure](https://pdftoolkit.github.io/modules/to-html/coverage.html#mathml-placement-and-browser-integration).
+HTML 0.6.0 also publishes its [MathML placement rules and browser validation procedure](https://pdftoolkit.github.io/modules/to-html/coverage.html#mathml-placement-and-browser-integration).
 Its release qualification and dedicated CI job validate generated output in
-Chromium and Firefox and retain their reports and screenshots. The site build
+Chromium and Firefox and retain their reports and screenshots. HTML 0.6 also checks widgets, derived attributes and signature status popovers in both engines. The site build
 renders those released guides and checks their links; browser engines remain
 validation dependencies of the HTML package.
 
@@ -138,12 +138,14 @@ required integrity and reuse with unencrypted input. Its transient fixtures
 remain in the validation workspace.
 
 `tools/build_docs.py` reproduces glyph tables and inline/fax fixtures, then runs
-the HTML5/pypdf oracles, Poppler pixel comparisons for graphics/contexts/fax,
+the HTML5/pypdf oracles, Poppler pixel comparisons for graphics/contexts/fax and widget appearances,
 content-parent anchor checks and the Node runtime. It also executes examples
-02/03/04 for figure export, targeted `/DV` reset and MAC-required authenticated
-derivation. The independent MAC/HTML5 oracle checks native and provider paths,
+02/03/04/05 for figure export, targeted `/DV` reset, MAC-required authenticated
+derivation and source signature integrity against an explicitly selected certificate.
+The signature oracle uses independent PDF/CMS parsers and validates complete signed
+revision boundaries; it does not establish PKI trust or later-change permissions. The independent MAC/HTML5 oracle checks native and provider paths,
 source identity, effective policies and permissions. Reset does not enable PDF
-ECMAScript. These three outputs and their assets stay under
+ECMAScript. These four outputs and their assets stay under
 `_build/pdfs/html-validation/`; they add neither pages nor assets to the site.
 
 The ISO 32000-2:2020 EC3 catalogue is read from `resources/iso32000-2-2020/`.
@@ -326,4 +328,4 @@ use the selected `--pdftoppm`. The default profile and site frames execute no
 runtime; explicitly enabled cases are checked in the private validation
 workspace. Every module guide retains its EN/FR counterpart.
 
-The released PDF-to-HTML checkout under `_sources/pdf-to-html` is selected independently. Its installed core and reader must exactly match its own published lock (versions and both source/dist commits), independently of the documented core/Reader pins. HTML 0.5.1 runs its oracles and tutorial 35 with its published lock, which selects Reader 0.6.0. The documented Reader 0.6.0 comes from core 0.11.0’s vendor; its guides, API, tutorial 12 and oracles all use that selection. Reader examples/oracles load that consumer’s actual core. `_build/validation-sources.json` records both validation environments and their exact package commits. The API exporter registers only the selected HTML and reader namespaces against their chosen trees. Module guides appear under `/modules/to-html/` in both languages. Tutorial 35 copies the input PDF, renders every page and runs the module CLI to produce actual HTML plus JSON diagnostics. `derivedHtml` inventories output HTML separately from documentation routes, with package/SHA provenance and sandboxed frames; the site checker rejects active content in these previews. The supplied 74-page original remains in the package and is linked at its selected release commit.
+The released PDF-to-HTML checkout under `_sources/pdf-to-html` is selected independently. Its installed core and reader must exactly match its own published lock (versions and both source/dist commits), independently of the documented core/Reader pins. HTML 0.6.0 runs its oracles and tutorial 35 with its published lock, which selects Reader 0.6.0. The documented Reader 0.6.0 comes from core 0.11.0’s vendor; its guides, API, tutorial 12 and oracles all use that selection. Reader examples/oracles load that consumer’s actual core. `_build/validation-sources.json` records both validation environments and their exact package commits. The API exporter registers only the selected HTML and reader namespaces against their chosen trees. Module guides appear under `/modules/to-html/` in both languages. Tutorial 35 copies the input PDF, renders every page and runs the module CLI to produce actual HTML plus JSON diagnostics. `derivedHtml` inventories output HTML separately from documentation routes, with package/SHA provenance and sandboxed frames; the site checker rejects active content in these previews. The supplied 74-page original remains in the package and is linked at its selected release commit.

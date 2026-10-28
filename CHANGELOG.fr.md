@@ -2,6 +2,12 @@
 
 [English](CHANGELOG.md) · [Français](CHANGELOG.fr.md)
 
+## [0.11.0] - 2026-10-28
+
+- Sélectionner PDF vers HTML 0.6.0 publié au commit exact de son tag annoté, en conservant les versions indépendantes du core, Reader, images/fontes et OpenType.
+- Publier le guide complet des signatures anglais/français, le registre des clauses actualisé et l’exemple exécutable à certificat explicite. Expliquer le rendu des apparences, les corrections de contenu/formulaire/attributs et la distinction entre intégrité, confiance et permissions des changements ultérieurs.
+- Exécuter les oracles indépendants d’apparences et de signatures dans la construction documentaire complète ; conserver les preuves PHP et navigateur dans la qualification du package HTML. Vérifier toutes les pages API, routes, liens source, aperçus PDF et adresses de compatibilité.
+
 ## [0.10.1] - 2026-10-28
 
 - Sélectionner PDF vers HTML 0.5.1 publié au commit exact de son tag annoté et actualiser les installations, packages, tutoriels et liens source anglais/français.

@@ -7,14 +7,14 @@ et l'ordre de lecture. Le module optionnel `pdftoolkit/pdf-to-html` utilise cett
 seconde description pour dériver du HTML selon **Deriving HTML from PDF 1.2**,
 publication PDF Association conservée avec son code source.
 
-Le dépôt [PDFToolkit/pdf-to-html](https://github.com/PDFToolkit/pdf-to-html/tree/v0.5.1) a été
+Le dépôt [PDFToolkit/pdf-to-html](https://github.com/PDFToolkit/pdf-to-html/tree/v0.6.0) a été
 créé spécialement pour implémenter les règles de ce
-[document de référence](https://github.com/PDFToolkit/pdf-to-html/blob/v0.5.1/resources/reference-documents/Deriving_HTML_from_PDF_1-2.pdf).
-La version **0.5.1** distingue les règles exécutées, les décisions de sécurité,
+[document de référence](https://github.com/PDFToolkit/pdf-to-html/blob/v0.6.0/resources/reference-documents/Deriving_HTML_from_PDF_1-2.pdf).
+La version **0.6.0** distingue les règles exécutées, les décisions de sécurité,
 les adaptations nécessaires au navigateur et les capacités fournies par
-l'application. Le [registre des exigences](https://github.com/PDFToolkit/pdf-to-html/blob/v0.5.1/docs/fr/requirements.md)
+l'application. Le [registre des exigences](https://github.com/PDFToolkit/pdf-to-html/blob/v0.6.0/docs/fr/requirements.md)
 relie les clauses du document aux décisions et aux tests ; le
-[guide de couverture](https://github.com/PDFToolkit/pdf-to-html/blob/v0.5.1/docs/fr/coverage.md)
+[guide de couverture](https://github.com/PDFToolkit/pdf-to-html/blob/v0.6.0/docs/fr/coverage.md)
 précise les entrées acceptées et les preuves indépendantes.
 
 Ce tutoriel exécute réellement `examples/01-derive-tagged-pdf.php` depuis la
@@ -23,7 +23,7 @@ obtenu, les diagnostics JSON et le PHP complet apparaissent ci-dessous. Le HTML
 est produit pendant la construction du site et ne remplace pas un résultat par
 une illustration écrite à la main.
 
-La version 0.5.1 préserve la mise en forme MathML native au lieu d’émettre du CSS
+La version 0.6.0 préserve la mise en forme MathML native au lieu d’émettre du CSS
 automatique `display:inline` ou `display:block` sur les éléments mathématiques.
 Placement Block sur la racine utilise `math[display="block"]` ; le CSS explicite
 et le display MathML de l’auteur gardent leur priorité. Le [guide de couverture MathML](https://pdftoolkit.github.io/fr/modules/to-html/coverage.html#placement-mathml-et-rendu-navigateur)
@@ -32,7 +32,7 @@ explique classes partagées, priorité des attributs et contrôles navigateur in
 ## Installer le module optionnel
 
 ```sh
-composer require "roukmoute/pdf:^0.11.0" "pdftoolkit/pdf-to-html:^0.5.1"
+composer require "roukmoute/pdf:^0.11.0" "pdftoolkit/pdf-to-html:^0.6.0"
 ```
 
 Cette commande installe le core et le lecteur comme dépendances. Une application
@@ -93,7 +93,7 @@ Une lecture stricte refuse les associations inverses incohérentes. La lecture
 permissive les signale ; elle ne désactive ni les contrôles de cycles ni les
 budgets. Les PDF chiffrés nécessitent une capacité d'authentification explicite,
 et le lecteur HTML destinataire doit appliquer les permissions vérifiées.
-Le [guide des politiques](https://github.com/PDFToolkit/pdf-to-html/blob/v0.5.1/docs/fr/policies.md)
+Le [guide des politiques](https://github.com/PDFToolkit/pdf-to-html/blob/v0.6.0/docs/fr/policies.md)
 explique ces objets et leurs responsabilités.
 
 ## Authentifier explicitement une entrée chiffrée
@@ -129,7 +129,7 @@ l'authentification Adobe.PubSec source. L'adaptateur HTML transmet
 le masque destinataire effectif par le même contrat de permissions ; clés,
 déchiffrement CMS et ordre des octets de permissions restent choisis par
 l'application. La confiance des signatures reste hors de cette opération.
-Le [guide d'authentification](https://github.com/PDFToolkit/pdf-to-html/blob/v0.5.1/docs/fr/authentication.md)
+Le [guide d'authentification](https://github.com/PDFToolkit/pdf-to-html/blob/v0.6.0/docs/fr/authentication.md)
 précise le chemin natif et le contrat distinct du fournisseur applicatif.
 
 ## Exiger le MAC de la source originale
@@ -154,7 +154,7 @@ compatible par défaut accepte aussi les PDF non protégés ; `RequirePdfMac` le
 refuse, y compris les fichiers privés de tous leurs marqueurs d'intégrité.
 Un mauvais credential ou un MAC corrompu ne déclenche aucun repli non authentifié.
 
-L'[exemple 04](https://github.com/PDFToolkit/pdf-to-html/blob/v0.5.1/examples/04-authenticate-source-mac.php)
+L'[exemple 04](https://github.com/PDFToolkit/pdf-to-html/blob/v0.6.0/examples/04-authenticate-source-mac.php)
 utilise explicitement le credential public de fixture `native-user` et écrit
 HTML/ressources dérivés. Le MAC PDF n'authentifie pas ce nouveau HTML : conserver
 les politiques habituelles de sécurité HTML et les permissions d'usage.
@@ -170,7 +170,7 @@ du certificat. Voir la [migration et les frontières MAC](https://pdftoolkit.git
 
 ## Exporter une figure et fournir le moteur de rendu
 
-L'[exemple 02](https://github.com/PDFToolkit/pdf-to-html/blob/v0.5.1/examples/02-export-figure.php)
+L'[exemple 02](https://github.com/PDFToolkit/pdf-to-html/blob/v0.6.0/examples/02-export-figure.php)
 lit un PDF balisé, trouve une `Figure` et transmet son `ContentGroup` à
 `GraphicPdfExporter` :
 
@@ -191,7 +191,7 @@ dans les coordonnées locales du Form, y compris avec une matrice cisaillée, et
 son groupe de transparence `/Group`. Sa `/Matrix` n'est appliquée qu'une fois.
 Si vous fournissez un viewport explicite, il utilise les coordonnées de la page :
 il ne reçoit pas une seconde fois la matrice du Form. L'[oracle de pixels
-indépendant](https://github.com/PDFToolkit/pdf-to-html/blob/v0.5.1/tools/validate_graphics_context.py)
+indépendant](https://github.com/PDFToolkit/pdf-to-html/blob/v0.6.0/tools/validate_graphics_context.py)
 compare les rendus Poppler pour vérifier le clipping et la transparence, au-delà
 de la seule présence de ces entrées dans le PDF exporté.
 
@@ -219,13 +219,13 @@ $result = $converter->convert(new FileBytes($pdfBytes), 'chart.pdf');
 logiques de la fenêtre de rendu indépendamment de la résolution du raster. Le profil
 visuel demandé échoue explicitement si le moteur manque ou refuse le groupe.
 L'application choisit son installation, son isolation et ses limites d'exécution.
-Voir le [guide des graphiques](https://github.com/PDFToolkit/pdf-to-html/blob/v0.5.1/docs/fr/graphics.md)
+Voir le [guide des graphiques](https://github.com/PDFToolkit/pdf-to-html/blob/v0.6.0/docs/fr/graphics.md)
 pour les programmes `GraphicProgram` conservés et les contrôles de pixels avec
 Poppler.
 
 ## Restaurer un groupe de champs sans exécuter les scripts PDF
 
-L'[exemple 03](https://github.com/PDFToolkit/pdf-to-html/blob/v0.5.1/examples/03-safe-form-reset.php)
+L'[exemple 03](https://github.com/PDFToolkit/pdf-to-html/blob/v0.6.0/examples/03-safe-form-reset.php)
 construit un modèle source objet et produit un formulaire HTML autonome :
 
 ```sh
@@ -284,8 +284,27 @@ ou élémentaire ne garantit pas son rendu natif par le navigateur ; le vocabula
 étendu produit un diagnostic et le package ne fournit ni polyfill de rendu ni
 évaluateur mathématique.
 
-Lire l'[architecture du module](https://github.com/PDFToolkit/pdf-to-html/blob/v0.5.1/docs/fr/architecture.md),
-sa [couverture](https://github.com/PDFToolkit/pdf-to-html/blob/v0.5.1/docs/fr/coverage.md)
-et son [guide de sécurité](https://github.com/PDFToolkit/pdf-to-html/blob/v0.5.1/docs/fr/security.md)
+Lire l'[architecture du module](https://github.com/PDFToolkit/pdf-to-html/blob/v0.6.0/docs/fr/architecture.md),
+sa [couverture](https://github.com/PDFToolkit/pdf-to-html/blob/v0.6.0/docs/fr/coverage.md)
+et son [guide de sécurité](https://github.com/PDFToolkit/pdf-to-html/blob/v0.6.0/docs/fr/security.md)
 pour distinguer modèle, fichier et runtime. Un HTML sémantique ne certifie pas
 automatiquement l'accessibilité ou PDF/UA.
+
+## Expliquer explicitement la signature du PDF original
+
+Le [guide des signatures](https://pdftoolkit.github.io/fr/modules/to-html/signatures.html)
+présente le port `SignatureValidationProvider` lié à la source et son adaptateur
+`SignatureOutputValidation`. L’[exemple 05](https://github.com/PDFToolkit/pdf-to-html/blob/v0.6.0/examples/05-verify-pdf-signature.php)
+exige trois chemins explicites et accepte un certificat DER ou PEM unique :
+
+```sh
+php examples/05-verify-pdf-signature.php signed.pdf signer.der _build/signed.html
+```
+
+Il contrôle l’intégrité mathématique avec ce certificat choisi, la provenance
+physique exacte de Contents et la révision signée complète. Le popover natif de
+statut explique le résultat sans activer JavaScript PDF. `integrity-verified`
+reste distinct de la confiance envers le certificat, de sa révocation et des
+permissions des modifications ultérieures. Le HTML produit n’est pas signé.
+Choisir un fournisseur applicatif plus complet si la politique de validation
+exige ces décisions supplémentaires.

@@ -5,7 +5,7 @@ resources and drawing instructions. Each lesson accompanies a complete,
 commented, executable script. Examples use the published core and module
 versions selected by the [source manifest](../../../resources/sources.json).
 The build verifies their exact commits and the installed dependencies against
-each consumer’s unchanged lock. Reader 0.6.0 uses the selected core consumer; HTML 0.5.1 keeps its
+each consumer’s unchanged lock. Reader 0.6.0 uses the selected core consumer; HTML 0.6.0 keeps its
 own published lock for tutorial 35. The validation manifest records both environments.
 
 Lessons 09, 10 and 27 use the optional `pdftoolkit/pdf-fonts` and
@@ -112,7 +112,7 @@ PDF, all three pages and the objects read.
 | [32. Document timestamps and DSS](32-pdf20-timestamp-dss.md) | RFC3161, explicit validation policy, VRI and preserved historical signatures. | [pdf20-timestamp-dss.php](https://github.com/PDFToolkit/pdf/blob/v0.11.0/examples/pdf20-timestamp-dss.php) |
 | [33. Geospatial objects and measurements](33-pdf20-geospatial.md) | Coordinate systems, paired control points, viewports, matrices and point clouds. | [pdf20-geospatial.php](https://github.com/PDFToolkit/pdf/blob/v0.11.0/examples/pdf20-geospatial.php) |
 | [34. Structure destinations](34-pdf20-structure-destinations.md) | Semantic targets, content traversal, named SD entries and explicit page fallbacks. | [pdf20-structure-destinations.php](https://github.com/PDFToolkit/pdf/blob/v0.11.0/examples/pdf20-structure-destinations.php) |
-| [35. Derive HTML from tagged PDF](35-derive-html.md) | Tested rules, object-based graphics rendering, targeted reset and actual HTML. | [01-derive-tagged-pdf.php](https://github.com/PDFToolkit/pdf-to-html/blob/v0.5.1/examples/01-derive-tagged-pdf.php) |
+| [35. Derive HTML from tagged PDF](35-derive-html.md) | Tested rules, object-based graphics rendering, targeted reset and actual HTML. | [01-derive-tagged-pdf.php](https://github.com/PDFToolkit/pdf-to-html/blob/v0.6.0/examples/01-derive-tagged-pdf.php) |
 | [36. Apply redaction](36-applied-redaction.md) | Actual deletion, shared resources and a fresh file without history. | [pdf17-secure-redaction.php](https://github.com/PDFToolkit/pdf/blob/v0.11.0/examples/pdf17-secure-redaction.php) |
 | [37. Fill a certified form](37-protected-form-fill.md) | Core 0.11.0: native P2 filling, historical FieldMDP lock and an isolated Tx appearance. | [protected-form-fill.php](37-protected-form-fill.md#code-source) |
 

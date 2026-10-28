@@ -11,14 +11,14 @@ and their invariants remain in the core. The
 for reading external files; this generator review does not replace it.
 
 The documented versions are core **0.11.0**, PDF reader **0.6.0**, image/font modules **0.1.12** and independent
-OpenType **0.3.0**, with PDF-to-HTML **0.5.1**. These packages require **PHP 8.3 or later** and are checked on
+OpenType **0.3.0**, with PDF-to-HTML **0.6.0**. These packages require **PHP 8.3 or later** and are checked on
 PHP 8.3, 8.4 and 8.5. Core **0.11** and OpenType **0.3** require 64-bit PHP; OpenType
 remains independent of the PDF core. The review includes the [PDF 2.0 companion mechanisms](pdf-2-0-bundle.md);
 individual source definitions and conformance declarations are not security
 certificates. OpenType's independent parser has its own
 [security boundaries](https://github.com/PDFToolkit/opentype/blob/v0.3.0/SECURITY.md).
 
-The **0.5.1** PDF-to-HTML module with the selected reader **0.6.0** retains its own
+The **0.6.0** PDF-to-HTML module with the selected reader **0.6.0** retains its own
 [security checks](https://pdftoolkit.github.io/modules/to-html/security.html)
 and [explicit policies](https://pdftoolkit.github.io/modules/to-html/policies.html).
 Independent tests verify HTML/CSS/URL filtering, associations and IDs,
@@ -29,6 +29,16 @@ Rendering remains application-supplied. Native password or certificate authentic
 explicit reader selection; the [HTML authentication guide](https://pdftoolkit.github.io/modules/to-html/authentication.html)
 shows its construction. The receiving HTML viewer must enforce verified
 permissions. A wrong native password does not fall back to another provider.
+
+PDF-to-HTML 0.6 accepts an explicit `SignatureValidationProvider`. Its supplied
+`SignatureOutputValidation` adapter binds results to the exact source request,
+requires a physical Contents span and complete signed revision, then verifies
+the covered bytes with the selected certificate. `integrity-verified` does not
+mean trusted identity, revocation checks or permission for later PDF changes.
+The [signature guide](https://pdftoolkit.github.io/modules/to-html/signatures.html)
+explains independent states and the native escaped status popover. Derived HTML
+is a new unsigned artifact. Appearance rendering reuses the explicitly supplied
+content engine with verified raster bytes and cumulative document budgets.
 
 Reader 0.3.1 limits the `EncryptMetadata=false` exemption to the actual catalog
 metadata object; page and Form metadata remain encrypted unless they explicitly

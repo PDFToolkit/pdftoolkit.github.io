@@ -38,7 +38,7 @@ composer require "roukmoute/pdf:^0.11.0"
 ```
 
 The documented releases are core **0.11.0**, PDF reader **0.6.0**, images/fonts **0.1.12**,
-independent OpenType **0.3.0** and PDF-to-HTML **0.5.1**. They require **PHP 8.3 or later** and are
+independent OpenType **0.3.0** and PDF-to-HTML **0.6.0**. They require **PHP 8.3 or later** and are
 checked on PHP 8.3, 8.4 and 8.5. Core **0.11** and OpenType **0.3** require 64-bit PHP;
 OpenType remains independent of the PDF core.
 
@@ -54,7 +54,7 @@ Choose the optional modules according to the files your application handles:
 The image/font/reader modules install the core as a dependency. The PDF-to-HTML module adds semantic derivation from tagged PDF and installs the reader as well. OpenType provides its own object model and installs without PDF dependencies. The package guide explains
 their Composer commands and supported versions.
 
-PDF-to-HTML 0.5.1 derives semantic content from tagged PDFs with checked structure
+PDF-to-HTML 0.6.0 derives semantic content from tagged PDFs with checked structure
 associations, Unicode, images, tables, navigation and form fields. Its
 [clause ledger](https://pdftoolkit.github.io/modules/to-html/requirements.html)
 links the retained reference to executable decisions and independent tests.
@@ -65,10 +65,17 @@ explains isolated PDF export and the application-supplied rendering engine.
 Rendering, authentication and unsupported codecs remain explicit capabilities;
 the default profile executes no PDF scripts or form actions.
 
-PDF-to-HTML 0.5.1 preserves native MathML layout when mapping Layout placement,
+PDF-to-HTML 0.6.0 preserves native MathML layout when mapping Layout placement,
 including shared classes. Explicit author CSS and MathML display remain authoritative.
 The [MathML coverage guide](https://pdftoolkit.github.io/modules/to-html/coverage.html#mathml-placement-and-browser-integration)
 explains the rules and independent Chromium/Firefox checks.
+
+PDF-to-HTML 0.6 adds reusable button appearance rendering, explicit source-bound
+[signature validation](https://pdftoolkit.github.io/modules/to-html/signatures.html)
+and native status popovers. The selected certificate verifies mathematical
+integrity of a complete PDF revision; trust, revocation and later-change
+permissions remain separate. Content, list/attribute and form corrections are
+tracked in the bilingual clause ledger and checked with independent tools.
 
 Reader 0.4 and PDF-to-HTML 0.4 provide explicit native password authentication with
 verified user/owner permissions. The [reader guide](https://pdftoolkit.github.io/modules/reader/authentication.html)
@@ -127,8 +134,8 @@ See [the build guide](docs/en/site/README.md) for local commands and requirement
 The workflow builds actual PDF examples, checks them with independent readers,
 renders all their pages, generates every API page and validates the whole site.
 It also verifies the HTML module's glyph and inline/fax fixtures, actual semantic
-HTML, isolated graphics and original rendering contexts with HTML5/pypdf/Poppler,
-page-navigation targets, the Node runtime and the figure-export/safe-reset examples.
+HTML, isolated graphics, original rendering contexts and widget appearances with HTML5/pypdf/Poppler,
+page-navigation targets, source signature integrity, the Node runtime and the figure-export/safe-reset/explicit-certificate examples.
 Those additional validation outputs stay in the build workspace; only the
 documented tutorial artifacts are published.
 

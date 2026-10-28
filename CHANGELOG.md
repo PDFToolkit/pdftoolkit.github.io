@@ -2,6 +2,12 @@
 
 [English](CHANGELOG.md) · [Français](CHANGELOG.fr.md)
 
+## [0.11.0] - 2026-10-28
+
+- Select published PDF-to-HTML 0.6.0 at its exact annotated tag commit, preserving the independently selected core, Reader, image/font and OpenType versions.
+- Publish the complete English/French signature guide, updated clause ledger and executable explicit-certificate example. Explain appearance rendering, content/form/attribute corrections and the distinction between signature integrity, trust and subsequent-change permissions.
+- Run independent appearance and signature oracles during the full documentation build; retain PHP and browser evidence in the HTML package qualification. Validate all API pages, routes, source links, PDF previews and compatibility addresses.
+
 ## [0.10.1] - 2026-10-28
 
 - Select published PDF-to-HTML 0.5.1 at its exact annotated tag commit and update the English/French installation, package, tutorial and source links.

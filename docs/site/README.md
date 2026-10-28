@@ -121,16 +121,16 @@ distinctes. Un mauvais credential de pièce jointe doit permettre l'ouverture
 du document puis échouer à son accès. Certificats générés et entrées adverses
 restent des données privées du build.
 
-La sélection actuelle documente PDF vers HTML 0.5.1 et le lecteur 0.6.0. Le
+La sélection actuelle documente PDF vers HTML 0.6.0 et le lecteur 0.6.0. Le
 [registre des exigences](https://pdftoolkit.github.io/fr/modules/to-html/requirements.html),
 les [politiques](https://pdftoolkit.github.io/fr/modules/to-html/policies.html) et
 les [graphiques](https://pdftoolkit.github.io/fr/modules/to-html/graphics.html)
 distinguent règles natives, adaptations HTML et capacités explicites de
 rasterisation, d'authentification et de codecs supplémentaires.
 
-HTML 0.5.1 publie aussi ses [règles de placement MathML et sa procédure de validation navigateur](https://pdftoolkit.github.io/fr/modules/to-html/coverage.html#placement-mathml-et-rendu-navigateur).
+HTML 0.6.0 publie aussi ses [règles de placement MathML et sa procédure de validation navigateur](https://pdftoolkit.github.io/fr/modules/to-html/coverage.html#placement-mathml-et-rendu-navigateur).
 La qualification de sa version et un job CI dédié vérifient la sortie dérivée
-dans Chromium et Firefox et conservent rapports et captures. Le build du site
+dans Chromium et Firefox et conservent rapports et captures. HTML 0.6 vérifie aussi les widgets, les attributs dérivés et les popovers de statut des signatures dans les deux moteurs. Le build du site
 rend ces guides publiés et vérifie leurs liens ; les moteurs navigateur restent
 des dépendances de validation du package HTML.
 
@@ -144,11 +144,14 @@ Ses fixtures temporaires restent dans l'espace de validation.
 
 `tools/build_docs.py` reproduit les tables de glyphes et les fixtures inline/fax,
 puis exécute les oracles HTML5/pypdf, les comparaisons de pixels Poppler pour
-graphiques/contextes/fax, le contrôle des parents d'ancres et le runtime Node.
-Il exécute aussi les exemples 02/03/04 d'export de figure, de reset ciblé `/DV`
-et de dérivation authentifiée avec MAC exigé. L'oracle MAC/HTML5 indépendant
+graphiques/contextes/fax et apparences de widgets, le contrôle des parents d'ancres et le runtime Node.
+Il exécute aussi les exemples 02/03/04/05 d'export de figure, de reset ciblé `/DV`,
+de dérivation authentifiée avec MAC exigé et d’intégrité de signature source avec
+un certificat choisi explicitement. L’oracle de signature emploie des parseurs
+PDF/CMS indépendants et vérifie les frontières de révision signée complète ; il
+n’établit ni la confiance PKI ni les permissions des changements ultérieurs. L'oracle MAC/HTML5 indépendant
 vérifie chemins natif/fourni, identité source, politiques et permissions effectives.
-Le reset n'active pas ECMAScript PDF. Ces trois sorties et leurs ressources restent dans
+Le reset n'active pas ECMAScript PDF. Ces quatre sorties et leurs ressources restent dans
 `_build/pdfs/html-validation/` ; elles n'ajoutent ni pages ni assets au site.
 
 Le catalogue ISO 32000-2:2020 EC3 est lu dans `resources/iso32000-2-2020/`.
@@ -336,4 +339,4 @@ le `--pdftoppm` choisi. Le profil par défaut et les frames du site n'exécutent
 pas le runtime ; les cas activés explicitement sont contrôlés dans l'espace privé
 de validation. Tous les guides du module conservent leur variante EN/FR.
 
-Le checkout publié `_sources/pdf-to-html` est sélectionné indépendamment. Son core et son lecteur installés doivent correspondre exactement à son propre lock publié (versions et commits source/dist), séparément des pins core/Reader documentés. HTML 0.5.1 exécute ses oracles et le tutoriel 35 avec son lock publié, qui sélectionne Reader 0.6.0. Le Reader 0.6.0 documenté provient du vendor core 0.11.0 ; ses guides, API, tutoriel 12 et oracles utilisent tous cette sélection. Exemples et oracles Reader chargent le véritable core de ce consumer. `_build/validation-sources.json` consigne les deux environnements de validation et leurs commits de packages exacts. L’exporteur API enregistre uniquement les namespaces HTML et lecteur sélectionnés contre leurs arbres choisis. Les guides apparaissent sous `/modules/to-html/` dans les deux langues. Le tutoriel 35 copie le PDF d’entrée, rend toutes ses pages et exécute le CLI pour produire le vrai HTML et les diagnostics JSON. `derivedHtml` inventorie cette sortie séparément des routes documentaires avec package/SHA et frames sandboxées ; le vérificateur refuse le contenu actif dans ces aperçus. L’original fourni de 74 pages reste dans le package, lié au commit de la version retenue.
+Le checkout publié `_sources/pdf-to-html` est sélectionné indépendamment. Son core et son lecteur installés doivent correspondre exactement à son propre lock publié (versions et commits source/dist), séparément des pins core/Reader documentés. HTML 0.6.0 exécute ses oracles et le tutoriel 35 avec son lock publié, qui sélectionne Reader 0.6.0. Le Reader 0.6.0 documenté provient du vendor core 0.11.0 ; ses guides, API, tutoriel 12 et oracles utilisent tous cette sélection. Exemples et oracles Reader chargent le véritable core de ce consumer. `_build/validation-sources.json` consigne les deux environnements de validation et leurs commits de packages exacts. L’exporteur API enregistre uniquement les namespaces HTML et lecteur sélectionnés contre leurs arbres choisis. Les guides apparaissent sous `/modules/to-html/` dans les deux langues. Le tutoriel 35 copie le PDF d’entrée, rend toutes ses pages et exécute le CLI pour produire le vrai HTML et les diagnostics JSON. `derivedHtml` inventorie cette sortie séparément des routes documentaires avec package/SHA et frames sandboxées ; le vérificateur refuse le contenu actif dans ces aperçus. L’original fourni de 74 pages reste dans le package, lié au commit de la version retenue.
