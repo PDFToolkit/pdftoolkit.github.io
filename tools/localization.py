@@ -361,6 +361,7 @@ TEXT = {
     'Exigences de la dérivation HTML': 'HTML derivation requirements',
     'Politiques de dérivation HTML': 'HTML derivation policies',
     'Graphiques PDF et rendu de figures': 'PDF graphics and figure rendering',
+    'Validation des signatures PDF': 'PDF signature validation',
     'Sécurité du HTML dérivé': 'Derived HTML security',
     'Référence Deriving HTML from PDF': 'Deriving HTML from PDF reference',
     'Module optionnel : dérivation HTML': 'Optional module: HTML derivation',

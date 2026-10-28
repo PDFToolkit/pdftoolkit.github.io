@@ -50,6 +50,10 @@ def validate_html_module(args, html: Path, work: Path, pdfs: Path) -> None:
         [sys.executable, "tools/validate_inline_derivation.py", "--php", args.php],
         [sys.executable, "tools/validate_graphics.py", "--php", args.php, "--pdftoppm", args.pdftoppm],
         [sys.executable, "tools/validate_graphics_context.py", "--php", args.php, "--pdftoppm", args.pdftoppm],
+        [sys.executable, "tools/validate_appearances.py", "--php", args.php, "--pdftoppm", args.pdftoppm,
+         "--work-dir", work / "html-appearances"],
+        [sys.executable, "tools/validate_signatures.py", "--php", args.php,
+         "--report", work / "html-signatures/report.json"],
         [sys.executable, "tools/validate_inline_fax.py", "--php", args.php, "--pdftoppm", args.pdftoppm],
         [sys.executable, "tools/validate_derivation.py", "--php", args.php],
         [sys.executable, "tools/validate_authentication.py", "--php", args.php, "--qpdf", args.qpdf],
@@ -75,6 +79,9 @@ def validate_html_module(args, html: Path, work: Path, pdfs: Path) -> None:
     run([args.php, html / "examples/04-authenticate-source-mac.php",
          html / "tests/Fixtures/source-integrity/tagged-mac-r6-standalone.pdf", examples / "authenticated.html"],
         html, env={**os.environ, "PDFTOOLKIT_PASSWORD": "native-user"})
+    run([args.php, html / "examples/05-verify-pdf-signature.php",
+         html / "tests/Fixtures/signatures/signed-padded.pdf", html / "tests/Fixtures/signatures/signer.der",
+         examples / "signed.html"], html)
 
 
 def build(args) -> None:

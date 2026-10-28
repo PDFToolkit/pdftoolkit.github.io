@@ -165,6 +165,7 @@ MODULES = {
         ('docs/requirements.md', 'requirements', 'Exigences de la dérivation HTML'),
         ('docs/policies.md', 'policies', 'Politiques de dérivation HTML'),
         ('docs/graphics.md', 'graphics', 'Graphiques PDF et rendu de figures'),
+        ('docs/signatures.md', 'signatures', 'Validation des signatures PDF'),
         ('docs/security.md', 'security', 'Sécurité du HTML dérivé'),
         ('docs/reference.md', 'reference', 'Référence Deriving HTML from PDF'),
     ]),

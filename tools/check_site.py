@@ -19,7 +19,7 @@ MODULE_GUIDES = {
     'images': ['index', 'architecture', 'signalements', 'versions'],
     'fonts': ['index', 'true-type-to-pdf', 'signalements', 'versions'],
     'opentype': ['index', 'architecture', 'coverage', 'substitutions', 'positioning', 'font-axes', 'font-metadata', 'variable-metrics', 'truetype-outlines', 'cff-outlines', 'truetype-variations', 'font-headers-and-styles', 'device-metrics', 'signalements', 'versions'],
-    'to-html': ['index', 'architecture', 'coverage', 'authentication', 'requirements', 'policies', 'graphics', 'security', 'reference', 'signalements', 'versions'],
+    'to-html': ['index', 'architecture', 'coverage', 'authentication', 'requirements', 'policies', 'graphics', 'signatures', 'security', 'reference', 'signalements', 'versions'],
 }
 
 
