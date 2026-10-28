@@ -49,6 +49,12 @@ jobs:
           ref: ${{ steps.sources.outputs.demo_revision }}
           fetch-depth: 0
           path: _sources/pdf-to-html-demo
+      - uses: actions/checkout@v6
+        with:
+          repository: PDFToolkit/pdf-codecs
+          ref: ${{ steps.sources.outputs.codecs_revision }}
+          fetch-depth: 0
+          path: _sources/pdf-codecs
       - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.3'
@@ -88,6 +94,7 @@ jobs:
           }
           COMPOSER_ROOT_VERSION="$CORE_ROOT_VERSION" install_locked_inputs _sources/pdf
           install_locked_inputs _sources/opentype
+          install_locked_inputs _sources/pdf-codecs
           install_locked_inputs _sources/pdf-to-html
       - name: Install the released browser demo's locked inputs
         run: |
@@ -104,19 +111,25 @@ jobs:
       - run: python -m pip install --require-hashes -r _sources/pdf-to-html/tools/validation-requirements.txt
       - run: python -m pip install --require-hashes -r _sources/pdf-to-html/tools/source-integrity-validation-requirements.txt
       - run: python -m pip install --require-hashes -r _sources/pdf-to-html-demo/tools/validation-requirements.txt
+      - run: python -m pip install --require-hashes -r _sources/pdf/vendor/pdftoolkit/pdf-images/tools/validation-requirements.txt
+      - run: python -m pip install --require-hashes -r _sources/pdf/vendor/pdftoolkit/pdf-fonts/tools/validation-requirements.txt
+      - run: python -m pip install --require-hashes -r _sources/opentype/tools/validation-requirements.txt
+      - run: python -m pip install --require-hashes -r _sources/pdf-codecs/tools/jpeg-validation-requirements.txt
       - name: Install the selected Reader oracle requirements
         run: |
           reader_consumer=$(python tools/check_sources.py --source-root _sources/pdf --pdf-to-html-root _sources/pdf-to-html --reader-consumer)
           python -m pip install --require-hashes -r "$reader_consumer/vendor/pdftoolkit/pdf-reader/tools/source-mac-validation-requirements.txt"
       - run: python -m pip check
       - uses: ./_sources/pdf/.github/actions/setup-qpdf
-      - run: sudo apt-get update && sudo apt-get install -y poppler-utils ghostscript
+      - run: sudo apt-get update && sudo apt-get install -y poppler-utils ghostscript imagemagick libjbig2dec0 util-linux cmake gcc make ninja-build pkg-config libfreetype-dev libjpeg-dev libpng-dev liblcms2-dev libopenjp2-7-dev zlib1g-dev
+      - name: Build the pinned image colour-management oracle
+        run: python _sources/pdf/vendor/pdftoolkit/pdf-images/tools/build_poppler.py --output _build/poppler
       - name: Verify documentation build contracts
         run: python -m unittest discover -s tests -p 'test_*.py'
       - name: Verify bilingual navigation and search behavior
         run: node tests/site_locales.cjs
       - name: Build real examples and verify every documentation page
-        run: python tools/build_docs.py --source-root _sources/pdf --opentype-root _sources/opentype --pdf-to-html-root _sources/pdf-to-html --demo-root _sources/pdf-to-html-demo --docs-revision "$GITHUB_SHA" --openssl /usr/bin/openssl --remote
+        run: python tools/build_docs.py --source-root _sources/pdf --opentype-root _sources/opentype --codecs-root _sources/pdf-codecs --pdf-to-html-root _sources/pdf-to-html --demo-root _sources/pdf-to-html-demo --docs-revision "$GITHUB_SHA" --openssl /usr/bin/openssl --image-pdftoppm "$GITHUB_WORKSPACE/_build/poppler/build/utils/pdftoppm" --remote
       - name: Verify the old project-site compatibility output
         run: |
           python tools/build_legacy_site.py --site-url https://pdftoolkit.github.io/ --site-dir _site --legacy-base /pdf --legacy-manifest resources/legacy-site-manifest.json --output _legacy
@@ -140,6 +153,19 @@ jobs:
         with:
           name: browser-demo-evidence
           path: _build/demo-browsers
+          if-no-files-found: warn
+      - name: Retain package validation reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: package-validation-evidence
+          path: |
+            _build/*validation*.json
+            _build/validation-sources.json
+            _build/jpx-codec-validation/
+            _build/font-layout-validation/report.json
+            _build/html-codec-images-browsers/
+            _build/openjpeg-oracle/build.json
           if-no-files-found: warn
       - uses: actions/upload-pages-artifact@v4
         with:

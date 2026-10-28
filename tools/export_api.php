@@ -362,7 +362,7 @@ function lockedDependency(string $consumer, string $name): array
 }
 
 /** @return array<string, array<string, mixed>> */
-function documentationPackages(string $root, string $sourcesPath, string $opentypeRoot, string $pdfToHtmlRoot, string $readerConsumer): array
+function documentationPackages(string $root, string $sourcesPath, string $opentypeRoot, string $pdfToHtmlRoot, string $readerConsumer, string $codecsRoot): array
 {
     $root = realpath($root) ?: throw new \RuntimeException('Cannot resolve the core source tree.');
     $manifestBytes = file_get_contents($sourcesPath);
@@ -380,7 +380,7 @@ function documentationPackages(string $root, string $sourcesPath, string $openty
     }
     $names = array_keys($selected);
     sort($names);
-    if (($manifest['schemaVersion'] ?? null) !== 1 || $names !== ['pdftoolkit/opentype', 'pdftoolkit/pdf-fonts', 'pdftoolkit/pdf-images', 'pdftoolkit/pdf-reader', 'pdftoolkit/pdf-to-html', 'roukmoute/pdf']) {
+    if (($manifest['schemaVersion'] ?? null) !== 1 || $names !== ['pdftoolkit/opentype', 'pdftoolkit/pdf-codecs', 'pdftoolkit/pdf-fonts', 'pdftoolkit/pdf-images', 'pdftoolkit/pdf-reader', 'pdftoolkit/pdf-to-html', 'roukmoute/pdf']) {
         throw new \RuntimeException('The released-source manifest must describe every package exactly once.');
     }
     foreach ($selected as $name => $package) {
@@ -435,36 +435,34 @@ function documentationPackages(string $root, string $sourcesPath, string $openty
             ...$selected[$name],
         ];
     }
-    $opentypeRoot = realpath($opentypeRoot) ?: throw new \RuntimeException('Cannot resolve the independent OpenType source tree.');
-    $opentype = $selected['pdftoolkit/opentype'];
-    foreach (['HEAD', 'v' . $opentype['version'] . '^{commit}'] as $reference) {
-        $process = proc_open(['git', '-C', $opentypeRoot, 'rev-parse', $reference], [1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes);
-        if (!is_resource($process)) {
-            throw new \RuntimeException('Cannot verify the independent OpenType checkout.');
+    foreach (['pdftoolkit/opentype' => $opentypeRoot, 'pdftoolkit/pdf-codecs' => $codecsRoot] as $name => $inputRoot) {
+        $inputRoot = realpath($inputRoot) ?: throw new \RuntimeException('Cannot resolve independent package source tree: ' . $name);
+        $selectedPackage = $selected[$name];
+        foreach (['HEAD', 'v' . $selectedPackage['version'] . '^{commit}'] as $reference) {
+            $process = proc_open(['git', '-C', $inputRoot, 'rev-parse', $reference], [1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes);
+            if (!is_resource($process)) {
+                throw new \RuntimeException('Cannot verify independent checkout: ' . $name);
+            }
+            $revision = trim(stream_get_contents($pipes[1]));
+            $error = stream_get_contents($pipes[2]);
+            fclose($pipes[1]);
+            fclose($pipes[2]);
+            if (proc_close($process) !== 0 || $revision !== $selectedPackage['revision']) {
+                throw new \RuntimeException('Independent checkout or tag differs from released-source manifest: ' . $name . ' ' . trim($error));
+            }
         }
-        $revision = trim(stream_get_contents($pipes[1]));
-        $error = stream_get_contents($pipes[2]);
-        fclose($pipes[1]);
-        fclose($pipes[2]);
-        if (proc_close($process) !== 0 || $revision !== $opentype['revision']) {
-            throw new \RuntimeException('OpenType checkout or tag differs from the released-source manifest. ' . trim($error));
+        $composer = json_decode(file_get_contents($inputRoot . '/composer.json') ?: '{}', true, flags: JSON_THROW_ON_ERROR);
+        if (($composer['name'] ?? null) !== $name) {
+            throw new \RuntimeException('Incorrect independent package identity: ' . $name);
         }
-    }
-    $composerBytes = file_get_contents($opentypeRoot . '/composer.json');
-    if ($composerBytes === false) {
-        throw new \RuntimeException('Cannot read the independent OpenType package identity.');
-    }
-    $composer = json_decode($composerBytes, true, flags: JSON_THROW_ON_ERROR);
-    if (($composer['name'] ?? null) !== 'pdftoolkit/opentype') {
-        throw new \RuntimeException('Incorrect independent OpenType package identity.');
-    }
-    foreach (array_keys($composer['require'] ?? []) as $dependency) {
-        if ($dependency === 'roukmoute/pdf' || str_starts_with($dependency, 'pdftoolkit/pdf-')) {
-            throw new \RuntimeException('OpenType must remain independent from PDF packages.');
+        foreach (array_keys($composer['require'] ?? []) as $dependency) {
+            if ($dependency === 'roukmoute/pdf' || str_starts_with($dependency, 'pdftoolkit/pdf-')) {
+                throw new \RuntimeException('Independent package must not depend on PDF packages: ' . $name);
+            }
         }
+        require $inputRoot . '/vendor/autoload.php';
+        $packages[$name] = ['root' => $inputRoot, ...$selectedPackage];
     }
-    require $opentypeRoot . '/vendor/autoload.php';
-    $packages['pdftoolkit/opentype'] = ['root' => $opentypeRoot, ...$opentype];
     $pdfToHtmlRoot = realpath($pdfToHtmlRoot) ?: throw new \RuntimeException('Cannot resolve the PDF-to-HTML source tree.');
     $html = $selected['pdftoolkit/pdf-to-html'];
     foreach (['HEAD', 'v' . $html['version'] . '^{commit}'] as $reference) {
@@ -550,15 +548,15 @@ function sourceLocation(string $file, array $packages): array
 }
 
 $arguments = $_SERVER['argv'] ?? [];
-if (!is_array($arguments) || count($arguments) !== 7 || !isset($arguments[1], $arguments[2], $arguments[3], $arguments[4], $arguments[5], $arguments[6]) || !is_string($arguments[1]) || $arguments[1] === '') {
-    fwrite(STDERR, "Usage: php tools/export_api.php <output.json> <source-root> <sources.json> <opentype-root> <pdf-to-html-root> <reader-consumer-root>\n");
+if (!is_array($arguments) || count($arguments) !== 8 || !isset($arguments[1], $arguments[2], $arguments[3], $arguments[4], $arguments[5], $arguments[6], $arguments[7]) || !is_string($arguments[1]) || $arguments[1] === '') {
+    fwrite(STDERR, "Usage: php tools/export_api.php <output.json> <source-root> <sources.json> <opentype-root> <pdf-to-html-root> <reader-consumer-root> <codecs-root>\n");
     exit(1);
 }
 
 try {
     $root = realpath($arguments[2]) ?: throw new \RuntimeException('Cannot resolve the core source tree.');
     require $root . '/vendor/autoload.php';
-    $packages = documentationPackages($root, $arguments[3], $arguments[4], $arguments[5], $arguments[6]);
+    $packages = documentationPackages($root, $arguments[3], $arguments[4], $arguments[5], $arguments[6], $arguments[7]);
     $files = [];
     foreach ($packages as $package) {
         $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($package['root'] . '/src', \FilesystemIterator::SKIP_DOTS));

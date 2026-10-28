@@ -28,10 +28,10 @@ GROUP_ROUTES = {
     'lexique': 'lexical-conventions', 'norme': 'specification',
     'dictionnaires': 'dictionaries', 'entrees': 'entries', 'definitions': 'definitions',
     'adobe': 'adobe', 'iso2': 'pdf-2-0', 'securite': 'security', 'polices-externes': 'external-fonts',
-    'images-externes': 'external-images', 'lecture': 'reader', 'fontes-opentype': 'opentype', 'conversion-html': 'to-html',
+    'images-externes': 'external-images', 'lecture': 'reader', 'fontes-opentype': 'opentype', 'conversion-html': 'to-html', 'codecs-images': 'image-codecs',
 }
 ENGLISH_ROUTES.update({f'reference/groups/{old}.html': f'reference/groups/{new}.html' for old, new in GROUP_ROUTES.items()})
-for module in ('reader', 'images', 'fonts', 'opentype', 'to-html'):
+for module in ('reader', 'images', 'fonts', 'opentype', 'to-html', 'codecs'):
     ENGLISH_ROUTES[f'modules/{module}/signalements.html'] = f'modules/{module}/reporting.html'
     ENGLISH_ROUTES[f'modules/{module}/versions.html'] = f'modules/{module}/changelog.html'
 
@@ -365,6 +365,7 @@ TEXT = {
     'Exigences de la dérivation HTML': 'HTML derivation requirements',
     'Politiques de dérivation HTML': 'HTML derivation policies',
     'Graphiques PDF et rendu de figures': 'PDF graphics and figure rendering',
+    'Couleurs et transparence des images décodées': 'Decoded image colour and transparency',
     'Validation des signatures PDF': 'PDF signature validation',
     'Sécurité du HTML dérivé': 'Derived HTML security',
     'Référence Deriving HTML from PDF': 'Deriving HTML from PDF reference',
@@ -439,6 +440,7 @@ TEXT = {
     'Variations des contours TrueType': 'TrueType outline variations',
     'En-têtes et styles des fontes': 'Font headers and styles',
     'Métriques pré-calculées': 'Precomputed device metrics',
+    'Migration vers le core 0.12': 'Migrating to core 0.12',
     'Migration vers le core 0.11': 'Migrating to core 0.11',
     'Migration vers le core 0.5': 'Migrating to core 0.5',
     'Migration vers le core 0.4': 'Migrating to core 0.4',
@@ -500,6 +502,19 @@ TEXT = {
     'Module optionnel : lecture de PDF': 'Optional module: PDF reading',
     'Modèle objet OpenType indépendant': 'Independent OpenType object model',
     'Architecture OpenType': 'OpenType architecture',
+    'Contrats des codecs d’image': 'Image codec contracts',
+    'Moteurs natifs et codecs PHP': 'Native engines and PHP codecs',
+    'Résolution explicite des flux externes': 'Explicit external stream resolution',
+    'Décodage et délimitation CCITT': 'CCITT decoding and framing',
+    'Importer les objets lus': 'Importing parsed objects',
+    'Déclarations de couleur PNG': 'PNG colour declarations',
+    'Mise en page OpenType dans les PDF': 'OpenType layout in PDF',
+    'Collections et paramètres OpenType': 'OpenType collections and parameters',
+    'Codecs d’image PHP indépendants': 'Independent PHP image codecs',
+    'Décoder les images en PHP': 'Decode images in PHP',
+    'Décodage JPEG': 'JPEG decoding',
+    'Décodage JPEG 2000': 'JPEG 2000 decoding',
+    'Décodage JBIG2': 'JBIG2 decoding',
     'Couverture OpenType': 'OpenType coverage',
     'Substitutions de glyphes': 'Glyph substitutions',
     'Lire un PDF': 'Reading a PDF', 'Architecture du lecteur': 'Reader architecture',
@@ -549,7 +564,7 @@ TEXT = {
     'Apprendre avec les objets': 'Learn with objects', 'Construire un document et explorer ses pages': 'Build a document and explore its pages',
     'Chaque tutoriel relie les explications aux objets PHP et au PDF créé ou lu. Consultez ses pages, le script et le résultat de son exécution.': 'Each tutorial connects the explanations to PHP objects and the PDF being created or read. Explore its pages, script and execution result.',
     'Un core PDF, des modules au choix': 'A PDF core, optional modules',
-    'Le core représente les objets et les mécanismes de la norme Adobe. Les modules de lecture PDF et de conversion d’images ou de fontes dépendent du core. Le modèle OpenType est indépendant et s’installe sans aucun package PDF.': 'The core represents the objects and mechanisms in the Adobe specification. PDF reading and image or font conversion modules depend on the core. The OpenType model is independent and installs without any PDF package.',
+    'Le core représente les objets et les mécanismes de la norme Adobe. Les modules de lecture PDF et de conversion d’images ou de fontes dépendent du core. Les modèles OpenType et de codecs PHP sont indépendants et s’installent sans aucun package PDF.': 'The core represents the objects and mechanisms in the Adobe specification. PDF reading and image or font conversion modules depend on the core. The OpenType and PHP codec models are independent and install without any PDF package.',
     'Choisir les packages et comprendre leur frontière →': 'Choose packages and understand their scope →',
     'Trois chemins pour explorer le projet': 'Three ways to explore the project', 'Comprendre les responsabilités': 'Understand responsibilities',
     'Valeurs, graphes, ressources, fonctions et écriture : comment les familles se composent.': 'Values, graphs, resources, functions and writing: how the component families fit together.',

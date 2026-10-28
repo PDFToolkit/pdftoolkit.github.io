@@ -16,6 +16,7 @@ PACKAGES = {
     "pdftoolkit/pdf-fonts": "https://github.com/PDFToolkit/pdf-fonts",
     "pdftoolkit/opentype": "https://github.com/PDFToolkit/opentype",
     "pdftoolkit/pdf-to-html": "https://github.com/PDFToolkit/pdf-to-html",
+    "pdftoolkit/pdf-codecs": "https://github.com/PDFToolkit/pdf-codecs",
 }
 
 
@@ -96,7 +97,7 @@ def select_reader(source_root: Path, html_root: Path, packages: dict[str, dict])
     return consumer
 
 
-def check(source_root: Path, manifest: Path, remote: bool = False, opentype_root: Path | None = None, pdf_to_html_root: Path | None = None) -> dict[str, dict]:
+def check(source_root: Path, manifest: Path, remote: bool = False, opentype_root: Path | None = None, pdf_to_html_root: Path | None = None, codecs_root: Path | None = None) -> dict[str, dict]:
     packages = load_manifest(manifest)
     core = packages["roukmoute/pdf"]
     require(git("rev-parse", "HEAD", root=source_root) == core["revision"], "Core checkout does not match the released source pin")
@@ -120,6 +121,14 @@ def check(source_root: Path, manifest: Path, remote: bool = False, opentype_root
             require(composer["name"] == name, "Independent OpenType source package identity differs")
             require(not any(dependency == "roukmoute/pdf" or dependency.startswith("pdftoolkit/pdf-") for dependency in composer.get("require", {})), "OpenType must remain independent from PDF packages")
             require((opentype_root / "docs").is_dir(), "Missing OpenType guides")
+        elif name == "pdftoolkit/pdf-codecs":
+            require(codecs_root is not None, "The independent image codecs checkout is required")
+            require(git("rev-parse", "HEAD", root=codecs_root) == source["revision"], "Codecs checkout differs from the released source pin")
+            require(git("rev-parse", f"v{source['version']}^{{commit}}", root=codecs_root) == source["revision"], "Codecs tag differs from the released source pin")
+            composer = json.loads((codecs_root / "composer.json").read_text(encoding="utf-8"))
+            require(composer.get("name") == name, "Independent codecs source package identity differs")
+            require(not any(dependency == "roukmoute/pdf" or dependency.startswith("pdftoolkit/") for dependency in composer.get("require", {})), "Codecs must remain independent from PDFToolkit packages")
+            require((codecs_root / "docs").is_dir(), "Missing codec guides")
         elif name != "roukmoute/pdf":
             selected_lock, selected_installed = composer_inputs(reader_consumer) if name == "pdftoolkit/pdf-reader" else (locked, installed)
             module_root = reader_consumer if name == "pdftoolkit/pdf-reader" else source_root
@@ -143,6 +152,7 @@ if __name__ == "__main__":
     parser.add_argument("--source-root", type=Path, required=True)
     parser.add_argument("--opentype-root", type=Path, help="Independent released OpenType checkout")
     parser.add_argument("--pdf-to-html-root", type=Path, help="Released PDF-to-HTML checkout with its locked reader")
+    parser.add_argument("--codecs-root", type=Path, help="Independent released image codecs checkout")
     parser.add_argument("--manifest", type=Path, default=Path(__file__).resolve().parents[1] / "resources/sources.json")
     parser.add_argument("--remote", action="store_true", help="Also verify every published remote tag")
     parser.add_argument("--github-output", type=Path, help="Export the core checkout inputs for GitHub Actions")
@@ -153,7 +163,9 @@ if __name__ == "__main__":
         core = packages["roukmoute/pdf"]
         opentype = packages["pdftoolkit/opentype"]
         html = packages["pdftoolkit/pdf-to-html"]
+        codecs = packages["pdftoolkit/pdf-codecs"]
         with args.github_output.open("a", encoding="utf-8", newline="\n") as stream:
+            stream.write(f"codecs_revision={codecs['revision']}\ncodecs_version={codecs['version']}\n")
             stream.write(f"opentype_revision={opentype['revision']}\nopentype_version={opentype['version']}\n")
             stream.write(f"pdf_to_html_revision={html['revision']}\npdf_to_html_version={html['version']}\n")
             stream.write(f"core_revision={core['revision']}\ncore_version={core['version']}\ncore_alias={'.'.join(core['version'].split('.')[:2])}.x-dev\n")
@@ -161,4 +173,4 @@ if __name__ == "__main__":
         require(args.pdf_to_html_root is not None, "The released PDF-to-HTML source checkout is required")
         print(select_reader(args.source_root.resolve(), args.pdf_to_html_root.resolve(), load_manifest(args.manifest.resolve())))
     else:
-        check(args.source_root.resolve(), args.manifest.resolve(), args.remote, args.opentype_root.resolve() if args.opentype_root else None, args.pdf_to_html_root.resolve() if args.pdf_to_html_root else None)
+        check(args.source_root.resolve(), args.manifest.resolve(), args.remote, args.opentype_root.resolve() if args.opentype_root else None, args.pdf_to_html_root.resolve() if args.pdf_to_html_root else None, args.codecs_root.resolve() if args.codecs_root else None)

@@ -17,10 +17,11 @@ from html_demo import DemoGallery
 DOCUMENTATION_REPOSITORY = 'https://github.com/PDFToolkit/pdftoolkit.github.io'
 SITE_ORIGIN = 'https://pdftoolkit.github.io'
 MODULE_GUIDES = {
-    'reader': ['index', 'architecture', 'components', 'pages', 'revision-history', 'structural-policy', 'authentication', 'public-key-authentication', 'source-mac', 'security', 'signalements', 'versions'],
-    'images': ['index', 'architecture', 'signalements', 'versions'],
-    'fonts': ['index', 'true-type-to-pdf', 'signalements', 'versions'],
-    'opentype': ['index', 'architecture', 'coverage', 'substitutions', 'positioning', 'font-axes', 'font-metadata', 'variable-metrics', 'truetype-outlines', 'cff-outlines', 'truetype-variations', 'font-headers-and-styles', 'device-metrics', 'signalements', 'versions'],
+    'codecs': ['index', 'architecture', 'jpeg', 'jpeg2000', 'jbig2', 'signalements', 'versions'],
+    'reader': ['index', 'architecture', 'components', 'pages', 'revision-history', 'structural-policy', 'authentication', 'public-key-authentication', 'source-mac', 'external-streams', 'fax', 'image-codecs', 'import', 'security', 'signalements', 'versions'],
+    'images': ['index', 'architecture', 'png-colour', 'signalements', 'versions'],
+    'fonts': ['index', 'true-type-to-pdf', 'opentype-layout', 'signalements', 'versions'],
+    'opentype': ['index', 'architecture', 'coverage', 'substitutions', 'positioning', 'font-axes', 'font-metadata', 'variable-metrics', 'truetype-outlines', 'cff-outlines', 'truetype-variations', 'font-headers-and-styles', 'device-metrics', 'collections-and-feature-parameters', 'signalements', 'versions'],
     'to-html': ['index', 'architecture', 'coverage', 'authentication', 'requirements', 'policies', 'graphics', 'signatures', 'security', 'reference', 'signalements', 'versions'],
 }
 
@@ -330,7 +331,7 @@ def check(root):
         if (english['url'], french['url']) not in translated_pairs:
             errors.append('API search records must target their reciprocal translation pair: ' + title)
     packages = {item['name']: item for item in manifest['packages']}
-    if len(packages) != len(manifest['packages']) or set(packages) != {'roukmoute/pdf', 'pdftoolkit/pdf-reader', 'pdftoolkit/pdf-images', 'pdftoolkit/pdf-fonts', 'pdftoolkit/opentype', 'pdftoolkit/pdf-to-html'}:
+    if len(packages) != len(manifest['packages']) or set(packages) != {'roukmoute/pdf', 'pdftoolkit/pdf-reader', 'pdftoolkit/pdf-images', 'pdftoolkit/pdf-fonts', 'pdftoolkit/opentype', 'pdftoolkit/pdf-to-html', 'pdftoolkit/pdf-codecs'}:
         errors.append('Package inventory must cover every unique package name')
     if packages.get('roukmoute/pdf', {}).get('revision') != manifest.get('revision'):
         errors.append('Core source revision differs from the site source revision')
@@ -391,7 +392,7 @@ def check(root):
         if page in documents:
             for link in documents[page].links:
                 url = urlsplit(link)
-                match = re.fullmatch(r'/PDFToolkit/(pdf-reader|pdf-images|pdf-fonts|pdf-to-html|opentype)/(?:blob|tree)/[^/]+/(README(?:\.fr)?\.md|CHANGELOG(?:\.fr)?\.md|SECURITY(?:\.fr)?\.md|docs/.+\.md)', url.path)
+                match = re.fullmatch(r'/PDFToolkit/(pdf-reader|pdf-images|pdf-fonts|pdf-to-html|pdf-codecs|opentype)/(?:blob|tree)/[^/]+/(README(?:\.fr)?\.md|CHANGELOG(?:\.fr)?\.md|SECURITY(?:\.fr)?\.md|docs/.+\.md)', url.path)
                 if url.netloc == 'github.com' and match and link != expected_source:
                     errors.append('Module guide navigation must stay on the central site: ' + page + ' -> ' + link)
     for slug, routes in MODULE_GUIDES.items():

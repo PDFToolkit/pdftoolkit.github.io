@@ -138,7 +138,7 @@ class SourceLinksTest(unittest.TestCase):
 
     def test_new_and_historic_html_guides_resolve_to_the_central_site(self):
         _, guides = self.register_html_guides()
-        self.assertEqual({'architecture', 'coverage', 'authentication', 'requirements', 'policies', 'graphics', 'signatures', 'security', 'reference'}, {route for _, route, _ in guides})
+        self.assertEqual({'architecture', 'coverage', 'authentication', 'requirements', 'policies', 'graphics', 'image-codecs', 'signatures', 'security', 'reference'}, {route for _, route, _ in guides})
         for language in ('en', 'fr'):
             self.site.language = language
             for base in ('/', '/pdf/'):

@@ -14,6 +14,22 @@ from check_sources import check, html_dependencies, select_reader
 from html_demo import DemoBuild, DemoSource
 
 
+def executable_path(value: str | Path | None) -> str | None:
+    """Anchor explicit paths before changing cwd, without resolving venv symlinks."""
+    if value is None:
+        return None
+    value = os.path.expanduser(str(value))
+    if os.path.dirname(value):
+        return os.path.abspath(value)
+    return value
+
+
+def prepare_executables(args) -> None:
+    for name in ('php', 'node', 'qpdf', 'openssl', 'pdftoppm', 'image_pdftoppm',
+                 'imagemagick', 'pdftotext', 'ghostscript', 'poppler_glib_bin'):
+        setattr(args, name, executable_path(getattr(args, name)))
+
+
 def run(command: list, cwd: Path, output: Path | None = None, env: dict[str, str] | None = None) -> None:
     if output:
         with output.open("wb") as stream:
@@ -40,6 +56,30 @@ def prepare_reader_oracle_autoload(reader: Path, consumer: Path) -> None:
     bridge.write_text(contents, encoding="utf-8", newline="\n")
 
 
+def validate_image_and_font_modules(args, source: Path, opentype: Path, codecs: Path, work: Path) -> None:
+    images = source / 'vendor/pdftoolkit/pdf-images'
+    fonts = source / 'vendor/pdftoolkit/pdf-fonts'
+    for package in (images, fonts):
+        prepare_reader_oracle_autoload(package, source)
+    for tool in ('validate_png.py', 'validate_png_color.py', 'validate_jpeg.py'):
+        command = [sys.executable, 'tools/' + tool, '--php', args.php,
+                   '--qpdf', args.qpdf, '--pdftoppm', args.image_pdftoppm or args.pdftoppm,
+                   '--report', work / (tool.removesuffix('.py') + '.json')]
+        if tool != 'validate_jpeg.py':
+            command.extend(['--imagemagick', args.imagemagick])
+        run(command, images)
+    run([sys.executable, 'tools/validate_opentype.py', '--php', args.php,
+         '--output', work / 'font-layout-validation'], fonts)
+    for tool in ('validate_cmaps.py', 'validate_collections.py', 'validate_feature_parameters.py', 'validate_feature_ranges.py'):
+        run([sys.executable, 'tools/' + tool, '--php', args.php], opentype)
+    for codec in ('jpeg', 'jbig2'):
+        run([sys.executable, 'tools/validate_' + codec + '.py', '--php', args.php,
+             '--report', work / (codec + '-codec-validation.json')], codecs)
+    run([sys.executable, 'tools/build_jpx_oracle.py', '--output', work / 'openjpeg-oracle'], codecs)
+    run([sys.executable, 'tools/validate_jpx.py', '--php', args.php,
+         '--oracle', work / 'openjpeg-oracle/jpx-oracle', '--output', work / 'jpx-codec-validation'], codecs)
+
+
 def validate_html_module(args, html: Path, work: Path, pdfs: Path) -> None:
     """Exercise released module behavior without adding validation outputs to site assets."""
     for command in (
@@ -48,6 +88,15 @@ def validate_html_module(args, html: Path, work: Path, pdfs: Path) -> None:
         [sys.executable, "tools/build_glyph_list.py", "--check"],
         [sys.executable, "tools/build_inline_fixture.py", "--check"],
         [sys.executable, "tools/build_inline_fax_fixture.py", "--check"],
+        [sys.executable, "tools/build_sample_images_fixture.py", "--check"],
+        [sys.executable, "tools/build_codec_image_sources.py", "--check"],
+        [sys.executable, "tools/build_codec_images_fixture.py", "--check"],
+        [sys.executable, "tools/validate_codec_images.py", "--php", args.php,
+         "--qpdf", args.qpdf, "--export", work / "html-codec-images",
+         "--report", work / "html-codec-images-validation.json"],
+        [sys.executable, "tools/validate_sample_images.py", "--php", args.php,
+         "--qpdf", args.qpdf, "--pdftoppm", args.pdftoppm,
+         "--report", work / "html-sample-images-validation.json"],
         [sys.executable, "tools/validate_inline_derivation.py", "--php", args.php],
         [sys.executable, "tools/validate_graphics.py", "--php", args.php, "--pdftoppm", args.pdftoppm],
         [sys.executable, "tools/validate_graphics_context.py", "--php", args.php, "--pdftoppm", args.pdftoppm],
@@ -63,6 +112,11 @@ def validate_html_module(args, html: Path, work: Path, pdfs: Path) -> None:
         [sys.executable, "tools/validate_public_key_authentication.py", "--php", args.php],
     ):
         run(command, html)
+    # Reuse the demo's locked Playwright installation for both browser engines.
+    # Keep module discovery explicit when the HTML checkout has no node_modules.
+    run([args.node, html / "tools/validate_codec_images.cjs", work / "html-codec-images",
+         work / "html-codec-images-browsers"], html,
+        env={**os.environ, "NODE_PATH": str(args.demo_root.absolute() / "node_modules")})
     runtime = work / "pdf-html-runtime.js"
     run([args.php, html / "tests/Script/runtime-fixture.php"], html, runtime)
     run([args.node, "--check", runtime], html)
@@ -86,6 +140,7 @@ def validate_html_module(args, html: Path, work: Path, pdfs: Path) -> None:
 
 
 def build(args) -> None:
+    prepare_executables(args)
     content = args.content_root.resolve()
     source = args.source_root.resolve()
     work = args.work_dir.resolve()
@@ -96,7 +151,8 @@ def build(args) -> None:
     manifest = args.sources.resolve() if args.sources else content / "resources/sources.json"
     opentype = args.opentype_root.resolve()
     html = args.pdf_to_html_root.resolve()
-    packages = check(source, manifest, args.remote, opentype, html)
+    codecs = args.codecs_root.resolve()
+    packages = check(source, manifest, args.remote, opentype, html, codecs)
     reader_consumer = select_reader(source, html, packages)
     reader = reader_consumer / "vendor/pdftoolkit/pdf-reader"
     (work / "validation-sources.json").write_text(json.dumps({
@@ -132,6 +188,16 @@ def build(args) -> None:
          "--fixtures-dir", work / "public-key-validation"], reader)
     run([sys.executable, "tools/validate_revision_history.py", "--php", args.php, "--qpdf", args.qpdf,
          "--work-dir", work / "reader-revision-history-validation"], reader)
+    run([sys.executable, "tools/validate_external_streams.py", "--php", args.php, "--qpdf", args.qpdf,
+         "--work-dir", work / "reader-external-streams-validation"], reader)
+    run([sys.executable, "tools/validate_import.py", "--php", args.php, "--qpdf", args.qpdf,
+         "--work-dir", work / "reader-import-validation", "--report", work / "reader-import-validation.json"], reader)
+    run([sys.executable, "tools/validate_fax.py", "--php", args.php, "--qpdf", args.qpdf,
+         "--pdftoppm", args.pdftoppm, "--report", work / "reader-fax-validation.json"], reader)
+    run([sys.executable, "tools/validate_image_codecs.py", "--php", args.php,
+         "--qpdf", args.qpdf, "--require-native",
+         "--report", work / "reader-image-codecs-validation.json"], reader)
+    validate_image_and_font_modules(args, source, opentype, codecs, work)
     validate_html_module(args, html, work, pdfs)
     demo = args.demo_root.resolve()
     demo_build = work / 'html-demo'
@@ -140,7 +206,7 @@ def build(args) -> None:
     run([sys.executable, "tools/validate_demo.py", demo_build, "--report", work / "html-demo-validation.json",
          "--pdftoppm", args.pdftoppm, "--require-release"], demo)
     api = work / "api.json"
-    run([args.php, content / "tools/export_api.php", api, source, manifest, opentype, html, reader_consumer], source)
+    run([args.php, content / "tools/export_api.php", api, source, manifest, opentype, html, reader_consumer, codecs], source)
     for example in sorted((source / "examples").glob("*.php")):
         output = pdfs / (example.stem + ".pdf")
         run([args.php, example, output, *([args.openssl] if example.stem == 'pdf20-timestamp-dss' else [])], source)
@@ -184,8 +250,13 @@ def build(args) -> None:
          "--pdftoppm", args.pdftoppm, "--work-dir", work / "incremental-permissions-validation"], source)
     run([sys.executable, "tools/validate_encrypted_usage_rights.py", "--php", args.php, "--qpdf", args.qpdf,
          "--work-dir", work / "encrypted-usage-rights-validation"], source)
+    for tool in ('validate_page_outlines.py', 'validate_action_contracts.py'):
+        run([sys.executable, 'tools/' + tool, '--php', args.php,
+             '--report', work / (tool.removesuffix('.py') + '.json')], source)
+    run([sys.executable, 'tools/validate_calculator_functions.py', '--php', args.php,
+         '--ghostscript', args.ghostscript, '--report', work / 'calculator-functions-validation.json'], source)
     run([sys.executable, content / "tools/build_site.py", "--content-root", content, "--source-root", source,
-         "--opentype-root", opentype, "--pdf-to-html-root", html, "--demo-root", demo, "--demo-build", demo_build, "--sources", manifest, "--api", api, "--pdf-dir", pdfs, "--pdf-preview-dir", previews,
+         "--opentype-root", opentype, "--codecs-root", codecs, "--pdf-to-html-root", html, "--demo-root", demo, "--demo-build", demo_build, "--sources", manifest, "--api", api, "--pdf-dir", pdfs, "--pdf-preview-dir", previews,
          "--output", args.output.resolve(), "--base-path", "/", "--docs-revision", args.docs_revision], content)
     run([sys.executable, content / "tools/check_site.py", args.output.resolve()], content)
 
@@ -195,6 +266,7 @@ if __name__ == "__main__":
     parser.add_argument("--content-root", type=Path, default=Path(__file__).resolve().parents[1])
     parser.add_argument("--source-root", type=Path, required=True)
     parser.add_argument("--opentype-root", type=Path, required=True, help="Independent released OpenType checkout")
+    parser.add_argument("--codecs-root", type=Path, required=True, help="Independent released image codecs checkout")
     parser.add_argument("--pdf-to-html-root", type=Path, required=True, help="Released PDF-to-HTML checkout and its locked reader")
     parser.add_argument("--demo-root", type=Path, required=True, help="Separately released browser demo checkout")
     parser.add_argument("--sources", type=Path)
@@ -206,6 +278,8 @@ if __name__ == "__main__":
     parser.add_argument("--qpdf", default="qpdf")
     parser.add_argument("--openssl", default=shutil.which("openssl"), help="Explicit OpenSSL executable for offline signature/timestamp examples and oracles")
     parser.add_argument("--pdftoppm", default="pdftoppm")
+    parser.add_argument("--image-pdftoppm", help="Pinned Poppler renderer for the Images colour-management corpus")
+    parser.add_argument("--imagemagick", default="convert")
     parser.add_argument("--pdftotext", default="pdftotext")
     parser.add_argument("--ghostscript", default="gs")
     parser.add_argument("--poppler-glib-bin", type=Path)
