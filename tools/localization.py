@@ -9,10 +9,14 @@ from html.parser import HTMLParser
 import re
 
 LANGUAGES = ('en', 'fr')
-# Public directory URLs already linked by the released Codecs README.
+# Published directory links and HTML CCITT helpers now shared with Reader.
 PUBLISHED_ROUTE_ALIASES = {
     'modules/reader/image-codecs/index.html': 'modules/reader/image-codecs.html',
     'fr/modules/reader/image-codecs/index.html': 'fr/modules/reader/image-codecs.html',
+    'reference/components/inlinefaxbits-e851e2b38507.html': 'reference/components/ccittfaxbits-fd6914c4cf01.html',
+    'fr/reference/components/inlinefaxbits-e851e2b38507.html': 'fr/reference/components/ccittfaxbits-fd6914c4cf01.html',
+    'reference/components/inlinefaxcodes-4ea2ae5e4bf3.html': 'reference/components/ccittfaxcodes-60f7339c16a6.html',
+    'fr/reference/components/inlinefaxcodes-4ea2ae5e4bf3.html': 'fr/reference/components/ccittfaxcodes-60f7339c16a6.html',
 }
 ENGLISH_ROUTES = {
     'guides/mecanismes.html': 'guides/mechanisms.html',

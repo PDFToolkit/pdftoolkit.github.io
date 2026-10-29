@@ -6,6 +6,8 @@
 
 ## [0.13.0] - 2026-10-29
 
+- Préserver les anciennes adresses API HTML `InlineFaxBits` et `InlineFaxCodes` dans les deux langues en les redirigeant vers leurs implémentations partagées Reader, avec les fragments de membres existants.
+
 - Sélectionner Images 0.2.1 depuis son checkout publié indépendant, avec son guide d’architecture français/anglais harmonisé. Conserver distinctes les dépendances verrouillées des exemples du core et des oracles de modules.
 
 - Sélectionner core 0.12.1, Reader 0.7, Images 0.2, Fonts 0.2, OpenType 0.4,

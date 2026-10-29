@@ -6,6 +6,8 @@
 
 ## [0.13.0] - 2026-10-29
 
+- Preserve the former HTML `InlineFaxBits` and `InlineFaxCodes` API addresses in both languages by redirecting them to their shared Reader implementations, including existing member fragments.
+
 - Select Images 0.2.1 from its independent published checkout, including its aligned French/English architecture guide. Preserve the separate locked dependencies used by core examples and module oracles.
 
 - Select published core 0.12.1, Reader 0.7, Images 0.2, Fonts 0.2, OpenType 0.4,

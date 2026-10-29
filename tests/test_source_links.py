@@ -194,11 +194,11 @@ class SourceLinksTest(unittest.TestCase):
                 href = 'https://packagist.org/packages/' + package + '?view=versions#package'
                 self.assertEqual(href, self.site.rewrite_link('docs/packages.md', href))
 
-    def test_published_directory_aliases_have_exact_language_destination_and_fallback(self):
+    def test_published_aliases_have_exact_language_destination_and_fallback(self):
         from check_site import Document
         from localization import PUBLISHED_ROUTE_ALIASES
-        route = 'modules/reader/image-codecs.html'
-        self.site.translations = {route: {'en': route, 'fr': 'fr/' + route}}
+        routes = {destination.removeprefix('fr/') for destination in PUBLISHED_ROUTE_ALIASES.values()}
+        self.site.translations = {route: {'en': route, 'fr': 'fr/' + route} for route in routes}
         self.site.output, self.site.written = self.root / 'output', []
         self.site.script_revision = 'unit-script'
         self.site.build_aliases()
@@ -210,6 +210,23 @@ class SourceLinksTest(unittest.TestCase):
             self.assertEqual(['/' + destination], document.redirect_targets)
             self.assertIn('/' + destination, document.links)
             self.assertIn('destination', document.ids)
+
+
+    def test_retired_html_fax_helpers_resolve_to_the_shared_reader_api_with_fragments(self):
+        from localization import PUBLISHED_ROUTE_ALIASES
+        replacements = {
+            'inlinefaxbits-e851e2b38507': ('ccittfaxbits-fd6914c4cf01', ['method-read', 'method-peek', 'method-align', 'method-hasEol', 'method-eol']),
+            'inlinefaxcodes-4ea2ae5e4bf3': ('ccittfaxcodes-60f7339c16a6', ['construction', 'proprietes']),
+        }
+        for prefix in ('', 'fr/'):
+            self.site.language = 'fr' if prefix else 'en'
+            for previous, (current, anchors) in replacements.items():
+                old_route = prefix + 'reference/components/' + previous + '.html'
+                new_route = prefix + 'reference/components/' + current + '.html'
+                self.assertEqual(new_route, PUBLISHED_ROUTE_ALIASES[old_route])
+                for anchor in anchors:
+                    self.assertEqual('/' + new_route + '?from=old#' + anchor,
+                                     self.site.rewrite_link('README.md', 'https://pdftoolkit.github.io/' + old_route + '?from=old#' + anchor))
 
 
 if __name__ == '__main__':
