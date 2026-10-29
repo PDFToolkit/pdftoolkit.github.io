@@ -16,9 +16,12 @@
   ressources et profils pris en charge. Actualiser les guides FR/EN EC3,
   pages/actions, import natif, images, fontes/OpenType et migration du core
   avec les preuves correspondantes.
-- Intégrer la démo 0.2 publiée et dix exemples reproductibles, dont JPEG,
+- Intégrer la démo 0.2.1 publiée et dix exemples reproductibles, dont JPEG,
   JPEG 2000 et JBIG2 dans des Workers PHP/WebAssembly locaux. Conserver les
   quatre identités des packages embarqués, PDF originaux, ressources et licences.
+  Amener les cadres de résultat hors écran dans la zone visible avant les contrôles
+  des widgets Chromium/Firefox, avec les mêmes limites de temps/mémoire et assertions
+  sur les pixels.
 - Compléter le build par les oracles indépendants Reader/Codecs/images/fontes,
   les outils JPEG 2000 et Poppler épinglés, les échantillons compactés/16 bits et
   les témoins couleur/alpha/ICC sous Chromium/Firefox. Distinguer preuves

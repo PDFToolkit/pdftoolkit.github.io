@@ -15,9 +15,11 @@
   library, with explicit installation guidance, resource limits and profile
   boundaries. Update English/French EC3, page/action, native-import, image,
   font/OpenType and core migration guidance with the corresponding evidence.
-- Integrate released demo 0.2 and ten reproducible examples, including JPEG,
+- Integrate released demo 0.2.1 and ten reproducible examples, including JPEG,
   JPEG 2000 and JBIG2 conversions in local PHP/WebAssembly Workers. Retain all
   four runtime package identities, original PDFs, derived assets and licences.
+  Bring offscreen result frames into view before checking widget interactions in
+  Chromium and Firefox; retain the same time, memory and pixel assertions.
 - Expand the full build with independent Reader/Codecs/image/font oracles,
   pinned JPEG 2000 and Poppler tools, packed/16-bit samples and Chromium/Firefox
   colour/alpha/ICC witnesses. Keep normative evidence and known oracle limits
