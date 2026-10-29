@@ -14,7 +14,7 @@ output and commented code appear after the explanations.
 
 ## Run the example
 
-In a standalone application, install the reader from Packagist with core 0.10,
+In a standalone application, install the reader from Packagist with core 0.12.1,
 then run the script distributed with the module:
 
 ```sh

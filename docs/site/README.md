@@ -2,7 +2,7 @@
 
 Le site est publié à [pdftoolkit.github.io](https://pdftoolkit.github.io/) depuis
 le dépôt [PDFToolkit/pdftoolkit.github.io](https://github.com/PDFToolkit/pdftoolkit.github.io).
-Il présente le core, les modules PDF optionnels, la dérivation HTML et le modèle OpenType indépendant à partir des versions
+Il présente le core, les modules PDF optionnels, la dérivation HTML et les modèles indépendants OpenType et Codecs à partir des versions
 publiées sélectionnées dans le manifeste. Le commit des textes et des outils de documentation
 est indiqué séparément des versions et commits des packages documentés.
 
@@ -12,7 +12,7 @@ Ce dépôt conserve les guides, tutoriels, assets partagés, outils de construct
 et workflow de publication. Les sources PHP, exemples, tests, ressources de la
 spécification et PDF Adobe restent dans leurs dépôts de packages. La construction
 les lit dans un checkout complet du core préparé sous `_sources/pdf`, avec ses
-modules PDF installés par Composer depuis leurs distributions publiées. Le package OpenType provient d’un checkout séparé sous `_sources/opentype`, au commit et au tag publiés dans le même manifeste. Son installation indépendante ne modifie ni le core ni son lock.
+modules PDF installés par Composer depuis leurs distributions publiées. Les packages OpenType et Codecs proviennent de checkouts séparés sous `_sources/opentype` et `_sources/pdf-codecs`, aux commits et tags publiés dans le même manifeste. Leurs installations indépendantes ne modifient ni le core ni son lock.
 
 Le manifeste `resources/sources.json` utilise `schemaVersion: 1`. Sa liste
 `packages` décrit chaque package avec `name`, `repository`, `version`, `revision`
@@ -36,7 +36,7 @@ ces chemins en conservant les URL publiques de téléchargement existantes. Les
 fixtures de tests et exemples générés restent auprès de leurs tests et scripts.
 
 `tools/export_api.php` charge l'autoloading du core préparé et découvre les
-classes, interfaces, enums et traits de son `src/`, des modules PDF installés et du checkout OpenType. Il charge aussi l’autoloading propre à OpenType.
+classes, interfaces, enums et traits de son `src/`, des modules PDF installés et des checkouts OpenType et Codecs. Il charge aussi leurs autoloadings propres.
 Il exporte leurs signatures, propriétés, constantes et provenance par package.
 Il lit les expressions des paramètres par défaut sans instancier les objets
 qu'elles décrivent. Les liens vers les sources utilisent les commits du
@@ -51,7 +51,7 @@ tableau, document et page de référence. Les entrées composées distinguent le
 sources Adobe et ISO ; voir le [guide de couverture](../coverage.md).
 
 Les guides propres aux modules sont publiés sous `/modules/reader/`,
-`/modules/images/`, `/modules/fonts/`, `/modules/opentype/` et `/modules/to-html/`. Leur package qualifie les pages et liens
+`/modules/images/`, `/modules/fonts/`, `/modules/opentype/`, `/modules/codecs/` et `/modules/to-html/`. Leur package qualifie les pages et liens
 pour que les fichiers Markdown de même nom restent distincts.
 
 Chaque script de `examples/` du core doit avoir un tutoriel ou une recette et
@@ -121,16 +121,16 @@ distinctes. Un mauvais credential de pièce jointe doit permettre l'ouverture
 du document puis échouer à son accès. Certificats générés et entrées adverses
 restent des données privées du build.
 
-La sélection actuelle documente PDF vers HTML 0.6.0 et le lecteur 0.6.0. Le
+La sélection actuelle documente PDF vers HTML 0.7.0 et le lecteur 0.7.0. Le
 [registre des exigences](https://pdftoolkit.github.io/fr/modules/to-html/requirements.html),
 les [politiques](https://pdftoolkit.github.io/fr/modules/to-html/policies.html) et
 les [graphiques](https://pdftoolkit.github.io/fr/modules/to-html/graphics.html)
 distinguent règles natives, adaptations HTML et capacités explicites de
 rasterisation, d'authentification et de codecs supplémentaires.
 
-HTML 0.6.0 publie aussi ses [règles de placement MathML et sa procédure de validation navigateur](https://pdftoolkit.github.io/fr/modules/to-html/coverage.html#placement-mathml-et-rendu-navigateur).
+HTML 0.7.0 publie aussi ses [règles de placement MathML et sa procédure de validation navigateur](https://pdftoolkit.github.io/fr/modules/to-html/coverage.html#placement-mathml-et-rendu-navigateur).
 La qualification de sa version et un job CI dédié vérifient la sortie dérivée
-dans Chromium et Firefox et conservent rapports et captures. HTML 0.6 vérifie aussi les widgets, les attributs dérivés et les popovers de statut des signatures dans les deux moteurs. Le build du site
+dans Chromium et Firefox et conservent rapports et captures. HTML 0.7 vérifie aussi les widgets, les attributs dérivés et les popovers de statut des signatures dans les deux moteurs. Le build du site
 rend ces guides publiés et vérifie leurs liens. Le build indépendant de la démo
 capture aussi sa galerie dans Chromium et contrôle ses pages intégrées dans les deux moteurs.
 
@@ -379,7 +379,7 @@ le `--pdftoppm` choisi. Le profil par défaut et les frames du site n'exécutent
 pas le runtime ; les cas activés explicitement sont contrôlés dans l'espace privé
 de validation. Tous les guides du module conservent leur variante EN/FR.
 
-Le checkout publié `_sources/pdf-to-html` est sélectionné indépendamment. Son core et son lecteur installés doivent correspondre exactement à son propre lock publié (versions et commits source/dist), séparément des pins core/Reader documentés. HTML 0.6.0 exécute ses oracles et le tutoriel 35 avec son lock publié, qui sélectionne Reader 0.6.0. Le Reader 0.6.0 documenté provient du vendor core 0.11.0 ; ses guides, API, tutoriel 12 et oracles utilisent tous cette sélection. Exemples et oracles Reader chargent le véritable core de ce consumer. `_build/validation-sources.json` consigne les deux environnements de validation et leurs commits de packages exacts. L’exporteur API enregistre uniquement les namespaces HTML et lecteur sélectionnés contre leurs arbres choisis. Les guides apparaissent sous `/modules/to-html/` dans les deux langues. Le tutoriel 35 copie le PDF d’entrée, rend toutes ses pages et exécute le CLI pour produire le vrai HTML et les diagnostics JSON. `derivedHtml` inventorie cette sortie séparément des routes documentaires avec package/SHA et frames sandboxées ; le vérificateur refuse le contenu actif dans ces aperçus. L’original fourni de 74 pages reste dans le package, lié au commit de la version retenue.
+Le checkout publié `_sources/pdf-to-html` est sélectionné indépendamment. Son core et son lecteur installés doivent correspondre exactement à son propre lock publié (versions et commits source/dist), séparément des pins core/Reader documentés. HTML 0.7.0 exécute ses oracles et le tutoriel 35 avec son lock publié, qui sélectionne Reader 0.7.0. Le Reader 0.7.0 documenté provient du vendor core 0.12.1 ; ses guides, API, tutoriel 12 et oracles utilisent tous cette sélection. Exemples et oracles Reader chargent le véritable core de ce consumer. `_build/validation-sources.json` consigne les deux environnements de validation et leurs commits de packages exacts. L’exporteur API enregistre uniquement les namespaces HTML et lecteur sélectionnés contre leurs arbres choisis. Les guides apparaissent sous `/modules/to-html/` dans les deux langues. Le tutoriel 35 copie le PDF d’entrée, rend toutes ses pages et exécute le CLI pour produire le vrai HTML et les diagnostics JSON. `derivedHtml` inventorie cette sortie séparément des routes documentaires avec package/SHA et frames sandboxées ; le vérificateur refuse le contenu actif dans ces aperçus. L’original fourni de 74 pages reste dans le package, lié au commit de la version retenue.
 
 ## Démo dans le navigateur et galerie visuelle
 

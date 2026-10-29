@@ -1,6 +1,6 @@
 # 37. Remplir un formulaire certifié
 
-Ce tutoriel utilise le core 0.11.0. Son code PHP complet et son PDF généré
+Ce tutoriel utilise le core 0.12.1. Son code PHP complet et son PDF généré
 proviennent du checkout core sélectionné pour le site ; le dépôt
 de documentation ne contient aucune seconde implémentation.
 

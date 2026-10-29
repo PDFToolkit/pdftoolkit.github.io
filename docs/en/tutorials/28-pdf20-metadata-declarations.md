@@ -1,6 +1,6 @@
 # 28. XMP metadata, declarations and document parts
 
-The [complete script](https://github.com/PDFToolkit/pdf/blob/v0.11.0/examples/pdf20-metadata-declarations.php)
+The [complete script](https://github.com/PDFToolkit/pdf/blob/v0.12.1/examples/pdf20-metadata-declarations.php)
 produces a PDF 2.0 file with a bilingual title, an author's declaration, an
 embedded report and separate metadata for the document, the document-part hierarchy and
 one drawing sequence. The coloured rectangle uses black point compensation.
@@ -9,13 +9,13 @@ than explanatory text on the page.
 
 ## Run the example
 
-From a core **0.11.0** checkout with its dependencies installed:
+From a core **0.12.1** checkout with its dependencies installed:
 
 ```bash
 php examples/pdf20-metadata-declarations.php metadata.pdf
 ```
 
-The example supplies Courier through [explicit metrics](https://github.com/PDFToolkit/pdf/blob/v0.11.0/examples/fixtures/pdf20-courier-font.php): FirstChar/LastChar, ASCII widths and a FontDescriptor. PDF 2.0 no longer permits omitting these entries for the fourteen standard fonts. This construction does not embed a font program; profiles requiring embedding need an explicitly embedded font.
+The example supplies Courier through [explicit metrics](https://github.com/PDFToolkit/pdf/blob/v0.12.1/examples/fixtures/pdf20-courier-font.php): FirstChar/LastChar, ASCII widths and a FontDescriptor. PDF 2.0 no longer permits omitting these entries for the fourteen standard fonts. This construction does not embed a font program; profiles requiring embedding need an explicitly embedded font.
 
 
 PHP 8.3 or later is sufficient. This script uses native core objects and needs
@@ -149,11 +149,11 @@ manually constructs a raw XML stream remains responsible for its content; the
 graph validates its references and PDF type. This lesson is not a general
 validator for every ISO 32000-2 rule.
 
-Preserved sources: [PDF Declarations, pages 7–10](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/reference-documents/PDF-Declarations.pdf#page=7),
-[black point compensation, page 4](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/reference-documents/PDF20_AN001-BPC.pdf#page=4),
-[associated files, pages 7 and 12–13](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/reference-documents/PDF20_AN002-AF.pdf#page=7)
-and [metadata locations, pages 4–10](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/reference-documents/PDF20_AN003-ObjectMetadataLocations.pdf#page=4).
-Document parts are defined in [ISO 32000-2, physical pages 850–853](https://github.com/PDFToolkit/pdf/blob/v0.11.0/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf#page=850).
+Preserved sources: [PDF Declarations, pages 7–10](https://github.com/PDFToolkit/pdf/blob/v0.12.1/resources/reference-documents/PDF-Declarations.pdf#page=7),
+[black point compensation, page 4](https://github.com/PDFToolkit/pdf/blob/v0.12.1/resources/reference-documents/PDF20_AN001-BPC.pdf#page=4),
+[associated files, pages 7 and 12–13](https://github.com/PDFToolkit/pdf/blob/v0.12.1/resources/reference-documents/PDF20_AN002-AF.pdf#page=7)
+and [metadata locations, pages 4–10](https://github.com/PDFToolkit/pdf/blob/v0.12.1/resources/reference-documents/PDF20_AN003-ObjectMetadataLocations.pdf#page=4).
+Document parts are defined in [ISO 32000-2, physical pages 850–853](https://github.com/PDFToolkit/pdf/blob/v0.12.1/resources/reference-documents/ISO_32000-2_sponsored_EC3.pdf#page=850).
 The bundle comes from the [PDF Association's sponsored access](https://pdfa.org/sponsored-standards/).
 
 [Tutorial path](README.md) · [PDF 2.0 guide](../pdf-2-0.md)

@@ -7,14 +7,14 @@ content means and in which order to read it. The optional `pdftoolkit/pdf-to-htm
 module uses that second description to derive HTML according to **Deriving HTML
 from PDF 1.2**, the PDF Association publication retained with its source code.
 
-The [PDFToolkit/pdf-to-html repository](https://github.com/PDFToolkit/pdf-to-html/tree/v0.6.0)
+The [PDFToolkit/pdf-to-html repository](https://github.com/PDFToolkit/pdf-to-html/tree/v0.7.0)
 was created specifically to implement the rules in this
-[reference document](https://github.com/PDFToolkit/pdf-to-html/blob/v0.6.0/resources/reference-documents/Deriving_HTML_from_PDF_1-2.pdf).
-Version **0.6.0** distinguishes executable rules, security decisions,
+[reference document](https://github.com/PDFToolkit/pdf-to-html/blob/v0.7.0/resources/reference-documents/Deriving_HTML_from_PDF_1-2.pdf).
+Version **0.7.0** distinguishes executable rules, security decisions,
 browser adaptations and capabilities supplied by the application. The
-[requirements ledger](https://github.com/PDFToolkit/pdf-to-html/blob/v0.6.0/docs/requirements.md)
+[requirements ledger](https://github.com/PDFToolkit/pdf-to-html/blob/v0.7.0/docs/requirements.md)
 links the document's clauses to decisions and tests; the
-[coverage guide](https://github.com/PDFToolkit/pdf-to-html/blob/v0.6.0/docs/coverage.md)
+[coverage guide](https://github.com/PDFToolkit/pdf-to-html/blob/v0.7.0/docs/coverage.md)
 describes accepted inputs and independent evidence.
 
 This tutorial runs the real `examples/01-derive-tagged-pdf.php` example from the
@@ -31,11 +31,24 @@ explains shared classes, attribute precedence and the independent browser checks
 ## Install the optional module
 
 ```sh
-composer require "roukmoute/pdf:^0.11.0" "pdftoolkit/pdf-to-html:^0.6.0"
+composer require "roukmoute/pdf:^0.12.1" "pdftoolkit/pdf-to-html:^0.7.0"
 ```
 
 This installs the core and reader dependencies. Core-only applications acquire
 no HTML conversion dependency. PHP 8.3+ with DOM and mbstring is required.
+
+For JPEG, JPEG 2000 and JBIG2 images, Reader selects a compatible native decoder,
+then the optional PHP library when installed:
+
+```sh
+composer require "pdftoolkit/pdf-codecs:^0.1"
+```
+
+The [image guide](https://pdftoolkit.github.io/modules/to-html/image-codecs.html)
+explains PDF colour-space precedence, sample precision and opacity. Unsupported
+browser representations retain an explicit rendering diagnostic. The
+[interactive gallery](https://pdftoolkit.github.io/modules/to-html/demo/?sample=jpeg2000)
+includes real JPEG, JPEG 2000 and JBIG2 inputs converted by PHP in the browser.
 
 ## Supply the PDF and keep each processing step explicit
 
@@ -89,7 +102,7 @@ Strict reading rejects inconsistent inverse associations. Permissive reading
 reports them; it does not disable cycle checks or budgets. Encrypted PDFs require
 an explicit authentication capability, and the receiving HTML viewer must
 enforce verified permissions. The
-[policies guide](https://github.com/PDFToolkit/pdf-to-html/blob/v0.6.0/docs/policies.md)
+[policies guide](https://github.com/PDFToolkit/pdf-to-html/blob/v0.7.0/docs/policies.md)
 explains these objects and their responsibilities.
 
 ## Authenticate an encrypted input explicitly
@@ -117,11 +130,11 @@ bytes. Wrong credentials fail; they do not trigger fallback authentication.
 The authenticated source's effective user/owner mask becomes `data-pdf-perms`
 and a diagnostic. The receiving viewer must enforce it; HTML attributes are not
 access control. Reusing a converter does not reuse a previous document's rights.
-Public-key authentication requires `pdftoolkit/pdf-reader:^0.6.0`. Inject
+Public-key authentication requires `pdftoolkit/pdf-reader:^0.7.0`. Inject
 `PublicKeyAuthentication` to select Adobe.PubSec source authentication explicitly. The HTML adapter propagates its effective recipient
 mask through the same permission contract; keys, CMS decryption and permission
 byte order remain application choices. Signature trust remains outside this
-operation. The [authentication guide](https://github.com/PDFToolkit/pdf-to-html/blob/v0.6.0/docs/authentication.md)
+operation. The [authentication guide](https://github.com/PDFToolkit/pdf-to-html/blob/v0.7.0/docs/authentication.md)
 details the native path and the separate application-provider contract.
 
 ## Require the original source MAC
@@ -146,7 +159,7 @@ also accepts unprotected PDFs; `RequirePdfMac` rejects them, including files
 stripped of all integrity markers. Wrong credentials or a corrupt MAC do not
 trigger an unauthenticated fallback.
 
-[Example 04](https://github.com/PDFToolkit/pdf-to-html/blob/v0.6.0/examples/04-authenticate-source-mac.php)
+[Example 04](https://github.com/PDFToolkit/pdf-to-html/blob/v0.7.0/examples/04-authenticate-source-mac.php)
 uses the public `native-user` fixture credential explicitly and writes derived
 HTML/assets. That PDF MAC does not authenticate the new HTML: preserve ordinary
 HTML safety policy and usage permissions. The application still chooses its
@@ -162,7 +175,7 @@ the port alone does not prove its cryptography or certificate trust. See the
 
 ## Export a figure and supply the rendering engine
 
-[Example 02](https://github.com/PDFToolkit/pdf-to-html/blob/v0.6.0/examples/02-export-figure.php)
+[Example 02](https://github.com/PDFToolkit/pdf-to-html/blob/v0.7.0/examples/02-export-figure.php)
 reads a tagged PDF, finds a `Figure` and passes its `ContentGroup` to
 `GraphicPdfExporter`:
 
@@ -181,7 +194,7 @@ A Form XObject can also be referenced directly by an `OBJR`, without a page
 coordinates, including a sheared matrix, and its transparency `/Group`. Its
 `/Matrix` is applied only once. An explicit viewport uses page coordinates;
 it does not receive the Form matrix a second time. The [independent pixel
-oracle](https://github.com/PDFToolkit/pdf-to-html/blob/v0.6.0/tools/validate_graphics_context.py)
+oracle](https://github.com/PDFToolkit/pdf-to-html/blob/v0.7.0/tools/validate_graphics_context.py)
 compares Poppler renderings to verify clipping and transparency, beyond the
 mere presence of these entries in the exported PDF.
 
@@ -210,12 +223,12 @@ $result = $converter->convert(new FileBytes($pdfBytes), 'chart.pdf');
 rendering viewport's logical dimensions independently of raster resolution. The
 requested visual profile fails explicitly when its engine is missing or declines
 the group. Applications choose installation, isolation and execution limits.
-See the [graphics guide](https://github.com/PDFToolkit/pdf-to-html/blob/v0.6.0/docs/graphics.md)
+See the [graphics guide](https://github.com/PDFToolkit/pdf-to-html/blob/v0.7.0/docs/graphics.md)
 for retained `GraphicProgram` objects and Poppler pixel checks.
 
 ## Reset a field group without executing PDF scripts
 
-[Example 03](https://github.com/PDFToolkit/pdf-to-html/blob/v0.6.0/examples/03-safe-form-reset.php)
+[Example 03](https://github.com/PDFToolkit/pdf-to-html/blob/v0.7.0/examples/03-safe-form-reset.php)
 constructs an object source model and produces a standalone HTML form:
 
 ```sh
@@ -271,9 +284,9 @@ Presentation and Content MathML. Preserved Content/elementary markup does not
 guarantee native browser rendering; extended vocabulary produces a diagnostic,
 and the package supplies no rendering polyfill or mathematical evaluator.
 
-See the [module architecture](https://github.com/PDFToolkit/pdf-to-html/blob/v0.6.0/docs/architecture.md),
-[coverage](https://github.com/PDFToolkit/pdf-to-html/blob/v0.6.0/docs/coverage.md) and
-[security guide](https://github.com/PDFToolkit/pdf-to-html/blob/v0.6.0/docs/security.md)
+See the [module architecture](https://github.com/PDFToolkit/pdf-to-html/blob/v0.7.0/docs/architecture.md),
+[coverage](https://github.com/PDFToolkit/pdf-to-html/blob/v0.7.0/docs/coverage.md) and
+[security guide](https://github.com/PDFToolkit/pdf-to-html/blob/v0.7.0/docs/security.md)
 for the model/file/runtime boundaries. Semantic HTML does not automatically
 certify accessibility or PDF/UA.
 
@@ -281,7 +294,7 @@ certify accessibility or PDF/UA.
 
 The [signature guide](https://pdftoolkit.github.io/modules/to-html/signatures.html)
 explains the source-bound `SignatureValidationProvider` port and its
-`SignatureOutputValidation` adapter. [Example 05](https://github.com/PDFToolkit/pdf-to-html/blob/v0.6.0/examples/05-verify-pdf-signature.php)
+`SignatureOutputValidation` adapter. [Example 05](https://github.com/PDFToolkit/pdf-to-html/blob/v0.7.0/examples/05-verify-pdf-signature.php)
 requires three explicit paths and accepts one DER or PEM certificate:
 
 ```sh

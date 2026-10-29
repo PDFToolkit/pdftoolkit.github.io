@@ -15,7 +15,7 @@ réelle et son code commenté sont présentés après les explications.
 ## Exécuter l'exemple
 
 Dans une application indépendante, installer le lecteur depuis Packagist avec
-le core 0.5, puis exécuter le script distribué avec le module :
+le core 0.12.1, puis exécuter le script distribué avec le module :
 
 ```sh
 composer require "roukmoute/pdf:^0.12" "pdftoolkit/pdf-reader:^0.7.0"
