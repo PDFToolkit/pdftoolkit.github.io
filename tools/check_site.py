@@ -452,12 +452,15 @@ def check(root):
     html_package = packages.get('pdftoolkit/pdf-to-html', {})
     expected_reference = html_package.get('repository', '') + '/blob/' + html_package.get('revision', '') + '/resources/reference-documents/Deriving_HTML_from_PDF_1-2.pdf'
     expected_metadata = html_package.get('repository', '') + '/blob/' + html_package.get('revision', '') + '/resources/reference.json'
+    official_reference = 'https://pdfa.org/download-area/specifications/Deriving_HTML_from_PDF_1-2.pdf'
     if html_reference.get('sourceUrl') != expected_reference or html_reference.get('metadataUrl') != expected_metadata or html_reference.get('physicalPdfPages') != 74 or html_reference.get('sha256') != '272669b92b073f74ae8ccd75ad35c94f0ee4f907fd8f9ded41fe3d1bc41f0f7d' or html_reference.get('bytes') != 900894 or html_reference.get('version') != '1.2' or html_reference.get('license') != 'CC-BY-4.0':
         errors.append('The HTML derivation reference must retain its supplied identity and released provenance')
     for language in ['en', 'fr']:
         reference_page = localized('modules/to-html/reference.html', language)
         if reference_page not in documents or expected_reference not in documents[reference_page].links or expected_metadata not in documents[reference_page].links:
             errors.append('Missing retained HTML derivation reference links: ' + str(reference_page))
+        if reference_page not in documents or official_reference not in documents[reference_page].links:
+            errors.append('Missing direct publisher PDF link: ' + str(reference_page))
     for language in ['en', 'fr']:
         if localized('modules/core/index.html', language) not in documents:
             errors.append('Missing localized core package hub: ' + language)

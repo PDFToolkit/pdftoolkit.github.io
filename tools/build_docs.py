@@ -117,6 +117,12 @@ def validate_html_module(args, html: Path, work: Path, pdfs: Path) -> None:
     run([args.node, html / "tools/validate_codec_images.cjs", work / "html-codec-images",
          work / "html-codec-images-browsers"], html,
         env={**os.environ, "NODE_PATH": str(args.demo_root.absolute() / "node_modules")})
+    for name, exporter in [('associated_styles', 'export-associated-styles.php'), ('mathml', 'export-mathml-cases.php')]:
+        cases = work / (name + '-cases.json')
+        run([args.php, html / 'tests' / exporter], html, cases)
+        run([args.node, html / 'tools' / ('validate_' + name + '.cjs'), cases,
+             work / (name + '-browsers')], html,
+            env={**os.environ, "NODE_PATH": str(args.demo_root.absolute() / "node_modules")})
     runtime = work / "pdf-html-runtime.js"
     run([args.php, html / "tests/Script/runtime-fixture.php"], html, runtime)
     run([args.node, "--check", runtime], html)
