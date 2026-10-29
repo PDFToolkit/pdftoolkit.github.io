@@ -362,7 +362,7 @@ function lockedDependency(string $consumer, string $name): array
 }
 
 /** @return array<string, array<string, mixed>> */
-function documentationPackages(string $root, string $sourcesPath, string $opentypeRoot, string $pdfToHtmlRoot, string $readerConsumer, string $codecsRoot): array
+function documentationPackages(string $root, string $sourcesPath, string $opentypeRoot, string $pdfToHtmlRoot, string $readerConsumer, string $codecsRoot, string $imagesRoot): array
 {
     $root = realpath($root) ?: throw new \RuntimeException('Cannot resolve the core source tree.');
     $manifestBytes = file_get_contents($sourcesPath);
@@ -411,7 +411,7 @@ function documentationPackages(string $root, string $sourcesPath, string $openty
     foreach ([...$lock['packages'], ...$lock['packages-dev']] as $package) {
         $lockedPackages[$package['name']] = $package;
     }
-    foreach (['pdf-fonts', 'pdf-images'] as $module) {
+    foreach (['pdf-fonts'] as $module) {
         $name = 'pdftoolkit/' . $module;
         if (!InstalledVersions::isInstalled($name)) {
             throw new \RuntimeException('A documented optional package is not installed: ' . $name);
@@ -463,6 +463,41 @@ function documentationPackages(string $root, string $sourcesPath, string $openty
         require $inputRoot . '/vendor/autoload.php';
         $packages[$name] = ['root' => $inputRoot, ...$selectedPackage];
     }
+    $imagesRoot = realpath($imagesRoot) ?: throw new \RuntimeException('Cannot resolve the Images source tree.');
+    $images = $selected['pdftoolkit/pdf-images'];
+    foreach (['HEAD', 'v' . $images['version'] . '^{commit}'] as $reference) {
+        $process = proc_open(['git', '-C', $imagesRoot, 'rev-parse', $reference], [1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes);
+        if (!is_resource($process)) {
+            throw new \RuntimeException('Cannot verify the Images checkout.');
+        }
+        $revision = trim(stream_get_contents($pipes[1]));
+        $error = stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+        if (proc_close($process) !== 0 || $revision !== $images['revision']) {
+            throw new \RuntimeException('Images checkout or tag differs from the released-source manifest. ' . trim($error));
+        }
+    }
+    $process = proc_open(['git', '-C', $imagesRoot, 'status', '--porcelain'], [1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes);
+    if (!is_resource($process)) {
+        throw new \RuntimeException('Cannot verify the Images worktree.');
+    }
+    $status = trim(stream_get_contents($pipes[1]));
+    $error = stream_get_contents($pipes[2]);
+    fclose($pipes[1]);
+    fclose($pipes[2]);
+    if (proc_close($process) !== 0 || $status !== '') {
+        throw new \RuntimeException('Images checkout has modified release inputs. ' . trim($error));
+    }
+    $composer = json_decode(file_get_contents($imagesRoot . '/composer.json') ?: '{}', true, flags: JSON_THROW_ON_ERROR);
+    if (($composer['name'] ?? null) !== 'pdftoolkit/pdf-images') {
+        throw new \RuntimeException('Incorrect Images package identity.');
+    }
+    lockedDependency($imagesRoot, 'roukmoute/pdf');
+    // Reflection uses the selected Images namespace and the documented core. Its oracles
+    // run separately with Images' own published lock; do not load a second core here.
+    (new SelectedSourceAutoloader('PDF\\Images\\', $imagesRoot . '/src'))->register();
+    $packages['pdftoolkit/pdf-images'] = ['root' => $imagesRoot, ...$images];
     $pdfToHtmlRoot = realpath($pdfToHtmlRoot) ?: throw new \RuntimeException('Cannot resolve the PDF-to-HTML source tree.');
     $html = $selected['pdftoolkit/pdf-to-html'];
     foreach (['HEAD', 'v' . $html['version'] . '^{commit}'] as $reference) {
@@ -502,23 +537,7 @@ function documentationPackages(string $root, string $sourcesPath, string $openty
     $loader = new \Composer\Autoload\ClassLoader();
     $loader->addPsr4('PDF\\Html\\', $pdfToHtmlRoot . '/src');
     $loader->register(true);
-    // Guard the entire namespace: a missing selected class must never fall back to an older vendor.
-    foreach ([...get_declared_classes(), ...get_declared_interfaces(), ...get_declared_traits()] as $name) {
-        if (str_starts_with($name, 'PDF\\Reading\\')) {
-            throw new \RuntimeException('Reader declarations were loaded before source selection.');
-        }
-    }
-    spl_autoload_register(static function (string $name) use ($readerRoot): void {
-        $prefix = 'PDF\\Reading\\';
-        if (!str_starts_with($name, $prefix)) {
-            return;
-        }
-        $path = $readerRoot . '/src/' . str_replace('\\', '/', substr($name, strlen($prefix))) . '.php';
-        if (!is_file($path)) {
-            throw new \RuntimeException('Declaration missing from the selected Reader: ' . $name);
-        }
-        require $path;
-    }, true, true);
+    (new SelectedSourceAutoloader('PDF\\Reading\\', $readerRoot . '/src'))->register();
     $packages['pdftoolkit/pdf-to-html'] = ['root' => $pdfToHtmlRoot, ...$html];
     $packages['pdftoolkit/pdf-reader'] = ['root' => $readerRoot, ...$selected['pdftoolkit/pdf-reader']];
     return $packages;
@@ -548,15 +567,16 @@ function sourceLocation(string $file, array $packages): array
 }
 
 $arguments = $_SERVER['argv'] ?? [];
-if (!is_array($arguments) || count($arguments) !== 8 || !isset($arguments[1], $arguments[2], $arguments[3], $arguments[4], $arguments[5], $arguments[6], $arguments[7]) || !is_string($arguments[1]) || $arguments[1] === '') {
-    fwrite(STDERR, "Usage: php tools/export_api.php <output.json> <source-root> <sources.json> <opentype-root> <pdf-to-html-root> <reader-consumer-root> <codecs-root>\n");
+if (!is_array($arguments) || count($arguments) !== 9 || !isset($arguments[1], $arguments[2], $arguments[3], $arguments[4], $arguments[5], $arguments[6], $arguments[7], $arguments[8]) || !is_string($arguments[1]) || $arguments[1] === '') {
+    fwrite(STDERR, "Usage: php tools/export_api.php <output.json> <source-root> <sources.json> <opentype-root> <pdf-to-html-root> <reader-consumer-root> <codecs-root> <images-root>\n");
     exit(1);
 }
 
 try {
+    require __DIR__ . '/SelectedSourceAutoloader.php';
     $root = realpath($arguments[2]) ?: throw new \RuntimeException('Cannot resolve the core source tree.');
     require $root . '/vendor/autoload.php';
-    $packages = documentationPackages($root, $arguments[3], $arguments[4], $arguments[5], $arguments[6], $arguments[7]);
+    $packages = documentationPackages($root, $arguments[3], $arguments[4], $arguments[5], $arguments[6], $arguments[7], $arguments[8]);
     $files = [];
     foreach ($packages as $package) {
         $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($package['root'] . '/src', \FilesystemIterator::SKIP_DOTS));

@@ -22,7 +22,7 @@ class HtmlDerivationSourcesTest(unittest.TestCase):
 
     def test_html_checkout_and_its_reader_are_selected_without_changing_core_lock(self):
         with patch('check_sources.git', side_effect=self.git), redirect_stdout(io.StringIO()):
-            packages = check(self.core, self.manifest, opentype_root=self.opentype, pdf_to_html_root=self.html, codecs_root=self.codecs)
+            packages = check(self.core, self.manifest, opentype_root=self.opentype, pdf_to_html_root=self.html, codecs_root=self.codecs, images_root=self.images)
         self.assertIn('pdftoolkit/pdf-to-html', packages)
         self.assertFalse((self.core / 'vendor/pdftoolkit/pdf-to-html').exists())
 
@@ -31,7 +31,7 @@ class HtmlDerivationSourcesTest(unittest.TestCase):
             return 'f' * 40 if root == self.html else self.git(*arguments, root=root)
         with patch('check_sources.git', side_effect=wrong_git):
             with self.assertRaisesRegex(ValueError, 'PDF-to-HTML checkout differs'):
-                check(self.core, self.manifest, opentype_root=self.opentype, pdf_to_html_root=self.html, codecs_root=self.codecs)
+                check(self.core, self.manifest, opentype_root=self.opentype, pdf_to_html_root=self.html, codecs_root=self.codecs, images_root=self.images)
 
     def test_bilingual_html_guides_and_group(self):
         owner = 'pdftoolkit/pdf-to-html'

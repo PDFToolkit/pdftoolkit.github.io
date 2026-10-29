@@ -10,8 +10,10 @@ import shutil
 import subprocess
 import sys
 
-from check_sources import check, html_dependencies, select_reader
+from check_sources import check, html_dependencies, select_reader, execution_dependencies
 from html_demo import DemoBuild, DemoSource
+from build_site import CORE_PACKAGE, MODULES, guide_pages
+from guide_headings import translated_anchors
 
 
 def executable_path(value: str | Path | None) -> str | None:
@@ -56,11 +58,9 @@ def prepare_reader_oracle_autoload(reader: Path, consumer: Path) -> None:
     bridge.write_text(contents, encoding="utf-8", newline="\n")
 
 
-def validate_image_and_font_modules(args, source: Path, opentype: Path, codecs: Path, work: Path) -> None:
-    images = source / 'vendor/pdftoolkit/pdf-images'
+def validate_image_and_font_modules(args, source: Path, opentype: Path, codecs: Path, images: Path, work: Path) -> None:
     fonts = source / 'vendor/pdftoolkit/pdf-fonts'
-    for package in (images, fonts):
-        prepare_reader_oracle_autoload(package, source)
+    prepare_reader_oracle_autoload(fonts, source)
     for tool in ('validate_png.py', 'validate_png_color.py', 'validate_jpeg.py'):
         command = [sys.executable, 'tools/' + tool, '--php', args.php,
                    '--qpdf', args.qpdf, '--pdftoppm', args.image_pdftoppm or args.pdftoppm,
@@ -152,17 +152,28 @@ def build(args) -> None:
     opentype = args.opentype_root.resolve()
     html = args.pdf_to_html_root.resolve()
     codecs = args.codecs_root.resolve()
-    packages = check(source, manifest, args.remote, opentype, html, codecs)
+    images = args.images_root.resolve()
+    packages = check(source, manifest, args.remote, opentype, html, codecs, images)
     reader_consumer = select_reader(source, html, packages)
     reader = reader_consumer / "vendor/pdftoolkit/pdf-reader"
+    guide_roots = {name: source / 'vendor' / name for name in MODULES}
+    guide_roots.update({'documentation': content, CORE_PACKAGE: source,
+                        'pdftoolkit/pdf-reader': reader, 'pdftoolkit/pdf-images': images,
+                        'pdftoolkit/opentype': opentype, 'pdftoolkit/pdf-codecs': codecs,
+                        'pdftoolkit/pdf-to-html': html})
+    anchors = translated_anchors(guide_pages(), guide_roots)
+    (work / 'guide-headings-validation.json').write_text(json.dumps({
+        'status': 'pass', 'pairs': len(anchors), 'routes': sorted(anchors),
+    }, indent=2) + '\n', encoding='utf-8')
     (work / "validation-sources.json").write_text(json.dumps({
+        "executionDependencies": execution_dependencies(source, images, html, packages),
         "documentedReader": packages["pdftoolkit/pdf-reader"],
         "readerConsumer": str(reader_consumer),
         "readerCore": packages["roukmoute/pdf"] if reader_consumer == source else html_dependencies(html)[0],
         "htmlPackage": packages["pdftoolkit/pdf-to-html"],
         "htmlValidationDependencies": html_dependencies(html),
     }, indent=2) + "\n", encoding="utf-8")
-    run([sys.executable, "-m", "unittest", "discover", "-s", content / "tests", "-p", "test_*.py"], content)
+    run([sys.executable, "-m", "unittest", "discover", "-s", content / "tests", "-p", "test_*.py"], content, env={**os.environ, "PDFTOOLKIT_TEST_PHP": args.php})
     for command in (
         [sys.executable, "tools/generate_specification.py", "--check"],
         [sys.executable, "tools/generate_adobe_supplement.py", "--check"],
@@ -197,7 +208,7 @@ def build(args) -> None:
     run([sys.executable, "tools/validate_image_codecs.py", "--php", args.php,
          "--qpdf", args.qpdf, "--require-native",
          "--report", work / "reader-image-codecs-validation.json"], reader)
-    validate_image_and_font_modules(args, source, opentype, codecs, work)
+    validate_image_and_font_modules(args, source, opentype, codecs, images, work)
     validate_html_module(args, html, work, pdfs)
     demo = args.demo_root.resolve()
     demo_build = work / 'html-demo'
@@ -206,7 +217,7 @@ def build(args) -> None:
     run([sys.executable, "tools/validate_demo.py", demo_build, "--report", work / "html-demo-validation.json",
          "--pdftoppm", args.pdftoppm, "--require-release"], demo)
     api = work / "api.json"
-    run([args.php, content / "tools/export_api.php", api, source, manifest, opentype, html, reader_consumer, codecs], source)
+    run([args.php, content / "tools/export_api.php", api, source, manifest, opentype, html, reader_consumer, codecs, images], source)
     for example in sorted((source / "examples").glob("*.php")):
         output = pdfs / (example.stem + ".pdf")
         run([args.php, example, output, *([args.openssl] if example.stem == 'pdf20-timestamp-dss' else [])], source)
@@ -256,7 +267,7 @@ def build(args) -> None:
     run([sys.executable, 'tools/validate_calculator_functions.py', '--php', args.php,
          '--ghostscript', args.ghostscript, '--report', work / 'calculator-functions-validation.json'], source)
     run([sys.executable, content / "tools/build_site.py", "--content-root", content, "--source-root", source,
-         "--opentype-root", opentype, "--codecs-root", codecs, "--pdf-to-html-root", html, "--demo-root", demo, "--demo-build", demo_build, "--sources", manifest, "--api", api, "--pdf-dir", pdfs, "--pdf-preview-dir", previews,
+         "--opentype-root", opentype, "--codecs-root", codecs, "--images-root", images, "--pdf-to-html-root", html, "--demo-root", demo, "--demo-build", demo_build, "--sources", manifest, "--api", api, "--pdf-dir", pdfs, "--pdf-preview-dir", previews,
          "--output", args.output.resolve(), "--base-path", "/", "--docs-revision", args.docs_revision], content)
     run([sys.executable, content / "tools/check_site.py", args.output.resolve()], content)
 
@@ -266,6 +277,7 @@ if __name__ == "__main__":
     parser.add_argument("--content-root", type=Path, default=Path(__file__).resolve().parents[1])
     parser.add_argument("--source-root", type=Path, required=True)
     parser.add_argument("--opentype-root", type=Path, required=True, help="Independent released OpenType checkout")
+    parser.add_argument("--images-root", type=Path, required=True, help="Separate released Images checkout and its own locked core")
     parser.add_argument("--codecs-root", type=Path, required=True, help="Independent released image codecs checkout")
     parser.add_argument("--pdf-to-html-root", type=Path, required=True, help="Released PDF-to-HTML checkout and its locked reader")
     parser.add_argument("--demo-root", type=Path, required=True, help="Separately released browser demo checkout")

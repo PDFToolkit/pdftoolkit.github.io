@@ -19,7 +19,7 @@ class CodecSourcesTest(unittest.TestCase):
     def verify(self, codecs=True):
         with patch('check_sources.git', side_effect=self.git), redirect_stdout(io.StringIO()):
             return check(self.core, self.manifest, opentype_root=self.opentype,
-                         pdf_to_html_root=self.html, codecs_root=self.codecs if codecs else None)
+                         pdf_to_html_root=self.html, codecs_root=self.codecs if codecs else None, images_root=self.images)
 
     def test_independent_codec_checkout_does_not_require_a_core_dependency(self):
         self.verify()
@@ -36,7 +36,7 @@ class CodecSourcesTest(unittest.TestCase):
             with self.subTest(reference=reference), patch('check_sources.git', side_effect=wrong_git), redirect_stdout(io.StringIO()):
                 with self.assertRaisesRegex(ValueError, 'Codecs (checkout|tag) differs'):
                     check(self.core, self.manifest, opentype_root=self.opentype,
-                          pdf_to_html_root=self.html, codecs_root=self.codecs)
+                          pdf_to_html_root=self.html, codecs_root=self.codecs, images_root=self.images)
 
     def test_reader_dependency_is_rejected(self):
         path = self.codecs / 'composer.json'

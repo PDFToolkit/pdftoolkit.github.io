@@ -14,6 +14,16 @@ resources and Adobe PDFs remain in their package repositories. The build
 reads them from a full core checkout prepared under `_sources/pdf`, with
 PDF modules installed by Composer from their published distributions. The OpenType and Codecs packages come from separate checkouts under `_sources/opentype` and `_sources/pdf-codecs`, at the published commits and tags selected by the same manifest. Their independent installations change neither the core nor its lock.
 
+The documented Images module also comes from a separate `_sources/pdf-images`
+checkout, passed as `--images-root`. Its guides and API declarations are read from
+the exact published tag; its `PDF\Images\` namespace loads from that checkout
+without falling back to an older version installed in the core. Its oracles use
+its own `composer.lock` and autoloader. Core examples keep their published
+runtime dependencies even when their Images version differs from the documented
+release. `executionDependencies` in `site-manifest.json` and
+`validation-sources.json` distinguishes `coreExamples`, `imagesValidation` and
+`htmlValidation`, with the versions and commits actually locked for each run.
+
 The `resources/sources.json` manifest uses `schemaVersion: 1`. Its `packages`
 list describes every package with `name`, `repository`, `version`, `revision`
 and `optional`. This file is authoritative for documented versions and
@@ -24,7 +34,7 @@ The core checkout must retain original PDFs, `resources/`, `examples/`,
 `composer.lock` and `vendor/`. A Composer archive does not supply all Adobe
 references or all required fixtures. Install development dependencies from
 this checkout, preserving its lock; the exporter verifies that installed
-module versions and revisions match the manifest. The selected core uses
+documented module versions and revisions match the manifest. The selected core uses
 Packagist to resolve modules; an application using these libraries installs
 them with the [package guide](../packages.md) commands without building
 the site.
@@ -36,7 +46,7 @@ paths while retaining the existing public reference-download URLs. Test fixtures
 and generated examples remain beside their owning tests and scripts.
 
 `tools/export_api.php` loads the prepared core's autoloader and discovers
-classes, interfaces, enums and traits in its `src/`, installed PDF modules and the OpenType and Codecs checkouts. It also loads their own autoloaders.
+classes, interfaces, enums and traits in its `src/`, installed PDF modules and the Images, OpenType and Codecs checkouts. It loads the two independent OpenType and Codecs packages’ own autoloaders; Images and Reader use loaders restricted to their selected source trees, rejecting declarations already loaded from another tree.
 It exports their signatures, properties, constants and package provenance.
 It reads default-parameter expressions without instantiating the objects
 they describe. Source links use manifest commits, including for the core.
@@ -189,6 +199,11 @@ COMPOSER_ROOT_VERSION="$core_alias" composer install --working-dir=_sources/pdf 
 git clone "$opentype_repository" _sources/opentype
 git -C _sources/opentype checkout --detach "$opentype_revision"
 composer install --working-dir=_sources/opentype --no-interaction --prefer-dist
+images_repository=$(python -c "import json; print(next(p for p in json.load(open('resources/sources.json'))['packages'] if p['name']=='pdftoolkit/pdf-images')['repository'])")
+images_revision=$(python -c "import json; print(next(p for p in json.load(open('resources/sources.json'))['packages'] if p['name']=='pdftoolkit/pdf-images')['revision'])")
+git clone "$images_repository" _sources/pdf-images
+git -C _sources/pdf-images checkout --detach "$images_revision"
+composer install --working-dir=_sources/pdf-images --no-interaction --prefer-dist
 codecs_repository=$(python -c "import json; print(next(p for p in json.load(open('resources/sources.json'))['packages'] if p['name']=='pdftoolkit/pdf-codecs')['repository'])")
 codecs_revision=$(python -c "import json; print(next(p for p in json.load(open('resources/sources.json'))['packages'] if p['name']=='pdftoolkit/pdf-codecs')['revision'])")
 git clone "$codecs_repository" _sources/pdf-codecs
@@ -212,15 +227,15 @@ python -m pip install --require-hashes -r _sources/pdf/tools/public-key-validati
 python -m pip install --require-hashes -r _sources/pdf-to-html/tools/validation-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf-to-html/tools/source-integrity-validation-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf-to-html-demo/tools/validation-requirements.txt
-python -m pip install --require-hashes -r _sources/pdf/vendor/pdftoolkit/pdf-images/tools/validation-requirements.txt
+python -m pip install --require-hashes -r _sources/pdf-images/tools/validation-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf/vendor/pdftoolkit/pdf-fonts/tools/validation-requirements.txt
 python -m pip install --require-hashes -r _sources/opentype/tools/validation-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf-codecs/tools/jpeg-validation-requirements.txt
 reader_consumer=$(python tools/check_sources.py --source-root _sources/pdf --pdf-to-html-root _sources/pdf-to-html --reader-consumer)
 python -m pip install --require-hashes -r "$reader_consumer/vendor/pdftoolkit/pdf-reader/tools/source-mac-validation-requirements.txt"
 python -m pip check
-python _sources/pdf/vendor/pdftoolkit/pdf-images/tools/build_poppler.py --output _build/poppler
-python tools/build_docs.py --source-root _sources/pdf --opentype-root _sources/opentype --codecs-root _sources/pdf-codecs --pdf-to-html-root _sources/pdf-to-html --demo-root _sources/pdf-to-html-demo --docs-revision "$(git rev-parse HEAD)" --image-pdftoppm _build/poppler/build/utils/pdftoppm --remote
+python _sources/pdf-images/tools/build_poppler.py --output _build/poppler
+python tools/build_docs.py --source-root _sources/pdf --opentype-root _sources/opentype --codecs-root _sources/pdf-codecs --images-root _sources/pdf-images --pdf-to-html-root _sources/pdf-to-html --demo-root _sources/pdf-to-html-demo --docs-revision "$(git rev-parse HEAD)" --image-pdftoppm _build/poppler/build/utils/pdftoppm --remote
 ```
 
 On PowerShell:
@@ -236,6 +251,10 @@ composer install --working-dir=_sources/pdf --no-interaction --prefer-dist
 git clone $opentypeSource.repository _sources/opentype
 git -C _sources/opentype checkout --detach $opentypeSource.revision
 composer install --working-dir=_sources/opentype --no-interaction --prefer-dist
+$imagesSource = $sourceManifest.packages | Where-Object name -eq 'pdftoolkit/pdf-images'
+git clone $imagesSource.repository _sources/pdf-images
+git -C _sources/pdf-images checkout --detach $imagesSource.revision
+composer install --working-dir=_sources/pdf-images --no-interaction --prefer-dist
 $codecsSource = $sourceManifest.packages | Where-Object name -eq 'pdftoolkit/pdf-codecs'
 git clone $codecsSource.repository _sources/pdf-codecs
 git -C _sources/pdf-codecs checkout --detach $codecsSource.revision
@@ -256,17 +275,22 @@ python -m pip install --require-hashes -r _sources/pdf/tools/public-key-validati
 python -m pip install --require-hashes -r _sources/pdf-to-html/tools/validation-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf-to-html/tools/source-integrity-validation-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf-to-html-demo/tools/validation-requirements.txt
-python -m pip install --require-hashes -r _sources/pdf/vendor/pdftoolkit/pdf-images/tools/validation-requirements.txt
+python -m pip install --require-hashes -r _sources/pdf-images/tools/validation-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf/vendor/pdftoolkit/pdf-fonts/tools/validation-requirements.txt
 python -m pip install --require-hashes -r _sources/opentype/tools/validation-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf-codecs/tools/jpeg-validation-requirements.txt
 $readerConsumer = python tools/check_sources.py --source-root _sources/pdf --pdf-to-html-root _sources/pdf-to-html --reader-consumer
 python -m pip install --require-hashes -r "$readerConsumer/vendor/pdftoolkit/pdf-reader/tools/source-mac-validation-requirements.txt"
 python -m pip check
-python _sources/pdf/vendor/pdftoolkit/pdf-images/tools/build_poppler.py --output _build/poppler
+python _sources/pdf-images/tools/build_poppler.py --output _build/poppler
 $docsRevision = git rev-parse HEAD
-python tools/build_docs.py --source-root _sources/pdf --opentype-root _sources/opentype --codecs-root _sources/pdf-codecs --pdf-to-html-root _sources/pdf-to-html --demo-root _sources/pdf-to-html-demo --docs-revision $docsRevision --image-pdftoppm _build/poppler/build/utils/pdftoppm --remote
+python tools/build_docs.py --source-root _sources/pdf --opentype-root _sources/opentype --codecs-root _sources/pdf-codecs --images-root _sources/pdf-images --pdf-to-html-root _sources/pdf-to-html --demo-root _sources/pdf-to-html-demo --docs-revision $docsRevision --image-pdftoppm _build/poppler/build/utils/pdftoppm --remote
 ```
+
+The preflight compares every FR/EN heading level in the inventory that will be
+rendered, before expensive oracles. A missing translation or different structure
+blocks the build; `guide-headings-validation.json` records the checked routes.
+Rendering reuses the same contract for translated anchors.
 
 `tools/build_docs.py` verifies published commits and tags, retained sources
 and normative generations. It exports the API, executes all examples,
@@ -280,8 +304,8 @@ To rebuild only the rendering from already-validated inputs:
 
 ```sh
 reader_consumer=$(python tools/check_sources.py --source-root _sources/pdf --pdf-to-html-root _sources/pdf-to-html --reader-consumer)
-php tools/export_api.php _build/api.json _sources/pdf resources/sources.json _sources/opentype _sources/pdf-to-html "$reader_consumer" _sources/pdf-codecs
-python tools/build_site.py --content-root . --source-root _sources/pdf --opentype-root _sources/opentype --codecs-root _sources/pdf-codecs --pdf-to-html-root _sources/pdf-to-html --demo-root _sources/pdf-to-html-demo --demo-build _build/html-demo --sources resources/sources.json --docs-revision "$(git rev-parse HEAD)" --api _build/api.json --pdf-dir _build/pdfs --pdf-preview-dir _build/pdf-pages --output _site --base-path /
+php tools/export_api.php _build/api.json _sources/pdf resources/sources.json _sources/opentype _sources/pdf-to-html "$reader_consumer" _sources/pdf-codecs _sources/pdf-images
+python tools/build_site.py --content-root . --source-root _sources/pdf --opentype-root _sources/opentype --codecs-root _sources/pdf-codecs --images-root _sources/pdf-images --pdf-to-html-root _sources/pdf-to-html --demo-root _sources/pdf-to-html-demo --demo-build _build/html-demo --sources resources/sources.json --docs-revision "$(git rev-parse HEAD)" --api _build/api.json --pdf-dir _build/pdfs --pdf-preview-dir _build/pdf-pages --output _site --base-path /
 python tools/check_site.py _site
 ```
 

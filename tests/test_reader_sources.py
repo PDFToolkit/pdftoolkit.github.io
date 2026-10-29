@@ -35,7 +35,7 @@ class ReaderSourcesTest(unittest.TestCase):
 
     def verify(self):
         with patch("check_sources.git", side_effect=self.git), redirect_stdout(io.StringIO()):
-            return check(self.core, self.manifest, opentype_root=self.opentype, pdf_to_html_root=self.html, codecs_root=self.codecs)
+            return check(self.core, self.manifest, opentype_root=self.opentype, pdf_to_html_root=self.html, codecs_root=self.codecs, images_root=self.images)
 
     def test_core_preferred_when_both_consumers_exactly_match(self):
         self.verify()

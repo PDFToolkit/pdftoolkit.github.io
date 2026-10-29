@@ -15,7 +15,8 @@ import subprocess
 from urllib.parse import quote, unquote, urlsplit
 
 import markdown
-from check_sources import select_reader
+from check_sources import select_reader, execution_dependencies
+from guide_headings import translated_anchors
 from html_demo import DemoGallery, DemoSource
 from localization import LANGUAGES, ENGLISH_ROUTES, canonical_source, localized_source, route_for, translate, translate_interface, ISO2_DESCRIPTIONS_FR, iso2_description
 
@@ -239,8 +240,19 @@ def group_for(component: dict) -> str:
     return 'document'
 
 
+def guide_pages() -> list[tuple[str, str, str, str, str]]:
+    """The same published guide inventory is used before oracles and during rendering."""
+    pages = [(CORE_PACKAGE if source in {'SECURITY.md', 'CHANGELOG.md', 'docs/migration-0.12.md'} else 'documentation', source, route, title, category) for source, route, title, category in GUIDES]
+    for name, (slug, title, guides) in MODULES.items():
+        for source, page_slug, page_title in [('README.md', 'index', title), *guides, ('SECURITY.md', 'signalements', 'Signaler une vulnérabilité'), ('CHANGELOG.md', 'versions', 'Versions et changements')]:
+            pages.append((name, source, f'modules/{slug}/{page_slug}.html', page_title, title))
+    for source, slug, title, _, _ in LESSONS:
+        pages.append(('documentation', f'docs/tutorials/{source}.md', f'tutorials/{slug}.html', title, 'Tutoriels'))
+    return pages
+
+
 class Site:
-    def __init__(self, content_root: Path, source_root: Path, output: Path, api: Path, pdfs: Path, pdf_previews: Path, base: str, docs_revision: str, sources: Path, opentype_root: Path | None = None, pdf_to_html_root: Path | None = None, demo_root: Path | None = None, demo_build: Path | None = None, codecs_root: Path | None = None):
+    def __init__(self, content_root: Path, source_root: Path, output: Path, api: Path, pdfs: Path, pdf_previews: Path, base: str, docs_revision: str, sources: Path, opentype_root: Path | None = None, pdf_to_html_root: Path | None = None, demo_root: Path | None = None, demo_build: Path | None = None, codecs_root: Path | None = None, images_root: Path | None = None):
         self.root, self.content_root, self.output, self.pdfs = source_root, content_root, output, pdfs
         root = source_root
         self.pdf_previews = pdf_previews
@@ -266,7 +278,7 @@ class Site:
         locked = json.loads((root / 'composer.lock').read_text(encoding='utf-8'))
         locked_packages = {item['name']: item for item in locked['packages'] + locked['packages-dev']}
         for name in MODULES:
-            if name in {"pdftoolkit/opentype", "pdftoolkit/pdf-to-html", "pdftoolkit/pdf-reader", "pdftoolkit/pdf-codecs"}:
+            if name in {"pdftoolkit/opentype", "pdftoolkit/pdf-to-html", "pdftoolkit/pdf-reader", "pdftoolkit/pdf-codecs", "pdftoolkit/pdf-images"}:
                 continue
             item = locked_packages.get(name, {})
             if item.get('version', '').removeprefix('v') != self.packages[name]['version'] or item.get('source', {}).get('reference') != self.packages[name]['revision']:
@@ -292,8 +304,17 @@ class Site:
         codecs_revision = subprocess.run(['git', '-C', str(codecs_root), 'rev-parse', 'HEAD'], check=True, capture_output=True, text=True).stdout.strip()
         if codecs_revision != self.packages['pdftoolkit/pdf-codecs']['revision']:
             raise ValueError('Codecs checkout differs from the released-source manifest')
+        if images_root is None:
+            raise ValueError('The separate released Images checkout is required')
+        for reference in ('HEAD', 'v' + self.packages['pdftoolkit/pdf-images']['version'] + '^{commit}'):
+            images_revision = subprocess.run(['git', '-C', str(images_root), 'rev-parse', reference], check=True, capture_output=True, text=True).stdout.strip()
+            if images_revision != self.packages['pdftoolkit/pdf-images']['revision']:
+                raise ValueError('Images checkout or tag differs from the released-source manifest')
+        if subprocess.run(['git', '-C', str(images_root), 'status', '--porcelain'], check=True, capture_output=True, text=True).stdout.strip():
+            raise ValueError('Images checkout has modified release inputs')
+        self.execution_dependencies = execution_dependencies(root, images_root, pdf_to_html_root, self.packages)
         reader_consumer = select_reader(root, pdf_to_html_root, self.packages)
-        self.package_roots = {CORE_PACKAGE: root, **{name: root / 'vendor' / name for name in MODULES if name not in {'pdftoolkit/opentype', 'pdftoolkit/pdf-to-html', 'pdftoolkit/pdf-reader', 'pdftoolkit/pdf-codecs'}}, 'pdftoolkit/opentype': opentype_root, 'pdftoolkit/pdf-codecs': codecs_root, 'pdftoolkit/pdf-to-html': pdf_to_html_root, 'pdftoolkit/pdf-reader': reader_consumer / 'vendor/pdftoolkit/pdf-reader'}
+        self.package_roots = {CORE_PACKAGE: root, **{name: root / 'vendor' / name for name in MODULES if name not in {'pdftoolkit/opentype', 'pdftoolkit/pdf-to-html', 'pdftoolkit/pdf-reader', 'pdftoolkit/pdf-codecs', 'pdftoolkit/pdf-images'}}, 'pdftoolkit/pdf-images': images_root, 'pdftoolkit/opentype': opentype_root, 'pdftoolkit/pdf-codecs': codecs_root, 'pdftoolkit/pdf-to-html': pdf_to_html_root, 'pdftoolkit/pdf-reader': reader_consumer / 'vendor/pdftoolkit/pdf-reader'}
         self.html_reference = json.loads((pdf_to_html_root / 'resources/reference.json').read_text(encoding='utf-8'))
         reference_path = self.html_reference['source']
         if reference_path != 'resources/reference-documents/Deriving_HTML_from_PDF_1-2.pdf':
@@ -321,15 +342,10 @@ class Site:
         self.groups = defaultdict(list)
         for item in self.components:
             self.groups[group_for(item)].append(item)
-        self.pages = [(CORE_PACKAGE if source in {'SECURITY.md', 'CHANGELOG.md', 'docs/migration-0.12.md'} else 'documentation', source, route, title, category) for source, route, title, category in GUIDES]
-        for name, (slug, title, guides) in MODULES.items():
-            for source, page_slug, page_title in [('README.md', 'index', title), *guides, ('SECURITY.md', 'signalements', 'Signaler une vulnérabilité'), ('CHANGELOG.md', 'versions', 'Versions et changements')]:
-                self.pages.append((name, source, f'modules/{slug}/{page_slug}.html', page_title, title))
+        self.pages = guide_pages()
         self.examples = {'table': 'recipes/table.html'}
-        for source, slug, title, example, _ in LESSONS:
-            route = f'tutorials/{slug}.html'
-            self.pages.append(('documentation', f'docs/tutorials/{source}.md', route, title, 'Tutoriels'))
-            self.examples[example] = route
+        for _, slug, _, example, _ in LESSONS:
+            self.examples[example] = f'tutorials/{slug}.html'
         if not set(EXTERNAL_EXAMPLES) <= set(self.examples):
             raise ValueError('Every external example needs a documented site page')
         self.example_sources = {}
@@ -444,21 +460,7 @@ class Site:
 
     def prepare_anchors(self) -> None:
         """Pair translated headings in order, failing on incomplete structure."""
-        def headings(text):
-            renderer = markdown.Markdown(extensions=['tables', 'fenced_code', 'toc', 'sane_lists'])
-            renderer.convert(text)
-            def flatten(tokens):
-                return [value for token in tokens for value in [token, *flatten(token.get('children', []))]]
-            return flatten(renderer.toc_tokens)
-        for owner, source, route, _, _ in self.pages:
-            root = self.content_root if owner == 'documentation' else self.package_roots[owner]
-            tokens = {language: headings((root / localized_source(owner, source, language)).read_text(encoding='utf-8')) for language in LANGUAGES}
-            if [token['level'] for token in tokens['en']] != [token['level'] for token in tokens['fr']]:
-                raise ValueError('Translated heading structure differs: ' + owner + ':' + source)
-            self.anchor_maps[route] = {
-                'en': {en['id']: fr['id'] for en, fr in zip(tokens['en'], tokens['fr']) if en['level'] > 1},
-                'fr': {fr['id']: en['id'] for en, fr in zip(tokens['en'], tokens['fr']) if fr['level'] > 1},
-            }
+        self.anchor_maps = translated_anchors(self.pages, {'documentation': self.content_root, **self.package_roots})
 
     def fragment_for(self, route: str, fragment: str, language: str | None = None) -> str:
         language = language or self.language
@@ -1203,6 +1205,7 @@ class Site:
         for record in sources.values():
             record['pages'] = {language: route_for(record['page'], language) for language in LANGUAGES}
         manifest = {'basePath': self.base, 'revision': self.revision, 'docsRevision': self.docs_revision, 'documentation': self.documentation, 'documentationSources': self.documentation_sources, 'packages': packages, 'components': len(self.components), 'examples': sorted(expected), 'exampleSources': sources, 'pdfPages': {example: ['assets/pdf-pages/' + image['file'] for image in images] for example, images in self.pdf_pages.items()}, 'pages': sorted(route for route in self.written if route.endswith('.html'))}
+        manifest['executionDependencies'] = self.execution_dependencies
         manifest['htmlDemo'] = demo_manifest
         manifest['derivedHtml'] = [{'example': name, 'path': record['html'], 'sha256': record['htmlSha256'], 'package': record['package'], 'revision': self.packages[record['package']]['revision']} for name, record in sources.items() if record['kind'] == 'conversion']
         html_package = self.packages['pdftoolkit/pdf-to-html']
@@ -1311,6 +1314,7 @@ if __name__ == '__main__':
     parser.add_argument('--content-root', type=Path, default=Path(__file__).resolve().parents[1])
     parser.add_argument('--source-root', type=Path, required=True)
     parser.add_argument('--opentype-root', type=Path, required=True, help='Independent released OpenType checkout')
+    parser.add_argument('--images-root', type=Path, required=True, help='Separate released Images checkout')
     parser.add_argument('--codecs-root', type=Path, required=True, help='Independent released image codecs checkout')
     parser.add_argument('--pdf-to-html-root', type=Path, required=True, help='Released PDF-to-HTML checkout and its locked reader')
     parser.add_argument('--demo-root', type=Path, required=True, help='Separately released browser demo checkout')
@@ -1329,4 +1333,4 @@ if __name__ == '__main__':
         parser.error('base-path must contain only URL path segments')
     content_root = args.content_root.resolve()
     sources = args.sources.resolve() if args.sources else content_root / 'resources' / 'sources.json'
-    Site(content_root, args.source_root.resolve(), args.output.resolve(), args.api.resolve(), args.pdf_dir.resolve(), args.pdf_preview_dir.resolve(), args.base_path, args.docs_revision, sources, args.opentype_root.resolve(), args.pdf_to_html_root.resolve(), args.demo_root.resolve(), args.demo_build.resolve(), args.codecs_root.resolve()).build()
+    Site(content_root, args.source_root.resolve(), args.output.resolve(), args.api.resolve(), args.pdf_dir.resolve(), args.pdf_preview_dir.resolve(), args.base_path, args.docs_revision, sources, args.opentype_root.resolve(), args.pdf_to_html_root.resolve(), args.demo_root.resolve(), args.demo_build.resolve(), args.codecs_root.resolve(), args.images_root.resolve()).build()

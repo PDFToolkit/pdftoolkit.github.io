@@ -75,6 +75,25 @@ def html_dependencies(root: Path) -> list[dict]:
     return [locked_dependency(root, name) for name in ("roukmoute/pdf", "pdftoolkit/pdf-reader")]
 
 
+def images_dependencies(root: Path) -> list[dict]:
+    """Keep the image oracle's released core distinct from the documented core."""
+    require((root / "vendor/autoload.php").is_file(), "Missing Images consumer autoloader")
+    return [locked_dependency(root, "roukmoute/pdf")]
+
+
+def core_example_dependencies(root: Path) -> list[dict]:
+    locked, _ = composer_inputs(root)
+    return [locked_dependency(root, name) for name in sorted(locked) if name in PACKAGES]
+
+
+def execution_dependencies(source: Path, images: Path, html: Path, packages: dict[str, dict]) -> dict:
+    return {
+        "coreExamples": {"package": packages["roukmoute/pdf"], "dependencies": core_example_dependencies(source)},
+        "imagesValidation": {"package": packages["pdftoolkit/pdf-images"], "dependencies": images_dependencies(images)},
+        "htmlValidation": {"package": packages["pdftoolkit/pdf-to-html"], "dependencies": html_dependencies(html)},
+    }
+
+
 def select_reader(source_root: Path, html_root: Path, packages: dict[str, dict]) -> Path:
     """Return one real consumer: core preferred, then HTML, with exact pinned Reader."""
     html_dependencies(html_root)
@@ -97,7 +116,7 @@ def select_reader(source_root: Path, html_root: Path, packages: dict[str, dict])
     return consumer
 
 
-def check(source_root: Path, manifest: Path, remote: bool = False, opentype_root: Path | None = None, pdf_to_html_root: Path | None = None, codecs_root: Path | None = None) -> dict[str, dict]:
+def check(source_root: Path, manifest: Path, remote: bool = False, opentype_root: Path | None = None, pdf_to_html_root: Path | None = None, codecs_root: Path | None = None, images_root: Path | None = None) -> dict[str, dict]:
     packages = load_manifest(manifest)
     core = packages["roukmoute/pdf"]
     require(git("rev-parse", "HEAD", root=source_root) == core["revision"], "Core checkout does not match the released source pin")
@@ -113,6 +132,15 @@ def check(source_root: Path, manifest: Path, remote: bool = False, opentype_root
             require(composer["name"] == name, "PDF-to-HTML source package identity differs")
             require((pdf_to_html_root / "docs").is_dir(), "Missing PDF-to-HTML guides")
             html_dependencies(pdf_to_html_root)
+        elif name == "pdftoolkit/pdf-images":
+            require(images_root is not None, "The separate released Images checkout is required")
+            require(git("rev-parse", "HEAD", root=images_root) == source["revision"], "Images checkout differs from the released source pin")
+            require(git("rev-parse", f"v{source['version']}^{{commit}}", root=images_root) == source["revision"], "Images tag differs from the released source pin")
+            require(not git("status", "--porcelain", root=images_root), "Images checkout has modified release inputs")
+            composer = json.loads((images_root / "composer.json").read_text(encoding="utf-8"))
+            require(composer.get("name") == name, "Images source package identity differs")
+            require((images_root / "docs").is_dir() and (images_root / "src").is_dir(), "Missing Images source or guides")
+            images_dependencies(images_root)
         elif name == "pdftoolkit/opentype":
             require(opentype_root is not None, "The independent OpenType source checkout is required")
             require(git("rev-parse", "HEAD", root=opentype_root) == source["revision"], "OpenType checkout differs from the released source pin")
@@ -152,6 +180,7 @@ if __name__ == "__main__":
     parser.add_argument("--source-root", type=Path, required=True)
     parser.add_argument("--opentype-root", type=Path, help="Independent released OpenType checkout")
     parser.add_argument("--pdf-to-html-root", type=Path, help="Released PDF-to-HTML checkout with its locked reader")
+    parser.add_argument("--images-root", type=Path, help="Separate released Images checkout and its own locked core")
     parser.add_argument("--codecs-root", type=Path, help="Independent released image codecs checkout")
     parser.add_argument("--manifest", type=Path, default=Path(__file__).resolve().parents[1] / "resources/sources.json")
     parser.add_argument("--remote", action="store_true", help="Also verify every published remote tag")
@@ -164,7 +193,9 @@ if __name__ == "__main__":
         opentype = packages["pdftoolkit/opentype"]
         html = packages["pdftoolkit/pdf-to-html"]
         codecs = packages["pdftoolkit/pdf-codecs"]
+        images = packages["pdftoolkit/pdf-images"]
         with args.github_output.open("a", encoding="utf-8", newline="\n") as stream:
+            stream.write(f"images_revision={images['revision']}\nimages_version={images['version']}\n")
             stream.write(f"codecs_revision={codecs['revision']}\ncodecs_version={codecs['version']}\n")
             stream.write(f"opentype_revision={opentype['revision']}\nopentype_version={opentype['version']}\n")
             stream.write(f"pdf_to_html_revision={html['revision']}\npdf_to_html_version={html['version']}\n")
@@ -173,4 +204,4 @@ if __name__ == "__main__":
         require(args.pdf_to_html_root is not None, "The released PDF-to-HTML source checkout is required")
         print(select_reader(args.source_root.resolve(), args.pdf_to_html_root.resolve(), load_manifest(args.manifest.resolve())))
     else:
-        check(args.source_root.resolve(), args.manifest.resolve(), args.remote, args.opentype_root.resolve() if args.opentype_root else None, args.pdf_to_html_root.resolve() if args.pdf_to_html_root else None, args.codecs_root.resolve() if args.codecs_root else None)
+        check(args.source_root.resolve(), args.manifest.resolve(), args.remote, args.opentype_root.resolve() if args.opentype_root else None, args.pdf_to_html_root.resolve() if args.pdf_to_html_root else None, args.codecs_root.resolve() if args.codecs_root else None, args.images_root.resolve() if args.images_root else None)
