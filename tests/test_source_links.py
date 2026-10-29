@@ -163,6 +163,54 @@ class SourceLinksTest(unittest.TestCase):
                 upstream = 'https://github.com/PDFToolkit/pdf-to-html/blob/v0.2.0/' + target + '#' + fragment
                 self.assertEqual(expected, self.site.rewrite_link(source, upstream, owner=owner))
 
+    def test_published_codec_readme_directory_urls_resolve_to_reader_with_locale_query_and_fragment(self):
+        for language in ('en', 'fr'):
+            self.site.language = language
+            for prefix in ('/', '/pdf/'):
+                for suffix in ('/', '/index.html'):
+                    href = 'https://pdftoolkit.github.io' + prefix + ('fr/' if language == 'fr' else '') + 'modules/reader/image-codecs' + suffix + '?mode=php#installation'
+                    with self.subTest(language=language, prefix=prefix, suffix=suffix):
+                        self.assertEqual('/' + ('fr/' if language == 'fr' else '') + 'modules/reader/image-codecs.html?mode=php#installation', self.site.rewrite_link('README.md', href, 'pdftoolkit/pdf-codecs'))
+        self.site.language = 'en'
+        self.assertEqual('/modules/reader/unknown/', self.site.rewrite_link('README.md', 'https://pdftoolkit.github.io/modules/reader/unknown/'))
+
+    def test_unicode_published_heading_links_resolve_only_to_real_localized_headings(self):
+        owner, _ = self.register_html_guides()
+        route = 'modules/to-html/graphics.html'
+        french = 'echantillons-dimage-natifs-et-cadrage-fax'
+        english = 'native-image-samples-and-fax-framing'
+        self.site.anchor_maps[route] = {'en': {english: french}, 'fr': {french: english}}
+        for language, expected in (('fr', french), ('en', english)):
+            self.site.language = language
+            for fragment in ('échantillons-dimage-natifs-et-cadrage-fax', '%C3%A9chantillons-dimage-natifs-et-cadrage-fax', french, english):
+                with self.subTest(language=language, fragment=fragment):
+                    self.assertEqual('/' + ('fr/' if language == 'fr' else '') + route + '#' + expected, self.site.rewrite_link('docs/coverage.md', 'graphics.md#' + fragment, owner))
+            self.assertEqual('unknown-%C3%A9', self.site.fragment_for(route, 'unknown-%C3%A9'))
+
+    def test_explicit_external_packagist_links_keep_their_exact_destination(self):
+        for language in ('en', 'fr'):
+            self.site.language = language
+            for package in (CORE_PACKAGE, *MODULES):
+                href = 'https://packagist.org/packages/' + package + '?view=versions#package'
+                self.assertEqual(href, self.site.rewrite_link('docs/packages.md', href))
+
+    def test_published_directory_aliases_have_exact_language_destination_and_fallback(self):
+        from check_site import Document
+        from localization import PUBLISHED_ROUTE_ALIASES
+        route = 'modules/reader/image-codecs.html'
+        self.site.translations = {route: {'en': route, 'fr': 'fr/' + route}}
+        self.site.output, self.site.written = self.root / 'output', []
+        self.site.script_revision = 'unit-script'
+        self.site.build_aliases()
+        self.assertEqual(PUBLISHED_ROUTE_ALIASES, self.site.aliases)
+        for alias, destination in PUBLISHED_ROUTE_ALIASES.items():
+            document = Document((self.site.output / alias).read_text())
+            self.assertEqual(['fr' if alias.startswith('fr/') else 'en'], document.languages)
+            self.assertEqual(['https://pdftoolkit.github.io/' + destination], document.canonicals)
+            self.assertEqual(['/' + destination], document.redirect_targets)
+            self.assertIn('/' + destination, document.links)
+            self.assertIn('destination', document.ids)
+
 
 if __name__ == '__main__':
     unittest.main()

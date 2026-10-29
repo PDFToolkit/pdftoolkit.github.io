@@ -12,6 +12,7 @@ import struct
 from urllib.parse import quote, unquote, urlsplit
 
 from html_demo import DemoGallery
+from localization import PUBLISHED_ROUTE_ALIASES
 
 
 DOCUMENTATION_REPOSITORY = 'https://github.com/PDFToolkit/pdftoolkit.github.io'
@@ -237,19 +238,20 @@ def check(root):
         logical: routes['fr'] for logical, routes in translations.items()
         if set(routes) == {'en', 'fr'} and logical != routes['en']
     }
+    expected_aliases.update(PUBLISHED_ROUTE_ALIASES)
     if aliases != expected_aliases:
-        errors.append('Legacy French aliases must cover exactly the renamed default routes')
+        errors.append('Aliases must cover exactly the renamed French routes and published directory URLs')
     for alias, destination in aliases.items():
         document = documents.get(alias)
         if document is None or destination not in documents:
-            errors.append('Missing legacy alias or French destination: ' + alias)
+            errors.append('Missing alias or declared destination: ' + alias)
             continue
         if document.canonicals != [SITE_ORIGIN + manifest['basePath'] + destination]:
-            errors.append(f'{alias}: legacy alias must canonicalize to its French destination')
+            errors.append(f'{alias}: alias must canonicalize to its exact destination')
         if manifest['basePath'] + destination not in document.links:
-            errors.append(f'{alias}: legacy alias needs an accessible French destination link')
-        if document.languages != ['fr']:
-            errors.append(f'{alias}: legacy French alias must declare French')
+            errors.append(f'{alias}: alias needs an accessible destination link')
+        if document.languages != ['fr' if destination.startswith('fr/') else 'en']:
+            errors.append(f'{alias}: alias must declare its destination language')
         if document.redirect_targets != [manifest['basePath'] + destination] or 'destination' not in document.ids:
             errors.append(f'{alias}: legacy alias needs its exact redirect target and fallback link')
     docs_revision = manifest.get('docsRevision', '')

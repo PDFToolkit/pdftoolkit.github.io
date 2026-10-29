@@ -9,6 +9,11 @@ from html.parser import HTMLParser
 import re
 
 LANGUAGES = ('en', 'fr')
+# Public directory URLs already linked by the released Codecs README.
+PUBLISHED_ROUTE_ALIASES = {
+    'modules/reader/image-codecs/index.html': 'modules/reader/image-codecs.html',
+    'fr/modules/reader/image-codecs/index.html': 'fr/modules/reader/image-codecs.html',
+}
 ENGLISH_ROUTES = {
     'guides/mecanismes.html': 'guides/mechanisms.html',
     'guides/supplement-adobe.html': 'guides/adobe-supplement.html',

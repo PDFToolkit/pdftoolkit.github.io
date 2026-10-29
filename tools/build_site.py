@@ -15,10 +15,11 @@ import subprocess
 from urllib.parse import quote, unquote, urlsplit
 
 import markdown
+from markdown.extensions.toc import slugify
 from check_sources import select_reader, execution_dependencies
 from guide_headings import translated_anchors
 from html_demo import DemoGallery, DemoSource
-from localization import LANGUAGES, ENGLISH_ROUTES, canonical_source, localized_source, route_for, translate, translate_interface, ISO2_DESCRIPTIONS_FR, iso2_description
+from localization import LANGUAGES, ENGLISH_ROUTES, PUBLISHED_ROUTE_ALIASES, canonical_source, localized_source, route_for, translate, translate_interface, ISO2_DESCRIPTIONS_FR, iso2_description
 
 
 REPOSITORY = 'https://github.com/PDFToolkit/pdf'
@@ -465,7 +466,16 @@ class Site:
     def fragment_for(self, route: str, fragment: str, language: str | None = None) -> str:
         language = language or self.language
         other = 'fr' if language == 'en' else 'en'
-        return self.anchor_maps.get(route, {}).get(other, {}).get(unquote(fragment), fragment)
+        anchors = self.anchor_maps.get(route, {})
+        decoded = unquote(fragment)
+        # Published GitHub Markdown links can retain accents, while this renderer
+        # uses ASCII heading IDs. Only resolve candidates present in the real TOC.
+        for candidate in (decoded, slugify(decoded, '-')):
+            if candidate in anchors.get(language, {}):
+                return candidate
+            if candidate in anchors.get(other, {}):
+                return anchors[other][candidate]
+        return fragment
 
     def source_url(self, source: str, line: int | None = None, owner: dict | None = None) -> str:
         package = owner if owner is not None else self.packages[CORE_PACKAGE]
@@ -604,6 +614,7 @@ class Site:
                 return self.url(route) + ('?' + parsed.query if parsed.query else '')
         if parsed.netloc == 'pdftoolkit.github.io':
             route = parsed.path.removeprefix('/pdf/').lstrip('/') if parsed.path.startswith('/pdf/') else parsed.path.lstrip('/')
+            route = PUBLISHED_ROUTE_ALIASES.get(route + 'index.html' if route.endswith('/') else route, route)
             route = route.removeprefix('fr/')
             route = next((old for old, new in ENGLISH_ROUTES.items() if new == route), route) or 'index.html'
             fragment = self.fragment_for(route, parsed.fragment)
@@ -1293,16 +1304,23 @@ class Site:
         self.page('404.html', 'Page introuvable', 'Documentation', f'<p>Cette adresse ne correspond pas à une page publiée.</p><p><a href="{e(self.url("reference/index.html"))}">Rechercher un composant</a> ou <a href="{e(self.url("index.html"))}">revenir à l’accueil</a>.</p>')
 
     def build_aliases(self) -> None:
-        """Old French root addresses continue to their French equivalents."""
+        """Preserve old French routes and exact directory URLs from published packages."""
         canonical_pages = {page for translations in self.translations.values() for page in translations.values()}
         self.aliases = {logical: variants['fr'] for logical, variants in self.translations.items() if logical not in canonical_pages}
+        for route, destination in PUBLISHED_ROUTE_ALIASES.items():
+            if route in canonical_pages or route in self.aliases or destination not in canonical_pages:
+                raise ValueError('Invalid published route alias: ' + route)
+            self.aliases[route] = destination
         for route, destination in self.aliases.items():
+            language = 'fr' if destination.startswith('fr/') else 'en'
+            explanation = 'Cette page est disponible en français et en anglais.' if language == 'fr' else 'This page is available in English and French.'
+            label = 'Continuer en français' if language == 'fr' else 'Continue in English'
             url = self.base + destination
-            html = f'''<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+            html = f'''<!doctype html><html lang="{language}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Documentation PDFToolkit</title><link rel="canonical" href="{e(SITE_ORIGIN + url)}">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; base-uri 'none'; form-action 'none'">
 <script defer src="{e(self.base + 'assets/site.js?v=' + self.script_revision)}"></script></head>
-<body><main data-root="{e(self.base)}" data-redirect-to="{e(url)}"><h1>Documentation PDFToolkit</h1><p>Cette page est disponible en français et en anglais.</p><a id="destination" href="{e(url)}">Continuer en français</a></main></body></html>'''
+<body><main data-root="{e(self.base)}" data-redirect-to="{e(url)}"><h1>Documentation PDFToolkit</h1><p>{explanation}</p><a id="destination" href="{e(url)}">{label}</a></main></body></html>'''
             path = self.output / route
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(html, encoding='utf-8', newline='\n')
