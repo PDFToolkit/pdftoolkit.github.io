@@ -33,13 +33,13 @@ verified before finalization.
 
 | Repository and package | Input | Produced objects or data |
 | --- | --- | --- |
-| [PDFToolkit/pdf](https://github.com/PDFToolkit/pdf) — `roukmoute/pdf` | PDF objects assembled by the application | PDF file, cross-references and revisions |
-| [PDFToolkit/pdf-images](https://github.com/PDFToolkit/pdf-images) — `pdftoolkit/pdf-images` | PNG or JPEG bytes and explicit limits | Color/alpha samples or core DCT representation |
-| [PDFToolkit/pdf-fonts](https://github.com/PDFToolkit/pdf-fonts) — `pdftoolkit/pdf-fonts` | Static TrueType/CFF bytes, text and explicit layout stages | Embeddable programs, Unicode/CID/GID mappings and positioned PDF text |
-| [PDFToolkit/pdf-reader](https://github.com/PDFToolkit/pdf-reader) — `pdftoolkit/pdf-reader` | PDF bytes and reading budgets | Read graph, pages and inherited attributes, references to resolve and encoded or decoded streams |
-| [PDFToolkit/opentype](https://github.com/PDFToolkit/opentype) — `pdftoolkit/opentype` | OpenType SFNT/TTC/OTC bytes and explicit limits | Tables, outlines, metrics, GSUB substitutions and GPOS positioning |
-| [PDFToolkit/pdf-codecs](https://github.com/PDFToolkit/pdf-codecs) — `pdftoolkit/pdf-codecs` | JPEG, JPEG 2000 or JBIG2 bytes | Component planes and exact colour/alpha metadata within the supported profiles |
-| [PDFToolkit/pdf-to-html](https://github.com/PDFToolkit/pdf-to-html) — `pdftoolkit/pdf-to-html` | Tagged PDF bytes or an explicit logical source model | Semantic HTML, CSS, assets and diagnostics |
+| [PDFToolkit/pdf](https://github.com/PDFToolkit/pdf) — [`roukmoute/pdf`](https://packagist.org/packages/roukmoute/pdf) | PDF objects assembled by the application | PDF file, cross-references and revisions |
+| [PDFToolkit/pdf-images](https://github.com/PDFToolkit/pdf-images) — [`pdftoolkit/pdf-images`](https://packagist.org/packages/pdftoolkit/pdf-images) | PNG or JPEG bytes and explicit limits | Color/alpha samples or core DCT representation |
+| [PDFToolkit/pdf-fonts](https://github.com/PDFToolkit/pdf-fonts) — [`pdftoolkit/pdf-fonts`](https://packagist.org/packages/pdftoolkit/pdf-fonts) | Static TrueType/CFF bytes, text and explicit layout stages | Embeddable programs, Unicode/CID/GID mappings and positioned PDF text |
+| [PDFToolkit/pdf-reader](https://github.com/PDFToolkit/pdf-reader) — [`pdftoolkit/pdf-reader`](https://packagist.org/packages/pdftoolkit/pdf-reader) | PDF bytes and reading budgets | Read graph, pages and inherited attributes, references to resolve and encoded or decoded streams |
+| [PDFToolkit/opentype](https://github.com/PDFToolkit/opentype) — [`pdftoolkit/opentype`](https://packagist.org/packages/pdftoolkit/opentype) | OpenType SFNT/TTC/OTC bytes and explicit limits | Tables, outlines, metrics, GSUB substitutions and GPOS positioning |
+| [PDFToolkit/pdf-codecs](https://github.com/PDFToolkit/pdf-codecs) — [`pdftoolkit/pdf-codecs`](https://packagist.org/packages/pdftoolkit/pdf-codecs) | JPEG, JPEG 2000 or JBIG2 bytes | Component planes and exact colour/alpha metadata within the supported profiles |
+| [PDFToolkit/pdf-to-html](https://github.com/PDFToolkit/pdf-to-html) — [`pdftoolkit/pdf-to-html`](https://packagist.org/packages/pdftoolkit/pdf-to-html) | Tagged PDF bytes or an explicit logical source model | Semantic HTML, CSS, assets and diagnostics |
 
 The reader, images and fonts modules depend on the core without depending on one another. Fonts additionally uses OpenType; PDF-to-HTML uses Reader. OpenType and Codecs are independent libraries. Reader discovers the optional PHP codecs only when image decoding is requested. The core knows none of their parsers: applications can construct its PDF objects directly. The object model is shared, without duplicate primitives or global registries.
 

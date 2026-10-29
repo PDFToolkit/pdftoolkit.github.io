@@ -31,13 +31,13 @@ collections. Les politiques de champs de signature sont appliquées aux snapshot
 
 | Dépôt et package | Entrée | Objets ou données produits |
 | --- | --- | --- |
-| [PDFToolkit/pdf](https://github.com/PDFToolkit/pdf) — `roukmoute/pdf` | Objets PDF assemblés par l'application | Fichier PDF, références croisées et révisions |
-| [PDFToolkit/pdf-images](https://github.com/PDFToolkit/pdf-images) — `pdftoolkit/pdf-images` | Octets PNG ou JPEG et limites explicites | Échantillons couleur/alpha ou représentation DCT du core |
-| [PDFToolkit/pdf-fonts](https://github.com/PDFToolkit/pdf-fonts) — `pdftoolkit/pdf-fonts` | Octets TrueType/CFF statiques, texte et étapes de layout explicites | Programmes incorporables, correspondances Unicode/CID/GID et texte PDF positionné |
-| [PDFToolkit/pdf-reader](https://github.com/PDFToolkit/pdf-reader) — `pdftoolkit/pdf-reader` | Octets PDF et budgets de lecture | Graphe lu, pages et attributs hérités, références à résoudre et flux encodés ou décodés |
-| [PDFToolkit/opentype](https://github.com/PDFToolkit/opentype) — `pdftoolkit/opentype` | Octets OpenType SFNT/TTC/OTC et limites explicites | Tables, contours, métriques, substitutions GSUB et positionnement GPOS |
-| [PDFToolkit/pdf-codecs](https://github.com/PDFToolkit/pdf-codecs) — `pdftoolkit/pdf-codecs` | Octets JPEG, JPEG 2000 ou JBIG2 | Plans de composantes et métadonnées couleur/alpha exactes dans les profils pris en charge |
-| [PDFToolkit/pdf-to-html](https://github.com/PDFToolkit/pdf-to-html) — `pdftoolkit/pdf-to-html` | Octets PDF balisés ou modèle logique source explicite | HTML sémantique, CSS, ressources et diagnostics |
+| [PDFToolkit/pdf](https://github.com/PDFToolkit/pdf) — [`roukmoute/pdf`](https://packagist.org/packages/roukmoute/pdf) | Objets PDF assemblés par l'application | Fichier PDF, références croisées et révisions |
+| [PDFToolkit/pdf-images](https://github.com/PDFToolkit/pdf-images) — [`pdftoolkit/pdf-images`](https://packagist.org/packages/pdftoolkit/pdf-images) | Octets PNG ou JPEG et limites explicites | Échantillons couleur/alpha ou représentation DCT du core |
+| [PDFToolkit/pdf-fonts](https://github.com/PDFToolkit/pdf-fonts) — [`pdftoolkit/pdf-fonts`](https://packagist.org/packages/pdftoolkit/pdf-fonts) | Octets TrueType/CFF statiques, texte et étapes de layout explicites | Programmes incorporables, correspondances Unicode/CID/GID et texte PDF positionné |
+| [PDFToolkit/pdf-reader](https://github.com/PDFToolkit/pdf-reader) — [`pdftoolkit/pdf-reader`](https://packagist.org/packages/pdftoolkit/pdf-reader) | Octets PDF et budgets de lecture | Graphe lu, pages et attributs hérités, références à résoudre et flux encodés ou décodés |
+| [PDFToolkit/opentype](https://github.com/PDFToolkit/opentype) — [`pdftoolkit/opentype`](https://packagist.org/packages/pdftoolkit/opentype) | Octets OpenType SFNT/TTC/OTC et limites explicites | Tables, contours, métriques, substitutions GSUB et positionnement GPOS |
+| [PDFToolkit/pdf-codecs](https://github.com/PDFToolkit/pdf-codecs) — [`pdftoolkit/pdf-codecs`](https://packagist.org/packages/pdftoolkit/pdf-codecs) | Octets JPEG, JPEG 2000 ou JBIG2 | Plans de composantes et métadonnées couleur/alpha exactes dans les profils pris en charge |
+| [PDFToolkit/pdf-to-html](https://github.com/PDFToolkit/pdf-to-html) — [`pdftoolkit/pdf-to-html`](https://packagist.org/packages/pdftoolkit/pdf-to-html) | Octets PDF balisés ou modèle logique source explicite | HTML sémantique, CSS, ressources et diagnostics |
 
 Les modules lecteur, images et fontes dépendent du core sans dépendre entre eux. Fonts utilise aussi OpenType ; PDF vers HTML utilise Reader. OpenType et Codecs sont des bibliothèques indépendantes. Reader découvre les codecs PHP optionnels seulement quand un décodage d’image est demandé. Le core ne connaît aucun de leurs parseurs : l’application peut construire directement ses objets PDF. Le modèle est partagé, sans copie des primitives ni registre global.
 
