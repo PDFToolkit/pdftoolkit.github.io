@@ -4,43 +4,50 @@
     {
       "name": "roukmoute/pdf",
       "repository": "https://github.com/PDFToolkit/pdf",
-      "version": "0.11.0",
-      "revision": "25b426190b1c2b8d9d26a3fbf94f71c8014725b3",
+      "version": "0.12.1",
+      "revision": "ea9ae2c134bbaf5fc3a22dbc7c81ff8e7b29a6cc",
       "optional": false
     },
     {
       "name": "pdftoolkit/pdf-reader",
       "repository": "https://github.com/PDFToolkit/pdf-reader",
-      "version": "0.6.0",
-      "revision": "c623665d2a54013fe937d10203322c27a8096094",
+      "version": "0.7.0",
+      "revision": "8f0a1a447da7812f515ac9c307f8431531d29655",
       "optional": true
     },
     {
       "name": "pdftoolkit/pdf-images",
       "repository": "https://github.com/PDFToolkit/pdf-images",
-      "version": "0.1.12",
-      "revision": "347d4d7170296ba1496754fda02fa6340e45d6e1",
+      "version": "0.2.0",
+      "revision": "47d208992b0b169ba6b1bf577183a8ece7698ae6",
       "optional": true
     },
     {
       "name": "pdftoolkit/pdf-fonts",
       "repository": "https://github.com/PDFToolkit/pdf-fonts",
-      "version": "0.1.12",
-      "revision": "38b2be95fa13d9264827f481fdc587ed366558f0",
+      "version": "0.2.0",
+      "revision": "4478c9d38549d8f3e8264a59505f4d9e1312eaf2",
       "optional": true
     },
     {
       "name": "pdftoolkit/opentype",
       "repository": "https://github.com/PDFToolkit/opentype",
-      "version": "0.3.0",
-      "revision": "792c38919aa4e2314b77e84a93791593fcd35afe",
+      "version": "0.4.0",
+      "revision": "22014ed40f29c61dc7068df5da19b09eed340678",
       "optional": true
     },
     {
       "name": "pdftoolkit/pdf-to-html",
       "repository": "https://github.com/PDFToolkit/pdf-to-html",
-      "version": "0.6.0",
-      "revision": "ca0e6da0c28cd79933c9006bbf4b9d942d933e78",
+      "version": "0.7.0",
+      "revision": "c82bf04fd7a920e16abfd2eca19918176375a734",
+      "optional": true
+    },
+    {
+      "name": "pdftoolkit/pdf-codecs",
+      "repository": "https://github.com/PDFToolkit/pdf-codecs",
+      "version": "0.1.0",
+      "revision": "1f82ae19d6dd874c574a5601d37f3ac63e0d4170",
       "optional": true
     }
   ]

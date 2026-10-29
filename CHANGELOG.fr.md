@@ -2,6 +2,29 @@
 
 [English](CHANGELOG.md) · [Français](CHANGELOG.fr.md)
 
+## Non publié
+
+## [0.13.0] - 2026-10-29
+
+- Sélectionner core 0.12.1, Reader 0.7, Images 0.2, Fonts 0.2, OpenType 0.4,
+  HTML 0.7 et Codecs indépendant 0.1 publiés, aux commits exacts de leurs tags
+  annotés. Construire les sept inventaires API et guides depuis ces sources.
+- Documenter le décodage natif prioritaire et l’utilisation automatique de la
+  bibliothèque PHP optionnelle, avec commande d’installation, limites de
+  ressources et profils pris en charge. Actualiser les guides FR/EN EC3,
+  pages/actions, import natif, images, fontes/OpenType et migration du core
+  avec les preuves correspondantes.
+- Intégrer la démo 0.2 publiée et dix exemples reproductibles, dont JPEG,
+  JPEG 2000 et JBIG2 dans des Workers PHP/WebAssembly locaux. Conserver les
+  quatre identités des packages embarqués, PDF originaux, ressources et licences.
+- Compléter le build par les oracles indépendants Reader/Codecs/images/fontes,
+  les outils JPEG 2000 et Poppler épinglés, les échantillons compactés/16 bits et
+  les témoins couleur/alpha/ICC sous Chromium/Firefox. Distinguer preuves
+  normatives, limites connues des oracles et comparaisons entre décodeurs.
+- Valider navigation bilingue, provenance API/source, téléchargements, aperçus
+  PDF, démo intégrée et anciennes adresses de compatibilité avant de publier
+  la documentation avec sa version indépendante.
+
 ## [0.12.0] - 2026-10-28
 
 - Intégrer la démo PDF vers HTML publiée indépendamment et sept exemples reproductibles, en conservant les versions des packages PHP. Sélectionner la démo par son propre tag annoté et son commit source exact.

@@ -2,6 +2,28 @@
 
 [English](CHANGELOG.md) · [Français](CHANGELOG.fr.md)
 
+## Unreleased
+
+## [0.13.0] - 2026-10-29
+
+- Select published core 0.12.1, Reader 0.7, Images 0.2, Fonts 0.2, OpenType 0.4,
+  HTML 0.7 and independent Codecs 0.1 from their exact annotated tag commits.
+  Build all seven API inventories and package guides from these released sources.
+- Document native-first image decoding and automatic use of the optional PHP
+  library, with explicit installation guidance, resource limits and profile
+  boundaries. Update English/French EC3, page/action, native-import, image,
+  font/OpenType and core migration guidance with the corresponding evidence.
+- Integrate released demo 0.2 and ten reproducible examples, including JPEG,
+  JPEG 2000 and JBIG2 conversions in local PHP/WebAssembly Workers. Retain all
+  four runtime package identities, original PDFs, derived assets and licences.
+- Expand the full build with independent Reader/Codecs/image/font oracles,
+  pinned JPEG 2000 and Poppler tools, packed/16-bit samples and Chromium/Firefox
+  colour/alpha/ICC witnesses. Keep normative evidence and known oracle limits
+  distinct from independent-decoder comparisons.
+- Validate bilingual navigation, API/source provenance, downloads, PDF previews,
+  embedded demo behavior and the unchanged legacy compatibility routes before
+  publishing the independently versioned documentation.
+
 ## [0.12.0] - 2026-10-28
 
 - Integrate the independently released PDF-to-HTML browser demo and seven reproducible examples, while keeping the PHP package releases unchanged. Select the demo with its own annotated tag and exact source commit.
