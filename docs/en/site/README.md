@@ -126,16 +126,16 @@ cases and two implicitly selected EFF streams with distinct keys. Wrong
 attachment credentials must preserve document opening and fail on attachment
 access. Generated certificates and adversarial inputs remain private build data.
 
-The current selection documents PDF-to-HTML 0.7.0 and reader 0.7.0. The
+The current selection documents PDF-to-HTML 0.8.1 and reader 0.7.0. The
 [requirements ledger](https://pdftoolkit.github.io/modules/to-html/requirements.html),
 [policies](https://pdftoolkit.github.io/modules/to-html/policies.html) and
 [graphics](https://pdftoolkit.github.io/modules/to-html/graphics.html) guides
 distinguish native rules, HTML adaptations and explicit capabilities for
 rasterization, authentication and additional codecs.
 
-HTML 0.7.0 also publishes its [MathML placement rules and browser validation procedure](https://pdftoolkit.github.io/modules/to-html/coverage.html#mathml-placement-and-browser-integration).
+HTML 0.8.1 also publishes its [MathML placement rules and browser validation procedure](https://pdftoolkit.github.io/modules/to-html/coverage.html#mathml-placement-and-browser-integration).
 Its release qualification and dedicated CI job validate generated output in
-Chromium and Firefox and retain their reports and screenshots. HTML 0.7 also checks widgets, derived attributes and signature status popovers in both engines. The site build
+Chromium and Firefox and retain their reports and screenshots. HTML 0.8 also checks widgets, derived attributes and signature status popovers in both engines. The site build
 renders those released guides and checks their links. The independent demo build
 also captures its gallery in Chromium and checks its integrated pages in both engines.
 
@@ -392,12 +392,14 @@ use the selected `--pdftoppm`. The default profile and site frames execute no
 runtime; explicitly enabled cases are checked in the private validation
 workspace. Every module guide retains its EN/FR counterpart.
 
-The released PDF-to-HTML checkout under `_sources/pdf-to-html` is selected independently. Its installed core and reader must exactly match its own published lock (versions and both source/dist commits), independently of the documented core/Reader pins. HTML 0.7.0 runs its oracles and tutorial 35 with its published lock, which selects Reader 0.7.0. The documented Reader 0.7.0 comes from core 0.12.1’s vendor; its guides, API, tutorial 12 and oracles all use that selection. Reader examples/oracles load that consumer’s actual core. `_build/validation-sources.json` records both validation environments and their exact package commits. The API exporter registers only the selected HTML and reader namespaces against their chosen trees. Module guides appear under `/modules/to-html/` in both languages. Tutorial 35 copies the input PDF, renders every page and runs the module CLI to produce actual HTML plus JSON diagnostics. `derivedHtml` inventories output HTML separately from documentation routes, with package/SHA provenance and sandboxed frames; the site checker rejects active content in these previews. The supplied 74-page original remains in the package and is linked at its selected release commit.
+The released PDF-to-HTML checkout under `_sources/pdf-to-html` is selected independently. Its installed core and reader must exactly match its own published lock (versions and both source/dist commits), independently of the documented core/Reader pins. HTML 0.8.1 runs its oracles and tutorial 35 with its published lock, which selects Reader 0.7.0. The documented Reader 0.7.0 comes from core 0.12.1’s vendor; its guides, API, tutorial 12 and oracles all use that selection. Reader examples/oracles load that consumer’s actual core. `_build/validation-sources.json` records both validation environments and their exact package commits. The API exporter registers only the selected HTML and reader namespaces against their chosen trees. Module guides appear under `/modules/to-html/` in both languages. Tutorial 35 copies the input PDF, renders every page and runs the module CLI to produce actual HTML plus JSON diagnostics. `derivedHtml` inventories output HTML separately from documentation routes, with package/SHA provenance and sandboxed frames; the site checker rejects active content in these previews. The supplied 74-page original remains in the package and is linked at its selected release commit.
 
 ## Browser demo and visual gallery
 
 The native [demo page](https://pdftoolkit.github.io/modules/to-html/demo/index.html)
 and its French counterpart integrate a separately released application.
+Documentation 0.14 selects demo 0.3 with HTML 0.8 and eleven gallery cases,
+including an original LuaLaTeX PDF with MathML structure elements.
 `resources/demo-source.json` selects its stable version, annotated tag and peeled
 commit. This is a distinct application source pin; `resources/sources.json`
 continues to describe only PHP packages. Executable examples, fixture generation,
@@ -409,7 +411,7 @@ The build verifies the selected demo checkout and published tag, invokes
 checkout, and rejects draft provenance. Every file is checked against a bounded
 path/size/SHA-256 inventory. The copied application is recorded under `htmlDemo`
 in the site manifest, separately from package identities and tutorial `derivedHtml`.
-HTML and PHP example sources have `.html.txt` and `.php.txt` extensions; no raw
+HTML, PHP and LaTeX example sources have `.html.txt`, `.php.txt` and `.tex.txt` extensions; no raw
 application output becomes an executable documentation page.
 
 Assets live under `/assets/html-demo/` and are shared by both locales. Only the
@@ -424,7 +426,7 @@ Other documentation pages keep their existing content security policy.
 
 The overview, graphics and signature guides show static comparisons of source
 PDF previews with actual Chromium captures of derived HTML. Each card links to
-the selected interactive example and its PDF/PHP downloads, without loading the
+the selected interactive example and its PDF/source downloads, without loading the
 demo runtime or changing these guides’ CSP. The gallery records the browser version
 and image dimensions; the full site check validates those facts, exact PNG bytes,
 bilingual routes, source provenance, case inventories and all comparison links. CI also installs the demo's locked Playwright dependency and

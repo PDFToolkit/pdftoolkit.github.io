@@ -131,16 +131,16 @@ distinctes. Un mauvais credential de pièce jointe doit permettre l'ouverture
 du document puis échouer à son accès. Certificats générés et entrées adverses
 restent des données privées du build.
 
-La sélection actuelle documente PDF vers HTML 0.7.0 et le lecteur 0.7.0. Le
+La sélection actuelle documente PDF vers HTML 0.8.1 et le lecteur 0.7.0. Le
 [registre des exigences](https://pdftoolkit.github.io/fr/modules/to-html/requirements.html),
 les [politiques](https://pdftoolkit.github.io/fr/modules/to-html/policies.html) et
 les [graphiques](https://pdftoolkit.github.io/fr/modules/to-html/graphics.html)
 distinguent règles natives, adaptations HTML et capacités explicites de
 rasterisation, d'authentification et de codecs supplémentaires.
 
-HTML 0.7.0 publie aussi ses [règles de placement MathML et sa procédure de validation navigateur](https://pdftoolkit.github.io/fr/modules/to-html/coverage.html#placement-mathml-et-rendu-navigateur).
+HTML 0.8.1 publie aussi ses [règles de placement MathML et sa procédure de validation navigateur](https://pdftoolkit.github.io/fr/modules/to-html/coverage.html#placement-mathml-et-rendu-navigateur).
 La qualification de sa version et un job CI dédié vérifient la sortie dérivée
-dans Chromium et Firefox et conservent rapports et captures. HTML 0.7 vérifie aussi les widgets, les attributs dérivés et les popovers de statut des signatures dans les deux moteurs. Le build du site
+dans Chromium et Firefox et conservent rapports et captures. HTML 0.8 vérifie aussi les widgets, les attributs dérivés et les popovers de statut des signatures dans les deux moteurs. Le build du site
 rend ces guides publiés et vérifie leurs liens. Le build indépendant de la démo
 capture aussi sa galerie dans Chromium et contrôle ses pages intégrées dans les deux moteurs.
 
@@ -403,12 +403,14 @@ le `--pdftoppm` choisi. Le profil par défaut et les frames du site n'exécutent
 pas le runtime ; les cas activés explicitement sont contrôlés dans l'espace privé
 de validation. Tous les guides du module conservent leur variante EN/FR.
 
-Le checkout publié `_sources/pdf-to-html` est sélectionné indépendamment. Son core et son lecteur installés doivent correspondre exactement à son propre lock publié (versions et commits source/dist), séparément des pins core/Reader documentés. HTML 0.7.0 exécute ses oracles et le tutoriel 35 avec son lock publié, qui sélectionne Reader 0.7.0. Le Reader 0.7.0 documenté provient du vendor core 0.12.1 ; ses guides, API, tutoriel 12 et oracles utilisent tous cette sélection. Exemples et oracles Reader chargent le véritable core de ce consumer. `_build/validation-sources.json` consigne les deux environnements de validation et leurs commits de packages exacts. L’exporteur API enregistre uniquement les namespaces HTML et lecteur sélectionnés contre leurs arbres choisis. Les guides apparaissent sous `/modules/to-html/` dans les deux langues. Le tutoriel 35 copie le PDF d’entrée, rend toutes ses pages et exécute le CLI pour produire le vrai HTML et les diagnostics JSON. `derivedHtml` inventorie cette sortie séparément des routes documentaires avec package/SHA et frames sandboxées ; le vérificateur refuse le contenu actif dans ces aperçus. L’original fourni de 74 pages reste dans le package, lié au commit de la version retenue.
+Le checkout publié `_sources/pdf-to-html` est sélectionné indépendamment. Son core et son lecteur installés doivent correspondre exactement à son propre lock publié (versions et commits source/dist), séparément des pins core/Reader documentés. HTML 0.8.1 exécute ses oracles et le tutoriel 35 avec son lock publié, qui sélectionne Reader 0.7.0. Le Reader 0.7.0 documenté provient du vendor core 0.12.1 ; ses guides, API, tutoriel 12 et oracles utilisent tous cette sélection. Exemples et oracles Reader chargent le véritable core de ce consumer. `_build/validation-sources.json` consigne les deux environnements de validation et leurs commits de packages exacts. L’exporteur API enregistre uniquement les namespaces HTML et lecteur sélectionnés contre leurs arbres choisis. Les guides apparaissent sous `/modules/to-html/` dans les deux langues. Le tutoriel 35 copie le PDF d’entrée, rend toutes ses pages et exécute le CLI pour produire le vrai HTML et les diagnostics JSON. `derivedHtml` inventorie cette sortie séparément des routes documentaires avec package/SHA et frames sandboxées ; le vérificateur refuse le contenu actif dans ces aperçus. L’original fourni de 74 pages reste dans le package, lié au commit de la version retenue.
 
 ## Démo dans le navigateur et galerie visuelle
 
 La [page de démo](https://pdftoolkit.github.io/fr/modules/to-html/demo/index.html)
 native et sa contrepartie anglaise intègrent une application publiée séparément.
+La documentation 0.14 sélectionne la démo 0.3 avec HTML 0.8 et onze cas de galerie,
+dont un PDF original LuaLaTeX avec des éléments de structure MathML.
 `resources/demo-source.json` sélectionne sa version stable, son tag annoté et le
 commit désigné. Cette sélection d’application est distincte :
 `resources/sources.json` décrit toujours les seuls packages PHP. Les exemples
@@ -421,8 +423,8 @@ tag publié, appelle `tools/build_demo.py` avec PHP, Node, Poppler et le checkou
 HTML publié choisis, et refuse une provenance de brouillon. Chaque fichier est
 comparé à un inventaire borné de chemins, tailles et SHA-256. L’application copiée
 figure dans `htmlDemo` du manifeste du site, séparément des identités des packages
-et du `derivedHtml` des tutoriels. Les sources HTML et PHP des exemples portent
-les extensions `.html.txt` et `.php.txt` ; aucune sortie brute de l’application
+et du `derivedHtml` des tutoriels. Les sources HTML, PHP et LaTeX des exemples portent
+les extensions `.html.txt`, `.php.txt` et `.tex.txt` ; aucune sortie brute de l’application
 ne devient une page de documentation exécutable.
 
 Les fichiers sont publiés sous `/assets/html-demo/` et partagés entre les langues.
@@ -440,7 +442,7 @@ de documentation conservent leur politique de sécurité actuelle.
 La présentation, les guides graphique et signatures affichent des comparaisons
 statiques entre les aperçus PDF sources et de vraies captures Chromium du HTML
 dérivé. Chaque carte relie l’exemple interactif sélectionné et ses téléchargements
-PDF/PHP, sans charger le moteur de démo ni modifier la CSP de ces guides. La galerie
+PDF/sources, sans charger le moteur de démo ni modifier la CSP de ces guides. La galerie
 conserve la version du navigateur et les dimensions des images ; le contrôle
 complet vérifie ces faits, les octets PNG exacts, les routes bilingues, la provenance,
 les inventaires des cas et tous les liens de comparaison. La CI installe aussi la

@@ -10,15 +10,19 @@ and their invariants remain in the core. The
 [security documentation](https://github.com/PDFToolkit/pdf-reader/blob/v0.7.0/docs/security.md)
 for reading external files; this generator review does not replace it.
 
-The [source manifest](../../resources/sources.json) pins versions and revisions: core 0.12, Reader/HTML 0.7, Images/Fonts 0.2, OpenType 0.4 and Codecs 0.1. These libraries use 64-bit PHP 8.3+; qualification covers PHP 8.3/8.4/8.5. [PDF 2.0 companion mechanisms](pdf-2-0-bundle.md) retain their own scope. Definitions and conformance declarations are not security certificates. OpenType and Codecs have format controls and limits separate from the writer.
+The [source manifest](../../resources/sources.json) pins versions and revisions: core 0.12, Reader 0.7, HTML 0.8, Images/Fonts 0.2, OpenType 0.4 and Codecs 0.1. These libraries use 64-bit PHP 8.3+; qualification covers PHP 8.3/8.4/8.5. [PDF 2.0 companion mechanisms](pdf-2-0-bundle.md) retain their own scope. Definitions and conformance declarations are not security certificates. OpenType and Codecs have format controls and limits separate from the writer.
 
-The **0.7.0** PDF-to-HTML module with the selected reader **0.7.0** retains its own
+The **0.8.1** PDF-to-HTML module with the selected reader **0.7.0** retains its own
 [security checks](https://pdftoolkit.github.io/modules/to-html/security.html)
 and [explicit policies](https://pdftoolkit.github.io/modules/to-html/policies.html).
 Independent tests verify HTML/CSS/URL filtering, associations and IDs,
 cumulative budgets, inline images and runtime confinement to bound controls.
 PDF scripts, remote resources and ResetForm/SubmitForm actions are disabled
 by default. Enabling the library-owned reset does not enable source scripts.
+HTML 0.8 separates the explicit local-stylesheet capability from script permission:
+its bounded filter rejects remote resource functions and imports, preserves
+ordered declarations, and accepts the documented subset of nested conditions.
+The demo selects that capability explicitly; the library default remains unchanged.
 Rendering remains application-supplied. Native password or certificate authentication is an
 explicit reader selection; the [HTML authentication guide](https://pdftoolkit.github.io/modules/to-html/authentication.html)
 shows its construction. The receiving HTML viewer must enforce verified

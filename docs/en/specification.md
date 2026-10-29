@@ -10,7 +10,7 @@ have a separate archival catalogue, including the original portfolio and its
 embedded-document relationships. They support comparison and targeted audits;
 their preservation does not alter the active definition inventories or establish
 implementation of all their procedures.
-The current libraries use 64-bit PHP 8.3 or later: core 0.12, Reader/HTML 0.7, Images/Fonts 0.2, OpenType 0.4 and Codecs 0.1. Exact published versions and commits are pinned in the source manifest. OpenType and Codecs have no PDF core dependency.
+The current libraries use 64-bit PHP 8.3 or later: core 0.12, Reader 0.7, HTML 0.8, Images/Fonts 0.2, OpenType 0.4 and Codecs 0.1. Exact published versions and commits are pinned in the source manifest. OpenType and Codecs have no PDF core dependency.
 The PHP runtime version and PDF format version are independent. The [PDF 2.0 guide](pdf-2-0.md)
 tracks ISO 32000-2:2020 EC3 separately from the ISO1 counts below. The
 [companion-specifications guide](pdf-2-0-bundle.md) describes ISO/TS 32001–32005,

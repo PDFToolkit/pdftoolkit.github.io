@@ -26,6 +26,8 @@ workflow de déploiement. Le code PHP, les exemples exécutables, les fixtures
 et les documents de spécification originaux restent dans
 [leurs dépôts de packages](https://github.com/orgs/PDFToolkit/repositories).
 Les guides des modules sont publiés ici à partir de leurs sources versionnées.
+La documentation **0.14** sélectionne HTML **0.8** et la démo interactive **0.3** ;
+le core reste en **0.12** et Reader en **0.7**, avec des révisions exactes distinctes.
 Le core regroupe ses dix-huit PDF de référence originaux dans
 `resources/reference-documents/`, avec leurs noms et octets d’origine.
 Les téléchargements publics des références conservent leurs URL existantes.
@@ -41,7 +43,7 @@ Composer :
 composer require "roukmoute/pdf:^0.12"
 ```
 
-Les versions documentées sont le core **0.12**, Reader **0.7**, Images et Fonts **0.2**, OpenType **0.4**, Codecs **0.1** et PDF vers HTML **0.7**. Elles nécessitent **PHP 8.3 ou supérieur en 64 bits** ; leurs validations couvrent PHP 8.3, 8.4 et 8.5. Les versions et révisions exactes sont fixées dans le manifeste de sources. OpenType et Codecs ne dépendent pas du core PDF.
+Les versions documentées sont le core **0.12**, Reader **0.7**, Images et Fonts **0.2**, OpenType **0.4**, Codecs **0.1** et PDF vers HTML **0.8**. Elles nécessitent **PHP 8.3 ou supérieur en 64 bits** ; leurs validations couvrent PHP 8.3, 8.4 et 8.5. Les versions et révisions exactes sont fixées dans le manifeste de sources. OpenType et Codecs ne dépendent pas du core PDF.
 
 Choisir les modules optionnels selon les fichiers traités par l'application :
 
@@ -55,7 +57,7 @@ Choisir les modules optionnels selon les fichiers traités par l'application :
 
 Les modules images/fontes/lecteur installent le core. Fonts installe aussi le modèle OpenType indépendant ; PDF vers HTML installe Reader. Codecs est une bibliothèque de décodeurs en PHP pur distincte. Au décodage explicite d’une image, Reader choisit d’abord un profil natif Ghostscript/prlimit qualifié, puis la bibliothèque PHP installée si la capacité manque. Sans moteur disponible, il indique une commande Composer utilisable sans installer silencieusement de dépendance. Le [guide des codecs image](https://pdftoolkit.github.io/fr/modules/reader/image-codecs.html) précise profils, budgets et métadonnées.
 
-PDF vers HTML 0.7 dérive le contenu sémantique des PDF balisés avec vérification
+PDF vers HTML 0.8 dérive le contenu sémantique des PDF balisés avec vérification
 des associations structurelles, Unicode, images, tableaux, navigation et champs.
 Son [registre des clauses](https://pdftoolkit.github.io/fr/modules/to-html/requirements.html)
 relie la référence conservée aux décisions exécutables et aux tests indépendants.
@@ -66,10 +68,19 @@ explique l'export PDF isolé et le moteur de rendu fourni par l'application.
 Rendu, authentification et codecs non pris en charge restent des capacités
 explicites ; le profil par défaut n'exécute aucun script PDF ni action de formulaire.
 
-PDF vers HTML 0.7 préserve la mise en forme MathML native lors du mapping de
+PDF vers HTML 0.8 préserve la mise en forme MathML native lors du mapping de
 Placement Layout, y compris pour les classes partagées. Le CSS explicite et le
 display MathML de l’auteur gardent leur priorité. Le [guide de couverture MathML](https://pdftoolkit.github.io/fr/modules/to-html/coverage.html#placement-mathml-et-rendu-navigateur)
 explique les règles et les contrôles indépendants Chromium/Firefox.
+
+HTML 0.8 ajoute des feuilles de style locales explicitement autorisées et filtrées,
+sans activer les scripts PDF ni les ressources distantes, et conserve l’ordre
+des déclarations de repli pour les navigateurs. La [galerie de la démo 0.3](https://pdftoolkit.github.io/fr/modules/to-html/demo/)
+contient onze exemples, dont un PDF produit par LuaLaTeX avec MathML dans son
+arbre de structure. Sa source et la provenance du build sont téléchargeables.
+Le [guide des politiques](https://pdftoolkit.github.io/fr/modules/to-html/policies.html)
+explique le profil optionnel d’interopérabilité des feuilles du catalogue ; ces
+exemples montrent des comportements testés, sans promettre une conformité PDF universelle.
 
 PDF vers HTML 0.6 ajoute le rendu réutilisable des apparences de boutons, la
 [validation explicite des signatures](https://pdftoolkit.github.io/fr/modules/to-html/signatures.html)

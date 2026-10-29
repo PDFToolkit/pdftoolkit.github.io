@@ -10,15 +10,20 @@ invariants restent dans le core. Le module
 [documentation de sécurité](https://github.com/PDFToolkit/pdf-reader/blob/v0.7.0/docs/security.md)
 pour la lecture de fichiers externes ; cette revue du générateur ne s'y substitue pas.
 
-Le [manifeste de sources](../resources/sources.json) fixe les versions et révisions : core 0.12, Reader/HTML 0.7, Images/Fonts 0.2, OpenType 0.4 et Codecs 0.1. Ces bibliothèques utilisent PHP 8.3+ en 64 bits ; la qualification couvre PHP 8.3/8.4/8.5. Les [mécanismes complémentaires PDF 2.0](pdf-2-0-bundle.md) restent dans leur domaine propre. Définitions et déclarations de conformité ne sont pas des certificats de sécurité. OpenType et Codecs ont leurs propres contrôles de formats et limites, distincts du writer.
+Le [manifeste de sources](../resources/sources.json) fixe les versions et révisions : core 0.12, Reader 0.7, HTML 0.8, Images/Fonts 0.2, OpenType 0.4 et Codecs 0.1. Ces bibliothèques utilisent PHP 8.3+ en 64 bits ; la qualification couvre PHP 8.3/8.4/8.5. Les [mécanismes complémentaires PDF 2.0](pdf-2-0-bundle.md) restent dans leur domaine propre. Définitions et déclarations de conformité ne sont pas des certificats de sécurité. OpenType et Codecs ont leurs propres contrôles de formats et limites, distincts du writer.
 
-Le module PDF vers HTML **0.7.0**, avec le lecteur sélectionné **0.7.0**, conserve ses propres
+Le module PDF vers HTML **0.8.1**, avec le lecteur sélectionné **0.7.0**, conserve ses propres
 [contrôles de sécurité](https://pdftoolkit.github.io/fr/modules/to-html/security.html)
 et [politiques explicites](https://pdftoolkit.github.io/fr/modules/to-html/policies.html).
 Ses tests indépendants vérifient filtrage HTML/CSS/URL, associations et IDs,
 budgets cumulatifs, images inline et confinement du runtime aux contrôles liés.
 Par défaut, scripts PDF, ressources distantes et actions ResetForm/SubmitForm sont
 désactivés. Activer le reset de la bibliothèque n'autorise pas les scripts source.
+HTML 0.8 sépare la capacité explicite de feuilles de style locales de l’autorisation
+des scripts : son filtre borné refuse les fonctions de ressources distantes et les
+imports, conserve l’ordre des déclarations et accepte le sous-ensemble documenté
+de conditions imbriquées. La démo choisit cette capacité explicitement ; le profil
+par défaut de la bibliothèque reste inchangé.
 Le moteur de rendu reste fourni par l'application. L'authentification native par
 mot de passe ou certificat est une sélection explicite du lecteur ; le
 [guide HTML d'authentification](https://pdftoolkit.github.io/fr/modules/to-html/authentication.html)

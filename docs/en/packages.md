@@ -1,7 +1,7 @@
 # Core and optional modules
 
 PDFToolkit separates the PDF model from external-file processing.
-The documented release series are core **0.12**, Reader **0.7**, Images and Fonts **0.2**, OpenType **0.4**, Codecs **0.1** and PDF-to-HTML **0.7**. They require **64-bit PHP 8.3 or later**; qualification covers PHP 8.3, 8.4 and 8.5. The source manifest pins exact versions and revisions. OpenType and Codecs have no PDF core dependency.
+The documented release series are core **0.12**, Reader **0.7**, Images and Fonts **0.2**, OpenType **0.4**, Codecs **0.1** and PDF-to-HTML **0.8**. They require **64-bit PHP 8.3 or later**; qualification covers PHP 8.3, 8.4 and 8.5. The source manifest pins exact versions and revisions. OpenType and Codecs have no PDF core dependency.
 The core retains its Composer name `roukmoute/pdf`; modules use `pdftoolkit/`.
 
 ## The core boundary
@@ -51,7 +51,7 @@ Core 0.8.0 retains PDF 2.0 writing with modern cryptography and PDF MAC, metadat
 
 ## Installing what the application needs
 
-All seven libraries are available on Packagist under `roukmoute/pdf` or the `pdftoolkit/` names above. The documented constraints are core `^0.12`, Reader/HTML `^0.7`, Images/Fonts `^0.2`, OpenType `^0.4` and Codecs `^0.1`. Older core tags `v0.1.0` and `v0.1.1` retain their PHP 8.5 constraint.
+All seven libraries are available on Packagist under `roukmoute/pdf` or the `pdftoolkit/` names above. The documented constraints are core `^0.12`, Reader `^0.7`, HTML `^0.8`, Images/Fonts `^0.2`, OpenType `^0.4` and Codecs `^0.1`. Older core tags `v0.1.0` and `v0.1.1` retain their PHP 8.5 constraint.
 
 To generate PDFs only:
 
@@ -102,7 +102,7 @@ Applications that added GitHub repositories under `repositories` can remove
 those entries from `composer.json`. Composer package names remain identical.
 
 Before 1.0, a new minor release may change names and signatures. The
-`^0.12`, `^0.7` and `^0.2` constraints allow patches within their series and
+`^0.12`, `^0.7`, `^0.8` and `^0.2` constraints allow patches within their series and
 exclude the next minor release. Consult changelogs before switching series.
 To work with upcoming development, explicitly request `dev-master` for the
 relevant packages.
@@ -229,10 +229,10 @@ and [coverage guide](coverage.md).
 
 ## Derive HTML from a tagged PDF
 
-The optional [PDF-to-HTML module](https://pdftoolkit.github.io/modules/to-html/index.html) follows the retained PDF Association **Deriving HTML from PDF 1.2** usage specification. Version 0.7 uses Reader 0.7, with 64-bit PHP 8.3+, DOM and mbstring; the source manifest fixes its exact core and module revisions. It derives semantic HTML from logical structure without inferring absent structure, OCR or PDF page layout. Model coverage, file adaptation and browser integration remain distinct.
+The optional [PDF-to-HTML module](https://pdftoolkit.github.io/modules/to-html/index.html) follows the retained PDF Association **Deriving HTML from PDF 1.2** usage specification. Version 0.8 uses Reader 0.7, with 64-bit PHP 8.3+, DOM and mbstring; the source manifest fixes its exact core and module revisions. It derives semantic HTML from logical structure without inferring absent structure, OCR or PDF page layout. Model coverage, file adaptation and browser integration remain distinct.
 
 ```sh
-composer require "roukmoute/pdf:^0.12" "pdftoolkit/pdf-to-html:^0.7"
+composer require "roukmoute/pdf:^0.12" "pdftoolkit/pdf-to-html:^0.8"
 ```
 
 [Follow the executable tutorial](tutorials/35-derive-html.md) and inspect diagnostics before publishing HTML. ParentTree associations, table-header identities, destinations, Unicode mappings, inline images and form actions have tests and independent oracles. The [requirements ledger](https://pdftoolkit.github.io/modules/to-html/requirements.html) links each rule to decisions and evidence; it does not certify universal PDF acceptance.
@@ -241,7 +241,7 @@ The [default profile](https://pdftoolkit.github.io/modules/to-html/policies.html
 
 [Graphics](https://pdftoolkit.github.io/modules/to-html/graphics.html) retain their programs and resources: `GraphicPdfExporter` produces an isolated PDF, then `RasterContentRenderer` calls the application's `GraphicsRasterizer`. Rendering engines, encrypted-input authentication, additional codecs and HTML-viewer permission enforcement remain explicit capabilities. A requested visual profile fails explicitly when its engine is unavailable.
 
-HTML 0.7 consumes Reader’s decoded planes and interprets PDF colour/alpha precedence before producing browser PNG assets. Exact-depth promotion, ICC bytes, `Decode` and `SMaskInData` are kept separate from page rendering. Signed/distinct-grid or unsupported colour/precision cases require the explicit renderer or produce diagnostics/placeholders; no silent eight-bit reduction is claimed. The [image codec guide](https://pdftoolkit.github.io/modules/to-html/image-codecs.html) records browser comparison and colour-engine limits.
+HTML 0.8 consumes Reader’s decoded planes and interprets PDF colour/alpha precedence before producing browser PNG assets. Exact-depth promotion, ICC bytes, `Decode` and `SMaskInData` are kept separate from page rendering. Signed/distinct-grid or unsupported colour/precision cases require the explicit renderer or produce diagnostics/placeholders; no silent eight-bit reduction is claimed. The [image codec guide](https://pdftoolkit.github.io/modules/to-html/image-codecs.html) records browser comparison and colour-engine limits.
 
 Native password or certificate authentication is selected through an explicit reader
 passed to `PdfToHtml`; the [authentication guide](https://pdftoolkit.github.io/modules/to-html/authentication.html)

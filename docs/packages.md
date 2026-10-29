@@ -1,7 +1,7 @@
 # Core et modules optionnels
 
 PDFToolkit sépare le modèle PDF des traitements de fichiers externes.
-Les versions documentées sont le core **0.12**, Reader **0.7**, Images et Fonts **0.2**, OpenType **0.4**, Codecs **0.1** et PDF vers HTML **0.7**. Elles nécessitent **PHP 8.3 ou supérieur en 64 bits** ; leurs validations couvrent PHP 8.3, 8.4 et 8.5. Les versions et révisions exactes sont fixées dans le manifeste de sources. OpenType et Codecs ne dépendent pas du core PDF.
+Les versions documentées sont le core **0.12**, Reader **0.7**, Images et Fonts **0.2**, OpenType **0.4**, Codecs **0.1** et PDF vers HTML **0.8**. Elles nécessitent **PHP 8.3 ou supérieur en 64 bits** ; leurs validations couvrent PHP 8.3, 8.4 et 8.5. Les versions et révisions exactes sont fixées dans le manifeste de sources. OpenType et Codecs ne dépendent pas du core PDF.
 Le core conserve son nom Composer `roukmoute/pdf` ; les modules utilisent `pdftoolkit/`.
 
 ## La frontière du core
@@ -49,7 +49,7 @@ Le core 0.8.0 conserve l'écriture PDF 2.0 avec cryptographie moderne/PDF MAC, m
 
 ## Installer ce dont l'application a besoin
 
-Les sept bibliothèques sont disponibles sur Packagist sous `roukmoute/pdf` ou les noms `pdftoolkit/` ci-dessus. Les contraintes documentées sont core `^0.12`, Reader/HTML `^0.7`, Images/Fonts `^0.2`, OpenType `^0.4` et Codecs `^0.1`. Les anciens tags du core `v0.1.0` et `v0.1.1` conservent leur contrainte PHP 8.5.
+Les sept bibliothèques sont disponibles sur Packagist sous `roukmoute/pdf` ou les noms `pdftoolkit/` ci-dessus. Les contraintes documentées sont core `^0.12`, Reader `^0.7`, HTML `^0.8`, Images/Fonts `^0.2`, OpenType `^0.4` et Codecs `^0.1`. Les anciens tags du core `v0.1.0` et `v0.1.1` conservent leur contrainte PHP 8.5.
 
 Pour générer seulement des PDF :
 
@@ -101,7 +101,7 @@ peuvent retirer ces entrées de leur `composer.json`. Les noms Composer des
 packages restent identiques.
 
 Avant 1.0, une nouvelle version mineure peut changer les noms et signatures.
-Les contraintes `^0.12`, `^0.7` et `^0.2` autorisent les correctifs de leur série et
+Les contraintes `^0.12`, `^0.7`, `^0.8` et `^0.2` autorisent les correctifs de leur série et
 écartent la version mineure suivante. Consulter les changelogs avant de changer
 de série. Pour travailler sur les développements à venir, demander explicitement
 `dev-master` pour les packages concernés.
@@ -228,10 +228,10 @@ politique de confiance d'une signature. Ces frontières sont détaillées dans l
 
 ## Dériver du HTML depuis un PDF balisé
 
-Le [module PDF vers HTML](https://pdftoolkit.github.io/fr/modules/to-html/index.html), optionnel, suit la spécification d’usage PDF Association **Deriving HTML from PDF 1.2** conservée. La version 0.7 utilise Reader 0.7, avec PHP 8.3+ en 64 bits, DOM et mbstring ; le manifeste de sources fixe les révisions exactes du core et des modules. Elle dérive le HTML sémantique de la structure logique sans inférer de structure absente, faire d’OCR ni reproduire la mise en page PDF. Modèle, adaptation des fichiers et intégration navigateur restent distincts.
+Le [module PDF vers HTML](https://pdftoolkit.github.io/fr/modules/to-html/index.html), optionnel, suit la spécification d’usage PDF Association **Deriving HTML from PDF 1.2** conservée. La version 0.8 utilise Reader 0.7, avec PHP 8.3+ en 64 bits, DOM et mbstring ; le manifeste de sources fixe les révisions exactes du core et des modules. Elle dérive le HTML sémantique de la structure logique sans inférer de structure absente, faire d’OCR ni reproduire la mise en page PDF. Modèle, adaptation des fichiers et intégration navigateur restent distincts.
 
 ```sh
-composer require "roukmoute/pdf:^0.12" "pdftoolkit/pdf-to-html:^0.7"
+composer require "roukmoute/pdf:^0.12" "pdftoolkit/pdf-to-html:^0.8"
 ```
 
 [Suivre le tutoriel exécutable](tutorials/35-derive-html.md) et examiner les diagnostics avant publication du HTML. Les associations ParentTree, identités des en-têtes de tableaux, destinations, correspondances Unicode, images inline et actions de formulaire disposent de tests et d'oracles indépendants. Le [registre des exigences](https://pdftoolkit.github.io/fr/modules/to-html/requirements.html) relie chaque règle aux décisions et preuves ; il ne certifie pas l'acceptation de tout PDF.
@@ -240,7 +240,7 @@ Le [profil par défaut](https://pdftoolkit.github.io/fr/modules/to-html/policies
 
 Les [graphiques](https://pdftoolkit.github.io/fr/modules/to-html/graphics.html) gardent leurs programmes et ressources : `GraphicPdfExporter` produit un PDF isolé, puis `RasterContentRenderer` appelle le `GraphicsRasterizer` fourni par l'application. Le moteur de rendu, l'authentification des entrées chiffrées, les codecs supplémentaires et le respect des permissions par le lecteur HTML restent des capacités explicites. Un profil visuel demandé sans moteur échoue explicitement.
 
-HTML 0.7 consomme les plans décodés du Reader et interprète les priorités PDF de couleur/alpha avant de produire des PNG pour le navigateur. Promotion exacte de profondeur, octets ICC, `Decode` et `SMaskInData` restent distincts du rendu de page. Les cas signés/à grilles distinctes ou de couleur/précision non représentable demandent le moteur explicite ou produisent diagnostics/placeholders ; aucune réduction silencieuse à huit bits n’est annoncée. Le [guide des codecs image](https://pdftoolkit.github.io/fr/modules/to-html/image-codecs.html) consigne les comparaisons navigateur et limites des moteurs couleur.
+HTML 0.8 consomme les plans décodés du Reader et interprète les priorités PDF de couleur/alpha avant de produire des PNG pour le navigateur. Promotion exacte de profondeur, octets ICC, `Decode` et `SMaskInData` restent distincts du rendu de page. Les cas signés/à grilles distinctes ou de couleur/précision non représentable demandent le moteur explicite ou produisent diagnostics/placeholders ; aucune réduction silencieuse à huit bits n’est annoncée. Le [guide des codecs image](https://pdftoolkit.github.io/fr/modules/to-html/image-codecs.html) consigne les comparaisons navigateur et limites des moteurs couleur.
 
 L'authentification native par mot de passe ou certificat se sélectionne avec un
 lecteur explicite passé à `PdfToHtml` ; le

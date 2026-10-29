@@ -4,6 +4,14 @@
 
 ## Unreleased
 
+## [0.14.0] - 2026-10-29
+
+- Select HTML 0.8.1 to preserve filtered stylesheet links associated with structure elements, while keeping the strict Supplement content rules and independent script/network permissions.
+- Select released HTML 0.8 and demo 0.3 with exact source identities. Document the separate embedded-stylesheet capability, explicit LaTeX catalogue interoperability, preserved CSS fallbacks and list layout corrections in English and French.
+- Introduce the demo with a short beginner workflow. Keep original HTML as the default source view and offer optional visual formatting without changing MathML whitespace, copies or downloads. Make results and source PDF downloads easier to find.
+- Add the real LuaLaTeX MathML structure example, its TeX source and reproducible provenance alongside the existing ten examples. Verify native PHP/WebAssembly identity and mathematical geometry in Chromium and Firefox.
+- Link directly to the publisher's derivation PDF while retaining the archived source and fingerprint. Include associated stylesheet and real MathML browser oracles in the complete site build and preserve existing compatibility routes.
+
 ## [0.13.0] - 2026-10-29
 
 - Preserve the former HTML `InlineFaxBits` and `InlineFaxCodes` API addresses in both languages by redirecting them to their shared Reader implementations, including existing member fragments.

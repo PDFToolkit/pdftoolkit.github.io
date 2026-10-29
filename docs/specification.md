@@ -11,7 +11,7 @@ distinct, comprenant le portfolio original et les relations de ses documents
 incorporés. Ils servent à la comparaison et aux audits ciblés ; leur
 conservation ne modifie pas les inventaires de définitions actifs et ne prouve
 pas l'implémentation de toutes leurs procédures.
-Les bibliothèques actuelles utilisent PHP 8.3 ou supérieur en 64 bits : core 0.12, Reader/HTML 0.7, Images/Fonts 0.2, OpenType 0.4 et Codecs 0.1. Les versions publiées et commits exacts sont fixés dans le manifeste de sources. OpenType et Codecs ne dépendent pas du core PDF.
+Les bibliothèques actuelles utilisent PHP 8.3 ou supérieur en 64 bits : core 0.12, Reader 0.7, HTML 0.8, Images/Fonts 0.2, OpenType 0.4 et Codecs 0.1. Les versions publiées et commits exacts sont fixés dans le manifeste de sources. OpenType et Codecs ne dépendent pas du core PDF.
 La version du runtime PHP et celle du format PDF sont indépendantes.
 Le [guide PDF 2.0](pdf-2-0.md) suit ISO 32000-2:2020 EC3 séparément des chiffres
 ISO1 ci-dessous. Le [guide des spécifications complémentaires](pdf-2-0-bundle.md)
