@@ -151,6 +151,31 @@ class DemoFragment(HTMLParser):
                     raise ValueError('Demo fragment runtime URLs must stay inside the selected assets')
 
 
+@dataclass(frozen=True)
+class DemoCodeSource:
+    artifact: DemoArtifact
+    language: str
+
+    @classmethod
+    def parse(cls, record: dict) -> DemoCodeSource:
+        artifact = DemoArtifact.parse(record)
+        language = next((language for suffix, language in (('.php.txt', 'php'), ('.tex.txt', 'tex'))
+                         if artifact.path.endswith(suffix)), None)
+        if language is None or artifact.mediaType != 'text/plain':
+            raise ValueError('Demo PHP or TeX source must be published as plain text')
+        # Released manifests identify the language through the inventoried filename.
+        # An explicit declaration, when present, must describe those same bytes.
+        if record.get('language', language) != language:
+            raise ValueError('Demo source language differs from its plain-text extension')
+        return cls(artifact, language)
+
+    def label(self, language: str) -> str:
+        if language not in {'en', 'fr'}:
+            raise ValueError('Invalid demo source label locale')
+        return {'php': {'en': 'PHP example', 'fr': 'Exemple PHP'},
+                'tex': {'en': 'LaTeX source', 'fr': 'Source LaTeX'}}[self.language][language]
+
+
 class DemoGallery:
     route = 'modules/to-html/demo/index.html'
     prefix = 'assets/html-demo/'
@@ -237,6 +262,7 @@ class DemoGallery:
             if global_asset is None or not global_asset.matches_gallery_file(artifact):
                 raise ValueError('Gallery asset differs from the complete demo inventory: ' + path)
         seen = set()
+        self.code_sources: dict[str, DemoCodeSource] = {}
         for case in cases:
             if not isinstance(case, dict):
                 raise ValueError('Demo case must be an object')
@@ -270,8 +296,9 @@ class DemoGallery:
                     raise ValueError('Missing or inconsistent demo case file: ' + identifier + '/' + role)
             html_preview = DemoArtifact.parse(files['htmlPreview'])
             html_preview.verify_png(self.build_root / 'gallery', files['htmlPreview'].get('width'), files['htmlPreview'].get('height'))
-            if not files['html']['path'].endswith('.html.txt') or not files['code']['path'].endswith('.php.txt'):
-                raise ValueError('Demo HTML and PHP source must be published as plain text')
+            if not files['html']['path'].endswith('.html.txt'):
+                raise ValueError('Demo HTML source must be published as plain text')
+            self.code_sources[identifier] = DemoCodeSource.parse(files['code'])
             pages = case.get('pages')
             if not isinstance(pages, list) or not 1 <= len(pages) <= 128:
                 raise ValueError('Demo case must preserve all rendered preview pages')
@@ -444,10 +471,11 @@ class DemoGallery:
 
     def fallback(self, language: str, asset_root: str) -> str:
         title = 'Downloadable examples' if language == 'en' else 'Exemples à télécharger'
-        labels = ('Input PDF', 'HTML source', 'PHP example', 'Diagnostics') if language == 'en' else ('PDF source', 'Source HTML', 'Exemple PHP', 'Diagnostics')
         cards = []
         for case in self.gallery['cases']:
             files = case['files']
+            source_label = self.code_sources[case['id']].label(language)
+            labels = ('Input PDF', 'HTML source', source_label, 'Diagnostics') if language == 'en' else ('PDF source', 'Source HTML', source_label, 'Diagnostics')
             url = lambda record: escape(asset_root + 'gallery/' + record['path'], quote=True)
             links = ' · '.join(f'<a href="{url(files[role])}" download>{label}</a>' for role, label in zip(('pdf', 'html', 'code', 'diagnostics'), labels))
             cards.append(f'<article class="card"><img class="card-preview" src="{url(files["preview"])}" alt="{escape(case["title"][language], quote=True)}" loading="lazy"><div class="card-body"><h3>{escape(case["title"][language])}</h3><p>{escape(case["description"][language])}</p><p>{links}</p></div></article>')
@@ -456,18 +484,19 @@ class DemoGallery:
     def teaser(self, language: str, base: str, identifiers: tuple[str, ...]) -> str:
         if language not in {'en', 'fr'} or not re.fullmatch(r'(?:/[A-Za-z0-9_.-]+)*/', base):
             raise ValueError('Invalid visual gallery locale or site root')
-        labels = {'en': ('See the conversion', 'Source PDF', 'Derived HTML', 'Try this example', 'Download PDF', 'PHP example', 'Open full image'),
-                  'fr': ('Voir la conversion', 'PDF source', 'HTML dérivé', 'Essayer cet exemple', 'Télécharger le PDF', 'Exemple PHP', 'Ouvrir l’image entière')}[language]
+        labels = {'en': ('See the conversion', 'Source PDF', 'Derived HTML', 'Try this example', 'Download PDF', 'Open full image'),
+                  'fr': ('Voir la conversion', 'PDF source', 'HTML dérivé', 'Essayer cet exemple', 'Télécharger le PDF', 'Ouvrir l’image entière')}[language]
         selected = {case['id']: case for case in self.gallery['cases']}
         if len(set(identifiers)) != len(identifiers) or any(identifier not in selected for identifier in identifiers):
             raise ValueError('Every guide preview must select a unique published gallery case')
         cards = []
         for identifier in identifiers:
             case = selected[identifier]
+            source_label = self.code_sources[identifier].label(language)
             route = base + ('fr/' if language == 'fr' else '') + self.route + '?sample=' + identifier
             url = lambda key: base + self.prefix + 'gallery/' + case['files'][key]['path']
-            comparisons = ''.join(f'<figure><a href="{escape(url(key), quote=True)}"><img src="{escape(url(key), quote=True)}" alt="{escape(label + " — " + case["title"][language], quote=True)}" loading="lazy"></a><figcaption>{escape(label)} · <a href="{escape(url(key), quote=True)}">{escape(labels[6])}</a></figcaption></figure>' for key, label in (('preview', labels[1]), ('htmlPreview', labels[2])))
-            cards.append(f'<article class="demo-teaser-card" data-demo-case="{identifier}"><h3>{escape(case["title"][language])}</h3><div class="demo-teaser-comparison">{comparisons}</div><p>{escape(case["description"][language])}</p><p class="demo-teaser-links"><a href="{escape(route, quote=True)}">{labels[3]} →</a><a href="{escape(url("pdf"), quote=True)}" download>{labels[4]}</a><a href="{escape(url("code"), quote=True)}" download>{labels[5]}</a></p></article>')
+            comparisons = ''.join(f'<figure><a href="{escape(url(key), quote=True)}"><img src="{escape(url(key), quote=True)}" alt="{escape(label + " — " + case["title"][language], quote=True)}" loading="lazy"></a><figcaption>{escape(label)} · <a href="{escape(url(key), quote=True)}">{escape(labels[5])}</a></figcaption></figure>' for key, label in (('preview', labels[1]), ('htmlPreview', labels[2])))
+            cards.append(f'<article class="demo-teaser-card" data-demo-case="{identifier}"><h3>{escape(case["title"][language])}</h3><div class="demo-teaser-comparison">{comparisons}</div><p>{escape(case["description"][language])}</p><p class="demo-teaser-links"><a href="{escape(route, quote=True)}">{labels[3]} →</a><a href="{escape(url("pdf"), quote=True)}" download>{labels[4]}</a><a href="{escape(url("code"), quote=True)}" download>{source_label}</a></p></article>')
         return '<section class="demo-teaser" aria-label="' + labels[0] + '"><h2>' + labels[0] + '</h2><div class="demo-teaser-cards">' + ''.join(cards) + '</div></section>'
 
     def head(self, base: str = '/') -> str:

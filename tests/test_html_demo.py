@@ -99,6 +99,16 @@ class DemoPublicationTest(unittest.TestCase):
     def load(self):
         return DemoGallery(self.pin, self.source, self.build, self.html)
 
+    def replace_code(self, filename, data, media='text/plain', declaration=None):
+        previous = self.case['files']['code']['path']
+        (self.build / 'gallery' / previous).unlink()
+        asset = self.asset('gallery/sample/' + filename, data, media)
+        self.assets = [item for item in self.assets if item['path'] != 'gallery/' + previous] + [asset]
+        record = {**asset, 'path': 'sample/' + filename}
+        self.gallery_assets[:] = [item for item in self.gallery_assets if item['path'] != previous] + [record]
+        self.case['files']['code'] = {**record, **(declaration or {})}
+        self.save()
+
     def test_runtime_requires_codecs_once_without_unknown_package_substitution(self):
         self.load()
         complete = deepcopy(self.runtime['packages'])
@@ -146,11 +156,55 @@ class DemoPublicationTest(unittest.TestCase):
             self.assertIn('<noscript>', body)
             self.assertIn('&lt;PDF&gt;', body)
             self.assertNotIn('<PDF>', body)
+            self.assertIn('PHP example' if language == 'en' else 'Exemple PHP', body)
         self.assertIn('type="module"', gallery.head())
         self.assertEqual('modules/to-html/demo/index.html', record['pages']['en'])
         self.assertEqual('fr/modules/to-html/demo/index.html', record['pages']['fr'])
         self.assertTrue((self.output / 'assets/html-demo/gallery/sample/result.html.txt').is_file())
         self.assertFalse(any(self.output.rglob('*.html')))
+
+    def test_tex_source_is_published_as_text_with_accurate_bilingual_labels(self):
+        source = b'\\documentclass{article}\n\\begin{document}$x^2$\\end{document}\n'
+        self.replace_code('example.tex.txt', source)
+        gallery = self.load()
+        self.assertEqual('tex', gallery.code_sources['sample'].language)
+        record = gallery.publish(self.output)
+        DemoGallery.validate_published(self.output, record, self.html)
+        self.assertEqual(source, (self.output / 'assets/html-demo/gallery/sample/example.tex.txt').read_bytes())
+        for language, label in (('en', 'LaTeX source'), ('fr', 'Source LaTeX')):
+            for body in (gallery.body(language), gallery.teaser(language, '/', ('sample',))):
+                with self.subTest(language=language, body=body):
+                    self.assertIn('/assets/html-demo/gallery/sample/example.tex.txt', body)
+                    self.assertIn(label, body)
+                    self.assertNotIn('PHP example', body)
+                    self.assertNotIn('Exemple PHP', body)
+                    self.assertNotIn('documentclass', body)
+        self.assertFalse(any(self.output.rglob('*.tex')))
+
+    def test_source_rejects_raw_executable_unknown_extensions_and_wrong_media(self):
+        for filename, media in (
+            ('example.php', 'text/plain'), ('example.tex', 'text/plain'),
+            ('example.html', 'text/plain'), ('example.js', 'text/plain'),
+            ('example.phtml', 'text/plain'), ('example.php.txt.html', 'text/plain'),
+            ('example.tex.txt.js', 'text/plain'), ('example.py.txt', 'text/plain'),
+            ('example.html.txt', 'text/plain'), ('example.PHP.TXT', 'text/plain'),
+            ('example.tex.txt', 'text/html'), ('example.php.txt', 'application/x-httpd-php'),
+        ):
+            with self.subTest(filename=filename, media=media):
+                self.replace_code(filename, b'Untrusted source stays a download.', media)
+                with self.assertRaises(ValueError):
+                    self.load()
+
+    def test_optional_source_language_must_match_the_inventoried_extension(self):
+        for suffix, language in (('php', 'php'), ('tex', 'tex')):
+            self.replace_code('example.' + suffix + '.txt', b'Original source bytes.', declaration={'language': language})
+            self.assertEqual(language, self.load().code_sources['sample'].language)
+            for mismatch in ({'language': 'tex' if language == 'php' else 'php'},
+                             {'language': 'javascript'}, {'language': None}, {'language': []}):
+                with self.subTest(suffix=suffix, declaration=mismatch):
+                    self.replace_code('example.' + suffix + '.txt', b'Original source bytes.', declaration=mismatch)
+                    with self.assertRaisesRegex(ValueError, 'language differs'):
+                        self.load()
 
     def test_only_native_demo_pages_receive_worker_and_blob_permissions(self):
         gallery = self.load()
