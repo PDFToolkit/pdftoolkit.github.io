@@ -18,8 +18,8 @@
     {
       "name": "pdftoolkit/pdf-images",
       "repository": "https://github.com/PDFToolkit/pdf-images",
-      "version": "0.2.0",
-      "revision": "47d208992b0b169ba6b1bf577183a8ece7698ae6",
+      "version": "0.2.1",
+      "revision": "fd8b0f7bb9215817c83ea26ef5e3ba25ad77576f",
       "optional": true
     },
     {

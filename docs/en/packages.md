@@ -68,7 +68,7 @@ composer require "roukmoute/pdf:^0.12" "pdftoolkit/pdf-reader:^0.7.0"
 To convert images:
 
 ```sh
-composer require "roukmoute/pdf:^0.12" "pdftoolkit/pdf-images:^0.2.0"
+composer require "roukmoute/pdf:^0.12" "pdftoolkit/pdf-images:^0.2.1"
 ```
 
 To embed TrueType/CFF fonts and select layout:

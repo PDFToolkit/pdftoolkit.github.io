@@ -34,10 +34,10 @@ API changes appear in the [changelog](../../CHANGELOG.md) and the
 | [`pdftoolkit/pdf-images`](https://pdftoolkit.github.io/modules/images/index.html) | Inspect JPEG files and decode PNG files into core image objects. |
 | [`pdftoolkit/pdf-fonts`](https://pdftoolkit.github.io/modules/fonts/index.html) | Select a static TrueType/CFF1 face, prepare metrics and mappings, and apply explicit OpenType layout to PDF text. |
 
-Reader **0.7.0** supports core `^0.11 || ^0.12`; Images **0.2.0** requires core `^0.12`; Fonts **0.2.0** also supports earlier core series from 0.4 through 0.11. Reader accepts PDF 1.0–2.0 syntax, explicit password/public-key authentication, source MAC verification and bounded object imports. Its image adapter selects a compatible native engine first, then the optional PHP codecs. Images handles static PNG depths, Adam7 and JPEG colour metadata. Fonts supports static TrueType/CFF1 faces and explicit OpenType layout; variable CFF2 embedding remains excluded. These packages are available on Packagist: [reader](https://packagist.org/packages/pdftoolkit/pdf-reader), [images](https://packagist.org/packages/pdftoolkit/pdf-images) and [fonts](https://packagist.org/packages/pdftoolkit/pdf-fonts). For example, to import image files with core 0.12.1:
+Reader **0.7.0** supports core `^0.11 || ^0.12`; Images **0.2.1** requires core `^0.12`; Fonts **0.2.0** also supports earlier core series from 0.4 through 0.11. Reader accepts PDF 1.0–2.0 syntax, explicit password/public-key authentication, source MAC verification and bounded object imports. Its image adapter selects a compatible native engine first, then the optional PHP codecs. Images handles static PNG depths, Adam7 and JPEG colour metadata. Fonts supports static TrueType/CFF1 faces and explicit OpenType layout; variable CFF2 embedding remains excluded. These packages are available on Packagist: [reader](https://packagist.org/packages/pdftoolkit/pdf-reader), [images](https://packagist.org/packages/pdftoolkit/pdf-images) and [fonts](https://packagist.org/packages/pdftoolkit/pdf-fonts). For example, to import image files with core 0.12.1:
 
 ```sh
-composer require "roukmoute/pdf:^0.12.1" "pdftoolkit/pdf-images:^0.2.0"
+composer require "roukmoute/pdf:^0.12.1" "pdftoolkit/pdf-images:^0.2.1"
 ```
 
 The module installs the core with its stable constraint. The [package guide](packages.md) explains boundaries, installation and reader behavior. Keep the application's `composer.lock` to pin the versions and commits used.

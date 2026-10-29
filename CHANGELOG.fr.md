@@ -6,6 +6,8 @@
 
 ## [0.13.0] - 2026-10-29
 
+- Sélectionner Images 0.2.1 depuis son checkout publié indépendant, avec son guide d’architecture français/anglais harmonisé. Conserver distinctes les dépendances verrouillées des exemples du core et des oracles de modules.
+
 - Sélectionner core 0.12.1, Reader 0.7, Images 0.2, Fonts 0.2, OpenType 0.4,
   HTML 0.7 et Codecs indépendant 0.1 publiés, aux commits exacts de leurs tags
   annotés. Construire les sept inventaires API et guides depuis ces sources.

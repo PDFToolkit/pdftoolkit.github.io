@@ -6,6 +6,8 @@
 
 ## [0.13.0] - 2026-10-29
 
+- Select Images 0.2.1 from its independent published checkout, including its aligned French/English architecture guide. Preserve the separate locked dependencies used by core examples and module oracles.
+
 - Select published core 0.12.1, Reader 0.7, Images 0.2, Fonts 0.2, OpenType 0.4,
   HTML 0.7 and independent Codecs 0.1 from their exact annotated tag commits.
   Build all seven API inventories and package guides from these released sources.
