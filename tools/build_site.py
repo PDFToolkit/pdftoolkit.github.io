@@ -122,7 +122,13 @@ LESSONS = [
     ('36-applied-redaction', '36-caviardisation', 'Appliquer une caviardisation', 'pdf17-secure-redaction', 'Suppression conservatrice des données et écriture d’un nouveau fichier.'),
     ('37-protected-form-fill', '37-remplissage-protege', 'Remplir un formulaire certifié', 'protected-form-fill', 'DocMDP, FieldMDP et remplacement isolé de l’apparence à texte variable.'),
 ]
-HTML_TO_PDF_EXAMPLES = ('invoice', 'catalogue', 'multipage')
+HTML_TO_PDF_EXAMPLE_TITLES = {
+    'invoice': 'Facture HTML vers PDF',
+    'catalogue': 'Catalogue HTML vers PDF',
+    'multipage': 'Document HTML sur plusieurs pages',
+    'css1': 'Bordures et cascade CSS1',
+}
+HTML_TO_PDF_EXAMPLES = tuple(HTML_TO_PDF_EXAMPLE_TITLES)
 EXTERNAL_EXAMPLES = {
     **{'from-html-' + name: {'package': 'pdftoolkit/html-to-pdf', 'source': 'examples/generate.php', 'kind': 'html-to-pdf', 'htmlSource': 'examples/sources/' + name + '.html'} for name in HTML_TO_PDF_EXAMPLES},
     'reading-pages': {
@@ -174,6 +180,7 @@ MODULES = {
         ('docs/invoice.md', 'invoice', 'Facture HTML vers PDF'),
         ('docs/catalogue.md', 'catalogue', 'Catalogue HTML vers PDF'),
         ('docs/multipage.md', 'multipage', 'Document HTML sur plusieurs pages'),
+        ('docs/css1.md', 'css1', 'Bordures et cascade CSS1'),
     ]),
     'pdftoolkit/pdf-codecs': ('codecs', 'Décoder les images en PHP', [('docs/architecture.md', 'architecture', 'Contrats des codecs d’image'), ('docs/jpeg.md', 'jpeg', 'Décodage JPEG'), ('docs/jpeg2000.md', 'jpeg2000', 'Décodage JPEG 2000'), ('docs/jbig2.md', 'jbig2', 'Décodage JBIG2')]),
     'pdftoolkit/pdf-reader': ('reader', 'Lire un PDF', [('docs/architecture.md', 'architecture', 'Architecture du lecteur'), ('docs/pages.md', 'pages', 'Pages, héritage et flux'), ('docs/inspection.md', 'inspection', 'Inspecter la structure PDF'), ('docs/revision-history.md', 'revision-history', 'Historique physique des révisions'), ('docs/structural-policy.md', 'structural-policy', 'Politique structurelle PDF 2.0'), ('docs/authentication.md', 'authentication', 'Authentification des PDF chiffrés'), ('docs/public-key-authentication.md', 'public-key-authentication', 'Authentification par clé publique'), ('docs/source-mac.md', 'source-mac', 'Authentifier le MAC du PDF source'), ('docs/external-streams.md', 'external-streams', 'Résolution explicite des flux externes'), ('docs/fax.md', 'fax', 'Décodage et délimitation CCITT'), ('docs/image-codecs.md', 'image-codecs', 'Moteurs natifs et codecs PHP'), ('docs/import.md', 'import', 'Importer les objets lus'), ('docs/components.md', 'components', 'Composants du lecteur'), ('docs/security.md', 'security', 'Limites et sécurité du lecteur')]),
@@ -845,7 +852,7 @@ class Site:
 
     def html_to_pdf_cards(self) -> str:
         cards = []
-        for name, title in [('invoice', 'Facture HTML vers PDF'), ('catalogue', 'Catalogue HTML vers PDF'), ('multipage', 'Document HTML sur plusieurs pages')]:
+        for name, title in HTML_TO_PDF_EXAMPLE_TITLES.items():
             example = 'from-html-' + name
             image = self.pdf_pages[example][0]
             cards.append(f'<div class="card"><a href="{e(self.url(self.examples[example]))}"><img src="{e(self.url("assets/pdf-pages/" + image["file"]))}" width="{image["width"]}" height="{image["height"]}" alt="{e(title)}" loading="lazy"><div class="card-body"><h3>{e(title)}</h3></div></a><p><a href="{e(self.url("examples/" + example + ".pdf"))}">Ouvrir le PDF ↗</a></p></div>')

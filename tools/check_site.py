@@ -18,7 +18,7 @@ from localization import PUBLISHED_ROUTE_ALIASES
 DOCUMENTATION_REPOSITORY = 'https://github.com/PDFToolkit/pdftoolkit.github.io'
 SITE_ORIGIN = 'https://pdftoolkit.github.io'
 MODULE_GUIDES = {
-    'from-html': ['index', 'architecture', 'usage', 'coverage', 'css-levels', 'references', 'invoice', 'catalogue', 'multipage', 'signalements', 'versions'],
+    'from-html': ['index', 'architecture', 'usage', 'coverage', 'css-levels', 'references', 'invoice', 'catalogue', 'multipage', 'css1', 'signalements', 'versions'],
     'codecs': ['index', 'architecture', 'jpeg', 'jpeg2000', 'jbig2', 'signalements', 'versions'],
     'reader': ['index', 'architecture', 'components', 'pages', 'inspection', 'revision-history', 'structural-policy', 'authentication', 'public-key-authentication', 'source-mac', 'external-streams', 'fax', 'image-codecs', 'import', 'security', 'signalements', 'versions'],
     'images': ['index', 'architecture', 'png-colour', 'signalements', 'versions'],
@@ -144,7 +144,7 @@ def module_package(slug):
 
 def validate_html_to_pdf_source(root, name, record, package, documents, example_pages):
     sample = name.removeprefix('from-html-')
-    if sample not in {'invoice', 'catalogue', 'multipage'} or name != 'from-html-' + sample or package.get('name') != 'pdftoolkit/html-to-pdf' or record.get('source') != 'examples/generate.php':
+    if sample not in {'invoice', 'catalogue', 'multipage', 'css1'} or name != 'from-html-' + sample or package.get('name') != 'pdftoolkit/html-to-pdf' or record.get('source') != 'examples/generate.php':
         raise ValueError('Incorrect HTML-to-PDF example provenance: ' + name)
     source_path = 'examples/sources/' + sample + '.html'
     source_url = package['repository'] + '/blob/' + package['revision'] + '/' + source_path

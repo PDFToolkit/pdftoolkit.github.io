@@ -121,8 +121,8 @@ class HtmlToPdfSourcesTest(unittest.TestCase):
         self.assertNotIn('--require-stage', run.call_args_list[0].args[0])
         self.assertEqual(['php', '-d', 'memory_limit=512M', 'examples/generate.php', output], run.call_args_list[1].args[0])
         self.assertTrue(all(call.args[1] == self.from_html for call in run.call_args_list))
-        self.assertEqual(6, len(list(previews.glob('*.png'))))
-        self.assertEqual(3, len(list(pdfs.glob('*.pdf'))))
+        self.assertEqual(2 * len(HTML_TO_PDF_EXAMPLES), len(list(previews.glob('*.png'))))
+        self.assertEqual(len(HTML_TO_PDF_EXAMPLES), len(list(pdfs.glob('*.pdf'))))
 
     def test_example_guides_use_one_generated_preview_panel_and_preserve_package_sources(self):
         owner = 'pdftoolkit/html-to-pdf'
@@ -166,3 +166,28 @@ class HtmlToPdfSourcesTest(unittest.TestCase):
                     other.write_text(original)
                     other_guide, _ = site.render_markdown(owner, str(other.relative_to(self.from_html)))
                     self.assertIn('<img', other_guide)
+
+    def test_css1_has_a_localized_gallery_card_and_navigation_route(self):
+        self.assertEqual(('invoice', 'catalogue', 'multipage', 'css1'), HTML_TO_PDF_EXAMPLES)
+        site = Site.__new__(Site)
+        site.base = '/'
+        site.examples = {'from-html-' + name: 'modules/from-html/' + name + '.html' for name in HTML_TO_PDF_EXAMPLES}
+        site.pdf_pages = {'from-html-' + name: [{'file': 'from-html-' + name + '-1.png', 'width': 794, 'height': 1123}] for name in HTML_TO_PDF_EXAMPLES}
+        for language in ('en', 'fr'):
+            with self.subTest(language=language):
+                site.language = language
+                cards = site.html_to_pdf_cards()
+                if language == 'en':
+                    cards = translate_interface(cards)
+                document = Document(cards)
+                self.assertEqual(4, cards.count('class="card"'))
+                self.assertIn(site.url('modules/from-html/css1.html'), document.links)
+                self.assertIn(site.url('examples/from-html-css1.pdf'), document.links)
+                self.assertIn('CSS1 borders and cascade' if language == 'en' else 'Bordures et cascade CSS1', cards)
+
+    def test_a_generation_receipt_without_the_css1_sample_is_incomplete(self):
+        pdfs = self.root / 'pdfs'
+        pdfs.mkdir()
+        (pdfs / 'html-to-pdf-manifest.json').write_text(json.dumps({'engine': 'native-php', 'documents': {name: {} for name in ('invoice', 'catalogue', 'multipage')}}))
+        with self.assertRaisesRegex(ValueError, 'receipt is incomplete'):
+            publish_html_to_pdf_source(self.from_html, pdfs, self.root, 'from-html-css1', {'htmlSource': 'examples/sources/css1.html'})

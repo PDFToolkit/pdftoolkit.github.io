@@ -375,6 +375,7 @@ TEXT = {
     'Facture HTML vers PDF': 'HTML-to-PDF invoice',
     'Catalogue HTML vers PDF': 'HTML-to-PDF catalogue',
     'Document HTML sur plusieurs pages': 'Multipage HTML document',
+    'Bordures et cascade CSS1': 'CSS1 borders and cascade',
     'Module optionnel : HTML vers PDF': 'Optional module: HTML to PDF',
     'Source HTML au commit documenté ↗': 'HTML source at the documented commit ↗',
     'Source HTML': 'HTML source',

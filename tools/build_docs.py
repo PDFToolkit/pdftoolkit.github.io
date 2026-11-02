@@ -12,7 +12,7 @@ import sys
 
 from check_sources import check, html_dependencies, select_reader, execution_dependencies
 from html_demo import DemoBuild, DemoSource
-from build_site import CORE_PACKAGE, MODULES, guide_pages
+from build_site import CORE_PACKAGE, HTML_TO_PDF_EXAMPLES, MODULES, guide_pages
 from guide_headings import translated_anchors
 
 
@@ -152,7 +152,7 @@ def validate_html_to_pdf_module(args, source: Path, work: Path, pdfs: Path, prev
     run([args.php, "-d", "memory_limit=512M", "examples/generate.php", output], source)
     run([sys.executable, "tools/validate_pdf.py", "--directory", output,
          "--qpdf", args.qpdf, "--pdftoppm", args.pdftoppm, "--pdftotext", args.pdftotext], source)
-    for name in ("invoice", "catalogue", "multipage"):
+    for name in HTML_TO_PDF_EXAMPLES:
         example = "from-html-" + name
         shutil.copyfile(output / (name + ".pdf"), pdfs / (example + ".pdf"))
         for image in (output / "renders").glob(name + "-*.png"):
