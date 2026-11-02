@@ -10,7 +10,7 @@ and their invariants remain in the core. The
 [security documentation](https://github.com/PDFToolkit/pdf-reader/blob/v0.8.1/docs/security.md)
 for reading external files; this generator review does not replace it.
 
-The [source manifest](../../resources/sources.json) pins versions and revisions: core 0.12, Reader 0.7, HTML 0.8, Images/Fonts 0.2, OpenType 0.4 and Codecs 0.1. These libraries use 64-bit PHP 8.3+; qualification covers PHP 8.3/8.4/8.5. [PDF 2.0 companion mechanisms](pdf-2-0-bundle.md) retain their own scope. Definitions and conformance declarations are not security certificates. OpenType and Codecs have format controls and limits separate from the writer.
+The [source manifest](../../resources/sources.json) pins versions and revisions: core 0.12.3, Reader 0.8.1, PDF-to-HTML 0.8.3, Images 0.2.2, Fonts 0.2.1, OpenType 0.4.0, Codecs 0.1.0 and HTML-to-PDF 0.2.1. These libraries use 64-bit PHP 8.3+; qualification covers PHP 8.3/8.4/8.5. [PDF 2.0 companion mechanisms](pdf-2-0-bundle.md) retain their own scope. Definitions and conformance declarations are not security certificates. OpenType and Codecs have format controls and limits separate from the writer.
 
 The **0.8.3** PDF-to-HTML module with the selected reader **0.8.1** retains its own
 [security checks](https://pdftoolkit.github.io/modules/to-html/security.html)

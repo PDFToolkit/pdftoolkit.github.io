@@ -105,8 +105,9 @@ seul n'installe aucun module. Conserver le `composer.lock` de l'application pour
 fixer les versions et les révisions.
 
 Les applications qui avaient ajouté les dépôts GitHub dans `repositories`
-peuvent retirer ces entrées de leur `composer.json`. Les noms Composer des
-packages restent identiques.
+peuvent retirer ces entrées de leur `composer.json`. Si elles exigent encore
+`roukmoute/pdf`, suivre la [migration du nom du package](https://github.com/PDFToolkit/pdf/blob/v0.12.3/README.fr.md#migration-du-nom-du-package)
+vers `pdftoolkit/pdf`. Les espaces de noms PHP et les classes restent identiques.
 
 Avant 1.0, une nouvelle version mineure peut changer les noms et signatures.
 Les contraintes `^0.12`, `^0.8` et `^0.2` autorisent les correctifs de leur série et
@@ -114,7 +115,7 @@ Les contraintes `^0.12`, `^0.8` et `^0.2` autorisent les correctifs de leur sér
 de série. Pour travailler sur les développements à venir, demander explicitement
 `dev-master` pour les packages concernés.
 
-Images 0.2 exige le core `^0.12` ; Reader 0.8 exige `^0.11 || ^0.12`. Fonts 0.2 accepte ses séries documentées du core 0.4–0.12 et exige OpenType `^0.4`. Les commandes ci-dessus sélectionnent le core 0.12. Le [guide de migration](migration-0.11.md) reste pertinent pour les changements d’API 0.11. Le core demande `ctype`, `iconv` et `zlib` ; les fournisseurs AES, CMS et de signature choisis demandent aussi `openssl`. Chaque manifeste Composer publié précise la compatibilité exacte.
+Les versions sélectionnées Reader 0.8.1, Images 0.2.2 et Fonts 0.2.1 exigent toutes le core canonique `pdftoolkit/pdf:^0.12.2`. Fonts exige aussi OpenType `^0.4`. Cette documentation sélectionne le core 0.12.3. Les versions antérieures des modules conservent leurs contraintes historiques dans leurs propres manifestes publiés ; elles ne décrivent pas la compatibilité de cette sélection. Le [guide de migration](migration-0.11.md) reste pertinent pour les changements d’API 0.11. Le core demande `ctype`, `iconv` et `zlib` ; les fournisseurs AES, CMS et de signature choisis demandent aussi `openssl`. Chaque manifeste Composer publié précise la compatibilité exacte.
 
 ## Lire un PDF externe
 

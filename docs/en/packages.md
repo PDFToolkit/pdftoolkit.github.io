@@ -107,7 +107,9 @@ core alone installs no module. Keep the application's `composer.lock` to
 pin versions and revisions.
 
 Applications that added GitHub repositories under `repositories` can remove
-those entries from `composer.json`. Composer package names remain identical.
+those entries from `composer.json`. If they still require `roukmoute/pdf`, follow
+the [package name migration](https://github.com/PDFToolkit/pdf/blob/v0.12.3/README.md#package-name-migration)
+to `pdftoolkit/pdf`. PHP namespaces and classes remain unchanged.
 
 Before 1.0, a new minor release may change names and signatures. The
 `^0.12`, `^0.8` and `^0.2` constraints allow patches within their series and
@@ -115,7 +117,7 @@ exclude the next minor release. Consult changelogs before switching series.
 To work with upcoming development, explicitly request `dev-master` for the
 relevant packages.
 
-Images 0.2 requires core `^0.12`; Reader 0.8 requires `^0.11 || ^0.12`. Fonts 0.2 accepts its documented core 0.4–0.12 series and requires OpenType `^0.4`. The commands above select core 0.12. The [migration guide](migration-0.11.md) remains relevant to 0.11 API changes. Core needs `ctype`, `iconv` and `zlib`; selected AES, CMS and signature providers also need `openssl`. Exact compatibility is recorded in each published Composer manifest.
+The selected Reader 0.8.1, Images 0.2.2 and Fonts 0.2.1 releases all require the canonical core `pdftoolkit/pdf:^0.12.2`. Fonts also requires OpenType `^0.4`. This documentation selects core 0.12.3. Earlier module releases retain their historical constraints in their own published manifests; those constraints do not describe the compatibility of this selection. The [migration guide](migration-0.11.md) remains relevant to 0.11 API changes. Core needs `ctype`, `iconv` and `zlib`; selected AES, CMS and signature providers also need `openssl`. Exact compatibility is recorded in each published Composer manifest.
 
 ## Reading an external PDF
 

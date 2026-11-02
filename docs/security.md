@@ -10,7 +10,7 @@ invariants restent dans le core. Le module
 [documentation de sécurité](https://github.com/PDFToolkit/pdf-reader/blob/v0.8.1/docs/security.md)
 pour la lecture de fichiers externes ; cette revue du générateur ne s'y substitue pas.
 
-Le [manifeste de sources](../resources/sources.json) fixe les versions et révisions : core 0.12, Reader 0.7, HTML 0.8, Images/Fonts 0.2, OpenType 0.4 et Codecs 0.1. Ces bibliothèques utilisent PHP 8.3+ en 64 bits ; la qualification couvre PHP 8.3/8.4/8.5. Les [mécanismes complémentaires PDF 2.0](pdf-2-0-bundle.md) restent dans leur domaine propre. Définitions et déclarations de conformité ne sont pas des certificats de sécurité. OpenType et Codecs ont leurs propres contrôles de formats et limites, distincts du writer.
+Le [manifeste de sources](../resources/sources.json) fixe les versions et révisions : core 0.12.3, Reader 0.8.1, PDF vers HTML 0.8.3, Images 0.2.2, Fonts 0.2.1, OpenType 0.4.0, Codecs 0.1.0 et HTML vers PDF 0.2.1. Ces bibliothèques utilisent PHP 8.3+ en 64 bits ; la qualification couvre PHP 8.3/8.4/8.5. Les [mécanismes complémentaires PDF 2.0](pdf-2-0-bundle.md) restent dans leur domaine propre. Définitions et déclarations de conformité ne sont pas des certificats de sécurité. OpenType et Codecs ont leurs propres contrôles de formats et limites, distincts du writer.
 
 Le module PDF vers HTML **0.8.3**, avec le lecteur sélectionné **0.8.1**, conserve ses propres
 [contrôles de sécurité](https://pdftoolkit.github.io/fr/modules/to-html/security.html)
