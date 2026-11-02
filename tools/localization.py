@@ -527,6 +527,7 @@ TEXT = {
     'Couverture OpenType': 'OpenType coverage',
     'Substitutions de glyphes': 'Glyph substitutions',
     'Lire un PDF': 'Reading a PDF', 'Architecture du lecteur': 'Reader architecture',
+    'Inspecter la structure PDF': 'Inspecting PDF structure',
     'Pages, héritage et flux': 'Pages, inheritance and streams', 'Composants du lecteur': 'Reader components',
     'Limites et sécurité du lecteur': 'Reader limits and security', 'Convertir des images': 'Converting images',
     'Contrats des convertisseurs d’images': 'Image converter contracts', 'Analyser des fontes': 'Inspecting fonts',

@@ -91,6 +91,7 @@ class DemoPublicationTest(unittest.TestCase):
         artifact = self.asset('gallery/gallery-manifest.json', data, 'application/json')
         assets = [item for item in self.assets if item['path'] != artifact['path']] + [artifact]
         self.manifest = {'schemaVersion': 1, 'htmlPackage': self.html,
+                         **({'readerPackage': self.gallery['readerPackage']} if 'readerPackage' in self.gallery else {}),
                          'application': {'repository': self.pin.repository, 'version': self.pin.version, 'revision': self.pin.revision, 'draft': False},
                          'runtime': 'assets/runtime-manifest.json', 'worker': 'assets/conversion-worker.js', 'trustedScriptHashes': getattr(self, 'trusted_hashes', []),
                          'gallery': 'gallery/gallery-manifest.json', 'assets': assets}
@@ -98,6 +99,104 @@ class DemoPublicationTest(unittest.TestCase):
 
     def load(self):
         return DemoGallery(self.pin, self.source, self.build, self.html)
+
+    def enable_inspection(self):
+        self.pin = replace(self.pin, version='0.4.0', tag='v0.4.0')
+        self.gallery['generator']['version'] = self.case['source']['version'] = self.pin.version
+        self.gallery['readerPackage'] = {'version': '0.8.0', 'revision': 'c' * 40}
+        reader = next(package for package in self.runtime['packages'] if package['name'] == 'pdftoolkit/pdf-reader')
+        reader.update(version='v0.8.0', source={'reference': 'c' * 40}, dist={'reference': 'c' * 40})
+        runtime = self.asset('assets/runtime-manifest.json', json.dumps(self.runtime).encode(), 'application/json')
+        self.assets = [item for item in self.assets if item['path'] != runtime['path']] + [runtime]
+        self.inspection = {'source': {key: self.case['files']['pdf'][key] for key in ('sha256', 'bytes')},
+                           'inspection': {'schemaVersion': 1, 'document': {'tagged': False}, 'truncated': False,
+                                          **{key: [] for key in ('pages', 'roots', 'nodes', 'objects', 'roleMappings', 'associatedFiles', 'diagnostics')}}}
+        self.save_inspection()
+
+    def save_inspection(self):
+        asset = self.asset('gallery/sample/inspection.json', (json.dumps(self.inspection) + '\n').encode(), 'application/json')
+        self.assets = [item for item in self.assets if item['path'] != asset['path']] + [asset]
+        record = {**asset, 'path': 'sample/inspection.json'}
+        self.gallery_assets[:] = [item for item in self.gallery_assets if item['path'] != record['path']] + [record]
+        self.case['files']['inspection'] = record
+        self.save()
+
+    def test_new_demo_publishes_verified_inspection_and_reader_identity(self):
+        self.enable_inspection()
+        gallery = self.load()
+        record = gallery.publish(self.output)
+        self.assertEqual(self.gallery['readerPackage'], record['readerPackage'])
+        DemoGallery.validate_published(self.output, record, self.html)
+        for language, label in (('en', 'PDF structure JSON'), ('fr', 'Structure PDF en JSON')):
+            body = gallery.body(language)
+            self.assertIn(label, body)
+            self.assertIn('/assets/html-demo/gallery/sample/inspection.json', body)
+        self.assertEqual(self.inspection, json.loads((self.output / 'assets/html-demo/gallery/sample/inspection.json').read_text()))
+        record['readerPackage'] = {**record['readerPackage'], 'revision': 'd' * 40}
+        with self.assertRaisesRegex(ValueError, 'Published inspection Reader'):
+            DemoGallery.validate_published(self.output, record, self.html)
+
+    def test_new_demo_requires_snapshot_for_every_case(self):
+        self.enable_inspection()
+        del self.case['files']['inspection']
+        self.save()
+        with self.assertRaisesRegex(ValueError, 'artifact path'):
+            self.load()
+
+    def test_inspection_must_identify_exact_pdf_even_with_consistent_inventory_hashes(self):
+        self.enable_inspection()
+        original = deepcopy(self.inspection)
+        for key, value in (('sha256', 'f' * 64), ('bytes', original['source']['bytes'] + 1), ('bytes', float(original['source']['bytes']))):
+            with self.subTest(key=key):
+                self.inspection = deepcopy(original)
+                self.inspection['source'][key] = value
+                self.save_inspection()
+                with self.assertRaisesRegex(ValueError, 'source identity'):
+                    self.load()
+
+    def test_inspection_schema_and_actual_bytes_are_verified(self):
+        self.enable_inspection()
+        original = deepcopy(self.inspection)
+        for version in (99, True):
+            self.inspection['inspection']['schemaVersion'] = version
+            self.save_inspection()
+            with self.subTest(version=version), self.assertRaisesRegex(ValueError, 'inspection schema'):
+                self.load()
+        self.inspection = original
+        del self.inspection['inspection']['roots']
+        self.save_inspection()
+        with self.assertRaisesRegex(ValueError, 'inspection collection'):
+            self.load()
+        self.inspection['inspection']['roots'] = []
+        self.save_inspection()
+        with (self.build / 'gallery/sample/inspection.json').open('ab') as stream:
+            stream.write(b' ')
+        with self.assertRaisesRegex(ValueError, 'Modified demo artifact'):
+            self.load()
+
+    def test_inspection_reader_matches_manifests_and_runtime(self):
+        self.enable_inspection()
+        self.manifest['readerPackage'] = {**self.gallery['readerPackage'], 'revision': 'd' * 40}
+        (self.build / 'demo-manifest.json').write_text(json.dumps(self.manifest))
+        with self.assertRaisesRegex(ValueError, 'same released Reader identity'):
+            self.load()
+        self.gallery['readerPackage']['revision'] = 'd' * 40
+        self.save()
+        with self.assertRaisesRegex(ValueError, 'inspection Reader package'):
+            self.load()
+
+    def test_demo_reader_must_match_selected_documentation_before_and_after_publication(self):
+        self.enable_inspection()
+        selected = {**self.gallery['readerPackage'], 'name': 'pdftoolkit/pdf-reader'}
+        gallery = DemoGallery(self.pin, self.source, self.build, self.html, selected)
+        record = gallery.publish(self.output)
+        DemoGallery.validate_published(self.output, record, self.html, selected)
+        for mismatch in ({**selected, 'version': '0.7.0'}, {**selected, 'revision': 'd' * 40}):
+            with self.subTest(mismatch=mismatch):
+                with self.assertRaisesRegex(ValueError, 'selected documentation source'):
+                    DemoGallery(self.pin, self.source, self.build, self.html, mismatch)
+                with self.assertRaisesRegex(ValueError, 'selected documentation source'):
+                    DemoGallery.validate_published(self.output, record, self.html, mismatch)
 
     def replace_code(self, filename, data, media='text/plain', declaration=None):
         previous = self.case['files']['code']['path']

@@ -195,6 +195,8 @@ def build(args) -> None:
     ):
         run(command, source)
     prepare_reader_oracle_autoload(reader, reader_consumer)
+    run([sys.executable, "tools/validate_inspection.py", "--php", args.php, "--qpdf", args.qpdf,
+         "--report", work / "reader-inspection-validation.json"], reader)
     run([sys.executable, "tools/validate_source_mac.py", "--php", args.php, "--qpdf", args.qpdf,
          "--work-dir", work / "source-mac-validation"], reader)
     run([sys.executable, "tools/validate_metadata_security.py", "--php", args.php, "--qpdf", args.qpdf], reader)

@@ -176,12 +176,33 @@ class DemoCodeSource:
                 'tex': {'en': 'LaTeX source', 'fr': 'Source LaTeX'}}[self.language][language]
 
 
+@dataclass(frozen=True)
+class DemoInspection:
+    """Bind a bounded Reader snapshot to the exact separately inventoried PDF."""
+    artifact: DemoArtifact
+    source: DemoArtifact
+
+    def verify(self, root: Path) -> None:
+        if self.artifact.mediaType != 'application/json' or self.artifact.bytes > 8 * 1024 * 1024:
+            raise ValueError('Missing or oversized demo inspection JSON')
+        value = json.loads(self.artifact.verify(root).read_text(encoding='utf-8'))
+        source = value.get('source') if isinstance(value, dict) else None
+        if not isinstance(source, dict) or type(source.get('bytes')) is not int or source != {'sha256': self.source.sha256, 'bytes': self.source.bytes}:
+            raise ValueError('Demo inspection source identity differs from its original PDF')
+        snapshot = value.get('inspection')
+        if not isinstance(snapshot, dict) or type(snapshot.get('schemaVersion')) is not int or snapshot['schemaVersion'] != 1 or not isinstance(snapshot.get('document'), dict) or type(snapshot.get('truncated')) is not bool:
+            raise ValueError('Unsupported demo inspection schema')
+        for key in ('pages', 'roots', 'nodes', 'objects', 'roleMappings', 'associatedFiles', 'diagnostics'):
+            if not isinstance(snapshot.get(key), list) or len(snapshot[key]) > 30000:
+                raise ValueError('Invalid or oversized demo inspection collection: ' + key)
+
+
 class DemoGallery:
     route = 'modules/to-html/demo/index.html'
     prefix = 'assets/html-demo/'
     manifest_name = 'demo-manifest.json'
 
-    def __init__(self, source: DemoSource, source_root: Path, build_root: Path, html_package: dict):
+    def __init__(self, source: DemoSource, source_root: Path, build_root: Path, html_package: dict, reader_package: dict | None = None):
         self.source = source
         self.source_root = source_root
         self.build_root = build_root
@@ -196,6 +217,7 @@ class DemoGallery:
             raise ValueError('Missing bounded demo gallery manifest')
         self.gallery = self.read_json(self.artifacts[self.gallery_path].verify(build_root))
         self.validate_gallery()
+        self.validate_reader_source(reader_package)
         self.validate_runtime()
         self.script_hashes = self.trusted_script_hashes(self.manifest)
         for path in ('app.js', 'app.css', 'assets/conversion-worker.js'):
@@ -247,6 +269,13 @@ class DemoGallery:
     def validate_gallery(self) -> None:
         if self.gallery.get('schemaVersion') != 1 or self.gallery.get('htmlPackage') != self.html_package or self.gallery.get('draft') is not False:
             raise ValueError('Gallery package provenance differs from the selected release')
+        inspection_required = tuple(map(int, self.source.version.split('.'))) >= (0, 4, 0)
+        self.reader_package = None
+        if inspection_required:
+            reader = self.gallery.get('readerPackage')
+            if not isinstance(reader, dict) or set(reader) != {'version', 'revision'} or not isinstance(reader['version'], str) or not re.fullmatch(r'\d+\.\d+\.\d+', reader['version']) or tuple(map(int, reader['version'].split('.'))) < (0, 8, 0) or not isinstance(reader['revision'], str) or not re.fullmatch(r'[0-9a-f]{40}', reader['revision']) or self.manifest.get('readerPackage') != reader:
+                raise ValueError('Demo inspection requires the same released Reader identity in both manifests')
+            self.reader_package = reader
         browser = self.gallery.get('browserPreview', {})
         if browser.get('engine') != 'chromium' or not re.fullmatch(r'[0-9]+(?:\.[0-9]+){1,3}', browser.get('version', '')) or type(browser.get('viewportWidth')) is not int or not 320 <= browser['viewportWidth'] <= 8192:
             raise ValueError('HTML previews must retain their actual Chromium capture provenance')
@@ -294,6 +323,11 @@ class DemoGallery:
                 artifact = DemoArtifact.parse(files.get(role, {}))
                 if gallery_assets.get(artifact.path) != artifact or artifact.mediaType != media:
                     raise ValueError('Missing or inconsistent demo case file: ' + identifier + '/' + role)
+            if inspection_required or 'inspection' in files:
+                artifact = DemoArtifact.parse(files.get('inspection', {}))
+                if gallery_assets.get(artifact.path) != artifact:
+                    raise ValueError('Missing or inconsistent demo case inspection: ' + identifier)
+                DemoInspection(artifact, DemoArtifact.parse(files['pdf'])).verify(self.build_root / 'gallery')
             html_preview = DemoArtifact.parse(files['htmlPreview'])
             html_preview.verify_png(self.build_root / 'gallery', files['htmlPreview'].get('width'), files['htmlPreview'].get('height'))
             if not files['html']['path'].endswith('.html.txt'):
@@ -319,6 +353,12 @@ class DemoGallery:
                 raise ValueError('Invalid demo PDF: ' + artifact.path)
             if artifact.mediaType == 'image/png' and not path.read_bytes().startswith(b'\x89PNG\r\n\x1a\n'):
                 raise ValueError('Invalid demo PNG: ' + artifact.path)
+
+    def validate_reader_source(self, reader_package: dict | None) -> None:
+        if self.reader_package is not None and reader_package is not None:
+            selected = {key: reader_package.get(key) for key in ('version', 'revision')}
+            if self.reader_package != selected:
+                raise ValueError('Demo inspection Reader differs from the selected documentation source')
 
     def trusted_script_hashes(self, manifest: dict) -> tuple[str, ...]:
         hashes = set()
@@ -358,6 +398,8 @@ class DemoGallery:
                 raise ValueError('Browser runtime dependency must identify a released source and distribution')
             if package['name'] == 'pdftoolkit/pdf-to-html' and {'version': version, 'revision': revision} != self.html_package:
                 raise ValueError('Browser runtime differs from the selected HTML package')
+            if package['name'] == 'pdftoolkit/pdf-reader' and self.reader_package is not None and {'version': version, 'revision': revision} != self.reader_package:
+                raise ValueError('Browser runtime differs from the inspection Reader package')
         files = runtime.get('files')
         if not isinstance(files, dict) or not 1 <= len(files) <= 4096:
             raise ValueError('Missing bounded browser runtime file inventory')
@@ -405,6 +447,7 @@ class DemoGallery:
             raise ValueError('Demo manifest collides with an existing output')
         manifest_file.write_bytes(data)
         return {'source': self.source.manifest(), 'htmlPackage': self.html_package,
+                **({'readerPackage': self.reader_package} if self.reader_package is not None else {}),
                 'manifest': self.prefix + self.manifest_name, 'manifestSha256': sha256(data).hexdigest(),
                 'gallery': self.prefix + self.gallery_path,
                 'cases': [case['id'] for case in self.gallery['cases']],
@@ -417,7 +460,7 @@ class DemoGallery:
                 'assets': [artifact.record(self.prefix) for artifact in self.artifacts.values()]}
 
     @classmethod
-    def validate_published(cls, root: Path, record: dict, html_package: dict) -> None:
+    def validate_published(cls, root: Path, record: dict, html_package: dict, reader_package: dict | None = None) -> None:
         source_value = record.get('source', {})
         if source_value.get('schemaVersion') != 1:
             raise ValueError('Missing published demo source identity')
@@ -435,11 +478,15 @@ class DemoGallery:
         cls.validate_application(value, source)
         gallery = cls.__new__(cls)
         gallery.source, gallery.build_root, gallery.html_package = source, root / cls.prefix, expected_package
+        gallery.manifest = value
         gallery.artifacts = cls.inventory(value.get('assets'))
         if value.get('gallery') != 'gallery/gallery-manifest.json' or value['gallery'] not in gallery.artifacts:
             raise ValueError('Missing published gallery manifest')
         gallery.gallery = cls.read_json(gallery.artifacts[value['gallery']].verify(gallery.build_root))
         gallery.validate_gallery()
+        gallery.validate_reader_source(reader_package)
+        if gallery.reader_package is not None and record.get('readerPackage') != gallery.reader_package:
+            raise ValueError('Published inspection Reader differs from its demo manifests')
         gallery.validate_runtime()
         script_hashes = gallery.trusted_script_hashes(value)
         if record.get('trustedScriptHashes') != list(script_hashes):
@@ -475,9 +522,13 @@ class DemoGallery:
         for case in self.gallery['cases']:
             files = case['files']
             source_label = self.code_sources[case['id']].label(language)
-            labels = ('Input PDF', 'HTML source', source_label, 'Diagnostics') if language == 'en' else ('PDF source', 'Source HTML', source_label, 'Diagnostics')
+            labels = ['Input PDF', 'HTML source', source_label, 'Diagnostics'] if language == 'en' else ['PDF source', 'Source HTML', source_label, 'Diagnostics']
+            roles = ['pdf', 'html', 'code', 'diagnostics']
+            if 'inspection' in files:
+                roles.append('inspection')
+                labels.append('PDF structure JSON' if language == 'en' else 'Structure PDF en JSON')
             url = lambda record: escape(asset_root + 'gallery/' + record['path'], quote=True)
-            links = ' · '.join(f'<a href="{url(files[role])}" download>{label}</a>' for role, label in zip(('pdf', 'html', 'code', 'diagnostics'), labels))
+            links = ' · '.join(f'<a href="{url(files[role])}" download>{label}</a>' for role, label in zip(roles, labels))
             cards.append(f'<article class="card"><img class="card-preview" src="{url(files["preview"])}" alt="{escape(case["title"][language], quote=True)}" loading="lazy"><div class="card-body"><h3>{escape(case["title"][language])}</h3><p>{escape(case["description"][language])}</p><p>{links}</p></div></article>')
         return '<noscript><section><h2>' + title + '</h2><div class="cards">' + ''.join(cards) + '</div></section></noscript>'
 

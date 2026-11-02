@@ -19,7 +19,7 @@ DOCUMENTATION_REPOSITORY = 'https://github.com/PDFToolkit/pdftoolkit.github.io'
 SITE_ORIGIN = 'https://pdftoolkit.github.io'
 MODULE_GUIDES = {
     'codecs': ['index', 'architecture', 'jpeg', 'jpeg2000', 'jbig2', 'signalements', 'versions'],
-    'reader': ['index', 'architecture', 'components', 'pages', 'revision-history', 'structural-policy', 'authentication', 'public-key-authentication', 'source-mac', 'external-streams', 'fax', 'image-codecs', 'import', 'security', 'signalements', 'versions'],
+    'reader': ['index', 'architecture', 'components', 'pages', 'inspection', 'revision-history', 'structural-policy', 'authentication', 'public-key-authentication', 'source-mac', 'external-streams', 'fax', 'image-codecs', 'import', 'security', 'signalements', 'versions'],
     'images': ['index', 'architecture', 'png-colour', 'signalements', 'versions'],
     'fonts': ['index', 'true-type-to-pdf', 'opentype-layout', 'signalements', 'versions'],
     'opentype': ['index', 'architecture', 'coverage', 'substitutions', 'positioning', 'font-axes', 'font-metadata', 'variable-metrics', 'truetype-outlines', 'cff-outlines', 'truetype-variations', 'font-headers-and-styles', 'device-metrics', 'collections-and-feature-parameters', 'signalements', 'versions'],
@@ -405,7 +405,7 @@ def check(root):
                     errors.append('Missing local module guide and provenance: ' + str(page))
     demo = manifest.get('htmlDemo', {})
     try:
-        DemoGallery.validate_published(root, demo, packages.get('pdftoolkit/pdf-to-html', {}))
+        DemoGallery.validate_published(root, demo, packages.get('pdftoolkit/pdf-to-html', {}), packages.get('pdftoolkit/pdf-reader', {}))
     except (ValueError, KeyError, TypeError, OSError) as error:
         errors.append('Invalid browser demo: ' + str(error))
     for language in ('en', 'fr'):
