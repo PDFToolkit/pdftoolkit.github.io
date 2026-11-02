@@ -4,7 +4,7 @@
 
 ## Unreleased
 
-## [0.14.0] - 2026-10-29
+## [0.14.0] - 2026-11-02
 
 - Select HTML 0.8.1 to preserve filtered stylesheet links associated with structure elements, while keeping the strict Supplement content rules and independent script/network permissions.
 - Select released HTML 0.8 and demo 0.3 with exact source identities. Document the separate embedded-stylesheet capability, explicit LaTeX catalogue interoperability, preserved CSS fallbacks and list layout corrections in English and French.
