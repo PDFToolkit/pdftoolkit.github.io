@@ -12,7 +12,7 @@ The `PDF\Syntax` namespace follows the reference's terminology. `BasicType` is t
 
 Scalar arguments are limited to leaves: a numeric value, byte sequence, name or boolean. Compositions use objects. A dictionary entry has a `NameType` and a `BasicType`; a content instruction has typed operands.
 
-Each class has its own responsibility in the PDF model. Names and abstractions follow the standard; the API may evolve to respect that model. Composition shortcuts and layout functions belong to future convenience libraries.
+Each class has its own responsibility in the PDF model. Names and abstractions follow the standard; the API may evolve to respect that model. HTML/CSS layout belongs to the optional HTML-to-PDF module, separate from these PDF objects.
 
 ## Package boundaries
 
@@ -134,3 +134,9 @@ are explicitly selected; the core does not automatically search for
 certificates or keys on disk or the network. External-file reading, text
 composition, ICC/XFA/3D/multimedia engines and certificate trust retain their
 own responsibilities.
+
+## HTML-to-PDF conversion
+
+`pdftoolkit/html-to-pdf` separates `HtmlSource`, HTML5/CSS compilation, cascade and computed styles, pagination and drawing operations, then PDF object serialization. Each conversion owns its tree and counters; font, image and stylesheet bytes come from the application. Masterminds HTML5, Sabberworm and Symfony CssSelector provide explicit parsers. The core, Fonts and Images provide PDF mechanisms without taking responsibility for HTML.
+
+The [module guides](https://pdftoolkit.github.io/modules/from-html/architecture.html) and [CSS-level registry](https://pdftoolkit.github.io/modules/from-html/css-levels.html) distinguish implemented capabilities from restrictions and remaining work. Reader's PDF source inspection and PDF-to-HTML derivation remain separate operations.

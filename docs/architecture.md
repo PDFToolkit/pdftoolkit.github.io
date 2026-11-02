@@ -12,7 +12,7 @@ Le namespace `PDF\Syntax` suit les termes de la référence. `BasicType` est le 
 
 Les arguments scalaires sont limités aux feuilles : une valeur numérique, une suite d'octets, un nom ou un booléen. Les compositions utilisent des objets. Une entrée de dictionnaire possède un `NameType` et un `BasicType` ; une instruction de contenu possède des opérandes typés.
 
-Chaque classe porte une responsabilité propre au modèle PDF. Les noms et les abstractions suivent la norme ; l'API peut évoluer pour respecter ce modèle. Les raccourcis de composition et les fonctions de mise en page appartiennent aux futures bibliothèques de confort.
+Chaque classe porte une responsabilité propre au modèle PDF. Les noms et les abstractions suivent la norme ; l'API peut évoluer pour respecter ce modèle. La mise en page HTML/CSS appartient au module optionnel HTML vers PDF, séparé de ces objets PDF.
 
 ## Frontière des packages
 
@@ -137,3 +137,9 @@ backends OpenSSL sont choisis explicitement ; le core n'effectue pas de recherch
 automatique de certificats ou de clés sur le disque ou le réseau. La lecture de
 fichiers externes, la composition de texte, les moteurs ICC/XFA/3D/multimédia et
 la confiance des certificats conservent leurs responsabilités propres.
+
+## Conversion HTML vers PDF
+
+`pdftoolkit/html-to-pdf` sépare `HtmlSource`, la compilation HTML5/CSS, la cascade et les styles calculés, la pagination et les opérations de dessin, puis l’écriture des objets PDF. Chaque conversion possède son arbre et ses compteurs ; les octets des fontes, images et feuilles CSS viennent de l’application. Masterminds HTML5, Sabberworm et Symfony CssSelector fournissent des parseurs explicites. Le core, Fonts et Images fournissent les mécanismes PDF, sans recevoir de responsabilité HTML.
+
+Les [guides du module](https://pdftoolkit.github.io/fr/modules/from-html/architecture.html) et le [registre CSS par niveaux](https://pdftoolkit.github.io/fr/modules/from-html/css-levels.html) distinguent les capacités implémentées des restrictions et travaux restants. L’inspection PDF source de Reader et la dérivation PDF vers HTML restent deux traitements séparés.

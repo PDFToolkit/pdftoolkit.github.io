@@ -24,7 +24,7 @@ This repository contains the shared prose, site assets, generator and deployment
 workflow. PHP code, executable examples, fixtures and original specification
 documents remain in [their package repositories](https://github.com/orgs/PDFToolkit/repositories).
 The module guides are published here from their released package sources.
-Documentation **0.15** selects HTML **0.8.2** and the interactive demo **0.4**;
+Documentation **0.16** adds HTML-to-PDF **0.1.0** and retains PDF-to-HTML **0.8.2** and the interactive demo **0.4**;
 core remains **0.12** while Reader advances to **0.8**, with exact revisions pinned separately.
 The core groups its eighteen original reference PDFs under
 `resources/reference-documents/`, preserving their original names and bytes.
@@ -42,7 +42,7 @@ The PHP libraries are available on Packagist. Install the core with Composer:
 composer require "roukmoute/pdf:^0.12"
 ```
 
-The documented release series are core **0.12**, Reader **0.8**, Images and Fonts **0.2**, OpenType **0.4**, Codecs **0.1** and PDF-to-HTML **0.8**. They require **64-bit PHP 8.3 or later**; qualification covers PHP 8.3, 8.4 and 8.5. The source manifest pins exact versions and revisions. OpenType and Codecs have no PDF core dependency.
+The documented release series are core **0.12**, Reader **0.8**, Images and Fonts **0.2**, OpenType **0.4**, Codecs **0.1**, PDF-to-HTML **0.8** and HTML-to-PDF **0.1**. They require **64-bit PHP 8.3 or later**; qualification covers PHP 8.3, 8.4 and 8.5. The source manifest pins exact versions and revisions. OpenType and Codecs have no PDF core dependency.
 
 Choose the optional modules according to the files your application handles:
 
@@ -53,6 +53,7 @@ Choose the optional modules according to the files your application handles:
 - [OpenType: pdftoolkit/opentype](https://packagist.org/packages/pdftoolkit/opentype)
 - [Codecs: pdftoolkit/pdf-codecs](https://packagist.org/packages/pdftoolkit/pdf-codecs)
 - [PDF to HTML: pdftoolkit/pdf-to-html](https://packagist.org/packages/pdftoolkit/pdf-to-html)
+- [HTML to PDF: pdftoolkit/html-to-pdf](https://packagist.org/packages/pdftoolkit/html-to-pdf)
 
 The image/font/reader modules install the core. Fonts also installs the independent OpenType model; PDF-to-HTML installs Reader. Codecs is a separate pure-PHP decoder library. On explicit image decoding, Reader selects a qualified Ghostscript/prlimit native profile first, then the installed PHP library for unavailable capabilities. If neither is available, it gives an actionable Composer command; it never installs a dependency silently. The [image codec guide](https://pdftoolkit.github.io/modules/reader/image-codecs.html) documents exact profiles, budgets and metadata.
 
@@ -163,3 +164,13 @@ query and fragment; PDF and other binary URLs continue to serve the actual bytes
 Documentation began in [PDFToolkit/pdf](https://github.com/PDFToolkit/pdf).
 The shared content was migrated from core 0.5.2, commit
 `ad1384a1400f9b13614e08aa352410b0af4b1e9c`, under the retained [MIT license](LICENSE).
+
+## Native HTML to PDF
+
+The optional [HTML-to-PDF 0.1 module](https://pdftoolkit.github.io/modules/from-html/index.html) receives UTF-8 HTML5/CSS and explicit `FontSet`, `ResourceCatalog` and `PageSettings` objects. It composes PDF through the core, Fonts and Images without a browser, JavaScript or implicit network access. `UnsupportedPolicy::Reject` rejects unsupported capabilities by default; `Report` retains diagnostics.
+
+```sh
+composer require "pdftoolkit/html-to-pdf:^0.1"
+```
+
+The [CSS progression](https://pdftoolkit.github.io/modules/from-html/css-levels.html) validates CSS1 before CSS2.0/2.1 and later modules. Version 0.1 implements a partial profile, not full CSS1 conformance. The [invoice](https://pdftoolkit.github.io/modules/from-html/invoice.html), [catalogue](https://pdftoolkit.github.io/modules/from-html/catalogue.html) and [multipage document](https://pdftoolkit.github.io/modules/from-html/multipage.html) show actual PDFs, every rendered page and their sources. The generated tags do not constitute PDF/UA or PDF/A certification.

@@ -173,3 +173,13 @@ Pour dériver du HTML sémantique depuis un PDF balisé, installer `pdftoolkit/p
 La version 0.8.2 accepte Reader 0.7 et 0.8 et PHP 8.3+ en 64 bits avec DOM et mbstring. Son [registre des exigences](https://pdftoolkit.github.io/fr/modules/to-html/requirements.html) rattache les règles aux tests. Les [profils](https://pdftoolkit.github.io/fr/modules/to-html/policies.html) distinguent contenu sémantique, actions de formulaire optionnelles et scripts PDF ; aucune de ces actions actives n'est autorisée par défaut. Le [rendu graphique](https://pdftoolkit.github.io/fr/modules/to-html/graphics.html) et l'authentification restent des capacités fournies explicitement par l'application. Conserver les ressources retournées et lire les diagnostics avant publication.
 
 [Packagist: pdftoolkit/pdf-to-html](https://packagist.org/packages/pdftoolkit/pdf-to-html).
+
+## Créer un PDF depuis HTML
+
+Pour une conversion HTML/CSS plutôt que l’assemblage manuel des objets PDF, installer le module optionnel [`pdftoolkit/html-to-pdf`](https://packagist.org/packages/pdftoolkit/html-to-pdf) :
+
+```sh
+composer require "pdftoolkit/html-to-pdf:^0.1"
+```
+
+Le [guide du convertisseur](https://pdftoolkit.github.io/fr/modules/from-html/usage.html) décrit les fontes et ressources fournies explicitement, les limites et les diagnostics. Voir les [PDF réels de la facture](https://pdftoolkit.github.io/fr/modules/from-html/invoice.html) et la [progression CSS par niveau](https://pdftoolkit.github.io/fr/modules/from-html/css-levels.html). Le core reste indépendant de ces parseurs HTML/CSS.

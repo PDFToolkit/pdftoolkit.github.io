@@ -4,6 +4,13 @@
 
 ## Non publié
 
+## [0.16.0] - 2026-11-02
+
+- Intégrer le huitième package publié, HTML vers PDF 0.1.0, avec son API, ses guides FR/EN et ses dépendances de validation distinctes. Préserver les versions et locks des autres packages.
+- Publier les vrais PDF de facture, catalogue et document multipage, avec chaque page rendue, le générateur et les sources HTML inertes dont les empreintes sont vérifiées.
+- Exécuter les validations indépendantes qpdf/pypdf/Poppler dans le build et conserver les preuves. Documenter limites explicites, ressources fournies par l’application et progression CSS1 puis CSS2.0/2.1 et modules ultérieurs, sans annoncer de conformité complète ni certification PDF/UA ou PDF/A.
+
+
 ## [0.15.0] - 2026-11-02
 
 - Publier le guide et l’API d’inspection source de Reader 0.8.0 : arbre des balises original, propriétés PDF typées, pages et références d’objets, correspondances de rôles des espaces de noms et métadonnées des fichiers associés, avec budgets explicites et flux opaques.

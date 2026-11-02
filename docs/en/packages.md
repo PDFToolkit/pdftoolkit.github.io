@@ -1,7 +1,7 @@
 # Core and optional modules
 
 PDFToolkit separates the PDF model from external-file processing.
-The documented release series are core **0.12**, Reader **0.8**, Images and Fonts **0.2**, OpenType **0.4**, Codecs **0.1** and PDF-to-HTML **0.8**. They require **64-bit PHP 8.3 or later**; qualification covers PHP 8.3, 8.4 and 8.5. The source manifest pins exact versions and revisions. OpenType and Codecs have no PDF core dependency.
+The documented release series are core **0.12**, Reader **0.8**, Images and Fonts **0.2**, OpenType **0.4**, Codecs **0.1**, PDF-to-HTML **0.8** and HTML-to-PDF **0.1**. They require **64-bit PHP 8.3 or later**; qualification covers PHP 8.3, 8.4 and 8.5. The source manifest pins exact versions and revisions. OpenType and Codecs have no PDF core dependency.
 The core retains its Composer name `roukmoute/pdf`; modules use `pdftoolkit/`.
 
 ## The core boundary
@@ -40,6 +40,7 @@ verified before finalization.
 | [PDFToolkit/opentype](https://github.com/PDFToolkit/opentype) — [`pdftoolkit/opentype`](https://packagist.org/packages/pdftoolkit/opentype) | OpenType SFNT/TTC/OTC bytes and explicit limits | Tables, outlines, metrics, GSUB substitutions and GPOS positioning |
 | [PDFToolkit/pdf-codecs](https://github.com/PDFToolkit/pdf-codecs) — [`pdftoolkit/pdf-codecs`](https://packagist.org/packages/pdftoolkit/pdf-codecs) | JPEG, JPEG 2000 or JBIG2 bytes | Component planes and exact colour/alpha metadata within the supported profiles |
 | [PDFToolkit/pdf-to-html](https://github.com/PDFToolkit/pdf-to-html) — [`pdftoolkit/pdf-to-html`](https://packagist.org/packages/pdftoolkit/pdf-to-html) | Tagged PDF bytes or an explicit logical source model | Semantic HTML, CSS, assets and diagnostics |
+| [PDFToolkit/html-to-pdf](https://github.com/PDFToolkit/html-to-pdf) — [`pdftoolkit/html-to-pdf`](https://packagist.org/packages/pdftoolkit/html-to-pdf) | UTF-8 HTML/CSS and explicit resources | Native PDF, selectable Unicode text and diagnostics |
 
 The reader, images and fonts modules depend on the core without depending on one another. Fonts additionally uses OpenType; PDF-to-HTML uses Reader. OpenType and Codecs are independent libraries. Reader discovers the optional PHP codecs only when image decoding is requested. The core knows none of their parsers: applications can construct its PDF objects directly. The object model is shared, without duplicate primitives or global registries.
 
@@ -51,7 +52,7 @@ Core 0.8.0 retains PDF 2.0 writing with modern cryptography and PDF MAC, metadat
 
 ## Installing what the application needs
 
-All seven libraries are available on Packagist under `roukmoute/pdf` or the `pdftoolkit/` names above. The documented constraints are core `^0.12`, Reader `^0.8`, HTML `^0.8`, Images/Fonts `^0.2`, OpenType `^0.4` and Codecs `^0.1`. Older core tags `v0.1.0` and `v0.1.1` retain their PHP 8.5 constraint.
+All eight libraries are available on Packagist under `roukmoute/pdf` or the `pdftoolkit/` names above. The documented constraints are core `^0.12`, Reader `^0.8`, HTML `^0.8`, Images/Fonts `^0.2`, OpenType `^0.4`, Codecs `^0.1` and HTML-to-PDF `^0.1`. Older core tags `v0.1.0` and `v0.1.1` retain their PHP 8.5 constraint.
 
 To generate PDFs only:
 
@@ -223,7 +224,7 @@ echo json_encode($inspection, JSON_THROW_ON_ERROR);
 
 ## Central documentation, independent installations
 
-This documentation presents the API of all seven libraries. Module pages carry
+This documentation presents the API of all eight libraries. Module pages carry
 an **optional** badge, and their source links use the module commit pinned
 by the build lock, or by the separate release tag and checkout for OpenType. This adds no dependency to applications installing only
 the core.
@@ -271,3 +272,13 @@ mathematical integrity, trust and permission for later changes remain distinct.
 HTML 0.6 also corrects combined marked-content properties, partial Unicode
 fallback, nested Form artifacts and form/list/attribute behavior. The module's
 exact-candidate CI checks PHP 8.3/8.4/8.5 and both Chromium and Firefox.
+
+## Native HTML to PDF
+
+The optional [HTML-to-PDF 0.1 module](https://pdftoolkit.github.io/modules/from-html/index.html) receives UTF-8 HTML5/CSS and explicit `FontSet`, `ResourceCatalog` and `PageSettings` objects. It composes PDF through the core, Fonts and Images without a browser, JavaScript or implicit network access. `UnsupportedPolicy::Reject` rejects unsupported capabilities by default; `Report` retains diagnostics.
+
+```sh
+composer require "pdftoolkit/html-to-pdf:^0.1"
+```
+
+The [CSS progression](https://pdftoolkit.github.io/modules/from-html/css-levels.html) validates CSS1 before CSS2.0/2.1 and later modules. Version 0.1 implements a partial profile, not full CSS1 conformance. The [invoice](https://pdftoolkit.github.io/modules/from-html/invoice.html), [catalogue](https://pdftoolkit.github.io/modules/from-html/catalogue.html) and [multipage document](https://pdftoolkit.github.io/modules/from-html/multipage.html) show actual PDFs, every rendered page and their sources. The generated tags do not constitute PDF/UA or PDF/A certification.

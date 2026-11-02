@@ -4,6 +4,13 @@
 
 ## Unreleased
 
+## [0.16.0] - 2026-11-02
+
+- Integrate the eighth published package, HTML-to-PDF 0.1.0, with its API, English/French guides and separate validation dependencies. Preserve other package releases and locks.
+- Publish actual invoice, catalogue and multipage PDFs with every rendered page, their generator and inert HTML sources verified against generation-receipt fingerprints.
+- Run independent qpdf/pypdf/Poppler validation in the build and retain evidence. Document explicit limits, application-supplied resources and CSS1-first progression through CSS2.0/2.1 and later modules, without full-conformance or PDF/UA/PDF/A certification claims.
+
+
 ## [0.15.0] - 2026-11-02
 
 - Publish Reader 0.8.0’s source-inspection guide and API: original tag trees, typed PDF properties, pages and object references, namespace role mappings and associated-file metadata, with explicit budgets and opaque streams.

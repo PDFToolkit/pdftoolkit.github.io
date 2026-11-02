@@ -26,7 +26,7 @@ workflow de déploiement. Le code PHP, les exemples exécutables, les fixtures
 et les documents de spécification originaux restent dans
 [leurs dépôts de packages](https://github.com/orgs/PDFToolkit/repositories).
 Les guides des modules sont publiés ici à partir de leurs sources versionnées.
-La documentation **0.15** sélectionne HTML **0.8.2** et la démo interactive **0.4** ;
+La documentation **0.16** ajoute HTML vers PDF **0.1.0** et conserve PDF vers HTML **0.8.2** ainsi que la démo interactive **0.4** ;
 le core reste en **0.12** et Reader passe en **0.8**, avec des révisions exactes distinctes.
 Le core regroupe ses dix-huit PDF de référence originaux dans
 `resources/reference-documents/`, avec leurs noms et octets d’origine.
@@ -45,7 +45,7 @@ Composer :
 composer require "roukmoute/pdf:^0.12"
 ```
 
-Les versions documentées sont le core **0.12**, Reader **0.8**, Images et Fonts **0.2**, OpenType **0.4**, Codecs **0.1** et PDF vers HTML **0.8**. Elles nécessitent **PHP 8.3 ou supérieur en 64 bits** ; leurs validations couvrent PHP 8.3, 8.4 et 8.5. Les versions et révisions exactes sont fixées dans le manifeste de sources. OpenType et Codecs ne dépendent pas du core PDF.
+Les versions documentées sont le core **0.12**, Reader **0.8**, Images et Fonts **0.2**, OpenType **0.4**, Codecs **0.1**, PDF vers HTML **0.8** et HTML vers PDF **0.1**. Elles nécessitent **PHP 8.3 ou supérieur en 64 bits** ; leurs validations couvrent PHP 8.3, 8.4 et 8.5. Les versions et révisions exactes sont fixées dans le manifeste de sources. OpenType et Codecs ne dépendent pas du core PDF.
 
 Choisir les modules optionnels selon les fichiers traités par l'application :
 
@@ -56,6 +56,7 @@ Choisir les modules optionnels selon les fichiers traités par l'application :
 - [OpenType: pdftoolkit/opentype](https://packagist.org/packages/pdftoolkit/opentype)
 - [Codecs: pdftoolkit/pdf-codecs](https://packagist.org/packages/pdftoolkit/pdf-codecs)
 - [PDF vers HTML : pdftoolkit/pdf-to-html](https://packagist.org/packages/pdftoolkit/pdf-to-html)
+- [HTML vers PDF: pdftoolkit/html-to-pdf](https://packagist.org/packages/pdftoolkit/html-to-pdf)
 
 Les modules images/fontes/lecteur installent le core. Fonts installe aussi le modèle OpenType indépendant ; PDF vers HTML installe Reader. Codecs est une bibliothèque de décodeurs en PHP pur distincte. Au décodage explicite d’une image, Reader choisit d’abord un profil natif Ghostscript/prlimit qualifié, puis la bibliothèque PHP installée si la capacité manque. Sans moteur disponible, il indique une commande Composer utilisable sans installer silencieusement de dépendance. Le [guide des codecs image](https://pdftoolkit.github.io/fr/modules/reader/image-codecs.html) précise profils, budgets et métadonnées.
 
@@ -180,3 +181,13 @@ La documentation a commencé dans [PDFToolkit/pdf](https://github.com/PDFToolkit
 Les contenus communs ont été transférés depuis le core 0.5.2, commit
 `ad1384a1400f9b13614e08aa352410b0af4b1e9c`, avec la [licence MIT](LICENSE)
 conservée.
+
+## HTML vers PDF natif
+
+Le module optionnel [HTML vers PDF 0.1](https://pdftoolkit.github.io/fr/modules/from-html/index.html) reçoit du HTML5/CSS UTF-8 et des objets `FontSet`, `ResourceCatalog` et `PageSettings`. Il compose des PDF avec le core, Fonts et Images, sans navigateur, JavaScript ni accès réseau implicite. `UnsupportedPolicy::Reject` refuse par défaut les capacités hors profil ; le mode `Report` conserve des diagnostics.
+
+```sh
+composer require "pdftoolkit/html-to-pdf:^0.1"
+```
+
+La [progression CSS](https://pdftoolkit.github.io/fr/modules/from-html/css-levels.html) valide CSS1 avant CSS2.0/2.1 puis les modules ultérieurs. La version 0.1 présente un profil partiel, pas une conformité CSS1 complète. Les [facture](https://pdftoolkit.github.io/fr/modules/from-html/invoice.html), [catalogue](https://pdftoolkit.github.io/fr/modules/from-html/catalogue.html) et [document multipage](https://pdftoolkit.github.io/fr/modules/from-html/multipage.html) montrent les vrais PDF, toutes leurs pages et les sources. Le balisage produit ne constitue pas une certification PDF/UA ou PDF/A.

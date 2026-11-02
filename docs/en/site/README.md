@@ -60,7 +60,7 @@ reference page. Composed entries distinguish Adobe and ISO sources; see
 the [coverage guide](../coverage.md).
 
 Module-specific guides are published under `/modules/reader/`,
-`/modules/images/`, `/modules/fonts/`, `/modules/opentype/`, `/modules/codecs/` and `/modules/to-html/`. Their package qualifies pages
+`/modules/images/`, `/modules/fonts/`, `/modules/opentype/`, `/modules/codecs/`, `/modules/to-html/` and `/modules/from-html/`. Their package qualifies pages
 and links so Markdown files sharing the same name remain distinct.
 
 Every script in the core's `examples/` must have a tutorial or recipe and
@@ -215,6 +215,11 @@ html_revision=$(python -c "import json; print(next(p for p in json.load(open('re
 git clone "$html_repository" _sources/pdf-to-html
 git -C _sources/pdf-to-html checkout --detach "$html_revision"
 composer install --working-dir=_sources/pdf-to-html --no-interaction --prefer-dist
+from_html_repository=$(python -c "import json; print(next(p for p in json.load(open('resources/sources.json'))['packages'] if p['name']=='pdftoolkit/html-to-pdf')['repository'])")
+from_html_revision=$(python -c "import json; print(next(p for p in json.load(open('resources/sources.json'))['packages'] if p['name']=='pdftoolkit/html-to-pdf')['revision'])")
+git clone "$from_html_repository" _sources/html-to-pdf
+git -C _sources/html-to-pdf checkout --detach "$from_html_revision"
+composer install --working-dir=_sources/html-to-pdf --no-interaction --prefer-dist
 demo_repository=$(python -c "import json; print(json.load(open('resources/demo-source.json'))['repository'])")
 demo_revision=$(python -c "import json; print(json.load(open('resources/demo-source.json'))['revision'])")
 git clone "$demo_repository" _sources/pdf-to-html-demo
@@ -226,6 +231,7 @@ npx --prefix _sources/pdf-to-html-demo playwright install --with-deps chromium f
 python -m pip install --require-hashes -r tools/site-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf/tools/public-key-validation-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf-to-html/tools/validation-requirements.txt
+python -m pip install --require-hashes -r _sources/html-to-pdf/tools/validation-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf-to-html/tools/source-integrity-validation-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf-to-html-demo/tools/validation-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf-images/tools/validation-requirements.txt
@@ -236,7 +242,7 @@ reader_consumer=$(python tools/check_sources.py --source-root _sources/pdf --pdf
 python -m pip install --require-hashes -r "$reader_consumer/vendor/pdftoolkit/pdf-reader/tools/source-mac-validation-requirements.txt"
 python -m pip check
 python _sources/pdf-images/tools/build_poppler.py --output _build/poppler
-python tools/build_docs.py --source-root _sources/pdf --opentype-root _sources/opentype --codecs-root _sources/pdf-codecs --images-root _sources/pdf-images --pdf-to-html-root _sources/pdf-to-html --demo-root _sources/pdf-to-html-demo --docs-revision "$(git rev-parse HEAD)" --image-pdftoppm _build/poppler/build/utils/pdftoppm --remote
+python tools/build_docs.py --source-root _sources/pdf --opentype-root _sources/opentype --codecs-root _sources/pdf-codecs --images-root _sources/pdf-images --pdf-to-html-root _sources/pdf-to-html --html-to-pdf-root _sources/html-to-pdf --demo-root _sources/pdf-to-html-demo --docs-revision "$(git rev-parse HEAD)" --image-pdftoppm _build/poppler/build/utils/pdftoppm --remote
 ```
 
 On PowerShell:
@@ -264,6 +270,10 @@ $htmlSource = $sourceManifest.packages | Where-Object name -eq 'pdftoolkit/pdf-t
 git clone $htmlSource.repository _sources/pdf-to-html
 git -C _sources/pdf-to-html checkout --detach $htmlSource.revision
 composer install --working-dir=_sources/pdf-to-html --no-interaction --prefer-dist
+$fromHtmlSource = $sourceManifest.packages | Where-Object name -eq 'pdftoolkit/html-to-pdf'
+git clone $fromHtmlSource.repository _sources/html-to-pdf
+git -C _sources/html-to-pdf checkout --detach $fromHtmlSource.revision
+composer install --working-dir=_sources/html-to-pdf --no-interaction --prefer-dist
 $demoSource = Get-Content resources/demo-source.json -Raw | ConvertFrom-Json
 git clone $demoSource.repository _sources/pdf-to-html-demo
 git -C _sources/pdf-to-html-demo checkout --detach $demoSource.revision
@@ -274,6 +284,7 @@ npx --prefix _sources/pdf-to-html-demo playwright install --with-deps chromium f
 python -m pip install --require-hashes -r tools/site-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf/tools/public-key-validation-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf-to-html/tools/validation-requirements.txt
+python -m pip install --require-hashes -r _sources/html-to-pdf/tools/validation-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf-to-html/tools/source-integrity-validation-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf-to-html-demo/tools/validation-requirements.txt
 python -m pip install --require-hashes -r _sources/pdf-images/tools/validation-requirements.txt
@@ -285,7 +296,7 @@ python -m pip install --require-hashes -r "$readerConsumer/vendor/pdftoolkit/pdf
 python -m pip check
 python _sources/pdf-images/tools/build_poppler.py --output _build/poppler
 $docsRevision = git rev-parse HEAD
-python tools/build_docs.py --source-root _sources/pdf --opentype-root _sources/opentype --codecs-root _sources/pdf-codecs --images-root _sources/pdf-images --pdf-to-html-root _sources/pdf-to-html --demo-root _sources/pdf-to-html-demo --docs-revision $docsRevision --image-pdftoppm _build/poppler/build/utils/pdftoppm --remote
+python tools/build_docs.py --source-root _sources/pdf --opentype-root _sources/opentype --codecs-root _sources/pdf-codecs --images-root _sources/pdf-images --pdf-to-html-root _sources/pdf-to-html --html-to-pdf-root _sources/html-to-pdf --demo-root _sources/pdf-to-html-demo --docs-revision $docsRevision --image-pdftoppm _build/poppler/build/utils/pdftoppm --remote
 ```
 
 The preflight compares every FR/EN heading level in the inventory that will be
@@ -305,8 +316,8 @@ To rebuild only the rendering from already-validated inputs:
 
 ```sh
 reader_consumer=$(python tools/check_sources.py --source-root _sources/pdf --pdf-to-html-root _sources/pdf-to-html --reader-consumer)
-php tools/export_api.php _build/api.json _sources/pdf resources/sources.json _sources/opentype _sources/pdf-to-html "$reader_consumer" _sources/pdf-codecs _sources/pdf-images
-python tools/build_site.py --content-root . --source-root _sources/pdf --opentype-root _sources/opentype --codecs-root _sources/pdf-codecs --images-root _sources/pdf-images --pdf-to-html-root _sources/pdf-to-html --demo-root _sources/pdf-to-html-demo --demo-build _build/html-demo --sources resources/sources.json --docs-revision "$(git rev-parse HEAD)" --api _build/api.json --pdf-dir _build/pdfs --pdf-preview-dir _build/pdf-pages --output _site --base-path /
+php tools/export_api.php _build/api.json _sources/pdf resources/sources.json _sources/opentype _sources/pdf-to-html "$reader_consumer" _sources/pdf-codecs _sources/pdf-images _sources/html-to-pdf
+python tools/build_site.py --content-root . --source-root _sources/pdf --opentype-root _sources/opentype --codecs-root _sources/pdf-codecs --images-root _sources/pdf-images --pdf-to-html-root _sources/pdf-to-html --html-to-pdf-root _sources/html-to-pdf --demo-root _sources/pdf-to-html-demo --demo-build _build/html-demo --sources resources/sources.json --docs-revision "$(git rev-parse HEAD)" --api _build/api.json --pdf-dir _build/pdfs --pdf-preview-dir _build/pdf-pages --output _site --base-path /
 python tools/check_site.py _site
 ```
 
@@ -467,3 +478,11 @@ The full build also runs the released demo’s `tools/validate_demo.py` with
 `--require-release`: independent PDF, HTML5 and PNG checks retain their report in
 `_build/html-demo-validation.json`. Install its hashed validation requirements
 in the same oracle environment before building.
+
+## Native HTML-to-PDF generation
+
+The eighth package, `pdftoolkit/html-to-pdf` 0.1, comes from the published `_sources/html-to-pdf` checkout passed as `--html-to-pdf-root`. HEAD, tag and clean state are checked; its lock and installed dependencies must match, including Masterminds HTML5, Sabberworm and Symfony CssSelector. Examples use its real autoloader in a separate process. The API loads only `PDF\HtmlToPdf\` and parser namespaces, preserving the PDF namespaces already selected. `executionDependencies.htmlToPdfValidation` identifies this environment separately from core examples and the inverse derivation.
+
+The build first checks registry consistency with `tools/check_css_coverage.py --report <output.json>`, then runs `php -d memory_limit=512M examples/generate.php <output>`, then the package's independent `tools/validate_pdf.py` oracle with qpdf, pypdf and Poppler. It publishes the invoice, catalogue and multipage document under `/modules/from-html/` in English and French, with actual PDFs and every rendered page. Generation-receipt fingerprints must match the HTML sources and PDFs. HTML sources are inert `.html.txt` downloads, also displayed as escaped text. The `html-to-pdf-validation/validation.json` report and rendered images are retained as build evidence.
+
+The coverage and `css-levels` guides come from the same release. Validation proceeds through CSS1, CSS2.0/2.1, then later modules; the site does not present the initial profile as full CSS1 conformance or its tags as PDF/UA or PDF/A certification.
