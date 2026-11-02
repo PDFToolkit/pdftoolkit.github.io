@@ -22,7 +22,7 @@ class ImagesSourcesTest(unittest.TestCase):
         with patch('check_sources.git', side_effect=self.git), redirect_stdout(io.StringIO()):
             return check(self.core, self.manifest, opentype_root=self.opentype,
                          pdf_to_html_root=self.html, codecs_root=self.codecs,
-                         images_root=self.images if images else None)
+                         images_root=self.images if images else None, html_to_pdf_root=self.from_html)
 
     def test_independent_images_release_and_each_execution_lock_keep_distinct_provenance(self):
         self.alter(self.core, 'pdftoolkit/pdf-images', version='0.0.9', source='b' * 40, dist='b' * 40)
@@ -49,7 +49,7 @@ class ImagesSourcesTest(unittest.TestCase):
             with self.subTest(command=command), patch('check_sources.git', side_effect=wrong_git):
                 with self.assertRaisesRegex(ValueError, error):
                     check(self.core, self.manifest, opentype_root=self.opentype,
-                          pdf_to_html_root=self.html, codecs_root=self.codecs, images_root=self.images)
+                          pdf_to_html_root=self.html, codecs_root=self.codecs, images_root=self.images, html_to_pdf_root=self.from_html)
 
     def test_selected_images_identity_and_own_autoloader_are_required(self):
         (self.images / 'vendor/autoload.php').unlink()

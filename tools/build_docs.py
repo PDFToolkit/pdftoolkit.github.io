@@ -145,6 +145,21 @@ def validate_html_module(args, html: Path, work: Path, pdfs: Path) -> None:
          examples / "signed.html"], html)
 
 
+def validate_html_to_pdf_module(args, source: Path, work: Path, pdfs: Path, previews: Path) -> None:
+    """Generate actual native PDFs, validate them independently, then retain every page."""
+    output = work / "html-to-pdf-validation"
+    run([sys.executable, "tools/check_css_coverage.py", "--report", work / "html-to-pdf-css-validation.json"], source)
+    run([args.php, "-d", "memory_limit=512M", "examples/generate.php", output], source)
+    run([sys.executable, "tools/validate_pdf.py", "--directory", output,
+         "--qpdf", args.qpdf, "--pdftoppm", args.pdftoppm, "--pdftotext", args.pdftotext], source)
+    for name in ("invoice", "catalogue", "multipage"):
+        example = "from-html-" + name
+        shutil.copyfile(output / (name + ".pdf"), pdfs / (example + ".pdf"))
+        for image in (output / "renders").glob(name + "-*.png"):
+            shutil.copyfile(image, previews / ("from-html-" + image.name))
+    shutil.copyfile(output / "manifest.json", pdfs / "html-to-pdf-manifest.json")
+
+
 def build(args) -> None:
     prepare_executables(args)
     content = args.content_root.resolve()
@@ -159,20 +174,21 @@ def build(args) -> None:
     html = args.pdf_to_html_root.resolve()
     codecs = args.codecs_root.resolve()
     images = args.images_root.resolve()
-    packages = check(source, manifest, args.remote, opentype, html, codecs, images)
+    html_to_pdf = args.html_to_pdf_root.resolve()
+    packages = check(source, manifest, args.remote, opentype, html, codecs, images, html_to_pdf)
     reader_consumer = select_reader(source, html, packages)
     reader = reader_consumer / "vendor/pdftoolkit/pdf-reader"
     guide_roots = {name: source / 'vendor' / name for name in MODULES}
     guide_roots.update({'documentation': content, CORE_PACKAGE: source,
                         'pdftoolkit/pdf-reader': reader, 'pdftoolkit/pdf-images': images,
                         'pdftoolkit/opentype': opentype, 'pdftoolkit/pdf-codecs': codecs,
-                        'pdftoolkit/pdf-to-html': html})
+                        'pdftoolkit/pdf-to-html': html, 'pdftoolkit/html-to-pdf': html_to_pdf})
     anchors = translated_anchors(guide_pages(), guide_roots)
     (work / 'guide-headings-validation.json').write_text(json.dumps({
         'status': 'pass', 'pairs': len(anchors), 'routes': sorted(anchors),
     }, indent=2) + '\n', encoding='utf-8')
     (work / "validation-sources.json").write_text(json.dumps({
-        "executionDependencies": execution_dependencies(source, images, html, packages),
+        "executionDependencies": execution_dependencies(source, images, html, packages, html_to_pdf),
         "documentedReader": packages["pdftoolkit/pdf-reader"],
         "readerConsumer": str(reader_consumer),
         "readerCore": packages["roukmoute/pdf"] if reader_consumer == source else html_dependencies(html)[0],
@@ -218,6 +234,7 @@ def build(args) -> None:
          "--report", work / "reader-image-codecs-validation.json"], reader)
     validate_image_and_font_modules(args, source, opentype, codecs, images, work)
     validate_html_module(args, html, work, pdfs)
+    validate_html_to_pdf_module(args, html_to_pdf, work, pdfs, previews)
     demo = args.demo_root.resolve()
     demo_build = work / 'html-demo'
     demo_source = DemoSource.load(content / 'resources/demo-source.json')
@@ -225,7 +242,7 @@ def build(args) -> None:
     run([sys.executable, "tools/validate_demo.py", demo_build, "--report", work / "html-demo-validation.json",
          "--pdftoppm", args.pdftoppm, "--require-release"], demo)
     api = work / "api.json"
-    run([args.php, content / "tools/export_api.php", api, source, manifest, opentype, html, reader_consumer, codecs, images], source)
+    run([args.php, content / "tools/export_api.php", api, source, manifest, opentype, html, reader_consumer, codecs, images, html_to_pdf], source)
     for example in sorted((source / "examples").glob("*.php")):
         output = pdfs / (example.stem + ".pdf")
         run([args.php, example, output, *([args.openssl] if example.stem == 'pdf20-timestamp-dss' else [])], source)
@@ -275,7 +292,7 @@ def build(args) -> None:
     run([sys.executable, 'tools/validate_calculator_functions.py', '--php', args.php,
          '--ghostscript', args.ghostscript, '--report', work / 'calculator-functions-validation.json'], source)
     run([sys.executable, content / "tools/build_site.py", "--content-root", content, "--source-root", source,
-         "--opentype-root", opentype, "--codecs-root", codecs, "--images-root", images, "--pdf-to-html-root", html, "--demo-root", demo, "--demo-build", demo_build, "--sources", manifest, "--api", api, "--pdf-dir", pdfs, "--pdf-preview-dir", previews,
+         "--opentype-root", opentype, "--codecs-root", codecs, "--images-root", images, "--pdf-to-html-root", html, "--html-to-pdf-root", html_to_pdf, "--demo-root", demo, "--demo-build", demo_build, "--sources", manifest, "--api", api, "--pdf-dir", pdfs, "--pdf-preview-dir", previews,
          "--output", args.output.resolve(), "--base-path", "/", "--docs-revision", args.docs_revision], content)
     run([sys.executable, content / "tools/check_site.py", args.output.resolve()], content)
 
@@ -288,6 +305,7 @@ if __name__ == "__main__":
     parser.add_argument("--images-root", type=Path, required=True, help="Separate released Images checkout and its own locked core")
     parser.add_argument("--codecs-root", type=Path, required=True, help="Independent released image codecs checkout")
     parser.add_argument("--pdf-to-html-root", type=Path, required=True, help="Released PDF-to-HTML checkout and its locked reader")
+    parser.add_argument("--html-to-pdf-root", type=Path, required=True, help="Released HTML-to-PDF checkout with its own locked dependencies")
     parser.add_argument("--demo-root", type=Path, required=True, help="Separately released browser demo checkout")
     parser.add_argument("--sources", type=Path)
     parser.add_argument("--work-dir", type=Path, default=Path("_build"))

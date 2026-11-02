@@ -18,6 +18,7 @@ from localization import PUBLISHED_ROUTE_ALIASES
 DOCUMENTATION_REPOSITORY = 'https://github.com/PDFToolkit/pdftoolkit.github.io'
 SITE_ORIGIN = 'https://pdftoolkit.github.io'
 MODULE_GUIDES = {
+    'from-html': ['index', 'architecture', 'usage', 'coverage', 'css-levels', 'references', 'invoice', 'catalogue', 'multipage', 'signalements', 'versions'],
     'codecs': ['index', 'architecture', 'jpeg', 'jpeg2000', 'jbig2', 'signalements', 'versions'],
     'reader': ['index', 'architecture', 'components', 'pages', 'inspection', 'revision-history', 'structural-policy', 'authentication', 'public-key-authentication', 'source-mac', 'external-streams', 'fax', 'image-codecs', 'import', 'security', 'signalements', 'versions'],
     'images': ['index', 'architecture', 'png-colour', 'signalements', 'versions'],
@@ -134,6 +135,29 @@ def validate_derived_html(value):
     parser.feed(value)
     if parser.html != 1:
         raise ValueError('Derived output must contain one HTML document')
+
+
+
+def module_package(slug):
+    return {'opentype': 'pdftoolkit/opentype', 'from-html': 'pdftoolkit/html-to-pdf'}.get(slug, 'pdftoolkit/pdf-' + slug)
+
+
+def validate_html_to_pdf_source(root, name, record, package, documents, example_pages):
+    sample = name.removeprefix('from-html-')
+    if sample not in {'invoice', 'catalogue', 'multipage'} or name != 'from-html-' + sample or package.get('name') != 'pdftoolkit/html-to-pdf' or record.get('source') != 'examples/generate.php':
+        raise ValueError('Incorrect HTML-to-PDF example provenance: ' + name)
+    source_path = 'examples/sources/' + sample + '.html'
+    source_url = package['repository'] + '/blob/' + package['revision'] + '/' + source_path
+    download = 'examples/' + name + '.html.txt'
+    if record.get('htmlSource') != source_path or record.get('htmlSourceUrl') != source_url or record.get('htmlSourceDownload') != download:
+        raise ValueError('Incorrect HTML-to-PDF source identity: ' + name)
+    path = root / download
+    if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != record.get('htmlSourceSha256'):
+        raise ValueError('Missing or modified inert HTML source download: ' + name)
+    if any(source_url not in documents[page].links for page in example_pages.values()):
+        raise ValueError('Missing HTML-to-PDF source link: ' + name)
+    if type(record.get('expectedPages')) is not int or record['expectedPages'] < 1:
+        raise ValueError('Invalid HTML-to-PDF preview count: ' + name)
 
 
 def check(root):
@@ -333,7 +357,7 @@ def check(root):
         if (english['url'], french['url']) not in translated_pairs:
             errors.append('API search records must target their reciprocal translation pair: ' + title)
     packages = {item['name']: item for item in manifest['packages']}
-    if len(packages) != len(manifest['packages']) or set(packages) != {'roukmoute/pdf', 'pdftoolkit/pdf-reader', 'pdftoolkit/pdf-images', 'pdftoolkit/pdf-fonts', 'pdftoolkit/opentype', 'pdftoolkit/pdf-to-html', 'pdftoolkit/pdf-codecs'}:
+    if len(packages) != len(manifest['packages']) or set(packages) != {'roukmoute/pdf', 'pdftoolkit/pdf-reader', 'pdftoolkit/pdf-images', 'pdftoolkit/pdf-fonts', 'pdftoolkit/opentype', 'pdftoolkit/pdf-to-html', 'pdftoolkit/pdf-codecs', 'pdftoolkit/html-to-pdf'}:
         errors.append('Package inventory must cover every unique package name')
     if packages.get('roukmoute/pdf', {}).get('revision') != manifest.get('revision'):
         errors.append('Core source revision differs from the site source revision')
@@ -348,7 +372,7 @@ def check(root):
         repository = 'https://github.com/PDFToolkit/' + (name.split('/')[-1] if optional else 'pdf')
         if package.get('optional') is not optional or package.get('repository') != repository:
             errors.append('Incorrect source package identity: ' + name)
-        slug = ('opentype' if name == 'pdftoolkit/opentype' else name.removeprefix('pdftoolkit/pdf-')) if optional else 'core'
+        slug = ('from-html' if name == 'pdftoolkit/html-to-pdf' else 'opentype' if name == 'pdftoolkit/opentype' else name.removeprefix('pdftoolkit/pdf-')) if optional else 'core'
         package_url = 'https://packagist.org/packages/' + name
         for language in ['en', 'fr']:
             for logical in ('index.html', 'reference/index.html', f'reference/packages/{slug}.html', f'modules/{slug}/index.html', 'guides/demarrer.html', 'guides/modules.html'):
@@ -394,14 +418,14 @@ def check(root):
         if page in documents:
             for link in documents[page].links:
                 url = urlsplit(link)
-                match = re.fullmatch(r'/PDFToolkit/(pdf-reader|pdf-images|pdf-fonts|pdf-to-html|pdf-codecs|opentype)/(?:blob|tree)/[^/]+/(README(?:\.fr)?\.md|CHANGELOG(?:\.fr)?\.md|SECURITY(?:\.fr)?\.md|docs/.+\.md)', url.path)
+                match = re.fullmatch(r'/PDFToolkit/(pdf-reader|pdf-images|pdf-fonts|pdf-to-html|html-to-pdf|pdf-codecs|opentype)/(?:blob|tree)/[^/]+/(README(?:\.fr)?\.md|CHANGELOG(?:\.fr)?\.md|SECURITY(?:\.fr)?\.md|docs/.+\.md)', url.path)
                 if url.netloc == 'github.com' and match and link != expected_source:
                     errors.append('Module guide navigation must stay on the central site: ' + page + ' -> ' + link)
     for slug, routes in MODULE_GUIDES.items():
         for language in ['en', 'fr']:
             for route in routes:
                 page = localized(f'modules/{slug}/{route}.html', language)
-                if page not in guides or guides[page].get('package') != ('pdftoolkit/opentype' if slug == 'opentype' else 'pdftoolkit/pdf-' + slug):
+                if page not in guides or guides[page].get('package') != module_package(slug):
                     errors.append('Missing local module guide and provenance: ' + str(page))
     demo = manifest.get('htmlDemo', {})
     try:
@@ -521,6 +545,11 @@ def check(root):
             if record.get('kind') == 'generated':
                 if package['name'] != 'roukmoute/pdf' or source_path != f'examples/{name}.php':
                     errors.append('Generated example must retain its core writer source: ' + name)
+            elif record.get('kind') == 'html-to-pdf':
+                try:
+                    validate_html_to_pdf_source(root, name, record, package, documents, example_pages)
+                except ValueError as error:
+                    errors.append(str(error))
             elif record.get('kind') in {'input', 'conversion'}:
                 input_path = record.get('input', '')
                 expected_input = package['repository'] + '/blob/' + package['revision'] + '/' + quote(input_path, safe='/')
@@ -575,7 +604,7 @@ def check(root):
         previews = manifest.get('pdfPages', {}).get(name, [])
         if not previews:
             errors.append('Missing rendered PDF pages: ' + name)
-        if record.get('kind') == 'input' and len(previews) != record.get('expectedPages'):
+        if record.get('kind') in {'input', 'html-to-pdf'} and len(previews) != record.get('expectedPages'):
             errors.append('Missing pages from the external input preview: ' + name)
         for page_number, preview in enumerate(previews, start=1):
             expected = f'assets/pdf-pages/{name}-{page_number}.png'

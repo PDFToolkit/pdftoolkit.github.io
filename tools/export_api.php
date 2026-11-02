@@ -362,7 +362,7 @@ function lockedDependency(string $consumer, string $name): array
 }
 
 /** @return array<string, array<string, mixed>> */
-function documentationPackages(string $root, string $sourcesPath, string $opentypeRoot, string $pdfToHtmlRoot, string $readerConsumer, string $codecsRoot, string $imagesRoot): array
+function documentationPackages(string $root, string $sourcesPath, string $opentypeRoot, string $pdfToHtmlRoot, string $readerConsumer, string $codecsRoot, string $imagesRoot, string $htmlToPdfRoot): array
 {
     $root = realpath($root) ?: throw new \RuntimeException('Cannot resolve the core source tree.');
     $manifestBytes = file_get_contents($sourcesPath);
@@ -380,7 +380,7 @@ function documentationPackages(string $root, string $sourcesPath, string $openty
     }
     $names = array_keys($selected);
     sort($names);
-    if (($manifest['schemaVersion'] ?? null) !== 1 || $names !== ['pdftoolkit/opentype', 'pdftoolkit/pdf-codecs', 'pdftoolkit/pdf-fonts', 'pdftoolkit/pdf-images', 'pdftoolkit/pdf-reader', 'pdftoolkit/pdf-to-html', 'roukmoute/pdf']) {
+    if (($manifest['schemaVersion'] ?? null) !== 1 || $names !== ['pdftoolkit/html-to-pdf', 'pdftoolkit/opentype', 'pdftoolkit/pdf-codecs', 'pdftoolkit/pdf-fonts', 'pdftoolkit/pdf-images', 'pdftoolkit/pdf-reader', 'pdftoolkit/pdf-to-html', 'roukmoute/pdf']) {
         throw new \RuntimeException('The released-source manifest must describe every package exactly once.');
     }
     foreach ($selected as $name => $package) {
@@ -540,6 +540,49 @@ function documentationPackages(string $root, string $sourcesPath, string $openty
     (new SelectedSourceAutoloader('PDF\\Reading\\', $readerRoot . '/src'))->register();
     $packages['pdftoolkit/pdf-to-html'] = ['root' => $pdfToHtmlRoot, ...$html];
     $packages['pdftoolkit/pdf-reader'] = ['root' => $readerRoot, ...$selected['pdftoolkit/pdf-reader']];
+    $htmlToPdfRoot = realpath($htmlToPdfRoot) ?: throw new \RuntimeException('Cannot resolve the HTML-to-PDF source tree.');
+    $htmlToPdf = $selected['pdftoolkit/html-to-pdf'];
+    foreach (['HEAD', 'v' . $htmlToPdf['version'] . '^{commit}'] as $reference) {
+        $process = proc_open(['git', '-C', $htmlToPdfRoot, 'rev-parse', $reference], [1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes);
+        if (!is_resource($process)) {
+            throw new \RuntimeException('Cannot verify the HTML-to-PDF checkout.');
+        }
+        $revision = trim(stream_get_contents($pipes[1]));
+        $error = stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+        if (proc_close($process) !== 0 || $revision !== $htmlToPdf['revision']) {
+            throw new \RuntimeException('HTML-to-PDF checkout or tag differs from the released-source manifest. ' . trim($error));
+        }
+    }
+    $composer = json_decode(file_get_contents($htmlToPdfRoot . '/composer.json') ?: '{}', true, flags: JSON_THROW_ON_ERROR);
+    if (($composer['name'] ?? null) !== 'pdftoolkit/html-to-pdf') {
+        throw new \RuntimeException('Incorrect HTML-to-PDF package identity.');
+    }
+    foreach (['roukmoute/pdf', 'pdftoolkit/pdf-fonts', 'pdftoolkit/pdf-images', 'pdftoolkit/opentype', 'pdftoolkit/pdf-reader', 'masterminds/html5', 'sabberworm/php-css-parser', 'symfony/css-selector'] as $name) {
+        lockedDependency($htmlToPdfRoot, $name);
+    }
+    // Load only this module and its parser dependencies. Existing selected PDF
+    // namespaces retain their documented versions; generation uses its own process.
+    foreach (['PDF\\HtmlToPdf\\' => '/src', 'Masterminds\\' => '/vendor/masterminds/html5/src', 'Sabberworm\\CSS\\' => '/vendor/sabberworm/php-css-parser/src', 'Symfony\\Component\\CssSelector\\' => '/vendor/symfony/css-selector'] as $prefix => $directory) {
+        (new SelectedSourceAutoloader($prefix, $htmlToPdfRoot . $directory))->register();
+    }
+    $externalSources = [];
+    $parserLock = json_decode(file_get_contents($htmlToPdfRoot . '/composer.lock') ?: '{}', true, flags: JSON_THROW_ON_ERROR);
+    $parserPackages = array_column($parserLock['packages'], null, 'name');
+    foreach (['masterminds/html5' => 'https://github.com/Masterminds/html5-php', 'sabberworm/php-css-parser' => 'https://github.com/MyIntervals/PHP-CSS-Parser', 'symfony/css-selector' => 'https://github.com/symfony/css-selector'] as $name => $repository) {
+        if (rtrim(preg_replace('/\\.git$/D', '', $parserPackages[$name]['source']['url'] ?? '') ?? '', '/') !== $repository) {
+            throw new \RuntimeException('Unexpected API parser source repository: ' . $name);
+        }
+        $externalSources[$name] = [
+            'root' => realpath($htmlToPdfRoot . '/vendor/' . $name) ?: throw new \RuntimeException('Missing API parser dependency.'),
+            'repository' => $repository,
+            ...lockedDependency($htmlToPdfRoot, $name),
+            'optional' => true,
+        ];
+    }
+    $packages['pdftoolkit/html-to-pdf'] = ['root' => $htmlToPdfRoot, 'externalSources' => $externalSources, ...$htmlToPdf];
+
     return $packages;
 }
 
@@ -549,34 +592,21 @@ function documentationPackages(string $root, string $sourcesPath, string $openty
  */
 function sourceLocation(string $file, array $packages): array
 {
-    $file = realpath($file) ?: throw new \RuntimeException('Cannot resolve an API source file.');
-    // Installed modules may live inside the core vendor directory.
-    foreach (array_reverse($packages, true) as $name => $package) {
-        if (str_starts_with($file, $package['root'] . DIRECTORY_SEPARATOR)) {
-            return [
-                'package' => $name,
-                'repository' => $package['repository'],
-                'revision' => $package['revision'],
-                'version' => $package['version'],
-                'optional' => $package['optional'],
-                'source' => str_replace('\\', '/', substr($file, strlen($package['root']) + 1)),
-            ];
-        }
-    }
-    throw new \RuntimeException('An API declaration is outside the documented source trees.');
+    return (new ApiSourceLocator($packages))->locate($file);
 }
 
 $arguments = $_SERVER['argv'] ?? [];
-if (!is_array($arguments) || count($arguments) !== 9 || !isset($arguments[1], $arguments[2], $arguments[3], $arguments[4], $arguments[5], $arguments[6], $arguments[7], $arguments[8]) || !is_string($arguments[1]) || $arguments[1] === '') {
-    fwrite(STDERR, "Usage: php tools/export_api.php <output.json> <source-root> <sources.json> <opentype-root> <pdf-to-html-root> <reader-consumer-root> <codecs-root> <images-root>\n");
+if (!is_array($arguments) || count($arguments) !== 10 || !isset($arguments[1], $arguments[2], $arguments[3], $arguments[4], $arguments[5], $arguments[6], $arguments[7], $arguments[8], $arguments[9]) || !is_string($arguments[1]) || $arguments[1] === '') {
+    fwrite(STDERR, "Usage: php tools/export_api.php <output.json> <source-root> <sources.json> <opentype-root> <pdf-to-html-root> <reader-consumer-root> <codecs-root> <images-root> <html-to-pdf-root>\n");
     exit(1);
 }
 
 try {
     require __DIR__ . '/SelectedSourceAutoloader.php';
+    require __DIR__ . '/ApiSourceLocator.php';
     $root = realpath($arguments[2]) ?: throw new \RuntimeException('Cannot resolve the core source tree.');
     require $root . '/vendor/autoload.php';
-    $packages = documentationPackages($root, $arguments[3], $arguments[4], $arguments[5], $arguments[6], $arguments[7], $arguments[8]);
+    $packages = documentationPackages($root, $arguments[3], $arguments[4], $arguments[5], $arguments[6], $arguments[7], $arguments[8], $arguments[9]);
     $files = [];
     foreach ($packages as $package) {
         $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($package['root'] . '/src', \FilesystemIterator::SKIP_DOTS));
@@ -603,7 +633,7 @@ try {
     usort($components, static fn (array $left, array $right): int => strcmp($left['name'], $right['name']));
     $metadata = [];
     foreach ($packages as $name => $package) {
-        unset($package['root'], $package['name']);
+        unset($package['root'], $package['name'], $package['externalSources']);
         $metadata[] = ['name' => $name, ...$package];
     }
     $json = json_encode(['packages' => $metadata, 'components' => $components], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);

@@ -17,6 +17,7 @@ PACKAGES = {
     "pdftoolkit/opentype": "https://github.com/PDFToolkit/opentype",
     "pdftoolkit/pdf-to-html": "https://github.com/PDFToolkit/pdf-to-html",
     "pdftoolkit/pdf-codecs": "https://github.com/PDFToolkit/pdf-codecs",
+    "pdftoolkit/html-to-pdf": "https://github.com/PDFToolkit/html-to-pdf",
 }
 
 
@@ -86,12 +87,21 @@ def core_example_dependencies(root: Path) -> list[dict]:
     return [locked_dependency(root, name) for name in sorted(locked) if name in PACKAGES]
 
 
-def execution_dependencies(source: Path, images: Path, html: Path, packages: dict[str, dict]) -> dict:
-    return {
+def html_to_pdf_dependencies(root: Path) -> list[dict]:
+    require((root / "vendor/autoload.php").is_file(), "Missing HTML-to-PDF consumer autoloader")
+    return [locked_dependency(root, name) for name in ("roukmoute/pdf", "pdftoolkit/pdf-fonts", "pdftoolkit/pdf-images", "pdftoolkit/opentype", "pdftoolkit/pdf-reader", "masterminds/html5", "sabberworm/php-css-parser", "symfony/css-selector")]
+
+
+def execution_dependencies(source: Path, images: Path, html: Path, packages: dict[str, dict], html_to_pdf: Path | None = None) -> dict:
+    result = {
         "coreExamples": {"package": packages["roukmoute/pdf"], "dependencies": core_example_dependencies(source)},
         "imagesValidation": {"package": packages["pdftoolkit/pdf-images"], "dependencies": images_dependencies(images)},
         "htmlValidation": {"package": packages["pdftoolkit/pdf-to-html"], "dependencies": html_dependencies(html)},
     }
+
+    if html_to_pdf is not None:
+        result["htmlToPdfValidation"] = {"package": packages["pdftoolkit/html-to-pdf"], "dependencies": html_to_pdf_dependencies(html_to_pdf)}
+    return result
 
 
 def select_reader(source_root: Path, html_root: Path, packages: dict[str, dict]) -> Path:
@@ -116,7 +126,7 @@ def select_reader(source_root: Path, html_root: Path, packages: dict[str, dict])
     return consumer
 
 
-def check(source_root: Path, manifest: Path, remote: bool = False, opentype_root: Path | None = None, pdf_to_html_root: Path | None = None, codecs_root: Path | None = None, images_root: Path | None = None) -> dict[str, dict]:
+def check(source_root: Path, manifest: Path, remote: bool = False, opentype_root: Path | None = None, pdf_to_html_root: Path | None = None, codecs_root: Path | None = None, images_root: Path | None = None, html_to_pdf_root: Path | None = None) -> dict[str, dict]:
     packages = load_manifest(manifest)
     core = packages["roukmoute/pdf"]
     require(git("rev-parse", "HEAD", root=source_root) == core["revision"], "Core checkout does not match the released source pin")
@@ -132,6 +142,15 @@ def check(source_root: Path, manifest: Path, remote: bool = False, opentype_root
             require(composer["name"] == name, "PDF-to-HTML source package identity differs")
             require((pdf_to_html_root / "docs").is_dir(), "Missing PDF-to-HTML guides")
             html_dependencies(pdf_to_html_root)
+        elif name == "pdftoolkit/html-to-pdf":
+            require(html_to_pdf_root is not None, "The separate released HTML-to-PDF checkout is required")
+            for reference in ("HEAD", f"v{source['version']}^{{commit}}"):
+                require(git("rev-parse", reference, root=html_to_pdf_root) == source["revision"], "HTML-to-PDF checkout or tag differs from the released source pin")
+            require(not git("status", "--porcelain", root=html_to_pdf_root), "HTML-to-PDF checkout has modified release inputs")
+            composer = json.loads((html_to_pdf_root / "composer.json").read_text(encoding="utf-8"))
+            require(composer.get("name") == name, "HTML-to-PDF source package identity differs")
+            require((html_to_pdf_root / "docs").is_dir() and (html_to_pdf_root / "src").is_dir(), "Missing HTML-to-PDF source or guides")
+            html_to_pdf_dependencies(html_to_pdf_root)
         elif name == "pdftoolkit/pdf-images":
             require(images_root is not None, "The separate released Images checkout is required")
             require(git("rev-parse", "HEAD", root=images_root) == source["revision"], "Images checkout differs from the released source pin")
@@ -180,6 +199,7 @@ if __name__ == "__main__":
     parser.add_argument("--source-root", type=Path, required=True)
     parser.add_argument("--opentype-root", type=Path, help="Independent released OpenType checkout")
     parser.add_argument("--pdf-to-html-root", type=Path, help="Released PDF-to-HTML checkout with its locked reader")
+    parser.add_argument("--html-to-pdf-root", type=Path, help="Separate released HTML-to-PDF checkout and locked dependencies")
     parser.add_argument("--images-root", type=Path, help="Separate released Images checkout and its own locked core")
     parser.add_argument("--codecs-root", type=Path, help="Independent released image codecs checkout")
     parser.add_argument("--manifest", type=Path, default=Path(__file__).resolve().parents[1] / "resources/sources.json")
@@ -194,7 +214,9 @@ if __name__ == "__main__":
         html = packages["pdftoolkit/pdf-to-html"]
         codecs = packages["pdftoolkit/pdf-codecs"]
         images = packages["pdftoolkit/pdf-images"]
+        html_to_pdf = packages["pdftoolkit/html-to-pdf"]
         with args.github_output.open("a", encoding="utf-8", newline="\n") as stream:
+            stream.write(f"html_to_pdf_revision={html_to_pdf['revision']}\nhtml_to_pdf_version={html_to_pdf['version']}\n")
             stream.write(f"images_revision={images['revision']}\nimages_version={images['version']}\n")
             stream.write(f"codecs_revision={codecs['revision']}\ncodecs_version={codecs['version']}\n")
             stream.write(f"opentype_revision={opentype['revision']}\nopentype_version={opentype['version']}\n")
@@ -204,4 +226,4 @@ if __name__ == "__main__":
         require(args.pdf_to_html_root is not None, "The released PDF-to-HTML source checkout is required")
         print(select_reader(args.source_root.resolve(), args.pdf_to_html_root.resolve(), load_manifest(args.manifest.resolve())))
     else:
-        check(args.source_root.resolve(), args.manifest.resolve(), args.remote, args.opentype_root.resolve() if args.opentype_root else None, args.pdf_to_html_root.resolve() if args.pdf_to_html_root else None, args.codecs_root.resolve() if args.codecs_root else None, args.images_root.resolve() if args.images_root else None)
+        check(args.source_root.resolve(), args.manifest.resolve(), args.remote, args.opentype_root.resolve() if args.opentype_root else None, args.pdf_to_html_root.resolve() if args.pdf_to_html_root else None, args.codecs_root.resolve() if args.codecs_root else None, args.images_root.resolve() if args.images_root else None, args.html_to_pdf_root.resolve() if args.html_to_pdf_root else None)

@@ -41,6 +41,12 @@ class OpenTypeSourcesTest(unittest.TestCase):
         (self.html / "docs").mkdir()
         (self.html / "composer.json").write_text(json.dumps({"name": "pdftoolkit/pdf-to-html"}), encoding="utf-8")
         # Synthetic unit fixtures do not identify published source releases.
+        self.from_html = self.root / "from-html"
+        (self.from_html / "docs").mkdir(parents=True)
+        (self.from_html / "src").mkdir()
+        (self.from_html / "vendor/composer").mkdir(parents=True)
+        (self.from_html / "vendor/autoload.php").write_text("<?php // Synthetic fixture.\n")
+        (self.from_html / "composer.json").write_text(json.dumps({"name": "pdftoolkit/html-to-pdf"}))
         self.records = [
             {"name": name, "repository": repository, "version": "0.1.0",
              "revision": str(index) * 40, "optional": name != "roukmoute/pdf"}
@@ -51,7 +57,7 @@ class OpenTypeSourcesTest(unittest.TestCase):
         self.save_manifest()
         modules = []
         for item in self.records:
-            if item["name"] in {"roukmoute/pdf", "pdftoolkit/opentype", "pdftoolkit/pdf-to-html", "pdftoolkit/pdf-codecs"}:
+            if item["name"] in {"roukmoute/pdf", "pdftoolkit/opentype", "pdftoolkit/pdf-to-html", "pdftoolkit/pdf-codecs", "pdftoolkit/html-to-pdf"}:
                 continue
             modules.append({"name": item["name"], "version": item["version"],
                             "source": {"reference": item["revision"]},
@@ -65,6 +71,9 @@ class OpenTypeSourcesTest(unittest.TestCase):
         (self.opentype / "docs").mkdir()
         self.save_composer({"php": "^8.3"})
         html_modules = [{"name": item["name"], "version": item["version"], "source": {"reference": item["revision"]}, "dist": {"reference": item["revision"]}} for item in self.records if item["name"] in {"roukmoute/pdf", "pdftoolkit/pdf-reader"}]
+        from_html_modules = [{"name": name, "version": "0.1.0", "source": {"reference": "a" * 40}, "dist": {"reference": "a" * 40}} for name in ("roukmoute/pdf", "pdftoolkit/pdf-fonts", "pdftoolkit/pdf-images", "pdftoolkit/opentype", "pdftoolkit/pdf-reader", "masterminds/html5", "sabberworm/php-css-parser", "symfony/css-selector")]
+        (self.from_html / "composer.lock").write_text(json.dumps({"packages": from_html_modules, "packages-dev": []}))
+        (self.from_html / "vendor/composer/installed.json").write_text(json.dumps({"packages": from_html_modules}))
         (self.html / "vendor/composer").mkdir(parents=True)
         (self.html / "vendor/pdftoolkit/pdf-reader/docs").mkdir(parents=True)
         (self.html / "composer.lock").write_text(json.dumps({"packages": html_modules, "packages-dev": []}), encoding="utf-8")
@@ -85,6 +94,8 @@ class OpenTypeSourcesTest(unittest.TestCase):
     def git(self, *arguments, root=None):
         if arguments[0] == 'status':
             return ''
+        if root == self.from_html:
+            return self.selected["pdftoolkit/html-to-pdf"]["revision"]
         if root == self.images:
             return self.selected['pdftoolkit/pdf-images']['revision']
         if root == self.codecs:
@@ -92,7 +103,7 @@ class OpenTypeSourcesTest(unittest.TestCase):
         package = "pdftoolkit/opentype" if root == self.opentype else ("pdftoolkit/pdf-to-html" if root == self.html else "roukmoute/pdf")
         return self.selected[package]["revision"]
 
-    def test_manifest_requires_all_seven_unique_released_package_identities(self):
+    def test_manifest_requires_all_eight_unique_released_package_identities(self):
         self.assertEqual(set(PACKAGES), set(load_manifest(self.manifest)))
         self.assertEqual(set(PACKAGES), set(load_sources(self.manifest)))
         self.records.append(dict(self.records[-1]))
@@ -104,21 +115,21 @@ class OpenTypeSourcesTest(unittest.TestCase):
 
     def test_opentype_checkout_is_separate_from_core_lock_and_vendor(self):
         with patch("check_sources.git", side_effect=self.git), redirect_stdout(io.StringIO()):
-            packages = check(self.core, self.manifest, opentype_root=self.opentype, pdf_to_html_root=self.html, codecs_root=self.codecs, images_root=self.images)
+            packages = check(self.core, self.manifest, opentype_root=self.opentype, pdf_to_html_root=self.html, codecs_root=self.codecs, images_root=self.images, html_to_pdf_root=self.from_html)
         self.assertIn("pdftoolkit/opentype", packages)
         self.assertFalse((self.core / "vendor/pdftoolkit/opentype").exists())
 
     def test_missing_independent_checkout_is_rejected(self):
         with patch("check_sources.git", side_effect=self.git):
             with self.assertRaisesRegex(ValueError, "independent OpenType source checkout"):
-                check(self.core, self.manifest, pdf_to_html_root=self.html, codecs_root=self.codecs, images_root=self.images)
+                check(self.core, self.manifest, pdf_to_html_root=self.html, codecs_root=self.codecs, images_root=self.images, html_to_pdf_root=self.from_html)
 
     def test_wrong_opentype_release_commit_is_rejected(self):
         def wrong_git(*arguments, root=None):
             return "f" * 40 if root == self.opentype else self.git(*arguments, root=root)
         with patch("check_sources.git", side_effect=wrong_git):
             with self.assertRaisesRegex(ValueError, "OpenType checkout differs"):
-                check(self.core, self.manifest, opentype_root=self.opentype, pdf_to_html_root=self.html, codecs_root=self.codecs, images_root=self.images)
+                check(self.core, self.manifest, opentype_root=self.opentype, pdf_to_html_root=self.html, codecs_root=self.codecs, images_root=self.images, html_to_pdf_root=self.from_html)
 
     def test_wrong_opentype_release_tag_is_rejected(self):
         def wrong_git(*arguments, root=None):
@@ -127,13 +138,13 @@ class OpenTypeSourcesTest(unittest.TestCase):
             return self.git(*arguments, root=root)
         with patch("check_sources.git", side_effect=wrong_git):
             with self.assertRaisesRegex(ValueError, "OpenType tag differs"):
-                check(self.core, self.manifest, opentype_root=self.opentype, pdf_to_html_root=self.html, codecs_root=self.codecs, images_root=self.images)
+                check(self.core, self.manifest, opentype_root=self.opentype, pdf_to_html_root=self.html, codecs_root=self.codecs, images_root=self.images, html_to_pdf_root=self.from_html)
 
     def test_opentype_pdf_dependency_is_rejected(self):
         self.save_composer({"php": "^8.3", "roukmoute/pdf": "^0.6"})
         with patch("check_sources.git", side_effect=self.git):
             with self.assertRaisesRegex(ValueError, "independent from PDF packages"):
-                check(self.core, self.manifest, opentype_root=self.opentype, pdf_to_html_root=self.html, codecs_root=self.codecs, images_root=self.images)
+                check(self.core, self.manifest, opentype_root=self.opentype, pdf_to_html_root=self.html, codecs_root=self.codecs, images_root=self.images, html_to_pdf_root=self.from_html)
 
     def test_api_signatures_link_both_pdf_and_independent_opentype_types(self):
         site = Site.__new__(Site)

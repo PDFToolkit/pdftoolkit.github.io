@@ -37,10 +37,10 @@ GROUP_ROUTES = {
     'lexique': 'lexical-conventions', 'norme': 'specification',
     'dictionnaires': 'dictionaries', 'entrees': 'entries', 'definitions': 'definitions',
     'adobe': 'adobe', 'iso2': 'pdf-2-0', 'securite': 'security', 'polices-externes': 'external-fonts',
-    'images-externes': 'external-images', 'lecture': 'reader', 'fontes-opentype': 'opentype', 'conversion-html': 'to-html', 'codecs-images': 'image-codecs',
+    'images-externes': 'external-images', 'lecture': 'reader', 'fontes-opentype': 'opentype', 'conversion-html': 'to-html', 'creation-html': 'from-html', 'codecs-images': 'image-codecs',
 }
 ENGLISH_ROUTES.update({f'reference/groups/{old}.html': f'reference/groups/{new}.html' for old, new in GROUP_ROUTES.items()})
-for module in ('reader', 'images', 'fonts', 'opentype', 'to-html', 'codecs'):
+for module in ('reader', 'images', 'fonts', 'opentype', 'to-html', 'from-html', 'codecs'):
     ENGLISH_ROUTES[f'modules/{module}/signalements.html'] = f'modules/{module}/reporting.html'
     ENGLISH_ROUTES[f'modules/{module}/versions.html'] = f'modules/{module}/changelog.html'
 
@@ -366,6 +366,19 @@ TEXT = {
     'Dérivation HTML': 'HTML derivation',
     'Démo HTML': 'HTML demo',
     'Explorer les exemples et essayer la conversion locale →': 'Explore examples and try local conversion →',
+    'Créer un PDF depuis HTML': 'Create PDF from HTML',
+    'Architecture HTML vers PDF': 'HTML-to-PDF architecture',
+    'Utiliser le convertisseur HTML vers PDF': 'Use the HTML-to-PDF converter',
+    'Couverture HTML vers PDF': 'HTML-to-PDF coverage',
+    'Validation par niveaux CSS': 'Validation by CSS level',
+    'Références HTML et CSS': 'HTML and CSS references',
+    'Facture HTML vers PDF': 'HTML-to-PDF invoice',
+    'Catalogue HTML vers PDF': 'HTML-to-PDF catalogue',
+    'Document HTML sur plusieurs pages': 'Multipage HTML document',
+    'Module optionnel : HTML vers PDF': 'Optional module: HTML to PDF',
+    'Source HTML au commit documenté ↗': 'HTML source at the documented commit ↗',
+    'Source HTML': 'HTML source',
+    'Télécharger la source HTML': 'Download the HTML source',
     'Dériver du HTML depuis un PDF': 'Derive HTML from PDF',
     'Dériver du HTML depuis un PDF balisé': 'Derive HTML from tagged PDF',
     'Structure logique, contenu Unicode et HTML sémantique avec diagnostics explicites.': 'Logical structure, Unicode content and semantic HTML with explicit diagnostics.',
