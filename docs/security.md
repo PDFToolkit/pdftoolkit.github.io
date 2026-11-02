@@ -7,12 +7,12 @@ dans les modules optionnels [pdf-fonts](https://github.com/PDFToolkit/pdf-fonts)
 et [pdf-images](https://github.com/PDFToolkit/pdf-images). Les objets PDF et leurs
 invariants restent dans le core. Le module
 [pdf-reader](https://github.com/PDFToolkit/pdf-reader) a sa propre
-[documentation de sécurité](https://github.com/PDFToolkit/pdf-reader/blob/v0.7.0/docs/security.md)
+[documentation de sécurité](https://github.com/PDFToolkit/pdf-reader/blob/v0.8.0/docs/security.md)
 pour la lecture de fichiers externes ; cette revue du générateur ne s'y substitue pas.
 
 Le [manifeste de sources](../resources/sources.json) fixe les versions et révisions : core 0.12, Reader 0.7, HTML 0.8, Images/Fonts 0.2, OpenType 0.4 et Codecs 0.1. Ces bibliothèques utilisent PHP 8.3+ en 64 bits ; la qualification couvre PHP 8.3/8.4/8.5. Les [mécanismes complémentaires PDF 2.0](pdf-2-0-bundle.md) restent dans leur domaine propre. Définitions et déclarations de conformité ne sont pas des certificats de sécurité. OpenType et Codecs ont leurs propres contrôles de formats et limites, distincts du writer.
 
-Le module PDF vers HTML **0.8.1**, avec le lecteur sélectionné **0.7.0**, conserve ses propres
+Le module PDF vers HTML **0.8.2**, avec le lecteur sélectionné **0.8.0**, conserve ses propres
 [contrôles de sécurité](https://pdftoolkit.github.io/fr/modules/to-html/security.html)
 et [politiques explicites](https://pdftoolkit.github.io/fr/modules/to-html/policies.html).
 Ses tests indépendants vérifient filtrage HTML/CSS/URL, associations et IDs,
@@ -44,7 +44,7 @@ Le lecteur 0.3.1 limite l'exemption `EncryptMetadata=false` au véritable objet
 de métadonnées du catalogue ; les métadonnées de pages et Forms restent chiffrées
 sauf sélection explicite d'Identity. Il résout les types indirects avant de
 choisir `EFF`, utilise la clé V4 fixe de 128 bits et ignore les tentatives de
-redéfinir le filtre standard Identity. Ses [sept régressions supplémentaires](https://github.com/PDFToolkit/pdf-reader/blob/v0.7.0/tools/validate_metadata_security.py)
+redéfinir le filtre standard Identity. Ses [sept régressions supplémentaires](https://github.com/PDFToolkit/pdf-reader/blob/v0.8.0/tools/validate_metadata_security.py)
 utilisent qpdf et cryptography, avec les limites précises des oracles expliquées
 dans le [guide d'authentification](https://pdftoolkit.github.io/fr/modules/reader/authentication.html).
 

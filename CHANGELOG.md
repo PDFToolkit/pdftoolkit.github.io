@@ -4,6 +4,14 @@
 
 ## Unreleased
 
+## [0.15.0] - 2026-11-02
+
+- Publish Reader 0.8.0’s source-inspection guide and API: original tag trees, typed PDF properties, pages and object references, namespace role mappings and associated-file metadata, with explicit budgets and opaque streams.
+- Select HTML 0.8.2 and demo 0.4.0. Add the bilingual PDF structure tab, exact-source inspection JSON downloads and retained inspection/PDF results when HTML conversion fails, is cancelled or times out.
+- Verify every new demo snapshot’s bytes, schema and original-PDF identity; require matching Reader provenance across gallery, application and browser-runtime manifests. Keep previous demo manifest formats supported.
+- Run the independent pypdf/qpdf inspection oracle in the full site build. Keep source values inert in the interface and distinguish read-only inspection from HTML derivation, PDF editing and conformance validation.
+- Source documented Reader 0.8.0 from HTML’s released vendor; preserve core 0.12.1 and its published Reader 0.7.0 development lock, without republishing unchanged packages.
+
 ## [0.14.0] - 2026-11-02
 
 - Select HTML 0.8.1 to preserve filtered stylesheet links associated with structure elements, while keeping the strict Supplement content rules and independent script/network permissions.

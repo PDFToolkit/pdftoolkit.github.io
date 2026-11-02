@@ -1,7 +1,7 @@
 # Core and optional modules
 
 PDFToolkit separates the PDF model from external-file processing.
-The documented release series are core **0.12**, Reader **0.7**, Images and Fonts **0.2**, OpenType **0.4**, Codecs **0.1** and PDF-to-HTML **0.8**. They require **64-bit PHP 8.3 or later**; qualification covers PHP 8.3, 8.4 and 8.5. The source manifest pins exact versions and revisions. OpenType and Codecs have no PDF core dependency.
+The documented release series are core **0.12**, Reader **0.8**, Images and Fonts **0.2**, OpenType **0.4**, Codecs **0.1** and PDF-to-HTML **0.8**. They require **64-bit PHP 8.3 or later**; qualification covers PHP 8.3, 8.4 and 8.5. The source manifest pins exact versions and revisions. OpenType and Codecs have no PDF core dependency.
 The core retains its Composer name `roukmoute/pdf`; modules use `pdftoolkit/`.
 
 ## The core boundary
@@ -36,7 +36,7 @@ verified before finalization.
 | [PDFToolkit/pdf](https://github.com/PDFToolkit/pdf) — [`roukmoute/pdf`](https://packagist.org/packages/roukmoute/pdf) | PDF objects assembled by the application | PDF file, cross-references and revisions |
 | [PDFToolkit/pdf-images](https://github.com/PDFToolkit/pdf-images) — [`pdftoolkit/pdf-images`](https://packagist.org/packages/pdftoolkit/pdf-images) | PNG or JPEG bytes and explicit limits | Color/alpha samples or core DCT representation |
 | [PDFToolkit/pdf-fonts](https://github.com/PDFToolkit/pdf-fonts) — [`pdftoolkit/pdf-fonts`](https://packagist.org/packages/pdftoolkit/pdf-fonts) | Static TrueType/CFF bytes, text and explicit layout stages | Embeddable programs, Unicode/CID/GID mappings and positioned PDF text |
-| [PDFToolkit/pdf-reader](https://github.com/PDFToolkit/pdf-reader) — [`pdftoolkit/pdf-reader`](https://packagist.org/packages/pdftoolkit/pdf-reader) | PDF bytes and reading budgets | Read graph, pages and inherited attributes, references to resolve and encoded or decoded streams |
+| [PDFToolkit/pdf-reader](https://github.com/PDFToolkit/pdf-reader) — [`pdftoolkit/pdf-reader`](https://packagist.org/packages/pdftoolkit/pdf-reader) | PDF bytes and reading budgets | Read graph, bounded source inspection, pages and inherited attributes, references to resolve and encoded or decoded streams |
 | [PDFToolkit/opentype](https://github.com/PDFToolkit/opentype) — [`pdftoolkit/opentype`](https://packagist.org/packages/pdftoolkit/opentype) | OpenType SFNT/TTC/OTC bytes and explicit limits | Tables, outlines, metrics, GSUB substitutions and GPOS positioning |
 | [PDFToolkit/pdf-codecs](https://github.com/PDFToolkit/pdf-codecs) — [`pdftoolkit/pdf-codecs`](https://packagist.org/packages/pdftoolkit/pdf-codecs) | JPEG, JPEG 2000 or JBIG2 bytes | Component planes and exact colour/alpha metadata within the supported profiles |
 | [PDFToolkit/pdf-to-html](https://github.com/PDFToolkit/pdf-to-html) — [`pdftoolkit/pdf-to-html`](https://packagist.org/packages/pdftoolkit/pdf-to-html) | Tagged PDF bytes or an explicit logical source model | Semantic HTML, CSS, assets and diagnostics |
@@ -51,7 +51,7 @@ Core 0.8.0 retains PDF 2.0 writing with modern cryptography and PDF MAC, metadat
 
 ## Installing what the application needs
 
-All seven libraries are available on Packagist under `roukmoute/pdf` or the `pdftoolkit/` names above. The documented constraints are core `^0.12`, Reader `^0.7`, HTML `^0.8`, Images/Fonts `^0.2`, OpenType `^0.4` and Codecs `^0.1`. Older core tags `v0.1.0` and `v0.1.1` retain their PHP 8.5 constraint.
+All seven libraries are available on Packagist under `roukmoute/pdf` or the `pdftoolkit/` names above. The documented constraints are core `^0.12`, Reader `^0.8`, HTML `^0.8`, Images/Fonts `^0.2`, OpenType `^0.4` and Codecs `^0.1`. Older core tags `v0.1.0` and `v0.1.1` retain their PHP 8.5 constraint.
 
 To generate PDFs only:
 
@@ -62,7 +62,7 @@ composer require "roukmoute/pdf:^0.12"
 To add reading of existing PDFs:
 
 ```sh
-composer require "roukmoute/pdf:^0.12" "pdftoolkit/pdf-reader:^0.7.0"
+composer require "roukmoute/pdf:^0.12" "pdftoolkit/pdf-reader:^0.8.0"
 ```
 
 To convert images:
@@ -102,12 +102,12 @@ Applications that added GitHub repositories under `repositories` can remove
 those entries from `composer.json`. Composer package names remain identical.
 
 Before 1.0, a new minor release may change names and signatures. The
-`^0.12`, `^0.7`, `^0.8` and `^0.2` constraints allow patches within their series and
+`^0.12`, `^0.8` and `^0.2` constraints allow patches within their series and
 exclude the next minor release. Consult changelogs before switching series.
 To work with upcoming development, explicitly request `dev-master` for the
 relevant packages.
 
-Images 0.2 requires core `^0.12`; Reader 0.7 requires `^0.11 || ^0.12`. Fonts 0.2 accepts its documented core 0.4–0.12 series and requires OpenType `^0.4`. The commands above select core 0.12. The [migration guide](migration-0.11.md) remains relevant to 0.11 API changes. Core needs `ctype`, `iconv` and `zlib`; selected AES, CMS and signature providers also need `openssl`. Exact compatibility is recorded in each published Composer manifest.
+Images 0.2 requires core `^0.12`; Reader 0.8 requires `^0.11 || ^0.12`. Fonts 0.2 accepts its documented core 0.4–0.12 series and requires OpenType `^0.4`. The commands above select core 0.12. The [migration guide](migration-0.11.md) remains relevant to 0.11 API changes. Core needs `ctype`, `iconv` and `zlib`; selected AES, CMS and signature providers also need `openssl`. Exact compatibility is recorded in each published Composer manifest.
 
 ## Reading an external PDF
 
@@ -160,7 +160,7 @@ without concatenation or decoding. Traversal and stream-count limits are
 explicit objects; cumulative `ReadDocument` budgets continue to apply.
 To obtain decoded bytes, separately request
 `$document->streamData($stream)`. The
-[page-reading guide](https://github.com/PDFToolkit/pdf-reader/blob/v0.7.0/docs/pages.md)
+[page-reading guide](https://github.com/PDFToolkit/pdf-reader/blob/v0.8.0/docs/pages.md)
 explains every step and supplies an executable example with three inherited
 pages.
 
@@ -186,7 +186,7 @@ $permissions = $document->permissions();
 
 R=5–7 receives explicitly prepared Unicode credentials; historical R=2–4 instead
 uses `PdfDocEncodedPassword` with PDFDocEncoding bytes. The
-[authentication guide](https://github.com/PDFToolkit/pdf-reader/blob/v0.7.0/docs/authentication.md)
+[authentication guide](https://github.com/PDFToolkit/pdf-reader/blob/v0.8.0/docs/authentication.md)
 details R=2–7, named `StrF`/`StmF`/`EFF` filters and AES-GCM tag checks. The default
 reader opens no encrypted input without that selection. Reader 0.4 verifies
 indicated source PDF MACs before returning protected content. Select
@@ -206,6 +206,20 @@ Authentication does not validate signature mathematics or confer certificate tru
 Read references remain tied to their source document. Reader 0.7 supplies [ImportSession](https://pdftoolkit.github.io/modules/reader/import.html) to copy an explicitly selected graph into new writer objects with remapped identities. The application chooses preserved encoded streams or bounded decoding. Shared identity and cycles survive; transport containers, signatures and source encryption authority do not transfer. This is neither automatic page merging, semantic repair nor an incremental edit of the original. Explicit [external-stream capabilities](https://pdftoolkit.github.io/modules/reader/external-streams.html) supply bytes without implicit file/network access. Reader and import budgets continue to apply.
 
 Reader 0.6 adds [physical revision history](https://pdftoolkit.github.io/modules/reader/revision-history.html): exact prefixes, xrefs and object spans within shared budgets. This view preserves source bytes without authenticating them or verifying signatures. To interpret an encrypted prefix, read it separately with `DocumentReader` and explicit credentials/integrity policies. A physical history does not become a native `FileRevision` authorized for incremental writing.
+
+Reader 0.8 adds [read-only source inspection](https://pdftoolkit.github.io/modules/reader/inspection.html): the tag tree, typed properties, pages and object references, role mappings and associated-file metadata. The **PDF structure** tab in [demo 0.4](https://pdftoolkit.github.io/modules/to-html/demo/) keeps this view even when HTML derivation fails. Budgets and omissions are explicit; associated streams are never opened or decoded, and the PDF is neither edited nor re-exported.
+
+```php
+use PDF\Reading\Inspection\DocumentInspector;
+use PDF\Reading\Inspection\InspectionLimits;
+
+$inspection = (new DocumentInspector(new InspectionLimits(
+    maxNodes: 5_000,
+    maxBytes: 2_097_152,
+)))->inspect($document);
+
+echo json_encode($inspection, JSON_THROW_ON_ERROR);
+```
 
 ## Central documentation, independent installations
 
@@ -229,7 +243,7 @@ and [coverage guide](coverage.md).
 
 ## Derive HTML from a tagged PDF
 
-The optional [PDF-to-HTML module](https://pdftoolkit.github.io/modules/to-html/index.html) follows the retained PDF Association **Deriving HTML from PDF 1.2** usage specification. Version 0.8 uses Reader 0.7, with 64-bit PHP 8.3+, DOM and mbstring; the source manifest fixes its exact core and module revisions. It derives semantic HTML from logical structure without inferring absent structure, OCR or PDF page layout. Model coverage, file adaptation and browser integration remain distinct.
+The optional [PDF-to-HTML module](https://pdftoolkit.github.io/modules/to-html/index.html) follows the retained PDF Association **Deriving HTML from PDF 1.2** usage specification. HTML 0.8.2 accepts Reader 0.7 and 0.8; this documentation selects Reader 0.8, with 64-bit PHP 8.3+, DOM and mbstring; the source manifest fixes its exact core and module revisions. It derives semantic HTML from logical structure without inferring absent structure, OCR or PDF page layout. Model coverage, file adaptation and browser integration remain distinct.
 
 ```sh
 composer require "roukmoute/pdf:^0.12" "pdftoolkit/pdf-to-html:^0.8"

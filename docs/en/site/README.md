@@ -80,8 +80,9 @@ retains its generation examples.
 The PDF-to-HTML checkout is separately pinned under `_sources/pdf-to-html`.
 Reader sources are selected independently from the installed core or HTML
 consumer: lock and installed version plus source/dist commits must exactly match
-the Reader pin. The core consumer is preferred; HTML is the fallback for older
-source selections. Neither published lock is changed. Tutorial 35 runs its real CLI against the independently generated tagged
+the Reader pin. The core consumer is preferred only when it matches the pin;
+the current Reader 0.8.0 selection comes from HTML 0.8.2’s vendor. Core 0.12.1
+retains its published lock, including Reader 0.7.0 as a development dependency. Tutorial 35 runs its real CLI against the independently generated tagged
 fixture. The build checks the retained reference and fixture bytes, then executes
 the package's pypdf/HTML5 oracle. It copies every asset listed in the CLI JSON,
 checking filenames, SHA-256 and output collisions. `derivedHtml` stays outside
@@ -126,7 +127,7 @@ cases and two implicitly selected EFF streams with distinct keys. Wrong
 attachment credentials must preserve document opening and fail on attachment
 access. Generated certificates and adversarial inputs remain private build data.
 
-The current selection documents PDF-to-HTML 0.8.1 and reader 0.7.0. The
+The current selection documents PDF-to-HTML 0.8.2 and reader 0.8.0. The
 [requirements ledger](https://pdftoolkit.github.io/modules/to-html/requirements.html),
 [policies](https://pdftoolkit.github.io/modules/to-html/policies.html) and
 [graphics](https://pdftoolkit.github.io/modules/to-html/graphics.html) guides
@@ -392,13 +393,21 @@ use the selected `--pdftoppm`. The default profile and site frames execute no
 runtime; explicitly enabled cases are checked in the private validation
 workspace. Every module guide retains its EN/FR counterpart.
 
-The released PDF-to-HTML checkout under `_sources/pdf-to-html` is selected independently. Its installed core and reader must exactly match its own published lock (versions and both source/dist commits), independently of the documented core/Reader pins. HTML 0.8.1 runs its oracles and tutorial 35 with its published lock, which selects Reader 0.7.0. The documented Reader 0.7.0 comes from core 0.12.1’s vendor; its guides, API, tutorial 12 and oracles all use that selection. Reader examples/oracles load that consumer’s actual core. `_build/validation-sources.json` records both validation environments and their exact package commits. The API exporter registers only the selected HTML and reader namespaces against their chosen trees. Module guides appear under `/modules/to-html/` in both languages. Tutorial 35 copies the input PDF, renders every page and runs the module CLI to produce actual HTML plus JSON diagnostics. `derivedHtml` inventories output HTML separately from documentation routes, with package/SHA provenance and sandboxed frames; the site checker rejects active content in these previews. The supplied 74-page original remains in the package and is linked at its selected release commit.
+The released PDF-to-HTML checkout under `_sources/pdf-to-html` is selected independently. Its installed core and reader must exactly match its own published lock (versions and both source/dist commits), independently of the documented core/Reader pins. HTML 0.8.2 runs its oracles and tutorial 35 with its published lock, which selects Reader 0.8.0. The documented Reader 0.8.0 comes from that HTML vendor; its guides, API, tutorial 12 and oracles all use that selection. Core 0.12.1 retains its own published lock and Reader 0.7.0 for its development examples. Reader examples/oracles load that consumer’s actual core. `_build/validation-sources.json` records both validation environments and their exact package commits. The API exporter registers only the selected HTML and reader namespaces against their chosen trees. Module guides appear under `/modules/to-html/` in both languages. Tutorial 35 copies the input PDF, renders every page and runs the module CLI to produce actual HTML plus JSON diagnostics. `derivedHtml` inventories output HTML separately from documentation routes, with package/SHA provenance and sandboxed frames; the site checker rejects active content in these previews. The supplied 74-page original remains in the package and is linked at its selected release commit.
+
+The Reader inspection guide is published at `/modules/reader/inspection.html`
+and `/fr/modules/reader/inspection.html`. The build runs the independent
+`validate_inspection.py` oracle against the selected Reader, using pypdf and
+qpdf. It compares original properties and references, MCID/MCR/OBJR trees, role
+mappings, associated files and budgets; streams remain opaque. The
+`reader-inspection-validation.json` report extends the Reader evidence without turning
+inspection into PDF/UA certification.
 
 ## Browser demo and visual gallery
 
 The native [demo page](https://pdftoolkit.github.io/modules/to-html/demo/index.html)
 and its French counterpart integrate a separately released application.
-Documentation 0.14 selects demo 0.3 with HTML 0.8 and eleven gallery cases,
+Documentation 0.15 selects demo 0.4 with HTML 0.8.2, Reader 0.8.0 and eleven gallery cases,
 including an original LuaLaTeX PDF with MathML structure elements.
 `resources/demo-source.json` selects its stable version, annotated tag and peeled
 commit. This is a distinct application source pin; `resources/sources.json`
@@ -413,6 +422,14 @@ path/size/SHA-256 inventory. The copied application is recorded under `htmlDemo`
 in the site manifest, separately from package identities and tutorial `derivedHtml`.
 HTML, PHP and LaTeX example sources have `.html.txt`, `.php.txt` and `.tex.txt` extensions; no raw
 application output becomes an executable documentation page.
+
+Every demo 0.4 case supplies `files.inspection`, a bounded JSON artifact whose
+hashes and original-PDF identity are verified before publication. Gallery and
+application manifests also record `readerPackage`, checked against the runtime’s
+locked Reader. The PDF structure tab and JavaScript-free JSON download expose
+this inspection independently of HTML derivation. The original PDF and a
+completed snapshot survive conversion errors, cancellation or timeout; original
+values remain inert text and associated files are never opened.
 
 Assets live under `/assets/html-demo/` and are shared by both locales. Only the
 demo pages load the application's module script and broaden their CSP for local

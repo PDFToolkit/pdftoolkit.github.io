@@ -3,7 +3,7 @@
 Explore real PDFs, their derived HTML, the PHP or LaTeX source behind each example,
 and the diagnostics that explain the result. The gallery keeps the input PDF,
 rendered page previews, exact HTML source and byte hashes together. Its code lives
-in the separately released [PDF-to-HTML demo 0.3](https://github.com/PDFToolkit/pdf-to-html-demo),
+in the separately released [PDF-to-HTML demo 0.4](https://github.com/PDFToolkit/pdf-to-html-demo),
 using the stable [HTML converter 0.8](https://pdftoolkit.github.io/modules/to-html/index.html).
 
 ## Try an example first
@@ -19,6 +19,28 @@ spaces that matter to mathematical formulas. Diagnostics explain information
 that could not be carried over. A successful conversion is not an accessibility
 certificate.
 
+## Inspect original structure
+
+The **PDF structure** tab shows the tag tree before HTML transformations. Expand
+its branches, select an element, and inspect its typed PDF properties and links
+to captured objects. Pages, role mappings, namespaces and associated files have
+separate views. Names and strings retain their hexadecimal bytes; references
+retain the object number and generation.
+
+Inspection comes from [Reader 0.8](https://pdftoolkit.github.io/modules/reader/inspection.html),
+using a model separate from the converter. A readable untagged PDF remains
+inspectable: its catalog and pages are available, and the absent tree is
+explicit. After an HTML conversion error, cancellation or timeout, the original
+PDF and any completed inspection remain available. **Clear my file** removes
+them from the session.
+
+PDF information is inert text. Attachments are never opened or executed;
+inspection describes stream metadata without decoding streams or acquiring
+external resources. **Download inspection JSON** preserves the captured snapshot
+and the source PDF SHA-256. Processing and display limits are reported; a partial
+snapshot does not mean that the document is empty. This view neither edits nor
+re-exports the PDF and is not PDF/UA validation or signature verification.
+
 ## Convert a file on this device
 
 Choose a PDF to convert it directly on this device, inside your browser. The application
@@ -30,8 +52,8 @@ assets still makes ordinary requests to the site's host.
 Each conversion has a fresh Worker. Cancel stops that Worker. Input size,
 execution time and PHP memory are bounded; unsupported or invalid input produces
 an error or diagnostics instead of a claim of complete conversion. The published
-runtime currently accepts at most 8 MiB of PDF input, allows 30 seconds per
-conversion and sets a 128 MiB PHP memory limit. Expanded preview documents are
+runtime currently accepts at most 8 MiB of PDF input, allows 30 seconds per job, including runtime loading, inspection and
+conversion, and sets a 128 MiB PHP memory limit. Expanded preview documents are
 also bounded to 16 million characters. Closing or reloading the page
 clears the session. The converter is designed for tagged PDF: visual similarity
 to an arbitrary untagged source is not guaranteed.
@@ -79,7 +101,7 @@ scripts disabled.
 
 ## Inspect and reproduce the output
 
-Each card exposes the source PDF, HTML text, PHP or LaTeX source and diagnostic JSON. The
+Each card exposes the source PDF, HTML text, PHP or LaTeX source, inspection JSON and diagnostic JSON. The
 public gallery manifest records hashes and source identities. Without JavaScript,
 the page still offers rendered previews and those downloads. The application and
 runtime are pinned independently from the documentation and PHP packages.

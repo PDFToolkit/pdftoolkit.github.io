@@ -1,6 +1,6 @@
 # Tutoriels : construire et lire un PDF objet par objet
 
-Ces tutoriels expliquent comment un fichier PDF relie ses valeurs, dictionnaires, ressources et instructions de dessin. Chaque leçon accompagne un script complet, commenté et exécutable. Les exemples utilisent les versions publiées du core et des modules sélectionnées dans le [manifeste de sources](../../resources/sources.json). La construction vérifie leurs commits exacts et les dépendances installées contre le lock inchangé de chaque consumer. Reader 0.7.0 utilise le consumer core sélectionné ; HTML 0.8.1 conserve son propre lock publié pour le tutoriel 35. Le manifeste de validation consigne les deux environnements.
+Ces tutoriels expliquent comment un fichier PDF relie ses valeurs, dictionnaires, ressources et instructions de dessin. Chaque leçon accompagne un script complet, commenté et exécutable. Les exemples utilisent les versions publiées du core et des modules sélectionnées dans le [manifeste de sources](../../resources/sources.json). La construction vérifie leurs commits exacts et les dépendances installées contre le lock inchangé de chaque consumer. Reader 0.8.0 utilise le consumer HTML 0.8.2 sélectionné, dont le lock publié sert aussi au tutoriel 35 ; les exemples du core conservent leur propre lock publié. Le manifeste de validation consigne les deux environnements.
 
 Les leçons 09, 10 et 27 utilisent les modules optionnels `pdftoolkit/pdf-fonts` et
 `pdftoolkit/pdf-images`, installés comme dépendances de développement dans le
@@ -37,8 +37,9 @@ php examples/hello-world.php
 Sous PowerShell, définir `$env:COMPOSER_ROOT_VERSION = '0.12.x-dev'` avant
 `composer install`. Le checkout utilise son `composer.lock` pour installer
 les outils de développement et les modules PDF aux versions publiées verrouillées.
-Le site commun sélectionne Reader 0.7.0 dans ce consumer core ; HTML conserve
-ses dépendances core/Reader épinglées séparément pour ses exemples et oracles.
+Ce consumer core conserve Reader 0.7.0 en développement. Le site commun
+sélectionne Reader 0.8.0 dans le vendor HTML 0.8.2 pour ses guides, exemples
+et oracles, sans modifier les locks publiés.
 
 Les leçons 20 et 26 demandent aussi l'extension `openssl`, utilisée par son backend de
 signature. Le certificat et la clé de démonstration sont des fixtures publiques
@@ -72,7 +73,7 @@ présente le PDF d'entrée, ses trois pages et les objets lus.
 | [09. Police TrueType et Unicode](09-embedded-font.md) | Programme incorporé, CID, largeurs et correspondance ToUnicode. | [embedded-font.php](https://github.com/PDFToolkit/pdf/blob/v0.12.1/examples/embedded-font.php) |
 | [10. Images JPEG et PNG](10-image-files.md) | Inspection JPEG, décodage PNG, échantillons et transparence. | [image-files.php](https://github.com/PDFToolkit/pdf/blob/v0.12.1/examples/image-files.php) |
 | [11. Révisions incrémentales](11-incremental-update.md) | Conservation des octets, remplacements et chaînage des xref. | [incremental-update.php](https://github.com/PDFToolkit/pdf/blob/v0.12.1/examples/incremental-update.php) |
-| [12. Lire un PDF externe](12-reading-pages.md) | Arbre vérifié, valeurs héritées et flux de contenu inspectés puis décodés. | [pages.php du module lecteur](https://github.com/PDFToolkit/pdf-reader/blob/v0.6.0/examples/pages.php) |
+| [12. Lire un PDF externe](12-reading-pages.md) | Arbre vérifié, valeurs héritées et flux de contenu inspectés puis décodés. | [pages.php du module lecteur](https://github.com/PDFToolkit/pdf-reader/blob/v0.8.0/examples/pages.php) |
 | [13. Extensions Adobe et numérotation Bates](13-adobe-extensions.md) | Déclaration des extensions, propriétés d'artefact et pied de page Bates. | [adobe-extensions.php](https://github.com/PDFToolkit/pdf/blob/v0.12.1/examples/adobe-extensions.php) |
 | [14. Champs AcroForm](14-acroform-fields.md) | Arbre, valeurs, widgets et apparences. | [acroform-fields.php](https://github.com/PDFToolkit/pdf/blob/v0.12.1/examples/acroform-fields.php) |
 | [15. Structure logique](15-tagged-structure.md) | Contenu marqué, ParentTree, IDTree et annotations. | [tagged-structure.php](https://github.com/PDFToolkit/pdf/blob/v0.12.1/examples/tagged-structure.php) |
@@ -95,7 +96,7 @@ présente le PDF d'entrée, ses trois pages et les objets lus.
 | [32. Horodatages de document et DSS](32-pdf20-timestamp-dss.md) | RFC3161, politique de validation explicite, VRI et signatures historiques conservées. | [pdf20-timestamp-dss.php](https://github.com/PDFToolkit/pdf/blob/v0.12.1/examples/pdf20-timestamp-dss.php) |
 | [33. Objets géospatiaux et mesures](33-pdf20-geospatial.md) | Systèmes de coordonnées, points de contrôle appariés, viewports, matrices et nuages de points. | [pdf20-geospatial.php](https://github.com/PDFToolkit/pdf/blob/v0.12.1/examples/pdf20-geospatial.php) |
 | [34. Destinations de structure](34-pdf20-structure-destinations.md) | Cibles sémantiques, parcours du contenu, entrées SD nommées et replis de page explicites. | [pdf20-structure-destinations.php](https://github.com/PDFToolkit/pdf/blob/v0.12.1/examples/pdf20-structure-destinations.php) |
-| [35. Dériver du HTML depuis un PDF balisé](35-derive-html.md) | Règles testées, rendu graphique objet, reset ciblé et HTML réel. | [01-derive-tagged-pdf.php](https://github.com/PDFToolkit/pdf-to-html/blob/v0.8.1/examples/01-derive-tagged-pdf.php) |
+| [35. Dériver du HTML depuis un PDF balisé](35-derive-html.md) | Règles testées, rendu graphique objet, reset ciblé et HTML réel. | [01-derive-tagged-pdf.php](https://github.com/PDFToolkit/pdf-to-html/blob/v0.8.2/examples/01-derive-tagged-pdf.php) |
 | [36. Appliquer une caviardisation](36-applied-redaction.md) | Suppression réelle, ressources partagées et nouveau fichier sans historique. | [pdf17-secure-redaction.php](https://github.com/PDFToolkit/pdf/blob/v0.12.1/examples/pdf17-secure-redaction.php) |
 | [37. Remplir un formulaire certifié](37-protected-form-fill.md) | Core 0.12.1 : remplissage natif P2, verrou FieldMDP historique et apparence Tx isolée. | [protected-form-fill.php](37-protected-form-fill.md#code-source) |
 

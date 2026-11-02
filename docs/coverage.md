@@ -132,7 +132,7 @@ Le vérificateur reproductible rejette clauses omises et fichiers de preuve abse
 Aucune certification WTPDF/PDF/UA-2 automatique ni conformité complète à la norme
 de base n’est revendiquée. Le lecteur 0.3 ajoute l'authentification R=2–7 sur
 activation explicite, les xrefs hybrides et d'autres filtres au périmètre PDF
-1.0–2.0. Son [guide d'authentification](https://github.com/PDFToolkit/pdf-reader/blob/v0.7.0/docs/authentication.md)
+1.0–2.0. Son [guide d'authentification](https://github.com/PDFToolkit/pdf-reader/blob/v0.8.0/docs/authentication.md)
 précise les filtres cryptographiques acceptés. Le lecteur 0.4 ajoute la frontière
 MAC source décrite ci-dessus ; le lecteur 0.5 ajoute l'authentification
 par clé publique source bornée. Ces mécanismes restent distincts de l'écriture et du rendu.

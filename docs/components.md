@@ -398,13 +398,13 @@ pas déduits automatiquement.
 Le [premier document](tutorials/01-first-document.md) présente une page ; le [tutoriel pages et texte](tutorials/02-pages-and-text.md) montre des pages partageant des ressources et des propriétés héritées.
 
 Pour consulter des pages d'un PDF existant, le module optionnel
-[`PageTreeReader`](https://github.com/PDFToolkit/pdf-reader/blob/v0.7.0/src/PageTreeReader.php)
+[`PageTreeReader`](https://github.com/PDFToolkit/pdf-reader/blob/v0.8.0/src/PageTreeReader.php)
 parcourt et vérifie son arbre. Il produit un
-[`ReadPageTree`](https://github.com/PDFToolkit/pdf-reader/blob/v0.7.0/src/ReadPageTree.php)
-dont les [`ReadPage`](https://github.com/PDFToolkit/pdf-reader/blob/v0.7.0/src/ReadPage.php)
+[`ReadPageTree`](https://github.com/PDFToolkit/pdf-reader/blob/v0.8.0/src/ReadPageTree.php)
+dont les [`ReadPage`](https://github.com/PDFToolkit/pdf-reader/blob/v0.8.0/src/ReadPage.php)
 gardent leurs dictionnaires source et leurs
-[`PageAttributes`](https://github.com/PDFToolkit/pdf-reader/blob/v0.7.0/src/PageAttributes.php)
-effectifs. [`PageContentsReader`](https://github.com/PDFToolkit/pdf-reader/blob/v0.7.0/src/PageContentsReader.php)
+[`PageAttributes`](https://github.com/PDFToolkit/pdf-reader/blob/v0.8.0/src/PageAttributes.php)
+effectifs. [`PageContentsReader`](https://github.com/PDFToolkit/pdf-reader/blob/v0.8.0/src/PageContentsReader.php)
 résout séparément les flux locaux de chaque page, sans décodage implicite.
 Le [guide des modules](packages.md#lire-un-pdf-externe) montre cette construction ;
 ces vues de lecture ne remplacent pas les objets de génération du core.
@@ -593,4 +593,4 @@ Les constructeurs vérifient les valeurs locales, les builders vérifient la pro
 
 Pour passer à des documents complets, suivre les [tutoriels](tutorials/README.md), comparer leur aperçu au PDF téléchargeable sur le site, puis étudier la [recette de tableau](recipes/table.md). Pour lire un PDF externe, utiliser le [module lecteur](packages.md#lire-un-pdf-externe), avec résolution et décodage explicites. Pour ajouter un comportement au modèle, consulter l'[architecture](architecture.md), la [couverture de spécification](specification.md) et la [référence API](https://pdftoolkit.github.io/reference/index.html).
 
-Pour dériver le contenu logique en HTML, le module optionnel PDF vers HTML 0.8.1 construit des objets source immuables et des processeurs propres au document, en utilisant le lecteur sélectionné 0.7.0. `HtmlDeriver` produit HTML, CSS, ressources et diagnostics ; `GraphicPdfExporter` conserve les programmes et prépare un PDF isolé pour le moteur `GraphicsRasterizer` de l'application. `FormActionPolicy` distingue le reset/soumission de formulaire de l'autorisation d'ECMAScript PDF. Les [exigences](https://pdftoolkit.github.io/fr/modules/to-html/requirements.html), [politiques](https://pdftoolkit.github.io/fr/modules/to-html/policies.html) et [graphiques](https://pdftoolkit.github.io/fr/modules/to-html/graphics.html) documentent les règles natives et ces capacités explicites ; le [tutoriel 35](tutorials/35-derive-html.md) montre la vraie sortie.
+Pour dériver le contenu logique en HTML, le module optionnel PDF vers HTML 0.8.2 construit des objets source immuables et des processeurs propres au document, en utilisant le lecteur sélectionné 0.8.0. `HtmlDeriver` produit HTML, CSS, ressources et diagnostics ; `GraphicPdfExporter` conserve les programmes et prépare un PDF isolé pour le moteur `GraphicsRasterizer` de l'application. `FormActionPolicy` distingue le reset/soumission de formulaire de l'autorisation d'ECMAScript PDF. Les [exigences](https://pdftoolkit.github.io/fr/modules/to-html/requirements.html), [politiques](https://pdftoolkit.github.io/fr/modules/to-html/policies.html) et [graphiques](https://pdftoolkit.github.io/fr/modules/to-html/graphics.html) documentent les règles natives et ces capacités explicites ; le [tutoriel 35](tutorials/35-derive-html.md) montre la vraie sortie.

@@ -3,7 +3,7 @@
 Explorez de vrais PDF, leur HTML dérivé, la source PHP ou LaTeX de chaque exemple
 et les diagnostics qui expliquent le résultat. La galerie conserve ensemble le
 PDF source, les aperçus de ses pages, la source HTML exacte et les empreintes des
-fichiers. Son code appartient à la [démo PDF-to-HTML 0.3](https://github.com/PDFToolkit/pdf-to-html-demo),
+fichiers. Son code appartient à la [démo PDF-to-HTML 0.4](https://github.com/PDFToolkit/pdf-to-html-demo),
 publiée séparément et utilisant le [convertisseur HTML 0.8](https://pdftoolkit.github.io/fr/modules/to-html/index.html) stable.
 
 ## Essayer d’abord un exemple
@@ -19,6 +19,30 @@ espaces qui comptent dans les formules mathématiques. Les diagnostics expliquen
 les informations qui n’ont pas pu être reprises. Une conversion réussie ne
 constitue pas un certificat d’accessibilité.
 
+## Inspecter la structure originale
+
+L’onglet **Structure PDF** présente l’arbre des balises avant les transformations
+HTML. Dépliez ses branches, choisissez un élément, puis consultez ses propriétés
+PDF typées et ses références vers les objets capturés. Les pages, les
+correspondances de rôles, les espaces de noms et les fichiers associés possèdent
+leurs propres vues. Les noms et chaînes conservent leurs octets en hexadécimal,
+et les références conservent numéro d’objet et génération.
+
+L’inspection provient de [Reader 0.8](https://pdftoolkit.github.io/fr/modules/reader/inspection.html),
+avec un modèle distinct du convertisseur. Un PDF lisible sans structure balisée
+reste inspectable : le catalogue et les pages sont disponibles, et l’absence
+d’arbre est indiquée. Après une erreur, une annulation ou une expiration de la
+conversion HTML, le PDF original et l’inspection déjà terminée restent visibles.
+**Effacer mon fichier** les retire de la session.
+
+Les informations du PDF sont du texte inerte. Les pièces jointes ne sont ni
+ouvertes ni exécutées ; l’inspection décrit les métadonnées des flux sans les
+décoder ni récupérer leurs ressources externes. **Télécharger le JSON d’inspection**
+conserve le snapshot capturé et le SHA-256 du PDF source. Les budgets et limites
+d’affichage sont signalés ; un snapshot partiel ne signifie pas que le document
+est vide. Cette vue ne modifie ni ne réexporte le PDF et ne constitue pas une
+validation PDF/UA ou une vérification des signatures.
+
 ## Convertir un fichier sur cet appareil
 
 Choisissez un PDF pour le convertir directement sur cet appareil, dans votre navigateur.
@@ -31,8 +55,8 @@ la page et des fichiers publics du moteur fait toujours des requêtes ordinaires
 Chaque conversion dispose d’un nouveau Worker. L’annulation arrête ce Worker.
 La taille d’entrée, le temps d’exécution et la mémoire PHP sont bornés ; une entrée
 invalide ou non prise en charge produit une erreur ou des diagnostics. Le moteur
-publié accepte actuellement au plus 8 Mio de PDF, autorise 30 secondes par
-conversion et fixe la limite mémoire PHP à 128 Mio. Les documents développés
+publié accepte actuellement au plus 8 Mio de PDF, autorise 30 secondes par traitement, chargement du moteur, inspection et
+conversion compris, et fixe la limite mémoire PHP à 128 Mio. Les documents développés
 pour l’aperçu sont aussi bornés à 16 millions de caractères. Fermer ou recharger la page
 efface la session. Le convertisseur est conçu pour le PDF balisé : la ressemblance
 visuelle avec une source quelconque non balisée n’est pas garantie.
@@ -83,8 +107,8 @@ un aperçu dont les scripts sont désactivés.
 
 ## Examiner et reproduire le résultat
 
-Chaque carte propose le PDF source, le texte HTML, la source PHP ou LaTeX et le JSON des
-diagnostics. Le manifeste public de la galerie conserve les empreintes et les
+Chaque carte propose le PDF source, le texte HTML, la source PHP ou LaTeX et les JSON
+d’inspection et de diagnostics. Le manifeste public de la galerie conserve les empreintes et les
 identités des sources. Sans JavaScript, la page propose toujours les aperçus
 rendus et ces téléchargements. L’application et son moteur sont sélectionnés
 indépendamment de la documentation et des packages PHP.

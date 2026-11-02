@@ -26,11 +26,13 @@ workflow de déploiement. Le code PHP, les exemples exécutables, les fixtures
 et les documents de spécification originaux restent dans
 [leurs dépôts de packages](https://github.com/orgs/PDFToolkit/repositories).
 Les guides des modules sont publiés ici à partir de leurs sources versionnées.
-La documentation **0.14** sélectionne HTML **0.8** et la démo interactive **0.3** ;
-le core reste en **0.12** et Reader en **0.7**, avec des révisions exactes distinctes.
+La documentation **0.15** sélectionne HTML **0.8.2** et la démo interactive **0.4** ;
+le core reste en **0.12** et Reader passe en **0.8**, avec des révisions exactes distinctes.
 Le core regroupe ses dix-huit PDF de référence originaux dans
 `resources/reference-documents/`, avec leurs noms et octets d’origine.
 Les téléchargements publics des références conservent leurs URL existantes.
+
+Reader 0.8 ajoute une [inspection des valeurs source](https://pdftoolkit.github.io/fr/modules/reader/inspection.html) en lecture seule : arbre des balises, propriétés typées, pages et références d’objets, correspondances de rôles et métadonnées des fichiers associés. L’onglet **Structure PDF** de la [démo 0.4](https://pdftoolkit.github.io/fr/modules/to-html/demo/) conserve cette vue même lorsque la dérivation HTML échoue. Les budgets et omissions sont explicites ; aucun flux associé n’est ouvert ou décodé, et aucune édition ni réexportation du PDF n’est réalisée.
 
 Reader 0.7 ajoute l’import explicite de graphes, CCITT borné et le décodage d’images natif/PHP. Images 0.2 ajoute toutes les profondeurs PNG statiques légales, Adam7, les couleurs calibrées/ICC et JPEG YCCK. Fonts 0.2 relie les programmes TrueType/CFF statiques au layout OpenType explicite ; OpenType 0.4 ajoute collections, formats cmap Unicode et plages de fonctionnalités. Les [guides de couverture](https://pdftoolkit.github.io/fr/guides/coverage.html) distinguent ces mécanismes du rendu, du shaping Unicode automatique et de la confiance des signatures.
 
@@ -43,7 +45,7 @@ Composer :
 composer require "roukmoute/pdf:^0.12"
 ```
 
-Les versions documentées sont le core **0.12**, Reader **0.7**, Images et Fonts **0.2**, OpenType **0.4**, Codecs **0.1** et PDF vers HTML **0.8**. Elles nécessitent **PHP 8.3 ou supérieur en 64 bits** ; leurs validations couvrent PHP 8.3, 8.4 et 8.5. Les versions et révisions exactes sont fixées dans le manifeste de sources. OpenType et Codecs ne dépendent pas du core PDF.
+Les versions documentées sont le core **0.12**, Reader **0.8**, Images et Fonts **0.2**, OpenType **0.4**, Codecs **0.1** et PDF vers HTML **0.8**. Elles nécessitent **PHP 8.3 ou supérieur en 64 bits** ; leurs validations couvrent PHP 8.3, 8.4 et 8.5. Les versions et révisions exactes sont fixées dans le manifeste de sources. OpenType et Codecs ne dépendent pas du core PDF.
 
 Choisir les modules optionnels selon les fichiers traités par l'application :
 
@@ -75,7 +77,7 @@ explique les règles et les contrôles indépendants Chromium/Firefox.
 
 HTML 0.8 ajoute des feuilles de style locales explicitement autorisées et filtrées,
 sans activer les scripts PDF ni les ressources distantes, et conserve l’ordre
-des déclarations de repli pour les navigateurs. La [galerie de la démo 0.3](https://pdftoolkit.github.io/fr/modules/to-html/demo/)
+des déclarations de repli pour les navigateurs. La [galerie de la démo 0.4](https://pdftoolkit.github.io/fr/modules/to-html/demo/)
 contient onze exemples, dont un PDF produit par LuaLaTeX avec MathML dans son
 arbre de structure. Sa source et la provenance du build sont téléchargeables.
 Le [guide des politiques](https://pdftoolkit.github.io/fr/modules/to-html/policies.html)

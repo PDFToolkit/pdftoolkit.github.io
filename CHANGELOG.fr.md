@@ -4,6 +4,14 @@
 
 ## Non publié
 
+## [0.15.0] - 2026-11-02
+
+- Publier le guide et l’API d’inspection source de Reader 0.8.0 : arbre des balises original, propriétés PDF typées, pages et références d’objets, correspondances de rôles des espaces de noms et métadonnées des fichiers associés, avec budgets explicites et flux opaques.
+- Sélectionner HTML 0.8.2 et la démo 0.4.0. Ajouter l’onglet bilingue Structure PDF, les téléchargements JSON liés aux octets source exacts et la conservation de l’inspection et du PDF après erreur, annulation ou expiration de la conversion HTML.
+- Vérifier les octets, le schéma et l’identité du PDF source de chaque nouveau snapshot ; exiger une provenance Reader identique dans les manifestes de galerie, d’application et du moteur navigateur. Conserver la prise en charge des anciens manifestes de démo.
+- Exécuter l’oracle d’inspection indépendant pypdf/qpdf dans le build complet du site. Garder les valeurs source inertes dans l’interface et distinguer inspection en lecture seule, dérivation HTML, édition PDF et validation de conformité.
+- Sélectionner Reader 0.8.0 documenté dans le vendor HTML publié ; conserver le core 0.12.1 et son lock de développement Reader 0.7.0 publié, sans republier les packages inchangés.
+
 ## [0.14.0] - 2026-11-02
 
 - Sélectionner HTML 0.8.1 pour conserver les liens vers les feuilles de style filtrées associées aux éléments de structure, avec les règles strictes de contenu Supplement et les permissions distinctes de script/réseau.
