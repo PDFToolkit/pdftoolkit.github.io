@@ -6,9 +6,12 @@
 
 ## [0.17.0] - 2026-11-02
 
-- Sélectionner HTML vers PDF 0.2.0 et documenter FR/EN ses côtés de bordure CSS1 indépendants, la validation des déclarations et les imports de feuilles explicitement fournies. Garder les limites de couverture CSS1 visibles.
+- Sélectionner la démo 0.4.1 avec ses dépendances d’exécution canoniques ; conserver les onze cas d’inspection/conversion et les validations natives/WebAssembly.
+- Sélectionner le core 0.12.3, Reader 0.8.1, Images 0.2.2, Fonts 0.2.1 et PDF vers HTML 0.8.3 depuis leurs versions canoniques publiées ; conserver les dépendances d’exécution verrouillées séparément par chaque consommateur.
+- Utiliser `pdftoolkit/pdf` comme nom canonique du core à partir de 0.12.2 dans les guides d’installation, la provenance API et la validation des sources sélectionnées. Préserver les identités des consommateurs historiques, refuser les installations ambiguës et conserver les routes API et de compatibilité.
+- Sélectionner HTML vers PDF 0.2.1 et documenter FR/EN ses côtés de bordure CSS1 indépendants, la validation des déclarations et les imports de feuilles explicitement fournies. Garder les limites de couverture CSS1 visibles.
 - Ajouter un quatrième exemple généré montrant les huit styles peints, des côtés asymétriques et les couleurs calculées, avec le vrai PDF, toutes ses pages rendues, les sources HTML inertes et PHP, et leurs empreintes.
-- Exiger les quatre exemples dans le reçu de génération ; vérifier galerie bilingue, navigation, sources téléchargeables et aperçus uniques en conservant les routes et sélections de packages existantes.
+- Exiger les quatre exemples dans le reçu de génération ; vérifier galerie bilingue, navigation, sources téléchargeables et aperçus uniques en conservant les routes existantes et les frontières indépendantes des packages.
 
 ## [0.16.0] - 2026-11-02
 

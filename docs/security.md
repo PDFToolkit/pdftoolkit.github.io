@@ -7,12 +7,12 @@ dans les modules optionnels [pdf-fonts](https://github.com/PDFToolkit/pdf-fonts)
 et [pdf-images](https://github.com/PDFToolkit/pdf-images). Les objets PDF et leurs
 invariants restent dans le core. Le module
 [pdf-reader](https://github.com/PDFToolkit/pdf-reader) a sa propre
-[documentation de sécurité](https://github.com/PDFToolkit/pdf-reader/blob/v0.8.0/docs/security.md)
+[documentation de sécurité](https://github.com/PDFToolkit/pdf-reader/blob/v0.8.1/docs/security.md)
 pour la lecture de fichiers externes ; cette revue du générateur ne s'y substitue pas.
 
 Le [manifeste de sources](../resources/sources.json) fixe les versions et révisions : core 0.12, Reader 0.7, HTML 0.8, Images/Fonts 0.2, OpenType 0.4 et Codecs 0.1. Ces bibliothèques utilisent PHP 8.3+ en 64 bits ; la qualification couvre PHP 8.3/8.4/8.5. Les [mécanismes complémentaires PDF 2.0](pdf-2-0-bundle.md) restent dans leur domaine propre. Définitions et déclarations de conformité ne sont pas des certificats de sécurité. OpenType et Codecs ont leurs propres contrôles de formats et limites, distincts du writer.
 
-Le module PDF vers HTML **0.8.2**, avec le lecteur sélectionné **0.8.0**, conserve ses propres
+Le module PDF vers HTML **0.8.3**, avec le lecteur sélectionné **0.8.1**, conserve ses propres
 [contrôles de sécurité](https://pdftoolkit.github.io/fr/modules/to-html/security.html)
 et [politiques explicites](https://pdftoolkit.github.io/fr/modules/to-html/policies.html).
 Ses tests indépendants vérifient filtrage HTML/CSS/URL, associations et IDs,
@@ -44,7 +44,7 @@ Le lecteur 0.3.1 limite l'exemption `EncryptMetadata=false` au véritable objet
 de métadonnées du catalogue ; les métadonnées de pages et Forms restent chiffrées
 sauf sélection explicite d'Identity. Il résout les types indirects avant de
 choisir `EFF`, utilise la clé V4 fixe de 128 bits et ignore les tentatives de
-redéfinir le filtre standard Identity. Ses [sept régressions supplémentaires](https://github.com/PDFToolkit/pdf-reader/blob/v0.8.0/tools/validate_metadata_security.py)
+redéfinir le filtre standard Identity. Ses [sept régressions supplémentaires](https://github.com/PDFToolkit/pdf-reader/blob/v0.8.1/tools/validate_metadata_security.py)
 utilisent qpdf et cryptography, avec les limites précises des oracles expliquées
 dans le [guide d'authentification](https://pdftoolkit.github.io/fr/modules/reader/authentication.html).
 
@@ -169,7 +169,7 @@ Le nom de téléchargement est ici fixe. Des données de requête ne doivent pas
 
 Les contrôles numériques évitent les débordements identifiés ; la validation des opérandes évite les revisites inutiles. Ils ne remplacent pas les quotas du service. Un graphe direct partagé peut représenter une très grande sortie lorsqu'il est développé en syntaxe PDF. Une chaîne de filtres peut aussi augmenter fortement le nombre d'octets. Une limite sur la taille des données d'entrée seule ne borne donc pas toute la sérialisation.
 
-Les tests [SecuritySerializationTest](https://github.com/PDFToolkit/pdf/blob/v0.11.0/tests/SecuritySerializationTest.php), [SecurityLimitsTest](https://github.com/PDFToolkit/pdf/blob/v0.11.0/tests/SecurityLimitsTest.php) et [FileOutputTest](https://github.com/PDFToolkit/pdf/blob/v0.11.0/tests/FileOutputTest.php) couvrent les charges d'injection, les 256 valeurs d'octet, les terminateurs inline, les bornes numériques, les graphes partagés et les sorties. [ImageObjectsTest](https://github.com/PDFToolkit/pdf/blob/v0.11.0/tests/ImageObjectsTest.php), [CrossReferenceSectionTest](https://github.com/PDFToolkit/pdf/blob/v0.11.0/tests/CrossReferenceSectionTest.php) et [IncrementalUpdateTest](https://github.com/PDFToolkit/pdf/blob/v0.11.0/tests/IncrementalUpdateTest.php) couvrent les invariants PDF du core. Les régressions de décodage des images sont dans [ImageImportTest du module](https://github.com/PDFToolkit/pdf-images/blob/v0.2.1/tests/ImageImportTest.php). Les validations TrueType restent dans [les tests du module de fontes](https://github.com/PDFToolkit/pdf-fonts/tree/v0.2.0/tests). Des lectures indépendantes avec pypdf ont confirmé les vecteurs binaires et la reproduction de l'ambiguïté inline. qpdf contrôle tous les exemples en CI.
+Les tests [SecuritySerializationTest](https://github.com/PDFToolkit/pdf/blob/v0.11.0/tests/SecuritySerializationTest.php), [SecurityLimitsTest](https://github.com/PDFToolkit/pdf/blob/v0.11.0/tests/SecurityLimitsTest.php) et [FileOutputTest](https://github.com/PDFToolkit/pdf/blob/v0.11.0/tests/FileOutputTest.php) couvrent les charges d'injection, les 256 valeurs d'octet, les terminateurs inline, les bornes numériques, les graphes partagés et les sorties. [ImageObjectsTest](https://github.com/PDFToolkit/pdf/blob/v0.11.0/tests/ImageObjectsTest.php), [CrossReferenceSectionTest](https://github.com/PDFToolkit/pdf/blob/v0.11.0/tests/CrossReferenceSectionTest.php) et [IncrementalUpdateTest](https://github.com/PDFToolkit/pdf/blob/v0.11.0/tests/IncrementalUpdateTest.php) couvrent les invariants PDF du core. Les régressions de décodage des images sont dans [ImageImportTest du module](https://github.com/PDFToolkit/pdf-images/blob/v0.2.2/tests/ImageImportTest.php). Les validations TrueType restent dans [les tests du module de fontes](https://github.com/PDFToolkit/pdf-fonts/tree/v0.2.1/tests). Des lectures indépendantes avec pypdf ont confirmé les vecteurs binaires et la reproduction de l'ambiguïté inline. qpdf contrôle tous les exemples en CI.
 
 Cette revue n'est pas un audit des lecteurs PDF, de PHP, du serveur HTTP ou d'une future bibliothèque de mise en page. Les fichiers de définition générés expriment les contraintes de la norme ; ils ne forment pas une politique générale d'assainissement des documents.
 

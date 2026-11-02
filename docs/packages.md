@@ -2,7 +2,7 @@
 
 PDFToolkit sépare le modèle PDF des traitements de fichiers externes.
 Les versions documentées sont le core **0.12**, Reader **0.8**, Images et Fonts **0.2**, OpenType **0.4**, Codecs **0.1**, PDF vers HTML **0.8** et HTML vers PDF **0.2**. Elles nécessitent **PHP 8.3 ou supérieur en 64 bits** ; leurs validations couvrent PHP 8.3, 8.4 et 8.5. Les versions et révisions exactes sont fixées dans le manifeste de sources. OpenType et Codecs ne dépendent pas du core PDF.
-Le core conserve son nom Composer `roukmoute/pdf` ; les modules utilisent `pdftoolkit/`.
+Depuis la version 0.12.2, le nom Composer du core est `pdftoolkit/pdf`, comme les autres bibliothèques sous `pdftoolkit/`. L’ancien nom `roukmoute/pdf` reste présent dans les versions et locks historiques ; il ne change pas les classes PHP ni les adresses de référence API.
 
 ## La frontière du core
 
@@ -31,7 +31,7 @@ collections. Les politiques de champs de signature sont appliquées aux snapshot
 
 | Dépôt et package | Entrée | Objets ou données produits |
 | --- | --- | --- |
-| [PDFToolkit/pdf](https://github.com/PDFToolkit/pdf) — [`roukmoute/pdf`](https://packagist.org/packages/roukmoute/pdf) | Objets PDF assemblés par l'application | Fichier PDF, références croisées et révisions |
+| [PDFToolkit/pdf](https://github.com/PDFToolkit/pdf) — [`pdftoolkit/pdf`](https://packagist.org/packages/pdftoolkit/pdf) | Objets PDF assemblés par l'application | Fichier PDF, références croisées et révisions |
 | [PDFToolkit/pdf-images](https://github.com/PDFToolkit/pdf-images) — [`pdftoolkit/pdf-images`](https://packagist.org/packages/pdftoolkit/pdf-images) | Octets PNG ou JPEG et limites explicites | Échantillons couleur/alpha ou représentation DCT du core |
 | [PDFToolkit/pdf-fonts](https://github.com/PDFToolkit/pdf-fonts) — [`pdftoolkit/pdf-fonts`](https://packagist.org/packages/pdftoolkit/pdf-fonts) | Octets TrueType/CFF statiques, texte et étapes de layout explicites | Programmes incorporables, correspondances Unicode/CID/GID et texte PDF positionné |
 | [PDFToolkit/pdf-reader](https://github.com/PDFToolkit/pdf-reader) — [`pdftoolkit/pdf-reader`](https://packagist.org/packages/pdftoolkit/pdf-reader) | Octets PDF et budgets de lecture | Graphe lu, inspection source bornée, pages et attributs hérités, références à résoudre et flux encodés ou décodés |
@@ -50,30 +50,37 @@ Le core 0.8.0 conserve l'écriture PDF 2.0 avec cryptographie moderne/PDF MAC, m
 
 ## Installer ce dont l'application a besoin
 
-Les huit bibliothèques sont disponibles sur Packagist sous `roukmoute/pdf` ou les noms `pdftoolkit/` ci-dessus. Les contraintes documentées sont core `^0.12`, Reader `^0.8`, HTML `^0.8`, Images/Fonts `^0.2`, OpenType `^0.4`, Codecs `^0.1` et HTML vers PDF `^0.2`. Les anciens tags du core `v0.1.0` et `v0.1.1` conservent leur contrainte PHP 8.5.
+Les huit bibliothèques sont disponibles sur Packagist sous les noms `pdftoolkit/` ci-dessus. Les contraintes documentées sont core `^0.12.3`, Reader `^0.8.1`, HTML `^0.8.3`, Images `^0.2.2`, Fonts `^0.2.1`, OpenType `^0.4`, Codecs `^0.1` et HTML vers PDF `^0.2.1`. Les anciens tags du core `v0.1.0` et `v0.1.1` conservent leur contrainte PHP 8.5.
+
+Pour migrer une dépendance directe existante, retirer l’ancien nom sans installer un second core, puis demander le package canonique. Le namespace PHP `PDF\` et les classes restent identiques :
+
+```sh
+composer remove roukmoute/pdf --no-update
+composer require "pdftoolkit/pdf:^0.12.3" --with-all-dependencies
+```
 
 Pour générer seulement des PDF :
 
 ```sh
-composer require "roukmoute/pdf:^0.12"
+composer require "pdftoolkit/pdf:^0.12.3"
 ```
 
 Pour ajouter la lecture de PDF existants :
 
 ```sh
-composer require "roukmoute/pdf:^0.12" "pdftoolkit/pdf-reader:^0.8.0"
+composer require "pdftoolkit/pdf:^0.12.3" "pdftoolkit/pdf-reader:^0.8.1"
 ```
 
 Pour convertir des images :
 
 ```sh
-composer require "roukmoute/pdf:^0.12" "pdftoolkit/pdf-images:^0.2.1"
+composer require "pdftoolkit/pdf:^0.12.3" "pdftoolkit/pdf-images:^0.2.2"
 ```
 
 Pour incorporer des fontes TrueType/CFF et choisir le layout :
 
 ```sh
-composer require "roukmoute/pdf:^0.12" "pdftoolkit/pdf-fonts:^0.2.0"
+composer require "pdftoolkit/pdf:^0.12.3" "pdftoolkit/pdf-fonts:^0.2.1"
 ```
 
 Pour analyser une fonte indépendamment du PDF :
@@ -159,7 +166,7 @@ concaténation ni décodage. Les limites de parcours et de nombre de flux sont d
 objets explicites ; les budgets cumulatifs de `ReadDocument` continuent de
 s'appliquer. Pour obtenir les octets décodés, demander séparément
 `$document->streamData($stream)`. Le
-[guide de lecture des pages](https://github.com/PDFToolkit/pdf-reader/blob/v0.8.0/docs/pages.md)
+[guide de lecture des pages](https://github.com/PDFToolkit/pdf-reader/blob/v0.8.1/docs/pages.md)
 explique chaque étape et fournit un exemple exécutable avec trois pages héritées.
 
 Les valeurs PDF restent des objets : `get()` conserve une référence comme
@@ -184,7 +191,7 @@ $permissions = $document->permissions();
 
 R=5–7 reçoit un credential Unicode préparé explicitement ; R=2–4 utilise plutôt
 `PdfDocEncodedPassword` avec des octets PDFDocEncoding. Le
-[guide d'authentification](https://github.com/PDFToolkit/pdf-reader/blob/v0.8.0/docs/fr/authentication.md)
+[guide d'authentification](https://github.com/PDFToolkit/pdf-reader/blob/v0.8.1/docs/fr/authentication.md)
 précise R=2–7, les filtres nommés `StrF`/`StmF`/`EFF` et la vérification des tags
 AES-GCM. Par défaut le lecteur n'ouvre aucune entrée chiffrée sans cette sélection.
 Le lecteur 0.4 vérifie tout MAC PDF source signalé avant de retourner le contenu
@@ -243,10 +250,10 @@ politique de confiance d'une signature. Ces frontières sont détaillées dans l
 
 ## Dériver du HTML depuis un PDF balisé
 
-Le [module PDF vers HTML](https://pdftoolkit.github.io/fr/modules/to-html/index.html), optionnel, suit la spécification d’usage PDF Association **Deriving HTML from PDF 1.2** conservée. HTML 0.8.2 accepte Reader 0.7 et 0.8 ; cette documentation sélectionne Reader 0.8, avec PHP 8.3+ en 64 bits, DOM et mbstring ; le manifeste de sources fixe les révisions exactes du core et des modules. Elle dérive le HTML sémantique de la structure logique sans inférer de structure absente, faire d’OCR ni reproduire la mise en page PDF. Modèle, adaptation des fichiers et intégration navigateur restent distincts.
+Le [module PDF vers HTML](https://pdftoolkit.github.io/fr/modules/to-html/index.html), optionnel, suit la spécification d’usage PDF Association **Deriving HTML from PDF 1.2** conservée. HTML 0.8.3 exige Reader `^0.8.1` et le core canonique `pdftoolkit/pdf:^0.12.2` ; cette documentation sélectionne Reader 0.8.1 et le core 0.12.3, avec PHP 8.3+ en 64 bits, DOM et mbstring ; le manifeste de sources fixe les révisions exactes du core et des modules. Elle dérive le HTML sémantique de la structure logique sans inférer de structure absente, faire d’OCR ni reproduire la mise en page PDF. Modèle, adaptation des fichiers et intégration navigateur restent distincts.
 
 ```sh
-composer require "roukmoute/pdf:^0.12" "pdftoolkit/pdf-to-html:^0.8"
+composer require "pdftoolkit/pdf:^0.12.3" "pdftoolkit/pdf-to-html:^0.8.3"
 ```
 
 [Suivre le tutoriel exécutable](tutorials/35-derive-html.md) et examiner les diagnostics avant publication du HTML. Les associations ParentTree, identités des en-têtes de tableaux, destinations, correspondances Unicode, images inline et actions de formulaire disposent de tests et d'oracles indépendants. Le [registre des exigences](https://pdftoolkit.github.io/fr/modules/to-html/requirements.html) relie chaque règle aux décisions et preuves ; il ne certifie pas l'acceptation de tout PDF.

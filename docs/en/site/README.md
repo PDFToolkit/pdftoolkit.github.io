@@ -80,9 +80,11 @@ retains its generation examples.
 The PDF-to-HTML checkout is separately pinned under `_sources/pdf-to-html`.
 Reader sources are selected independently from the installed core or HTML
 consumer: lock and installed version plus source/dist commits must exactly match
-the Reader pin. The core consumer is preferred only when it matches the pin;
-the current Reader 0.8.0 selection comes from HTML 0.8.2’s vendor. Core 0.12.1
-retains its published lock, including Reader 0.7.0 as a development dependency. Tutorial 35 runs its real CLI against the independently generated tagged
+the Reader pin. The core consumer is preferred only when it matches the pin.
+The selected core uses `pdftoolkit/pdf`; each consumer keeps its published lock.
+Historical locks may identify `roukmoute/pdf`, and execution provenance retains
+that actual name and commit. A missing core, two installed core identities, or a
+lock/installation name mismatch fails validation. Tutorial 35 runs its real CLI against the independently generated tagged
 fixture. The build checks the retained reference and fixture bytes, then executes
 the package's pypdf/HTML5 oracle. It copies every asset listed in the CLI JSON,
 checking filenames, SHA-256 and output collisions. `derivedHtml` stays outside
@@ -127,7 +129,7 @@ cases and two implicitly selected EFF streams with distinct keys. Wrong
 attachment credentials must preserve document opening and fail on attachment
 access. Generated certificates and adversarial inputs remain private build data.
 
-The current selection documents PDF-to-HTML 0.8.2 and reader 0.8.0. The
+The current selection documents PDF-to-HTML 0.8.3 and reader 0.8.1. The
 [requirements ledger](https://pdftoolkit.github.io/modules/to-html/requirements.html),
 [policies](https://pdftoolkit.github.io/modules/to-html/policies.html) and
 [graphics](https://pdftoolkit.github.io/modules/to-html/graphics.html) guides
@@ -188,9 +190,9 @@ From this repository's root, prepare the core checkout at the manifest
 commit, then run the same complete build as CI:
 
 ```sh
-core_repository=$(python -c "import json; print(next(p for p in json.load(open('resources/sources.json'))['packages'] if p['name']=='roukmoute/pdf')['repository'])")
-core_revision=$(python -c "import json; print(next(p for p in json.load(open('resources/sources.json'))['packages'] if p['name']=='roukmoute/pdf')['revision'])")
-core_alias=$(python -c "import json; print(next(p for p in json.load(open('resources/sources.json'))['packages'] if p['name']=='roukmoute/pdf')['version'].rsplit('.', 1)[0]+'.x-dev')")
+core_repository=$(python -c "import json; print(next(p for p in json.load(open('resources/sources.json'))['packages'] if p['name']=='pdftoolkit/pdf')['repository'])")
+core_revision=$(python -c "import json; print(next(p for p in json.load(open('resources/sources.json'))['packages'] if p['name']=='pdftoolkit/pdf')['revision'])")
+core_alias=$(python -c "import json; print(next(p for p in json.load(open('resources/sources.json'))['packages'] if p['name']=='pdftoolkit/pdf')['version'].rsplit('.', 1)[0]+'.x-dev')")
 opentype_repository=$(python -c "import json; print(next(p for p in json.load(open('resources/sources.json'))['packages'] if p['name']=='pdftoolkit/opentype')['repository'])")
 opentype_revision=$(python -c "import json; print(next(p for p in json.load(open('resources/sources.json'))['packages'] if p['name']=='pdftoolkit/opentype')['revision'])")
 
@@ -249,7 +251,7 @@ On PowerShell:
 
 ```powershell
 $sourceManifest = Get-Content resources/sources.json -Raw | ConvertFrom-Json
-$coreSource = $sourceManifest.packages | Where-Object name -eq 'roukmoute/pdf'
+$coreSource = $sourceManifest.packages | Where-Object name -eq 'pdftoolkit/pdf'
 $opentypeSource = $sourceManifest.packages | Where-Object name -eq 'pdftoolkit/opentype'
 git clone $coreSource.repository _sources/pdf
 git -C _sources/pdf checkout --detach $coreSource.revision
@@ -404,7 +406,7 @@ use the selected `--pdftoppm`. The default profile and site frames execute no
 runtime; explicitly enabled cases are checked in the private validation
 workspace. Every module guide retains its EN/FR counterpart.
 
-The released PDF-to-HTML checkout under `_sources/pdf-to-html` is selected independently. Its installed core and reader must exactly match its own published lock (versions and both source/dist commits), independently of the documented core/Reader pins. HTML 0.8.2 runs its oracles and tutorial 35 with its published lock, which selects Reader 0.8.0. The documented Reader 0.8.0 comes from that HTML vendor; its guides, API, tutorial 12 and oracles all use that selection. Core 0.12.1 retains its own published lock and Reader 0.7.0 for its development examples. Reader examples/oracles load that consumer’s actual core. `_build/validation-sources.json` records both validation environments and their exact package commits. The API exporter registers only the selected HTML and reader namespaces against their chosen trees. Module guides appear under `/modules/to-html/` in both languages. Tutorial 35 copies the input PDF, renders every page and runs the module CLI to produce actual HTML plus JSON diagnostics. `derivedHtml` inventories output HTML separately from documentation routes, with package/SHA provenance and sandboxed frames; the site checker rejects active content in these previews. The supplied 74-page original remains in the package and is linked at its selected release commit.
+The released PDF-to-HTML checkout under `_sources/pdf-to-html` is selected independently. Its installed core and reader must exactly match its own published lock (versions and both source/dist commits), independently of the documented core/Reader pins. HTML 0.8.3 runs its oracles and tutorial 35 with its published lock, which selects Reader 0.8.1. The documented Reader 0.8.1 comes from that HTML vendor; its guides, API, tutorial 12 and oracles all use that selection. Core 0.12.3 retains its own published lock with Reader 0.8.1, Fonts 0.2.1 and Images 0.2.2 for its development examples. HTML 0.8.3 executes with its independently locked canonical core 0.12.2; that runtime identity remains distinct from the documented core 0.12.3. Reader examples/oracles load that consumer’s actual core. `_build/validation-sources.json` records both validation environments and their exact package commits. The API exporter registers only the selected HTML and reader namespaces against their chosen trees. Module guides appear under `/modules/to-html/` in both languages. Tutorial 35 copies the input PDF, renders every page and runs the module CLI to produce actual HTML plus JSON diagnostics. `derivedHtml` inventories output HTML separately from documentation routes, with package/SHA provenance and sandboxed frames; the site checker rejects active content in these previews. The supplied 74-page original remains in the package and is linked at its selected release commit.
 
 The Reader inspection guide is published at `/modules/reader/inspection.html`
 and `/fr/modules/reader/inspection.html`. The build runs the independent
@@ -418,7 +420,7 @@ inspection into PDF/UA certification.
 
 The native [demo page](https://pdftoolkit.github.io/modules/to-html/demo/index.html)
 and its French counterpart integrate a separately released application.
-Documentation 0.15 selects demo 0.4 with HTML 0.8.2, Reader 0.8.0 and eleven gallery cases,
+Documentation 0.17 selects demo 0.4.1 with HTML 0.8.3, Reader 0.8.1 and eleven gallery cases,
 including an original LuaLaTeX PDF with MathML structure elements.
 `resources/demo-source.json` selects its stable version, annotated tag and peeled
 commit. This is a distinct application source pin; `resources/sources.json`

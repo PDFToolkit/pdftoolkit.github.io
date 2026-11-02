@@ -16,7 +16,7 @@ Each class has its own responsibility in the PDF model. Names and abstractions f
 
 ## Package boundaries
 
-The `roukmoute/pdf` core contains the PDF objects and mechanisms described by the Adobe/ISO reference. `pdftoolkit/pdf-reader`, `pdftoolkit/pdf-images` and `pdftoolkit/pdf-fonts` are separate optional modules. They depend on the core, which depends on none of them. Their parsers are not loaded by an application that installs only the core.
+The `pdftoolkit/pdf` core contains the PDF objects and mechanisms described by the Adobe/ISO reference. `pdftoolkit/pdf-reader`, `pdftoolkit/pdf-images` and `pdftoolkit/pdf-fonts` are separate optional modules. They depend on the core, which depends on none of them. Their parsers are not loaded by an application that installs only the core.
 
 Names, values, references and structures are shared through composition. In particular, the core defines image samples and streams, the embedded `/FontFile2` program, metrics, CID fonts and PDF CMaps. JPEG inspection, PNG decoding and TrueType table analysis are external-format processing in their respective modules. The [package guide](packages.md) details these boundaries and installation.
 

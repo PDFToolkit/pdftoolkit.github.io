@@ -11,7 +11,7 @@ explicitement normalisé.
 ## Exécuter le véritable exemple
 
 ```sh
-composer require "roukmoute/pdf:^0.12.1"
+composer require "pdftoolkit/pdf:^0.12.3"
 php examples/pdf17-secure-redaction.php redacted.pdf --source=original.pdf
 ```
 

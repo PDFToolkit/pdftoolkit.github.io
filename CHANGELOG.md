@@ -6,9 +6,12 @@
 
 ## [0.17.0] - 2026-11-02
 
-- Select HTML-to-PDF 0.2.0 and document its independent CSS1 border sides, declaration validation and explicit stylesheet imports in English and French. Keep the CSS1 coverage limits visible.
+- Select demo 0.4.1 with canonical runtime dependencies; preserve the eleven inspection/conversion cases and native/WebAssembly validation.
+- Select core 0.12.3, Reader 0.8.1, Images 0.2.2, Fonts 0.2.1 and PDF-to-HTML 0.8.3 from their published canonical package releases; retain each consumer’s independently locked execution dependencies.
+- Use `pdftoolkit/pdf` as the canonical core package from 0.12.2 in installation guides, API ownership and selected-source validation. Preserve historical consumer identities, reject ambiguous core installations and keep existing API and compatibility routes.
+- Select HTML-to-PDF 0.2.1 and document its independent CSS1 border sides, declaration validation and explicit stylesheet imports in English and French. Keep the CSS1 coverage limits visible.
 - Add a fourth generated example showing eight painted border styles, asymmetric edges and computed colours, with the actual PDF, all rendered pages, inert HTML and PHP sources, and source fingerprints.
-- Require all four example receipts in the build; validate the bilingual gallery, navigation, source downloads and single preview panels while retaining existing routes and package selections.
+- Require all four example receipts in the build; validate the bilingual gallery, navigation, source downloads and single preview panels while retaining existing routes and independent package boundaries.
 
 ## [0.16.0] - 2026-11-02
 

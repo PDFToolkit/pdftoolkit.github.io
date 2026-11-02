@@ -6,19 +6,19 @@ versions selected by the [source manifest](../../../resources/sources.json).
 It traverses the page tree, examines effective attributes and separately requests
 stream decoding. Dictionaries, numbers and rectangles remain core objects.
 
-The [input PDF](https://github.com/PDFToolkit/pdf-reader/blob/v0.8.0/tests/Fixtures/page-tree/classic.pdf)
+The [input PDF](https://github.com/PDFToolkit/pdf-reader/blob/v0.8.1/tests/Fixtures/page-tree/classic.pdf)
 is an original fixture created with pypdf and qpdf independently of the PHP writer.
-The [complete script](https://github.com/PDFToolkit/pdf-reader/blob/v0.8.0/examples/pages.php)
+The [complete script](https://github.com/PDFToolkit/pdf-reader/blob/v0.8.1/examples/pages.php)
 belongs to the reader repository. On the site, its three pages, actual console
 output and commented code appear after the explanations.
 
 ## Run the example
 
-In a standalone application, install the reader from Packagist with core 0.12.1,
+In a standalone application, install the reader from Packagist with core 0.12.3,
 then run the script distributed with the module:
 
 ```sh
-composer require "roukmoute/pdf:^0.12" "pdftoolkit/pdf-reader:^0.8.0"
+composer require "pdftoolkit/pdf:^0.12.3" "pdftoolkit/pdf-reader:^0.8.1"
 php vendor/pdftoolkit/pdf-reader/examples/pages.php vendor/pdftoolkit/pdf-reader/tests/Fixtures/page-tree/classic.pdf
 ```
 
@@ -150,7 +150,7 @@ independently with Poppler.
 
 ## Verification and limitations
 
-The [independent fixtures](https://github.com/PDFToolkit/pdf-reader/blob/v0.8.0/tests/Fixtures/page-tree/README.md)
+The [independent fixtures](https://github.com/PDFToolkit/pdf-reader/blob/v0.8.1/tests/Fixtures/page-tree/README.md)
 have expected values verified with pypdf and qpdf, then PHP tests. Documentation
 preserves the input bytes exactly, executes the locked module's script and renders
 its three pages.

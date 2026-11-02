@@ -25,8 +25,8 @@ This repository contains the shared prose, site assets, generator and deployment
 workflow. PHP code, executable examples, fixtures and original specification
 documents remain in [their package repositories](https://github.com/orgs/PDFToolkit/repositories).
 The module guides are published here from their released package sources.
-Documentation **0.17** selects HTML-to-PDF **0.2.0** and retains PDF-to-HTML **0.8.2** and the interactive demo **0.4**;
-core and Reader remain **0.12** and **0.8**, with exact revisions pinned separately.
+Documentation **0.17** selects HTML-to-PDF **0.2.1** and retains PDF-to-HTML **0.8.3** and the interactive demo **0.4.1**;
+core and Reader are **0.12.3** and **0.8.1**, with exact revisions pinned separately.
 The core groups its eighteen original reference PDFs under
 `resources/reference-documents/`, preserving their original names and bytes.
 Public reference downloads keep their existing URLs.
@@ -40,14 +40,14 @@ Reader 0.7 adds explicit graph import, bounded CCITT and native/PHP image decodi
 The PHP libraries are available on Packagist. Install the core with Composer:
 
 ```sh
-composer require "roukmoute/pdf:^0.12"
+composer require "pdftoolkit/pdf:^0.12.3"
 ```
 
 The documented release series are core **0.12**, Reader **0.8**, Images and Fonts **0.2**, OpenType **0.4**, Codecs **0.1**, PDF-to-HTML **0.8** and HTML-to-PDF **0.2**. They require **64-bit PHP 8.3 or later**; qualification covers PHP 8.3, 8.4 and 8.5. The source manifest pins exact versions and revisions. OpenType and Codecs have no PDF core dependency.
 
 Choose the optional modules according to the files your application handles:
 
-- [Core: roukmoute/pdf](https://packagist.org/packages/roukmoute/pdf)
+- [Core: pdftoolkit/pdf](https://packagist.org/packages/pdftoolkit/pdf)
 - [PDF reader: pdftoolkit/pdf-reader](https://packagist.org/packages/pdftoolkit/pdf-reader)
 - [Images: pdftoolkit/pdf-images](https://packagist.org/packages/pdftoolkit/pdf-images)
 - [Fonts: pdftoolkit/pdf-fonts](https://packagist.org/packages/pdftoolkit/pdf-fonts)

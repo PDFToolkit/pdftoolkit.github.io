@@ -46,7 +46,7 @@ encodings, programs, CID/GID mappings and extracted text with pypdf and Poppler.
 Some readers classify FontFile3/OpenType with glyf outlines as TrueType; Table
 126 permits that declaration, and the example's rendering is checked separately.
 
-Fonts 0.2 supplies a separate [OpenType layout example](https://github.com/PDFToolkit/pdf-fonts/blob/v0.2.0/examples/opentype-layout.php) for static TrueType/CFF1, selected ligatures/kerning/marks and real PDF placement. Its [guide](https://pdftoolkit.github.io/modules/fonts/opentype-layout.html) distinguishes CID/GID mappings, aliases and CFF container interoperability. It does not add automatic script itemization, bidi or a vertical compositor to this native-font example.
+Fonts 0.2 supplies a separate [OpenType layout example](https://github.com/PDFToolkit/pdf-fonts/blob/v0.2.1/examples/opentype-layout.php) for static TrueType/CFF1, selected ligatures/kerning/marks and real PDF placement. Its [guide](https://pdftoolkit.github.io/modules/fonts/opentype-layout.html) distinguishes CID/GID mappings, aliases and CFF container interoperability. It does not add automatic script itemization, bidi or a vertical compositor to this native-font example.
 
 Reference: ISO 9.5–9.10, Tables 110–127, physical pages 261–303; Annex D.
 
