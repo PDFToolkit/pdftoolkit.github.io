@@ -19,13 +19,14 @@ or the module you need:
 - [OpenType](https://pdftoolkit.github.io/modules/opentype/)
 - [Codecs](https://pdftoolkit.github.io/modules/codecs/)
 - [PDF to HTML](https://pdftoolkit.github.io/modules/to-html/)
+- [HTML to PDF](https://pdftoolkit.github.io/modules/from-html/)
 
 This repository contains the shared prose, site assets, generator and deployment
 workflow. PHP code, executable examples, fixtures and original specification
 documents remain in [their package repositories](https://github.com/orgs/PDFToolkit/repositories).
 The module guides are published here from their released package sources.
-Documentation **0.16** adds HTML-to-PDF **0.1.0** and retains PDF-to-HTML **0.8.2** and the interactive demo **0.4**;
-core remains **0.12** while Reader advances to **0.8**, with exact revisions pinned separately.
+Documentation **0.17** selects HTML-to-PDF **0.2.0** and retains PDF-to-HTML **0.8.2** and the interactive demo **0.4**;
+core and Reader remain **0.12** and **0.8**, with exact revisions pinned separately.
 The core groups its eighteen original reference PDFs under
 `resources/reference-documents/`, preserving their original names and bytes.
 Public reference downloads keep their existing URLs.
@@ -42,7 +43,7 @@ The PHP libraries are available on Packagist. Install the core with Composer:
 composer require "roukmoute/pdf:^0.12"
 ```
 
-The documented release series are core **0.12**, Reader **0.8**, Images and Fonts **0.2**, OpenType **0.4**, Codecs **0.1**, PDF-to-HTML **0.8** and HTML-to-PDF **0.1**. They require **64-bit PHP 8.3 or later**; qualification covers PHP 8.3, 8.4 and 8.5. The source manifest pins exact versions and revisions. OpenType and Codecs have no PDF core dependency.
+The documented release series are core **0.12**, Reader **0.8**, Images and Fonts **0.2**, OpenType **0.4**, Codecs **0.1**, PDF-to-HTML **0.8** and HTML-to-PDF **0.2**. They require **64-bit PHP 8.3 or later**; qualification covers PHP 8.3, 8.4 and 8.5. The source manifest pins exact versions and revisions. OpenType and Codecs have no PDF core dependency.
 
 Choose the optional modules according to the files your application handles:
 
@@ -167,10 +168,12 @@ The shared content was migrated from core 0.5.2, commit
 
 ## Native HTML to PDF
 
-The optional [HTML-to-PDF 0.1 module](https://pdftoolkit.github.io/modules/from-html/index.html) receives UTF-8 HTML5/CSS and explicit `FontSet`, `ResourceCatalog` and `PageSettings` objects. It composes PDF through the core, Fonts and Images without a browser, JavaScript or implicit network access. `UnsupportedPolicy::Reject` rejects unsupported capabilities by default; `Report` retains diagnostics.
+The optional [HTML-to-PDF 0.2 module](https://pdftoolkit.github.io/modules/from-html/index.html) receives UTF-8 HTML5/CSS and explicit `FontSet`, `ResourceCatalog` and `PageSettings` objects. It composes PDF through the core, Fonts and Images without a browser, JavaScript or implicit network access. `UnsupportedPolicy::Reject` rejects unsupported capabilities by default; `Report` retains diagnostics.
 
 ```sh
-composer require "pdftoolkit/html-to-pdf:^0.1"
+composer require "pdftoolkit/html-to-pdf:^0.2"
 ```
 
-The [CSS progression](https://pdftoolkit.github.io/modules/from-html/css-levels.html) validates CSS1 before CSS2.0/2.1 and later modules. Version 0.1 implements a partial profile, not full CSS1 conformance. The [invoice](https://pdftoolkit.github.io/modules/from-html/invoice.html), [catalogue](https://pdftoolkit.github.io/modules/from-html/catalogue.html) and [multipage document](https://pdftoolkit.github.io/modules/from-html/multipage.html) show actual PDFs, every rendered page and their sources. The generated tags do not constitute PDF/UA or PDF/A certification.
+Version 0.2 adds independent border sides with CSS1 styles, width keywords, shorthand expansion and computed colours. The [CSS1 example](https://pdftoolkit.github.io/modules/from-html/css1.html) shows all eight painted styles and an asymmetric box. The cascade validates declarations before choosing winners; stylesheet imports resolve only bytes explicitly supplied in `ResourceCatalog`. Inline borders, automatic or negative margins, percentage margins/padding, floats and full CSS1 conformance remain outside the profile. Tiny dash patterns are limited to bound rendering work.
+
+The [CSS progression](https://pdftoolkit.github.io/modules/from-html/css-levels.html) validates CSS1 before CSS2.0/2.1 and later modules. Version 0.2 implements a partial profile, not full CSS1 conformance. The [invoice](https://pdftoolkit.github.io/modules/from-html/invoice.html), [catalogue](https://pdftoolkit.github.io/modules/from-html/catalogue.html), [multipage document](https://pdftoolkit.github.io/modules/from-html/multipage.html) and [CSS1 borders](https://pdftoolkit.github.io/modules/from-html/css1.html) show actual PDFs, every rendered page and their sources. The generated tags do not constitute PDF/UA or PDF/A certification.

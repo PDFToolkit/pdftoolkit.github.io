@@ -4,6 +4,12 @@
 
 ## Unreleased
 
+## [0.17.0] - 2026-11-02
+
+- Select HTML-to-PDF 0.2.0 and document its independent CSS1 border sides, declaration validation and explicit stylesheet imports in English and French. Keep the CSS1 coverage limits visible.
+- Add a fourth generated example showing eight painted border styles, asymmetric edges and computed colours, with the actual PDF, all rendered pages, inert HTML and PHP sources, and source fingerprints.
+- Require all four example receipts in the build; validate the bilingual gallery, navigation, source downloads and single preview panels while retaining existing routes and package selections.
+
 ## [0.16.0] - 2026-11-02
 
 - Integrate the eighth published package, HTML-to-PDF 0.1.0, with its API, English/French guides and separate validation dependencies. Preserve other package releases and locks.

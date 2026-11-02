@@ -20,14 +20,15 @@ ou le module nécessaire :
 - [OpenType](https://pdftoolkit.github.io/fr/modules/opentype/)
 - [Codecs](https://pdftoolkit.github.io/fr/modules/codecs/)
 - [PDF vers HTML](https://pdftoolkit.github.io/fr/modules/to-html/)
+- [HTML vers PDF](https://pdftoolkit.github.io/fr/modules/from-html/)
 
 Ce dépôt contient les textes communs, les assets du site, le générateur et le
 workflow de déploiement. Le code PHP, les exemples exécutables, les fixtures
 et les documents de spécification originaux restent dans
 [leurs dépôts de packages](https://github.com/orgs/PDFToolkit/repositories).
 Les guides des modules sont publiés ici à partir de leurs sources versionnées.
-La documentation **0.16** ajoute HTML vers PDF **0.1.0** et conserve PDF vers HTML **0.8.2** ainsi que la démo interactive **0.4** ;
-le core reste en **0.12** et Reader passe en **0.8**, avec des révisions exactes distinctes.
+La documentation **0.17** sélectionne HTML vers PDF **0.2.0** et conserve PDF vers HTML **0.8.2** ainsi que la démo interactive **0.4** ;
+le core et Reader restent en **0.12** et **0.8**, avec des révisions exactes distinctes.
 Le core regroupe ses dix-huit PDF de référence originaux dans
 `resources/reference-documents/`, avec leurs noms et octets d’origine.
 Les téléchargements publics des références conservent leurs URL existantes.
@@ -45,7 +46,7 @@ Composer :
 composer require "roukmoute/pdf:^0.12"
 ```
 
-Les versions documentées sont le core **0.12**, Reader **0.8**, Images et Fonts **0.2**, OpenType **0.4**, Codecs **0.1**, PDF vers HTML **0.8** et HTML vers PDF **0.1**. Elles nécessitent **PHP 8.3 ou supérieur en 64 bits** ; leurs validations couvrent PHP 8.3, 8.4 et 8.5. Les versions et révisions exactes sont fixées dans le manifeste de sources. OpenType et Codecs ne dépendent pas du core PDF.
+Les versions documentées sont le core **0.12**, Reader **0.8**, Images et Fonts **0.2**, OpenType **0.4**, Codecs **0.1**, PDF vers HTML **0.8** et HTML vers PDF **0.2**. Elles nécessitent **PHP 8.3 ou supérieur en 64 bits** ; leurs validations couvrent PHP 8.3, 8.4 et 8.5. Les versions et révisions exactes sont fixées dans le manifeste de sources. OpenType et Codecs ne dépendent pas du core PDF.
 
 Choisir les modules optionnels selon les fichiers traités par l'application :
 
@@ -184,10 +185,12 @@ conservée.
 
 ## HTML vers PDF natif
 
-Le module optionnel [HTML vers PDF 0.1](https://pdftoolkit.github.io/fr/modules/from-html/index.html) reçoit du HTML5/CSS UTF-8 et des objets `FontSet`, `ResourceCatalog` et `PageSettings`. Il compose des PDF avec le core, Fonts et Images, sans navigateur, JavaScript ni accès réseau implicite. `UnsupportedPolicy::Reject` refuse par défaut les capacités hors profil ; le mode `Report` conserve des diagnostics.
+Le module optionnel [HTML vers PDF 0.2](https://pdftoolkit.github.io/fr/modules/from-html/index.html) reçoit du HTML5/CSS UTF-8 et des objets `FontSet`, `ResourceCatalog` et `PageSettings`. Il compose des PDF avec le core, Fonts et Images, sans navigateur, JavaScript ni accès réseau implicite. `UnsupportedPolicy::Reject` refuse par défaut les capacités hors profil ; le mode `Report` conserve des diagnostics.
 
 ```sh
-composer require "pdftoolkit/html-to-pdf:^0.1"
+composer require "pdftoolkit/html-to-pdf:^0.2"
 ```
 
-La [progression CSS](https://pdftoolkit.github.io/fr/modules/from-html/css-levels.html) valide CSS1 avant CSS2.0/2.1 puis les modules ultérieurs. La version 0.1 présente un profil partiel, pas une conformité CSS1 complète. Les [facture](https://pdftoolkit.github.io/fr/modules/from-html/invoice.html), [catalogue](https://pdftoolkit.github.io/fr/modules/from-html/catalogue.html) et [document multipage](https://pdftoolkit.github.io/fr/modules/from-html/multipage.html) montrent les vrais PDF, toutes leurs pages et les sources. Le balisage produit ne constitue pas une certification PDF/UA ou PDF/A.
+La version 0.2 ajoute des côtés de bordure indépendants, les styles CSS1, les mots-clés de largeur, les raccourcis et les couleurs calculées. L’[exemple CSS1](https://pdftoolkit.github.io/fr/modules/from-html/css1.html) montre les huit styles peints et une boîte asymétrique. La cascade valide les déclarations avant de sélectionner les valeurs ; les imports de feuilles utilisent uniquement les octets explicitement fournis dans `ResourceCatalog`. Les bordures inline, les marges automatiques ou négatives, les marges/paddings en pourcentage, les flottants et la conformité CSS1 complète restent hors profil. Les motifs de tirets trop fins sont limités pour borner le travail de rendu.
+
+La [progression CSS](https://pdftoolkit.github.io/fr/modules/from-html/css-levels.html) valide CSS1 avant CSS2.0/2.1 puis les modules ultérieurs. La version 0.2 présente un profil partiel, pas une conformité CSS1 complète. Les [facture](https://pdftoolkit.github.io/fr/modules/from-html/invoice.html), [catalogue](https://pdftoolkit.github.io/fr/modules/from-html/catalogue.html), [document multipage](https://pdftoolkit.github.io/fr/modules/from-html/multipage.html) et [bordures CSS1](https://pdftoolkit.github.io/fr/modules/from-html/css1.html) montrent les vrais PDF, toutes leurs pages et les sources. Le balisage produit ne constitue pas une certification PDF/UA ou PDF/A.

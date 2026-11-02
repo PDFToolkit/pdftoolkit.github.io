@@ -4,6 +4,12 @@
 
 ## Non publié
 
+## [0.17.0] - 2026-11-02
+
+- Sélectionner HTML vers PDF 0.2.0 et documenter FR/EN ses côtés de bordure CSS1 indépendants, la validation des déclarations et les imports de feuilles explicitement fournies. Garder les limites de couverture CSS1 visibles.
+- Ajouter un quatrième exemple généré montrant les huit styles peints, des côtés asymétriques et les couleurs calculées, avec le vrai PDF, toutes ses pages rendues, les sources HTML inertes et PHP, et leurs empreintes.
+- Exiger les quatre exemples dans le reçu de génération ; vérifier galerie bilingue, navigation, sources téléchargeables et aperçus uniques en conservant les routes et sélections de packages existantes.
+
 ## [0.16.0] - 2026-11-02
 
 - Intégrer le huitième package publié, HTML vers PDF 0.1.0, avec son API, ses guides FR/EN et ses dépendances de validation distinctes. Préserver les versions et locks des autres packages.

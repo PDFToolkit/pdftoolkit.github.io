@@ -179,7 +179,9 @@ Version 0.8.2 accepts Reader 0.7 and 0.8 and 64-bit PHP 8.3+ with DOM and mbstri
 For HTML/CSS conversion instead of assembling PDF objects manually, install the optional [`pdftoolkit/html-to-pdf`](https://packagist.org/packages/pdftoolkit/html-to-pdf) module:
 
 ```sh
-composer require "pdftoolkit/html-to-pdf:^0.1"
+composer require "pdftoolkit/html-to-pdf:^0.2"
 ```
 
 The [converter guide](https://pdftoolkit.github.io/modules/from-html/usage.html) describes explicitly supplied fonts and resources, limits and diagnostics. See the [actual invoice PDFs](https://pdftoolkit.github.io/modules/from-html/invoice.html) and [CSS progression by level](https://pdftoolkit.github.io/modules/from-html/css-levels.html). The core remains independent from these HTML/CSS parsers.
+
+The [CSS1 example](https://pdftoolkit.github.io/modules/from-html/css1.html) shows version 0.2 border styles, their four sides and computed colours. The profile remains partial; check its coverage before converting an existing document.
