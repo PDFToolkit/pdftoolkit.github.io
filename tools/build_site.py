@@ -196,6 +196,26 @@ MODULES = {
 
 
 
+class SourcePreviewFilter(markdown.treeprocessors.Treeprocessor):
+    """Replace a package README-style thumbnail with the site's generated PDF panel."""
+
+    def __init__(self, renderer, source: str, preview: str):
+        super().__init__(renderer)
+        self.directory = posixpath.dirname(source)
+        self.preview = preview
+
+    def run(self, root):
+        for parent in root.iter():
+            for child in list(parent):
+                if child.tag != 'img':
+                    continue
+                url = urlsplit(child.get('src', ''))
+                target = posixpath.normpath(posixpath.join(self.directory, unquote(url.path)))
+                if not url.scheme and not url.netloc and target == self.preview:
+                    parent.remove(child)
+        return root
+
+
 def publish_html_to_pdf_source(source: Path, pdfs: Path, output: Path, example: str, record: dict) -> None:
     """Bind the inert source download and PDF to the real generator's receipt."""
     name = example.removeprefix('from-html-')
@@ -704,6 +724,10 @@ class Site:
 
     def render_markdown(self, owner: str, source: str) -> tuple[str, list[dict]]:
         renderer = markdown.Markdown(extensions=['tables', 'fenced_code', 'toc', 'sane_lists'])
+        canonical = canonical_source(owner, source)
+        if owner == 'pdftoolkit/html-to-pdf' and canonical in {'docs/' + name + '.md' for name in HTML_TO_PDF_EXAMPLES}:
+            preview = 'examples/previews/' + Path(canonical).stem + '.png'
+            renderer.treeprocessors.register(SourcePreviewFilter(renderer, source, preview), 'source-preview-filter', 5)
         root = self.content_root if owner == 'documentation' else self.package_roots[owner]
         html = renderer.convert((root / source).read_text(encoding='utf-8'))
         html = re.sub(r'<h1\b[^>]*>.*?</h1>\s*', '', html, count=1, flags=re.S)

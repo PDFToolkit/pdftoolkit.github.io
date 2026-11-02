@@ -12,7 +12,7 @@ import test_reader_sources as reader_fixtures
 from build_docs import validate_html_to_pdf_module
 from build_site import HTML_TO_PDF_EXAMPLES, MODULES, Site, group_for, publish_html_to_pdf_source
 from check_sources import check, execution_dependencies
-from check_site import module_package, validate_html_to_pdf_source
+from check_site import Document, module_package, validate_html_to_pdf_source
 from localization import localized_source, route_for, translate_interface
 
 
@@ -123,3 +123,46 @@ class HtmlToPdfSourcesTest(unittest.TestCase):
         self.assertTrue(all(call.args[1] == self.from_html for call in run.call_args_list))
         self.assertEqual(6, len(list(previews.glob('*.png'))))
         self.assertEqual(3, len(list(pdfs.glob('*.pdf'))))
+
+    def test_example_guides_use_one_generated_preview_panel_and_preserve_package_sources(self):
+        owner = 'pdftoolkit/html-to-pdf'
+        site = Site.__new__(Site)
+        site.base = '/'
+        site.package_roots = {owner: self.from_html}
+        site.markdown_routes = {}
+        site.rewrite_link = lambda source, href, package: href
+        generator = self.from_html / 'generate.php'
+        generator.write_text('<?php // Published generator fixture.')
+        for sample in HTML_TO_PDF_EXAMPLES:
+            example = 'from-html-' + sample
+            html_source = self.from_html / 'examples/sources' / (sample + '.html')
+            html_source.parent.mkdir(parents=True, exist_ok=True)
+            html_source.write_text('<p>Fresh source</p>')
+            site.example_sources = {example: {'kind': 'html-to-pdf', 'path': generator, 'source': 'examples/generate.php',
+                'package': owner, 'sourceUrl': 'https://example.test/generate.php', 'htmlSourceUrl': 'https://example.test/' + sample + '.html',
+                'htmlSource': 'examples/sources/' + sample + '.html', 'htmlSourceDownload': 'examples/' + example + '.html.txt'}}
+            site.pdf_pages = {example: [{'file': example + '-' + str(number) + '.png', 'width': 794, 'height': 1123} for number in (1, 2)]}
+            for language in ('en', 'fr'):
+                with self.subTest(sample=sample, language=language):
+                    site.language = language
+                    relative = ('docs/' if language == 'en' else 'docs/fr/') + sample + '.md'
+                    source = self.from_html / relative
+                    source.parent.mkdir(parents=True, exist_ok=True)
+                    preview = ('../' if language == 'en' else '../../') + 'examples/previews/' + sample + '.png'
+                    original = '# Example\n\n![Repository preview](' + preview + ')\n\nKeep this explanation.\n'
+                    source.write_text(original)
+                    guide, _ = site.render_markdown(owner, relative)
+                    rendered = guide + site.example_panel(example)
+                    self.assertIn('Keep this explanation.', guide)
+                    self.assertNotIn('<img', guide)
+                    self.assertEqual(1, rendered.count('class="pdf-pages"'))
+                    self.assertEqual(2, rendered.count('<img '))
+                    document = Document(rendered)
+                    for number in (1, 2):
+                        self.assertEqual(2, document.links.count('/assets/pdf-pages/' + example + '-' + str(number) + '.png'))
+                    self.assertIn('/examples/' + example + '.pdf', document.links)
+                    self.assertEqual(original, source.read_text())
+                    other = source.with_name('coverage.md')
+                    other.write_text(original)
+                    other_guide, _ = site.render_markdown(owner, str(other.relative_to(self.from_html)))
+                    self.assertIn('<img', other_guide)
