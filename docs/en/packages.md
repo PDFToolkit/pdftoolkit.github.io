@@ -52,7 +52,7 @@ Core 0.8.0 retains PDF 2.0 writing with modern cryptography and PDF MAC, metadat
 
 ## Installing what the application needs
 
-All eight libraries are available on Packagist under the `pdftoolkit/` names above. The documented constraints are core `^0.12.3`, Reader `^0.8.1`, HTML `^0.8.3`, Images `^0.2.2`, Fonts `^0.2.1`, OpenType `^0.4`, Codecs `^0.1` and HTML-to-PDF `^0.2.1`. Older core tags `v0.1.0` and `v0.1.1` retain their PHP 8.5 constraint.
+All eight libraries are available on Packagist under the `pdftoolkit/` names above. The documented constraints are core `^0.12.3`, Reader `^0.8.1`, HTML `^0.8.3`, Images `^0.2.2`, Fonts `^0.2.1`, OpenType `^0.4`, Codecs `^0.1` and HTML-to-PDF `^0.3`. Older core tags `v0.1.0` and `v0.1.1` retain their PHP 8.5 constraint.
 
 To migrate an existing direct dependency, remove the former name without installing a second core, then require the canonical package. The PHP `PDF\` namespace and classes stay unchanged:
 
@@ -284,12 +284,12 @@ exact-candidate CI checks PHP 8.3/8.4/8.5 and both Chromium and Firefox.
 
 ## Native HTML to PDF
 
-The optional [HTML-to-PDF 0.2 module](https://pdftoolkit.github.io/modules/from-html/index.html) receives UTF-8 HTML5/CSS and explicit `FontSet`, `ResourceCatalog` and `PageSettings` objects. It composes PDF through the core, Fonts and Images without a browser, JavaScript or implicit network access. `UnsupportedPolicy::Reject` rejects unsupported capabilities by default; `Report` retains diagnostics.
+The optional [HTML-to-PDF 0.3 module](https://pdftoolkit.github.io/modules/from-html/index.html) receives UTF-8 HTML5/CSS and explicit `FontSet`, `ResourceCatalog` and `PageSettings` objects. It composes PDF through the core, Fonts and Images without a browser, JavaScript or implicit network access. `UnsupportedPolicy::Reject` rejects unsupported capabilities by default; `Report` retains diagnostics.
 
 ```sh
-composer require "pdftoolkit/html-to-pdf:^0.2"
+composer require "pdftoolkit/html-to-pdf:^0.3"
 ```
 
-Version 0.2 adds independent border sides with CSS1 styles, width keywords, shorthand expansion and computed colours. The [CSS1 example](https://pdftoolkit.github.io/modules/from-html/css1.html) shows all eight painted styles and an asymmetric box. The cascade validates declarations before choosing winners; stylesheet imports resolve only bytes explicitly supplied in `ResourceCatalog`. Inline borders, automatic or negative margins, percentage margins/padding, floats and full CSS1 conformance remain outside the profile. Tiny dash patterns are limited to bound rendering work.
+Version 0.3 adds bounded left/right floats, `clear`, text wrapping around exclusions and explicit font-family bindings. The [historical W3C CSS1 sample](https://pdftoolkit.github.io/modules/from-html/css1.html#w3c-css1) converts the unchanged `test5526c.htm` source to a one-page PDF with explicitly enabled static radio snapshots. The original [CSS1 border example](https://pdftoolkit.github.io/modules/from-html/css1.html) remains available. Floats require explicit widths and a context that fits on one page; unsupported placement combinations fail explicitly. Inline borders, automatic or negative margins and percentage margins/padding remain outside the profile.
 
-The [CSS progression](https://pdftoolkit.github.io/modules/from-html/css-levels.html) validates CSS1 before CSS2.0/2.1 and later modules. Version 0.2 implements a partial profile, not full CSS1 conformance. The [invoice](https://pdftoolkit.github.io/modules/from-html/invoice.html), [catalogue](https://pdftoolkit.github.io/modules/from-html/catalogue.html), [multipage document](https://pdftoolkit.github.io/modules/from-html/multipage.html) and [CSS1 borders](https://pdftoolkit.github.io/modules/from-html/css1.html) show actual PDFs, every rendered page and their sources. The generated tags do not constitute PDF/UA or PDF/A certification.
+The [CSS progression](https://pdftoolkit.github.io/modules/from-html/css-levels.html) validates CSS1 before CSS2.0/2.1 and later modules. The 0.3 registry has 49 partial entries and 13 unsupported entries; none claims complete CSS1 conformance. The [invoice](https://pdftoolkit.github.io/modules/from-html/invoice.html), [catalogue](https://pdftoolkit.github.io/modules/from-html/catalogue.html), [multipage document](https://pdftoolkit.github.io/modules/from-html/multipage.html), [CSS1 borders](https://pdftoolkit.github.io/modules/from-html/css1.html) and [W3C sample](https://pdftoolkit.github.io/modules/from-html/css1.html#w3c-css1) show actual PDFs, every rendered page and their sources. The W3C sample also provides its generation receipt and independent validation report. The generated tags do not constitute PDF/UA or PDF/A certification.

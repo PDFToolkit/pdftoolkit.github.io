@@ -4,6 +4,10 @@
 
 ## Unreleased
 
+- Add a fifth native HTML-to-PDF example: the unchanged historical W3C `test5526c.htm` source, its one-page PDF and native preview in a second CSS1 guide panel. Preserve the four existing examples and routes.
+- Run its dedicated generator and independent PDF oracle, publish source/PDF fingerprints and downloadable generation/validation receipts, and check their identities in both languages.
+- Prepare the HTML-to-PDF 0.3 documentation with bounded floats, explicit static radio snapshots and the CSS1 coverage totals: 49 partial entries and 13 unsupported entries, with no full-conformance claim.
+
 ## [0.17.1] - 2026-11-02
 
 - Select HTML-to-PDF 0.2.2 and publish its revised English/French documentation with self-contained descriptions of the module’s behavior and limits.

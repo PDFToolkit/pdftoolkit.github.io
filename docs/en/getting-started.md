@@ -196,9 +196,9 @@ Version 0.8.3 requires Reader `^0.8.1`, the canonical core `pdftoolkit/pdf:^0.12
 For HTML/CSS conversion instead of assembling PDF objects manually, install the optional [`pdftoolkit/html-to-pdf`](https://packagist.org/packages/pdftoolkit/html-to-pdf) module:
 
 ```sh
-composer require "pdftoolkit/html-to-pdf:^0.2"
+composer require "pdftoolkit/html-to-pdf:^0.3"
 ```
 
 The [converter guide](https://pdftoolkit.github.io/modules/from-html/usage.html) describes explicitly supplied fonts and resources, limits and diagnostics. See the [actual invoice PDFs](https://pdftoolkit.github.io/modules/from-html/invoice.html) and [CSS progression by level](https://pdftoolkit.github.io/modules/from-html/css-levels.html). The core remains independent from these HTML/CSS parsers.
 
-The [CSS1 example](https://pdftoolkit.github.io/modules/from-html/css1.html) shows version 0.2 border styles, their four sides and computed colours. The profile remains partial; check its coverage before converting an existing document.
+The [historical W3C CSS1 sample](https://pdftoolkit.github.io/modules/from-html/css1.html#w3c-css1) shows the unchanged `test5526c.htm` source converted with version 0.3 bounded floats, with its PDF, preview and validation evidence. The border example remains on the same page. The registry has 49 partial entries and 13 unsupported entries: CSS1 is not complete; check the coverage before converting an existing document.

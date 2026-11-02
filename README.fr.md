@@ -27,7 +27,7 @@ workflow de déploiement. Le code PHP, les exemples exécutables, les fixtures
 et les documents de spécification originaux restent dans
 [leurs dépôts de packages](https://github.com/orgs/PDFToolkit/repositories).
 Les guides des modules sont publiés ici à partir de leurs sources versionnées.
-La documentation **0.17** sélectionne HTML vers PDF **0.2.1** et conserve PDF vers HTML **0.8.3** ainsi que la démo interactive **0.4.1** ;
+La documentation **0.18** sélectionne HTML vers PDF **0.3.0** et conserve PDF vers HTML **0.8.3** ainsi que la démo interactive **0.4.1** ;
 le core et Reader sont en **0.12.3** et **0.8.1**, avec des révisions exactes distinctes.
 Le core regroupe ses dix-huit PDF de référence originaux dans
 `resources/reference-documents/`, avec leurs noms et octets d’origine.
@@ -185,12 +185,12 @@ conservée.
 
 ## HTML vers PDF natif
 
-Le module optionnel [HTML vers PDF 0.2](https://pdftoolkit.github.io/fr/modules/from-html/index.html) reçoit du HTML5/CSS UTF-8 et des objets `FontSet`, `ResourceCatalog` et `PageSettings`. Il compose des PDF avec le core, Fonts et Images, sans navigateur, JavaScript ni accès réseau implicite. `UnsupportedPolicy::Reject` refuse par défaut les capacités hors profil ; le mode `Report` conserve des diagnostics.
+Le module optionnel [HTML vers PDF 0.3](https://pdftoolkit.github.io/fr/modules/from-html/index.html) reçoit du HTML5/CSS UTF-8 et des objets `FontSet`, `ResourceCatalog` et `PageSettings`. Il compose des PDF avec le core, Fonts et Images, sans navigateur, JavaScript ni accès réseau implicite. `UnsupportedPolicy::Reject` refuse par défaut les capacités hors profil ; le mode `Report` conserve des diagnostics.
 
 ```sh
-composer require "pdftoolkit/html-to-pdf:^0.2"
+composer require "pdftoolkit/html-to-pdf:^0.3"
 ```
 
-La version 0.2 ajoute des côtés de bordure indépendants, les styles CSS1, les mots-clés de largeur, les raccourcis et les couleurs calculées. L’[exemple CSS1](https://pdftoolkit.github.io/fr/modules/from-html/css1.html) montre les huit styles peints et une boîte asymétrique. La cascade valide les déclarations avant de sélectionner les valeurs ; les imports de feuilles utilisent uniquement les octets explicitement fournis dans `ResourceCatalog`. Les bordures inline, les marges automatiques ou négatives, les marges/paddings en pourcentage, les flottants et la conformité CSS1 complète restent hors profil. Les motifs de tirets trop fins sont limités pour borner le travail de rendu.
+La version 0.3 ajoute les flottants gauche/droite bornés, `clear`, le retour à la ligne autour des exclusions et les correspondances explicites de familles de fontes. Le [témoin historique W3C CSS1](https://pdftoolkit.github.io/fr/modules/from-html/css1.html#w3c-css1) convertit la source inchangée `test5526c.htm` en un PDF d’une page, avec des instantanés statiques de boutons radio explicitement activés. L’[exemple de bordures CSS1](https://pdftoolkit.github.io/fr/modules/from-html/css1.html) reste disponible. Les flottants exigent des largeurs explicites et un contexte tenant sur une page ; les combinaisons de placement hors profil échouent explicitement. Les bordures inline, les marges automatiques ou négatives et les marges/paddings en pourcentage restent hors profil.
 
-La [progression CSS](https://pdftoolkit.github.io/fr/modules/from-html/css-levels.html) valide CSS1 avant CSS2.0/2.1 puis les modules ultérieurs. La version 0.2 présente un profil partiel, pas une conformité CSS1 complète. Les [facture](https://pdftoolkit.github.io/fr/modules/from-html/invoice.html), [catalogue](https://pdftoolkit.github.io/fr/modules/from-html/catalogue.html), [document multipage](https://pdftoolkit.github.io/fr/modules/from-html/multipage.html) et [bordures CSS1](https://pdftoolkit.github.io/fr/modules/from-html/css1.html) montrent les vrais PDF, toutes leurs pages et les sources. Le balisage produit ne constitue pas une certification PDF/UA ou PDF/A.
+La [progression CSS](https://pdftoolkit.github.io/fr/modules/from-html/css-levels.html) valide CSS1 avant CSS2.0/2.1 puis les modules ultérieurs. Le registre 0.3 compte 49 entrées partielles et 13 non prises en charge ; aucune n’annonce une conformité CSS1 complète. Les [facture](https://pdftoolkit.github.io/fr/modules/from-html/invoice.html), [catalogue](https://pdftoolkit.github.io/fr/modules/from-html/catalogue.html), [document multipage](https://pdftoolkit.github.io/fr/modules/from-html/multipage.html), [bordures CSS1](https://pdftoolkit.github.io/fr/modules/from-html/css1.html) et [témoin W3C](https://pdftoolkit.github.io/fr/modules/from-html/css1.html#w3c-css1) montrent les vrais PDF, toutes leurs pages et les sources. Le témoin W3C fournit aussi son reçu de génération et son rapport de validation indépendante. Le balisage produit ne constitue pas une certification PDF/UA ou PDF/A.
