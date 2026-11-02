@@ -27,3 +27,7 @@
   public guides, tutorials, recipes, package documentation and interface strings.
   Update both languages together. Preserve API/PDF identifiers and original
   normative quotations. Verify reciprocal language links and heading mappings.
+
+- Describe public functionality and limits directly, using PDFToolkit APIs,
+  demonstrated behavior and published standards. Avoid vendor or product
+  comparisons in source comments, guides, release notes and site content.

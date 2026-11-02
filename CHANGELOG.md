@@ -4,6 +4,11 @@
 
 ## Unreleased
 
+## [0.17.1] - 2026-11-02
+
+- Select HTML-to-PDF 0.2.2 and publish its revised English/French documentation with self-contained descriptions of the module’s behavior and limits.
+- Preserve the explicit CSS1/CSS2, PDF/UA and PDF/A coverage limits, all examples and every existing route.
+
 ## [0.17.0] - 2026-11-02
 
 - Select demo 0.4.1 with canonical runtime dependencies; preserve the eleven inspection/conversion cases and native/WebAssembly validation.

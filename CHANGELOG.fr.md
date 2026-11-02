@@ -4,6 +4,11 @@
 
 ## Non publié
 
+## [0.17.1] - 2026-11-02
+
+- Sélectionner HTML vers PDF 0.2.2 et publier sa documentation FR/EN révisée, qui décrit directement les comportements et limites du module.
+- Conserver les limites explicites de couverture CSS1/CSS2, PDF/UA et PDF/A, tous les exemples et toutes les routes existantes.
+
 ## [0.17.0] - 2026-11-02
 
 - Sélectionner la démo 0.4.1 avec ses dépendances d’exécution canoniques ; conserver les onze cas d’inspection/conversion et les validations natives/WebAssembly.
