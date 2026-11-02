@@ -108,7 +108,7 @@ pin versions and revisions.
 
 Applications that added GitHub repositories under `repositories` can remove
 those entries from `composer.json`. If they still require `roukmoute/pdf`, follow
-the [package name migration](https://github.com/PDFToolkit/pdf/blob/v0.12.3/README.md#package-name-migration)
+the [package name migration](getting-started.md#package-name-migration)
 to `pdftoolkit/pdf`. PHP namespaces and classes remain unchanged.
 
 Before 1.0, a new minor release may change names and signatures. The

@@ -106,7 +106,7 @@ fixer les versions et les révisions.
 
 Les applications qui avaient ajouté les dépôts GitHub dans `repositories`
 peuvent retirer ces entrées de leur `composer.json`. Si elles exigent encore
-`roukmoute/pdf`, suivre la [migration du nom du package](https://github.com/PDFToolkit/pdf/blob/v0.12.3/README.fr.md#migration-du-nom-du-package)
+`roukmoute/pdf`, suivre la [migration du nom du package](getting-started.md#migration-du-nom-du-package)
 vers `pdftoolkit/pdf`. Les espaces de noms PHP et les classes restent identiques.
 
 Avant 1.0, une nouvelle version mineure peut changer les noms et signatures.

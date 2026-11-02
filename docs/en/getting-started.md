@@ -26,6 +26,23 @@ API changes appear in the [changelog](../../CHANGELOG.md) and the
 [0.12 migration guide](https://github.com/PDFToolkit/pdf/blob/v0.12.3/docs/migration-0.12.md). Keep the consuming project's
 `composer.lock` to pin installed versions.
 
+### Package name migration
+
+Since 0.12.2, the Composer package is `pdftoolkit/pdf`. The PHP namespace remains
+`PDF\` and its API is unchanged. To migrate an application that directly
+requires the former name:
+
+```sh
+composer remove roukmoute/pdf --no-update
+composer require 'pdftoolkit/pdf:^0.12.2' --with-all-dependencies
+```
+
+Review and commit the resulting lock file. The new package replaces the old name
+at `self.version`, so compatible older module constraints can resolve to one core
+installation. It does not impersonate older exact versions: a constraint pinned
+to `0.12.1`, for example, must be updated. Previously published tags and lock
+files retain their original package identity.
+
 ## Optional modules
 
 | Package | Responsibility |
