@@ -11,6 +11,7 @@ import test_opentype_sources as fixtures
 import test_reader_sources as reader_fixtures
 from build_docs import validate_html_to_pdf_module
 from build_site import HTML_TO_PDF_EXAMPLES, MODULES, Site, group_for, publish_html_to_pdf_source
+from html_to_pdf_examples import HTML_TO_PDF_SAMPLES, HTML_TO_PDF_STANDARD_EXAMPLES
 from check_sources import check, execution_dependencies
 from check_site import Document, module_package, validate_html_to_pdf_source
 from localization import localized_source, route_for, translate_interface
@@ -67,7 +68,7 @@ class HtmlToPdfSourcesTest(unittest.TestCase):
         for language in ('en', 'fr'):
             site.language = language
             menu = site.module_navigation(owner)
-            for page in ('usage', 'coverage', 'css-levels', *HTML_TO_PDF_EXAMPLES):
+            for page in ('usage', 'coverage', 'css-levels', *(sample.guide for sample in HTML_TO_PDF_SAMPLES.values())):
                 self.assertIn(site.url('modules/from-html/' + page + '.html'), menu)
             self.assertEqual('docs/fr/css-levels.md', localized_source(owner, 'docs/css-levels.md', 'fr'))
         self.assertEqual('modules/from-html/reporting.html', route_for('modules/from-html/signalements.html', 'en'))
@@ -82,7 +83,7 @@ class HtmlToPdfSourcesTest(unittest.TestCase):
         pdfs.mkdir()
         pdf = b'%PDF-1.7 synthetic unit fixture'
         (pdfs / 'from-html-invoice.pdf').write_bytes(pdf)
-        receipt = {'engine': 'native-php', 'documents': {name: {} for name in HTML_TO_PDF_EXAMPLES}}
+        receipt = {'engine': 'native-php', 'documents': {name: {} for name in HTML_TO_PDF_STANDARD_EXAMPLES}}
         receipt['documents']['invoice'] = {'pages': 1, 'bytes': len(pdf), 'sourceSha256': hashlib.sha256(html).hexdigest(), 'pdfSha256': hashlib.sha256(pdf).hexdigest()}
         manifest = pdfs / 'html-to-pdf-manifest.json'
         manifest.write_text(json.dumps(receipt))
@@ -106,11 +107,17 @@ class HtmlToPdfSourcesTest(unittest.TestCase):
     def test_oracle_runs_in_selected_checkout_and_retains_all_pages(self):
         output = self.root / 'html-to-pdf-validation'
         (output / 'renders').mkdir(parents=True)
-        for name in HTML_TO_PDF_EXAMPLES:
+        for name in HTML_TO_PDF_STANDARD_EXAMPLES:
             (output / (name + '.pdf')).write_bytes(b'%PDF-1.7 fixture')
             for page in (1, 2):
                 (output / 'renders' / f'{name}-{page}.png').write_bytes(b'PNG fixture')
         (output / 'manifest.json').write_text('{}')
+        historical = output / 'w3c'
+        (historical / 'validation').mkdir(parents=True)
+        (historical / 'test5526c.pdf').write_bytes(b'%PDF-1.7 historical fixture')
+        (historical / 'manifest.json').write_text('{}')
+        (historical / 'validation/pdf-report.json').write_text('{}')
+        (historical / 'validation/native-96dpi.png').write_bytes(b'PNG historical fixture')
         pdfs, previews = self.root / 'pdfs', self.root / 'previews'
         pdfs.mkdir()
         previews.mkdir()
@@ -120,8 +127,11 @@ class HtmlToPdfSourcesTest(unittest.TestCase):
         self.assertEqual('tools/check_css_coverage.py', run.call_args_list[0].args[0][1])
         self.assertNotIn('--require-stage', run.call_args_list[0].args[0])
         self.assertEqual(['php', '-d', 'memory_limit=512M', 'examples/generate.php', output], run.call_args_list[1].args[0])
+        self.assertEqual(['php', '-d', 'memory_limit=512M', 'examples/generate-w3c.php', historical], run.call_args_list[3].args[0])
+        self.assertEqual('tools/validate_w3c_css1.py', run.call_args_list[4].args[0][1])
+        self.assertIn(historical / 'test5526c.pdf', run.call_args_list[4].args[0])
         self.assertTrue(all(call.args[1] == self.from_html for call in run.call_args_list))
-        self.assertEqual(2 * len(HTML_TO_PDF_EXAMPLES), len(list(previews.glob('*.png'))))
+        self.assertEqual(2 * len(HTML_TO_PDF_STANDARD_EXAMPLES) + 1, len(list(previews.glob('*.png'))))
         self.assertEqual(len(HTML_TO_PDF_EXAMPLES), len(list(pdfs.glob('*.pdf'))))
 
     def test_example_guides_use_one_generated_preview_panel_and_preserve_package_sources(self):
@@ -133,23 +143,27 @@ class HtmlToPdfSourcesTest(unittest.TestCase):
         site.rewrite_link = lambda source, href, package: href
         generator = self.from_html / 'generate.php'
         generator.write_text('<?php // Published generator fixture.')
+        css1_panels = {'en': [], 'fr': []}
         for sample in HTML_TO_PDF_EXAMPLES:
             example = 'from-html-' + sample
-            html_source = self.from_html / 'examples/sources' / (sample + '.html')
+            definition = HTML_TO_PDF_SAMPLES[sample]
+            html_source = self.from_html / definition.source
             html_source.parent.mkdir(parents=True, exist_ok=True)
             html_source.write_text('<p>Fresh source</p>')
-            site.example_sources = {example: {'kind': 'html-to-pdf', 'path': generator, 'source': 'examples/generate.php',
+            site.example_sources = {example: {'kind': 'html-to-pdf', 'path': generator, 'source': definition.generator,
                 'package': owner, 'sourceUrl': 'https://example.test/generate.php', 'htmlSourceUrl': 'https://example.test/' + sample + '.html',
-                'htmlSource': 'examples/sources/' + sample + '.html', 'htmlSourceDownload': 'examples/' + example + '.html.txt'}}
+                'htmlSource': definition.source, 'htmlSourceDownload': 'examples/' + example + '.html.txt',
+                'generationReceipt': 'examples/' + example + '.manifest.json', 'validationReport': 'examples/' + example + '.validation.json'}}
             site.pdf_pages = {example: [{'file': example + '-' + str(number) + '.png', 'width': 794, 'height': 1123} for number in (1, 2)]}
             for language in ('en', 'fr'):
                 with self.subTest(sample=sample, language=language):
                     site.language = language
-                    relative = ('docs/' if language == 'en' else 'docs/fr/') + sample + '.md'
+                    relative = ('docs/' if language == 'en' else 'docs/fr/') + definition.guide + '.md'
                     source = self.from_html / relative
                     source.parent.mkdir(parents=True, exist_ok=True)
-                    preview = ('../' if language == 'en' else '../../') + 'examples/previews/' + sample + '.png'
-                    original = '# Example\n\n![Repository preview](' + preview + ')\n\nKeep this explanation.\n'
+                    previews = [('..' if language == 'en' else '../..') + '/' + sample.preview
+                                for sample in HTML_TO_PDF_SAMPLES.values() if sample.guide == definition.guide]
+                    original = '# Example\n\n' + '\n\n'.join('![Repository preview](' + preview + ')' for preview in previews) + '\n\nKeep this explanation.\n'
                     source.write_text(original)
                     guide, _ = site.render_markdown(owner, relative)
                     rendered = guide + site.example_panel(example)
@@ -161,17 +175,32 @@ class HtmlToPdfSourcesTest(unittest.TestCase):
                     for number in (1, 2):
                         self.assertEqual(2, document.links.count('/assets/pdf-pages/' + example + '-' + str(number) + '.png'))
                     self.assertIn('/examples/' + example + '.pdf', document.links)
+                    if definition.guide == 'css1':
+                        css1_panels[language].append(site.example_panel(example))
                     self.assertEqual(original, source.read_text())
                     other = source.with_name('coverage.md')
                     other.write_text(original)
                     other_guide, _ = site.render_markdown(owner, str(other.relative_to(self.from_html)))
                     self.assertIn('<img', other_guide)
+        for language, panels in css1_panels.items():
+            with self.subTest(combined_css1_panels=language):
+                rendered = ''.join(panels)
+                if language == 'en':
+                    rendered = translate_interface(rendered)
+                document = Document(rendered)
+                self.assertFalse(document.duplicates)
+                self.assertEqual(2, rendered.count('class="pdf-pages"'))
+                self.assertTrue({'resultat-pdf', 'source-html', 'code-source', 'w3c-css1',
+                                 'w3c-css1-source-html', 'w3c-css1-code-source'} <= document.ids)
+                self.assertIn('Historical W3C CSS1 sample' if language == 'en' else 'Témoin historique W3C CSS1', rendered)
+                self.assertIn('/examples/from-html-w3c-css1.manifest.json', document.links)
+                self.assertIn('/examples/from-html-w3c-css1.validation.json', document.links)
 
     def test_css1_has_a_localized_gallery_card_and_navigation_route(self):
-        self.assertEqual(('invoice', 'catalogue', 'multipage', 'css1'), HTML_TO_PDF_EXAMPLES)
+        self.assertEqual(('invoice', 'catalogue', 'multipage', 'css1', 'w3c-css1'), HTML_TO_PDF_EXAMPLES)
         site = Site.__new__(Site)
         site.base = '/'
-        site.examples = {'from-html-' + name: 'modules/from-html/' + name + '.html' for name in HTML_TO_PDF_EXAMPLES}
+        site.examples = {'from-html-' + name: sample.route for name, sample in HTML_TO_PDF_SAMPLES.items()}
         site.pdf_pages = {'from-html-' + name: [{'file': 'from-html-' + name + '-1.png', 'width': 794, 'height': 1123}] for name in HTML_TO_PDF_EXAMPLES}
         for language in ('en', 'fr'):
             with self.subTest(language=language):
@@ -180,9 +209,11 @@ class HtmlToPdfSourcesTest(unittest.TestCase):
                 if language == 'en':
                     cards = translate_interface(cards)
                 document = Document(cards)
-                self.assertEqual(4, cards.count('class="card"'))
+                self.assertEqual(5, cards.count('class="card"'))
                 self.assertIn(site.url('modules/from-html/css1.html'), document.links)
                 self.assertIn(site.url('examples/from-html-css1.pdf'), document.links)
+                self.assertIn(site.url('modules/from-html/css1.html') + '#w3c-css1', document.links)
+                self.assertIn(site.url('examples/from-html-w3c-css1.pdf'), document.links)
                 self.assertIn('CSS1 borders and cascade' if language == 'en' else 'Bordures et cascade CSS1', cards)
 
     def test_a_generation_receipt_without_the_css1_sample_is_incomplete(self):
@@ -190,4 +221,51 @@ class HtmlToPdfSourcesTest(unittest.TestCase):
         pdfs.mkdir()
         (pdfs / 'html-to-pdf-manifest.json').write_text(json.dumps({'engine': 'native-php', 'documents': {name: {} for name in ('invoice', 'catalogue', 'multipage')}}))
         with self.assertRaisesRegex(ValueError, 'receipt is incomplete'):
-            publish_html_to_pdf_source(self.from_html, pdfs, self.root, 'from-html-css1', {'htmlSource': 'examples/sources/css1.html'})
+            publish_html_to_pdf_source(self.from_html, pdfs, self.root, 'from-html-css1', {'source': 'examples/generate.php', 'htmlSource': 'examples/sources/css1.html'})
+
+    def test_historical_source_and_proof_keep_their_generator_bytes_and_page_identity(self):
+        name = 'from-html-w3c-css1'
+        definition = HTML_TO_PDF_SAMPLES['w3c-css1']
+        original = b'<!DOCTYPE html>\r\n<p>Unmodified source bytes</p>\r\n'
+        source = self.from_html / definition.source
+        source.parent.mkdir(parents=True)
+        source.write_bytes(original)
+        pdf = b'%PDF-1.7 synthetic historical fixture'
+        pdfs = self.root / 'pdfs'
+        output = self.root / 'site/examples'
+        pdfs.mkdir()
+        output.mkdir(parents=True)
+        (pdfs / (name + '.pdf')).write_bytes(pdf)
+        (output / (name + '.pdf')).write_bytes(pdf)
+        receipt = {'engine': 'native-php', 'pages': 1, 'diagnostics': [], 'formControls': 'static-snapshot',
+                   'sourceSha256': hashlib.sha256(original).hexdigest(), 'pdfSha256': hashlib.sha256(pdf).hexdigest()}
+        preview = output.parent / 'assets/pdf-pages' / (name + '-1.png')
+        preview.parent.mkdir(parents=True)
+        image = b'PNG unit fixture'
+        preview.write_bytes(image)
+        report = {'status': 'pass', 'sourceUnmodified': True, 'sourceSha256': receipt['sourceSha256'], 'receipt': receipt,
+                  'render': {'file': 'native-96dpi.png', 'dpi': 96, 'sha256': hashlib.sha256(image).hexdigest()}}
+        (pdfs / 'html-to-pdf-w3c-manifest.json').write_text(json.dumps(receipt))
+        (pdfs / 'html-to-pdf-w3c-validation.json').write_text(json.dumps(report))
+        package = self.selected['pdftoolkit/html-to-pdf']
+        source_url = package['repository'] + '/blob/' + package['revision'] + '/' + definition.source
+        record = {'source': definition.generator, 'htmlSource': definition.source, 'htmlSourceUrl': source_url}
+        publish_html_to_pdf_source(self.from_html, pdfs, output, name, record)
+        self.assertEqual(original, (output / (name + '.html.txt')).read_bytes())
+        document = SimpleNamespace(ids={'w3c-css1'}, links=[source_url, '/' + record['generationReceipt'], '/' + record['validationReport']])
+        validate_html_to_pdf_source(output.parent, name, record, package, {'css1.html': document}, {'en': 'css1.html'})
+        preview.write_bytes(image + b'modified')
+        with self.assertRaisesRegex(ValueError, 'preview differs'):
+            validate_html_to_pdf_source(output.parent, name, record, package, {'css1.html': document}, {'en': 'css1.html'})
+        preview.write_bytes(image)
+        record['source'] = 'examples/generate.php'
+        with self.assertRaisesRegex(ValueError, 'provenance'):
+            validate_html_to_pdf_source(output.parent, name, record, package, {'css1.html': document}, {'en': 'css1.html'})
+        record['source'] = definition.generator
+        (output / (name + '.pdf')).write_bytes(pdf + b'modified')
+        with self.assertRaisesRegex(ValueError, 'does not bind'):
+            validate_html_to_pdf_source(output.parent, name, record, package, {'css1.html': document}, {'en': 'css1.html'})
+        report['status'] = 'fail'
+        (pdfs / 'html-to-pdf-w3c-validation.json').write_text(json.dumps(report))
+        with self.assertRaisesRegex(ValueError, 'independent validation'):
+            publish_html_to_pdf_source(self.from_html, pdfs, output, name, record)

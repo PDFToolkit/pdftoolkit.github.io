@@ -19,6 +19,7 @@ from markdown.extensions.toc import slugify
 from check_sources import select_reader, execution_dependencies
 from guide_headings import translated_anchors
 from html_demo import DemoGallery, DemoSource
+from html_to_pdf_examples import HTML_TO_PDF_EXAMPLES, HTML_TO_PDF_EXAMPLE_TITLES, HTML_TO_PDF_SAMPLES, HTML_TO_PDF_STANDARD_EXAMPLES
 from localization import LANGUAGES, ENGLISH_ROUTES, PUBLISHED_ROUTE_ALIASES, canonical_source, localized_source, route_for, translate, translate_interface, ISO2_DESCRIPTIONS_FR, iso2_description
 
 
@@ -122,15 +123,8 @@ LESSONS = [
     ('36-applied-redaction', '36-caviardisation', 'Appliquer une caviardisation', 'pdf17-secure-redaction', 'Suppression conservatrice des données et écriture d’un nouveau fichier.'),
     ('37-protected-form-fill', '37-remplissage-protege', 'Remplir un formulaire certifié', 'protected-form-fill', 'DocMDP, FieldMDP et remplacement isolé de l’apparence à texte variable.'),
 ]
-HTML_TO_PDF_EXAMPLE_TITLES = {
-    'invoice': 'Facture HTML vers PDF',
-    'catalogue': 'Catalogue HTML vers PDF',
-    'multipage': 'Document HTML sur plusieurs pages',
-    'css1': 'Bordures et cascade CSS1',
-}
-HTML_TO_PDF_EXAMPLES = tuple(HTML_TO_PDF_EXAMPLE_TITLES)
 EXTERNAL_EXAMPLES = {
-    **{'from-html-' + name: {'package': 'pdftoolkit/html-to-pdf', 'source': 'examples/generate.php', 'kind': 'html-to-pdf', 'htmlSource': 'examples/sources/' + name + '.html'} for name in HTML_TO_PDF_EXAMPLES},
+    **{'from-html-' + name: {'package': 'pdftoolkit/html-to-pdf', 'source': sample.generator, 'kind': 'html-to-pdf', 'htmlSource': sample.source} for name, sample in HTML_TO_PDF_SAMPLES.items()},
     'reading-pages': {
         'package': 'pdftoolkit/pdf-reader',
         'source': 'examples/pages.php',
@@ -206,10 +200,10 @@ MODULES = {
 class SourcePreviewFilter(markdown.treeprocessors.Treeprocessor):
     """Replace a package README-style thumbnail with the site's generated PDF panel."""
 
-    def __init__(self, renderer, source: str, preview: str):
+    def __init__(self, renderer, source: str, previews: set[str]):
         super().__init__(renderer)
         self.directory = posixpath.dirname(source)
-        self.preview = preview
+        self.previews = previews
 
     def run(self, root):
         for parent in root.iter():
@@ -218,7 +212,7 @@ class SourcePreviewFilter(markdown.treeprocessors.Treeprocessor):
                     continue
                 url = urlsplit(child.get('src', ''))
                 target = posixpath.normpath(posixpath.join(self.directory, unquote(url.path)))
-                if not url.scheme and not url.netloc and target == self.preview:
+                if not url.scheme and not url.netloc and target in self.previews:
                     parent.remove(child)
         return root
 
@@ -228,22 +222,38 @@ def publish_html_to_pdf_source(source: Path, pdfs: Path, output: Path, example: 
     name = example.removeprefix('from-html-')
     if name not in HTML_TO_PDF_EXAMPLES or example != 'from-html-' + name:
         raise ValueError('Unknown HTML-to-PDF example')
-    relative = 'examples/sources/' + name + '.html'
-    if record.get('htmlSource') != relative:
+    sample = HTML_TO_PDF_SAMPLES[name]
+    relative = sample.source
+    if record.get('htmlSource') != relative or record.get('source') != sample.generator:
         raise ValueError('HTML-to-PDF source path differs')
-    receipt = json.loads((pdfs / 'html-to-pdf-manifest.json').read_text(encoding='utf-8'))
-    if receipt.get('engine') != 'native-php' or set(receipt.get('documents', {})) != set(HTML_TO_PDF_EXAMPLES):
-        raise ValueError('HTML-to-PDF generation receipt is incomplete')
-    entry = receipt['documents'][name]
+    if name == 'w3c-css1':
+        receipt = json.loads((pdfs / 'html-to-pdf-w3c-manifest.json').read_text(encoding='utf-8'))
+        report = json.loads((pdfs / 'html-to-pdf-w3c-validation.json').read_text(encoding='utf-8'))
+        if receipt.get('engine') != 'native-php' or receipt.get('pages') != 1 or receipt.get('diagnostics') != [] or receipt.get('formControls') != 'static-snapshot':
+            raise ValueError('HTML-to-PDF historical generation receipt is incomplete')
+        if report.get('status') != 'pass' or report.get('sourceUnmodified') is not True or report.get('sourceSha256') != receipt.get('sourceSha256') or report.get('receipt') != receipt:
+            raise ValueError('HTML-to-PDF historical independent validation is missing or mismatched')
+        entry = receipt
+    else:
+        receipt = json.loads((pdfs / 'html-to-pdf-manifest.json').read_text(encoding='utf-8'))
+        if receipt.get('engine') != 'native-php' or set(receipt.get('documents', {})) != set(HTML_TO_PDF_STANDARD_EXAMPLES):
+            raise ValueError('HTML-to-PDF generation receipt is incomplete')
+        entry = receipt['documents'][name]
     html = (source / relative).read_bytes()
     pdf = (pdfs / (example + '.pdf')).read_bytes()
-    if entry.get('sourceSha256') != hashlib.sha256(html).hexdigest() or entry.get('pdfSha256') != hashlib.sha256(pdf).hexdigest() or entry.get('bytes') != len(pdf):
+    if entry.get('sourceSha256') != hashlib.sha256(html).hexdigest() or entry.get('pdfSha256') != hashlib.sha256(pdf).hexdigest() or (name != 'w3c-css1' and entry.get('bytes') != len(pdf)):
         raise ValueError('HTML-to-PDF generation receipt does not match the source and PDF bytes')
     if type(entry.get('pages')) is not int or entry['pages'] < 1:
         raise ValueError('Invalid generated HTML-to-PDF page count')
     filename = example + '.html.txt'
     (output / filename).write_bytes(html)
     record.update(htmlSourceDownload='examples/' + filename, htmlSourceSha256=entry['sourceSha256'], expectedPages=entry['pages'])
+    if name == 'w3c-css1':
+        for key, original, suffix in [('generationReceipt', 'html-to-pdf-w3c-manifest.json', '.manifest.json'), ('validationReport', 'html-to-pdf-w3c-validation.json', '.validation.json')]:
+            target = example + suffix
+            shutil.copyfile(pdfs / original, output / target)
+            record[key] = 'examples/' + target
+            record[key + 'Sha256'] = hashlib.sha256((output / target).read_bytes()).hexdigest()
 
 
 def load_sources(path: Path) -> dict[str, dict]:
@@ -417,7 +427,7 @@ class Site:
         for item in self.components:
             self.groups[group_for(item)].append(item)
         self.pages = guide_pages()
-        self.examples = {'table': 'recipes/table.html', **{'from-html-' + name: f'modules/from-html/{name}.html' for name in HTML_TO_PDF_EXAMPLES}}
+        self.examples = {'table': 'recipes/table.html', **{'from-html-' + name: sample.route for name, sample in HTML_TO_PDF_SAMPLES.items()}}
         for _, slug, _, example, _ in LESSONS:
             self.examples[example] = f'tutorials/{slug}.html'
         if not set(EXTERNAL_EXAMPLES) <= set(self.examples):
@@ -647,12 +657,13 @@ class Site:
         for name, record in self.example_sources.items():
             if record['package'] == package_name and not fragment:
                 if record['source'] == target:
-                    return self.url(self.examples[name]) + ('?' + query if query else '') + '#code-source'
+                    anchor = 'w3c-css1-code-source' if name == 'from-html-w3c-css1' else 'code-source'
+                    return self.url(self.examples[name]) + ('?' + query if query else '') + '#' + anchor
                 if record.get('input') == target:
                     return self.url(f'examples/{name}.pdf') + suffix
                 if record.get('htmlSource') == target:
                     return self.url(f'examples/{name}.html.txt') + suffix
-                if record['kind'] == 'html-to-pdf' and target == 'examples/previews/' + name.removeprefix('from-html-') + '.png':
+                if record['kind'] == 'html-to-pdf' and target == HTML_TO_PDF_SAMPLES[name.removeprefix('from-html-')].preview:
                     return self.url('assets/pdf-pages/' + name + '-1.png') + suffix
         if package_name == CORE_PACKAGE:
             if target == self.adobe_metadata['path']:
@@ -732,9 +743,9 @@ class Site:
     def render_markdown(self, owner: str, source: str) -> tuple[str, list[dict]]:
         renderer = markdown.Markdown(extensions=['tables', 'fenced_code', 'toc', 'sane_lists'])
         canonical = canonical_source(owner, source)
-        if owner == 'pdftoolkit/html-to-pdf' and canonical in {'docs/' + name + '.md' for name in HTML_TO_PDF_EXAMPLES}:
-            preview = 'examples/previews/' + Path(canonical).stem + '.png'
-            renderer.treeprocessors.register(SourcePreviewFilter(renderer, source, preview), 'source-preview-filter', 5)
+        if owner == 'pdftoolkit/html-to-pdf' and canonical in {'docs/' + sample.guide + '.md' for sample in HTML_TO_PDF_SAMPLES.values()}:
+            previews = {sample.preview for sample in HTML_TO_PDF_SAMPLES.values() if sample.guide == Path(canonical).stem}
+            renderer.treeprocessors.register(SourcePreviewFilter(renderer, source, previews), 'source-preview-filter', 5)
         root = self.content_root if owner == 'documentation' else self.package_roots[owner]
         html = renderer.convert((root / source).read_text(encoding='utf-8'))
         html = re.sub(r'<h1\b[^>]*>.*?</h1>\s*', '', html, count=1, flags=re.S)
@@ -796,6 +807,10 @@ class Site:
 
     def example_panel(self, example: str) -> str:
         record = self.example_sources[example]
+        historical = example == 'from-html-w3c-css1'
+        pdf_id = 'w3c-css1' if historical else 'resultat-pdf'
+        source_id = 'w3c-css1-source-html' if historical else 'source-html'
+        code_id = 'w3c-css1-code-source' if historical else 'code-source'
         code = record['path'].read_text(encoding='utf-8')
         pdf = self.url(f'examples/{example}.pdf')
         source = self.url(f'examples/{example}.php.txt')
@@ -804,6 +819,8 @@ class Site:
         is_conversion = record['kind'] == 'conversion'
         pdf_label = 'PDF d’entrée' if is_input else 'Résultat PDF'
         heading = 'Voir le PDF d’entrée' if is_input else 'Voir le résultat PDF'
+        if historical:
+            heading = 'Témoin historique W3C CSS1'
         source_name = Path(record['source']).name
         page_images = ''.join(
             f'<figure class="pdf-page"><a href="{e(self.url("assets/pdf-pages/" + image["file"]))}" target="_blank" rel="noopener" aria-label="Agrandir la page {number} sur {len(pages)}">'
@@ -817,6 +834,8 @@ class Site:
             if is_input else
             'Ce fichier a été généré avec le code de cette documentation. Toutes ses pages sont reproduites ci-dessous ; ouvrir le PDF pour utiliser ses liens et ses signets.'
         )
+        if historical:
+            description = 'La source historique W3C test5526c.htm est convertie sans modification en PHP. Les boutons radio sont des instantanés statiques explicites. La géométrie vérifiée ne constitue pas une conformité CSS1 complète.'
         provenance = f'<p>Code de <code>{e(record["package"])}</code> · <a href="{e(record["sourceUrl"])}">Consulter la source au commit documenté ↗</a>'
         if is_input:
             provenance += f' · <a href="{e(record["inputSourceUrl"])}">Origine du PDF d’entrée ↗</a>'
@@ -832,7 +851,9 @@ class Site:
 <pre><code class="language-text">{e(result)}</code></pre></section>'''
         if record['kind'] == 'html-to-pdf':
             html_source = (self.package_roots[record['package']] / record['htmlSource']).read_text(encoding='utf-8')
-            console = f'<section class="source-panel" id="source-html"><h2>Source HTML</h2><p><a href="{e(self.url(record["htmlSourceDownload"]))}" download>Télécharger la source HTML</a></p><details><summary>Lire la source HTML</summary><pre><code class="language-html">{e(html_source)}</code></pre></details></section>'
+            console = f'<section class="source-panel" id="{source_id}"><h2>Source HTML</h2><p><a href="{e(self.url(record["htmlSourceDownload"]))}" download>Télécharger la source HTML</a></p><details><summary>Lire la source HTML</summary><pre><code class="language-html">{e(html_source)}</code></pre></details></section>'
+            if historical:
+                console += f'<p><a href="{e(self.url(record["generationReceipt"]))}" download>Reçu de génération JSON</a> · <a href="{e(self.url(record["validationReport"]))}" download>Validation indépendante JSON</a></p>'
         if is_conversion:
             html_result = self.url(f'examples/{example}.html')
             console += f'''<section class="source-panel" id="resultat-html"><div class="panel-intro"><h2>Résultat HTML</h2>
@@ -840,7 +861,7 @@ class Site:
 <p><a href="{e(html_result)}" download>Télécharger le HTML</a></p></div>
 <iframe class="pdf-viewer" sandbox="" src="{e(html_result)}" title="Résultat HTML" loading="lazy"></iframe>
 <details><summary>Lire la source HTML</summary><pre><code class="language-html">{e((self.pdfs / (example + '.html')).read_text(encoding='utf-8'))}</code></pre></details></section>'''
-        return f'''<section class="pdf-panel" id="resultat-pdf"><div class="panel-intro"><h2>{heading}</h2>
+        return f'''<section class="pdf-panel" id="{pdf_id}"><div class="panel-intro"><h2>{heading}</h2>
 <p>{description}</p></div>
 <div class="pdf-actions"><a class="button" href="{e(pdf)}" target="_blank" rel="noopener">Ouvrir le PDF ↗</a><a class="button secondary" href="{e(pdf)}" download>Télécharger</a><a class="button secondary" href="{e(source)}" download="{e(source_name)}">Télécharger le code PHP</a></div>
 <div class="pdf-pages" role="region" aria-label="Aperçu des {len(pages)} pages du PDF {e(example)}" tabindex="0">{page_images}</div>
@@ -848,14 +869,16 @@ class Site:
 <p class="search-hint">Ce lecteur dépend du navigateur. Si le document ne s’affiche pas, utiliser « Ouvrir le PDF » ou « Télécharger ».</p>
 <iframe class="pdf-viewer" src="{e(pdf)}#view=FitH" title="{pdf_label} : {e(example)}" loading="lazy"></iframe>
 </details></section>
-{console}<section class="source-panel" id="code-source"><div class="panel-intro"><h2>Code source complet</h2>{provenance}</div><details><summary>Lire le script commenté : {e(source_name)}</summary><pre><code class="language-php">{e(code)}</code></pre></details></section>'''
+{console}<section class="source-panel" id="{code_id}"><div class="panel-intro"><h2>Code source complet</h2>{provenance}</div><details><summary>Lire le script commenté : {e(source_name)}</summary><pre><code class="language-php">{e(code)}</code></pre></details></section>'''
 
     def html_to_pdf_cards(self) -> str:
         cards = []
         for name, title in HTML_TO_PDF_EXAMPLE_TITLES.items():
             example = 'from-html-' + name
             image = self.pdf_pages[example][0]
-            cards.append(f'<div class="card"><a href="{e(self.url(self.examples[example]))}"><img src="{e(self.url("assets/pdf-pages/" + image["file"]))}" width="{image["width"]}" height="{image["height"]}" alt="{e(title)}" loading="lazy"><div class="card-body"><h3>{e(title)}</h3></div></a><p><a href="{e(self.url("examples/" + example + ".pdf"))}">Ouvrir le PDF ↗</a></p></div>')
+            anchor = HTML_TO_PDF_SAMPLES[name].anchor
+            target = self.url(self.examples[example]) + ('#' + anchor if anchor else '')
+            cards.append(f'<div class="card"><a href="{e(target)}"><img src="{e(self.url("assets/pdf-pages/" + image["file"]))}" width="{image["width"]}" height="{image["height"]}" alt="{e(title)}" loading="lazy"><div class="card-body"><h3>{e(title)}</h3></div></a><p><a href="{e(self.url("examples/" + example + ".pdf"))}">Ouvrir le PDF ↗</a></p></div>')
         return '<div class="cards">' + ''.join(cards) + '</div>'
 
     def tutorial_cards(self) -> str:
@@ -1388,9 +1411,11 @@ class Site:
                 body = self.html_to_pdf_cards() + body
             if route == 'tutorials/index.html':
                 body = self.tutorial_cards() + body
-            example = next((name for name, target in self.examples.items() if target == route), None)
-            if example:
+            for example in (name for name, target in self.examples.items() if target == route):
                 body += self.example_panel(example)
+                if example == 'from-html-w3c-css1':
+                    toc += [{'id': 'w3c-css1', 'name': 'Témoin historique W3C CSS1', 'level': 2}, {'id': 'w3c-css1-source-html', 'name': 'Source HTML W3C', 'level': 2}, {'id': 'w3c-css1-code-source', 'name': 'Code source W3C', 'level': 2}]
+                    continue
                 if self.example_sources[example]['kind'] in {'input', 'conversion'}:
                     toc += [{'id': 'resultat-pdf', 'name': 'PDF d’entrée', 'level': 2}, {'id': 'resultat-lecture', 'name': 'Résultat de la lecture', 'level': 2}]
                     if self.example_sources[example]['kind'] == 'conversion':

@@ -12,7 +12,8 @@ import sys
 
 from check_sources import check, html_dependencies, select_reader, execution_dependencies
 from html_demo import DemoBuild, DemoSource
-from build_site import CORE_PACKAGE, HTML_TO_PDF_EXAMPLES, MODULES, guide_pages
+from build_site import CORE_PACKAGE, MODULES, guide_pages
+from html_to_pdf_examples import HTML_TO_PDF_STANDARD_EXAMPLES
 from guide_headings import translated_anchors
 
 
@@ -152,12 +153,21 @@ def validate_html_to_pdf_module(args, source: Path, work: Path, pdfs: Path, prev
     run([args.php, "-d", "memory_limit=512M", "examples/generate.php", output], source)
     run([sys.executable, "tools/validate_pdf.py", "--directory", output,
          "--qpdf", args.qpdf, "--pdftoppm", args.pdftoppm, "--pdftotext", args.pdftotext], source)
-    for name in HTML_TO_PDF_EXAMPLES:
+    for name in HTML_TO_PDF_STANDARD_EXAMPLES:
         example = "from-html-" + name
         shutil.copyfile(output / (name + ".pdf"), pdfs / (example + ".pdf"))
         for image in (output / "renders").glob(name + "-*.png"):
             shutil.copyfile(image, previews / ("from-html-" + image.name))
     shutil.copyfile(output / "manifest.json", pdfs / "html-to-pdf-manifest.json")
+    historical = output / 'w3c'
+    run([args.php, '-d', 'memory_limit=512M', 'examples/generate-w3c.php', historical], source)
+    run([sys.executable, 'tools/validate_w3c_css1.py', '--pdf', historical / 'test5526c.pdf',
+         '--manifest', historical / 'manifest.json', '--output', historical / 'validation',
+         '--qpdf', args.qpdf, '--pdftoppm', args.pdftoppm, '--pdftotext', args.pdftotext], source)
+    shutil.copyfile(historical / 'test5526c.pdf', pdfs / 'from-html-w3c-css1.pdf')
+    shutil.copyfile(historical / 'validation/native-96dpi.png', previews / 'from-html-w3c-css1-1.png')
+    shutil.copyfile(historical / 'manifest.json', pdfs / 'html-to-pdf-w3c-manifest.json')
+    shutil.copyfile(historical / 'validation/pdf-report.json', pdfs / 'html-to-pdf-w3c-validation.json')
 
 
 def build(args) -> None:

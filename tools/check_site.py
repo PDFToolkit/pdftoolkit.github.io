@@ -12,6 +12,7 @@ import struct
 from urllib.parse import quote, unquote, urlsplit
 
 from html_demo import DemoGallery
+from html_to_pdf_examples import HTML_TO_PDF_SAMPLES
 from localization import PUBLISHED_ROUTE_ALIASES
 
 
@@ -144,9 +145,10 @@ def module_package(slug):
 
 def validate_html_to_pdf_source(root, name, record, package, documents, example_pages):
     sample = name.removeprefix('from-html-')
-    if sample not in {'invoice', 'catalogue', 'multipage', 'css1'} or name != 'from-html-' + sample or package.get('name') != 'pdftoolkit/html-to-pdf' or record.get('source') != 'examples/generate.php':
+    definition = HTML_TO_PDF_SAMPLES.get(sample)
+    if definition is None or name != 'from-html-' + sample or package.get('name') != 'pdftoolkit/html-to-pdf' or record.get('source') != definition.generator:
         raise ValueError('Incorrect HTML-to-PDF example provenance: ' + name)
-    source_path = 'examples/sources/' + sample + '.html'
+    source_path = definition.source
     source_url = package['repository'] + '/blob/' + package['revision'] + '/' + source_path
     download = 'examples/' + name + '.html.txt'
     if record.get('htmlSource') != source_path or record.get('htmlSourceUrl') != source_url or record.get('htmlSourceDownload') != download:
@@ -158,6 +160,30 @@ def validate_html_to_pdf_source(root, name, record, package, documents, example_
         raise ValueError('Missing HTML-to-PDF source link: ' + name)
     if type(record.get('expectedPages')) is not int or record['expectedPages'] < 1:
         raise ValueError('Invalid HTML-to-PDF preview count: ' + name)
+    if sample == 'w3c-css1':
+        evidence = {}
+        for key, suffix in [('generationReceipt', '.manifest.json'), ('validationReport', '.validation.json')]:
+            expected = 'examples/' + name + suffix
+            if record.get(key) != expected or not (root / expected).is_file() or hashlib.sha256((root / expected).read_bytes()).hexdigest() != record.get(key + 'Sha256'):
+                raise ValueError('Missing or modified historical HTML-to-PDF validation evidence: ' + name)
+            evidence[key] = json.loads((root / expected).read_text(encoding='utf-8'))
+        receipt, report = evidence['generationReceipt'], evidence['validationReport']
+        pdf = root / 'examples' / (name + '.pdf')
+        if receipt.get('engine') != 'native-php' or receipt.get('pages') != 1 or receipt.get('diagnostics') != [] or receipt.get('formControls') != 'static-snapshot' or record['expectedPages'] != 1:
+            raise ValueError('Incorrect historical HTML-to-PDF receipt: ' + name)
+        if receipt.get('sourceSha256') != record['htmlSourceSha256'] or not pdf.is_file() or receipt.get('pdfSha256') != hashlib.sha256(pdf.read_bytes()).hexdigest() or report.get('receipt') != receipt or report.get('status') != 'pass' or report.get('sourceUnmodified') is not True or report.get('sourceSha256') != receipt.get('sourceSha256'):
+            raise ValueError('Historical HTML-to-PDF evidence does not bind the published source and PDF: ' + name)
+        preview = root / 'assets/pdf-pages' / (name + '-1.png')
+        render = report.get('render', {})
+        if render.get('file') != 'native-96dpi.png' or render.get('dpi') != 96 or not preview.is_file() or render.get('sha256') != hashlib.sha256(preview.read_bytes()).hexdigest():
+            raise ValueError('Historical HTML-to-PDF preview differs from the independently validated native rendering: ' + name)
+        for page in example_pages.values():
+            document = documents[page]
+            if 'w3c-css1' not in document.ids:
+                raise ValueError('Missing historical HTML-to-PDF preview panel: ' + page)
+            for key in ('generationReceipt', 'validationReport'):
+                if not any(urlsplit(link).path.endswith('/' + record[key]) for link in document.links):
+                    raise ValueError('Missing historical HTML-to-PDF validation download: ' + page)
 
 
 def check(root):
