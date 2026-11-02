@@ -342,7 +342,11 @@ function lockedDependency(string $consumer, string $name): array
     $lock = json_decode(file_get_contents($consumer . '/composer.lock') ?: '{}', true, flags: JSON_THROW_ON_ERROR);
     $installed = json_decode(file_get_contents($consumer . '/vendor/composer/installed.json') ?: '{}', true, flags: JSON_THROW_ON_ERROR);
     $identities = [];
-    foreach ([[...($lock['packages'] ?? []), ...($lock['packages-dev'] ?? [])], $installed['packages'] ?? []] as $inventory) {
+    $inventories = [[...($lock['packages'] ?? []), ...($lock['packages-dev'] ?? [])], $installed['packages'] ?? []];
+    if ($name === CorePackageIdentity::CANONICAL) {
+        $name = (new CorePackageIdentity(...$inventories))->name;
+    }
+    foreach ($inventories as $inventory) {
         $records = array_column($inventory, null, 'name');
         if (count($records) !== count($inventory)) {
             throw new \RuntimeException('Duplicate Composer package identity.');
@@ -380,11 +384,11 @@ function documentationPackages(string $root, string $sourcesPath, string $openty
     }
     $names = array_keys($selected);
     sort($names);
-    if (($manifest['schemaVersion'] ?? null) !== 1 || $names !== ['pdftoolkit/html-to-pdf', 'pdftoolkit/opentype', 'pdftoolkit/pdf-codecs', 'pdftoolkit/pdf-fonts', 'pdftoolkit/pdf-images', 'pdftoolkit/pdf-reader', 'pdftoolkit/pdf-to-html', 'roukmoute/pdf']) {
+    if (($manifest['schemaVersion'] ?? null) !== 1 || $names !== ['pdftoolkit/html-to-pdf', 'pdftoolkit/opentype', 'pdftoolkit/pdf', 'pdftoolkit/pdf-codecs', 'pdftoolkit/pdf-fonts', 'pdftoolkit/pdf-images', 'pdftoolkit/pdf-reader', 'pdftoolkit/pdf-to-html']) {
         throw new \RuntimeException('The released-source manifest must describe every package exactly once.');
     }
     foreach ($selected as $name => $package) {
-        $optional = $name !== 'roukmoute/pdf';
+        $optional = $name !== 'pdftoolkit/pdf';
         $repository = 'https://github.com/PDFToolkit/' . ($optional ? substr($name, strlen('pdftoolkit/')) : 'pdf');
         if (($package['repository'] ?? null) !== $repository || ($package['optional'] ?? null) !== $optional) {
             throw new \RuntimeException('Incorrect released-source package identity: ' . $name);
@@ -398,15 +402,25 @@ function documentationPackages(string $root, string $sourcesPath, string $openty
     $error = stream_get_contents($pipes[2]);
     fclose($pipes[1]);
     fclose($pipes[2]);
-    if (proc_close($process) !== 0 || $revision !== $selected['roukmoute/pdf']['revision']) {
+    if (proc_close($process) !== 0 || $revision !== $selected['pdftoolkit/pdf']['revision']) {
         throw new \RuntimeException('Core Git HEAD differs from the released-source manifest. ' . trim($error));
     }
-    $packages = ['roukmoute/pdf' => ['root' => $root, ...$selected['roukmoute/pdf']]];
+    $packages = ['pdftoolkit/pdf' => ['root' => $root, ...$selected['pdftoolkit/pdf']]];
+    $coreComposer = json_decode(file_get_contents($root . '/composer.json') ?: '{}', true, flags: JSON_THROW_ON_ERROR);
+    if (($coreComposer['name'] ?? null) !== CorePackageIdentity::CANONICAL) {
+        throw new \RuntimeException('Documented core must use the canonical package identity.');
+    }
     $lockBytes = file_get_contents($root . '/composer.lock');
     if ($lockBytes === false) {
         throw new \RuntimeException('Cannot read the locked documentation dependencies.');
     }
     $lock = json_decode($lockBytes, true, flags: JSON_THROW_ON_ERROR);
+    $installedCoreInputs = json_decode(file_get_contents($root . '/vendor/composer/installed.json') ?: '{}', true, flags: JSON_THROW_ON_ERROR);
+    foreach ([...$lock['packages'], ...$lock['packages-dev'], ...($installedCoreInputs['packages'] ?? [])] as $package) {
+        if (in_array($package['name'], [CorePackageIdentity::CANONICAL, CorePackageIdentity::LEGACY], true)) {
+            throw new \RuntimeException('The documented core checkout must not install a second core package.');
+        }
+    }
     $lockedPackages = [];
     foreach ([...$lock['packages'], ...$lock['packages-dev']] as $package) {
         $lockedPackages[$package['name']] = $package;
@@ -456,7 +470,7 @@ function documentationPackages(string $root, string $sourcesPath, string $openty
             throw new \RuntimeException('Incorrect independent package identity: ' . $name);
         }
         foreach (array_keys($composer['require'] ?? []) as $dependency) {
-            if ($dependency === 'roukmoute/pdf' || str_starts_with($dependency, 'pdftoolkit/pdf-')) {
+            if (in_array($dependency, [CorePackageIdentity::CANONICAL, CorePackageIdentity::LEGACY], true) || str_starts_with($dependency, 'pdftoolkit/pdf-')) {
                 throw new \RuntimeException('Independent package must not depend on PDF packages: ' . $name);
             }
         }
@@ -493,7 +507,7 @@ function documentationPackages(string $root, string $sourcesPath, string $openty
     if (($composer['name'] ?? null) !== 'pdftoolkit/pdf-images') {
         throw new \RuntimeException('Incorrect Images package identity.');
     }
-    lockedDependency($imagesRoot, 'roukmoute/pdf');
+    lockedDependency($imagesRoot, 'pdftoolkit/pdf');
     // Reflection uses the selected Images namespace and the documented core. Its oracles
     // run separately with Images' own published lock; do not load a second core here.
     (new SelectedSourceAutoloader('PDF\\Images\\', $imagesRoot . '/src'))->register();
@@ -518,7 +532,7 @@ function documentationPackages(string $root, string $sourcesPath, string $openty
         throw new \RuntimeException('Incorrect PDF-to-HTML package identity.');
     }
     // HTML validation keeps its own published lock, which may predate the documented core/Reader.
-    foreach (['roukmoute/pdf', 'pdftoolkit/pdf-reader'] as $name) {
+    foreach (['pdftoolkit/pdf', 'pdftoolkit/pdf-reader'] as $name) {
         lockedDependency($pdfToHtmlRoot, $name);
     }
     $readerConsumer = realpath($readerConsumer) ?: throw new \RuntimeException('Cannot resolve the selected Reader consumer.');
@@ -559,7 +573,7 @@ function documentationPackages(string $root, string $sourcesPath, string $openty
     if (($composer['name'] ?? null) !== 'pdftoolkit/html-to-pdf') {
         throw new \RuntimeException('Incorrect HTML-to-PDF package identity.');
     }
-    foreach (['roukmoute/pdf', 'pdftoolkit/pdf-fonts', 'pdftoolkit/pdf-images', 'pdftoolkit/opentype', 'pdftoolkit/pdf-reader', 'masterminds/html5', 'sabberworm/php-css-parser', 'symfony/css-selector'] as $name) {
+    foreach (['pdftoolkit/pdf', 'pdftoolkit/pdf-fonts', 'pdftoolkit/pdf-images', 'pdftoolkit/opentype', 'pdftoolkit/pdf-reader', 'masterminds/html5', 'sabberworm/php-css-parser', 'symfony/css-selector'] as $name) {
         lockedDependency($htmlToPdfRoot, $name);
     }
     // Load only this module and its parser dependencies. Existing selected PDF
@@ -604,6 +618,7 @@ if (!is_array($arguments) || count($arguments) !== 10 || !isset($arguments[1], $
 try {
     require __DIR__ . '/SelectedSourceAutoloader.php';
     require __DIR__ . '/ApiSourceLocator.php';
+    require __DIR__ . '/CorePackageIdentity.php';
     $root = realpath($arguments[2]) ?: throw new \RuntimeException('Cannot resolve the core source tree.');
     require $root . '/vendor/autoload.php';
     $packages = documentationPackages($root, $arguments[3], $arguments[4], $arguments[5], $arguments[6], $arguments[7], $arguments[8], $arguments[9]);

@@ -22,6 +22,7 @@ class OpenTypeSourcesTest(unittest.TestCase):
         self.core = self.root / "core"
         self.opentype = self.root / "opentype"
         self.core.mkdir()
+        (self.core / "composer.json").write_text(json.dumps({"name": "pdftoolkit/pdf"}))
         self.opentype.mkdir()
         self.codecs = self.root / "codecs"
         self.codecs.mkdir()
@@ -33,7 +34,7 @@ class OpenTypeSourcesTest(unittest.TestCase):
         (self.images / "composer.json").write_text(json.dumps({"name": "pdftoolkit/pdf-images"}))
         (self.images / "vendor/composer").mkdir(parents=True)
         (self.images / "vendor/autoload.php").write_text("<?php // Synthetic independent consumer.\n")
-        image_core = {"name": "roukmoute/pdf", "version": "0.0.1", "source": {"reference": "a" * 40}, "dist": {"reference": "a" * 40}}
+        image_core = {"name": "pdftoolkit/pdf", "version": "0.0.1", "source": {"reference": "a" * 40}, "dist": {"reference": "a" * 40}}
         (self.images / "composer.lock").write_text(json.dumps({"packages": [image_core], "packages-dev": []}))
         (self.images / "vendor/composer/installed.json").write_text(json.dumps({"packages": [image_core]}))
         self.html = self.root / "html"
@@ -49,7 +50,7 @@ class OpenTypeSourcesTest(unittest.TestCase):
         (self.from_html / "composer.json").write_text(json.dumps({"name": "pdftoolkit/html-to-pdf"}))
         self.records = [
             {"name": name, "repository": repository, "version": "0.1.0",
-             "revision": str(index) * 40, "optional": name != "roukmoute/pdf"}
+             "revision": str(index) * 40, "optional": name != "pdftoolkit/pdf"}
             for index, (name, repository) in enumerate(PACKAGES.items(), start=1)
         ]
         self.selected = {item["name"]: item for item in self.records}
@@ -57,7 +58,7 @@ class OpenTypeSourcesTest(unittest.TestCase):
         self.save_manifest()
         modules = []
         for item in self.records:
-            if item["name"] in {"roukmoute/pdf", "pdftoolkit/opentype", "pdftoolkit/pdf-to-html", "pdftoolkit/pdf-codecs", "pdftoolkit/html-to-pdf"}:
+            if item["name"] in {"pdftoolkit/pdf", "pdftoolkit/opentype", "pdftoolkit/pdf-to-html", "pdftoolkit/pdf-codecs", "pdftoolkit/html-to-pdf"}:
                 continue
             modules.append({"name": item["name"], "version": item["version"],
                             "source": {"reference": item["revision"]},
@@ -70,8 +71,8 @@ class OpenTypeSourcesTest(unittest.TestCase):
             json.dumps({"packages": modules}), encoding="utf-8")
         (self.opentype / "docs").mkdir()
         self.save_composer({"php": "^8.3"})
-        html_modules = [{"name": item["name"], "version": item["version"], "source": {"reference": item["revision"]}, "dist": {"reference": item["revision"]}} for item in self.records if item["name"] in {"roukmoute/pdf", "pdftoolkit/pdf-reader"}]
-        from_html_modules = [{"name": name, "version": "0.1.0", "source": {"reference": "a" * 40}, "dist": {"reference": "a" * 40}} for name in ("roukmoute/pdf", "pdftoolkit/pdf-fonts", "pdftoolkit/pdf-images", "pdftoolkit/opentype", "pdftoolkit/pdf-reader", "masterminds/html5", "sabberworm/php-css-parser", "symfony/css-selector")]
+        html_modules = [{"name": item["name"], "version": item["version"], "source": {"reference": item["revision"]}, "dist": {"reference": item["revision"]}} for item in self.records if item["name"] in {"pdftoolkit/pdf", "pdftoolkit/pdf-reader"}]
+        from_html_modules = [{"name": name, "version": "0.1.0", "source": {"reference": "a" * 40}, "dist": {"reference": "a" * 40}} for name in ("pdftoolkit/pdf", "pdftoolkit/pdf-fonts", "pdftoolkit/pdf-images", "pdftoolkit/opentype", "pdftoolkit/pdf-reader", "masterminds/html5", "sabberworm/php-css-parser", "symfony/css-selector")]
         (self.from_html / "composer.lock").write_text(json.dumps({"packages": from_html_modules, "packages-dev": []}))
         (self.from_html / "vendor/composer/installed.json").write_text(json.dumps({"packages": from_html_modules}))
         (self.html / "vendor/composer").mkdir(parents=True)
@@ -100,7 +101,7 @@ class OpenTypeSourcesTest(unittest.TestCase):
             return self.selected['pdftoolkit/pdf-images']['revision']
         if root == self.codecs:
             return self.selected["pdftoolkit/pdf-codecs"]["revision"]
-        package = "pdftoolkit/opentype" if root == self.opentype else ("pdftoolkit/pdf-to-html" if root == self.html else "roukmoute/pdf")
+        package = "pdftoolkit/opentype" if root == self.opentype else ("pdftoolkit/pdf-to-html" if root == self.html else "pdftoolkit/pdf")
         return self.selected[package]["revision"]
 
     def test_manifest_requires_all_eight_unique_released_package_identities(self):
@@ -141,7 +142,7 @@ class OpenTypeSourcesTest(unittest.TestCase):
                 check(self.core, self.manifest, opentype_root=self.opentype, pdf_to_html_root=self.html, codecs_root=self.codecs, images_root=self.images, html_to_pdf_root=self.from_html)
 
     def test_opentype_pdf_dependency_is_rejected(self):
-        self.save_composer({"php": "^8.3", "roukmoute/pdf": "^0.6"})
+        self.save_composer({"php": "^8.3", "pdftoolkit/pdf": "^0.6"})
         with patch("check_sources.git", side_effect=self.git):
             with self.assertRaisesRegex(ValueError, "independent from PDF packages"):
                 check(self.core, self.manifest, opentype_root=self.opentype, pdf_to_html_root=self.html, codecs_root=self.codecs, images_root=self.images, html_to_pdf_root=self.from_html)

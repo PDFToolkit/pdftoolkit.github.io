@@ -9,8 +9,11 @@ import re
 import subprocess
 
 
+CORE_PACKAGE = "pdftoolkit/pdf"
+CORE_IDENTITIES = frozenset({CORE_PACKAGE, "roukmoute/pdf"})
+
 PACKAGES = {
-    "roukmoute/pdf": "https://github.com/PDFToolkit/pdf",
+    CORE_PACKAGE: "https://github.com/PDFToolkit/pdf",
     "pdftoolkit/pdf-reader": "https://github.com/PDFToolkit/pdf-reader",
     "pdftoolkit/pdf-images": "https://github.com/PDFToolkit/pdf-images",
     "pdftoolkit/pdf-fonts": "https://github.com/PDFToolkit/pdf-fonts",
@@ -41,7 +44,7 @@ def load_manifest(path: Path) -> dict[str, dict]:
         require(item["repository"] == PACKAGES[name], f"Unexpected source repository: {name}")
         require(re.fullmatch(r"[0-9a-f]{40}", item["revision"]) is not None, f"Source must be an exact commit: {name}")
         require(re.fullmatch(r"\d+\.\d+\.\d+", item["version"]) is not None, f"Source must be a stable release: {name}")
-        require(item["optional"] is (name != "roukmoute/pdf"), f"Incorrect package boundary: {name}")
+        require(item["optional"] is (name != "pdftoolkit/pdf"), f"Incorrect package boundary: {name}")
     return packages
 
 
@@ -73,13 +76,22 @@ def locked_dependency(root: Path, name: str) -> dict:
 
 
 def html_dependencies(root: Path) -> list[dict]:
-    return [locked_dependency(root, name) for name in ("roukmoute/pdf", "pdftoolkit/pdf-reader")]
+    return [core_dependency(root), locked_dependency(root, "pdftoolkit/pdf-reader")]
+
+
+def core_dependency(root: Path) -> dict:
+    """Retain the actual historical/canonical name; never merge two installed cores."""
+    locked, installed = composer_inputs(root)
+    names = [set(inventory) & CORE_IDENTITIES for inventory in (locked, installed)]
+    require(all(len(found) == 1 for found in names), f"Exactly one core package identity is required in lock and installation: {root}")
+    require(names[0] == names[1], f"Installed core package name differs from its consumer lock: {root}")
+    return locked_dependency(root, next(iter(names[0])))
 
 
 def images_dependencies(root: Path) -> list[dict]:
     """Keep the image oracle's released core distinct from the documented core."""
     require((root / "vendor/autoload.php").is_file(), "Missing Images consumer autoloader")
-    return [locked_dependency(root, "roukmoute/pdf")]
+    return [core_dependency(root)]
 
 
 def core_example_dependencies(root: Path) -> list[dict]:
@@ -89,12 +101,12 @@ def core_example_dependencies(root: Path) -> list[dict]:
 
 def html_to_pdf_dependencies(root: Path) -> list[dict]:
     require((root / "vendor/autoload.php").is_file(), "Missing HTML-to-PDF consumer autoloader")
-    return [locked_dependency(root, name) for name in ("roukmoute/pdf", "pdftoolkit/pdf-fonts", "pdftoolkit/pdf-images", "pdftoolkit/opentype", "pdftoolkit/pdf-reader", "masterminds/html5", "sabberworm/php-css-parser", "symfony/css-selector")]
+    return [core_dependency(root), *[locked_dependency(root, name) for name in ("pdftoolkit/pdf-fonts", "pdftoolkit/pdf-images", "pdftoolkit/opentype", "pdftoolkit/pdf-reader", "masterminds/html5", "sabberworm/php-css-parser", "symfony/css-selector")]]
 
 
 def execution_dependencies(source: Path, images: Path, html: Path, packages: dict[str, dict], html_to_pdf: Path | None = None) -> dict:
     result = {
-        "coreExamples": {"package": packages["roukmoute/pdf"], "dependencies": core_example_dependencies(source)},
+        "coreExamples": {"package": packages["pdftoolkit/pdf"], "dependencies": core_example_dependencies(source)},
         "imagesValidation": {"package": packages["pdftoolkit/pdf-images"], "dependencies": images_dependencies(images)},
         "htmlValidation": {"package": packages["pdftoolkit/pdf-to-html"], "dependencies": html_dependencies(html)},
     }
@@ -128,10 +140,13 @@ def select_reader(source_root: Path, html_root: Path, packages: dict[str, dict])
 
 def check(source_root: Path, manifest: Path, remote: bool = False, opentype_root: Path | None = None, pdf_to_html_root: Path | None = None, codecs_root: Path | None = None, images_root: Path | None = None, html_to_pdf_root: Path | None = None) -> dict[str, dict]:
     packages = load_manifest(manifest)
-    core = packages["roukmoute/pdf"]
+    core = packages["pdftoolkit/pdf"]
+    composer = json.loads((source_root / "composer.json").read_text(encoding="utf-8"))
+    require(composer.get("name") == CORE_PACKAGE, "Documented core must use the canonical package identity")
     require(git("rev-parse", "HEAD", root=source_root) == core["revision"], "Core checkout does not match the released source pin")
     require(git("rev-parse", f"v{core['version']}^{{commit}}", root=source_root) == core["revision"], "Core tag does not identify the pinned commit")
     locked, installed = composer_inputs(source_root)
+    require(CORE_IDENTITIES.isdisjoint(locked) and CORE_IDENTITIES.isdisjoint(installed), "The documented core checkout must not install a second core package")
     require(pdf_to_html_root is not None, "The released PDF-to-HTML source checkout is required")
     reader_consumer = select_reader(source_root, pdf_to_html_root, packages)
     for name, source in packages.items():
@@ -166,7 +181,7 @@ def check(source_root: Path, manifest: Path, remote: bool = False, opentype_root
             require(git("rev-parse", f"v{source['version']}^{{commit}}", root=opentype_root) == source["revision"], "OpenType tag differs from the released source pin")
             composer = json.loads((opentype_root / "composer.json").read_text(encoding="utf-8"))
             require(composer["name"] == name, "Independent OpenType source package identity differs")
-            require(not any(dependency == "roukmoute/pdf" or dependency.startswith("pdftoolkit/pdf-") for dependency in composer.get("require", {})), "OpenType must remain independent from PDF packages")
+            require(not any(dependency in CORE_IDENTITIES or dependency.startswith("pdftoolkit/pdf-") for dependency in composer.get("require", {})), "OpenType must remain independent from PDF packages")
             require((opentype_root / "docs").is_dir(), "Missing OpenType guides")
         elif name == "pdftoolkit/pdf-codecs":
             require(codecs_root is not None, "The independent image codecs checkout is required")
@@ -174,9 +189,9 @@ def check(source_root: Path, manifest: Path, remote: bool = False, opentype_root
             require(git("rev-parse", f"v{source['version']}^{{commit}}", root=codecs_root) == source["revision"], "Codecs tag differs from the released source pin")
             composer = json.loads((codecs_root / "composer.json").read_text(encoding="utf-8"))
             require(composer.get("name") == name, "Independent codecs source package identity differs")
-            require(not any(dependency == "roukmoute/pdf" or dependency.startswith("pdftoolkit/") for dependency in composer.get("require", {})), "Codecs must remain independent from PDFToolkit packages")
+            require(not any(dependency in CORE_IDENTITIES or dependency.startswith("pdftoolkit/") for dependency in composer.get("require", {})), "Codecs must remain independent from PDFToolkit packages")
             require((codecs_root / "docs").is_dir(), "Missing codec guides")
-        elif name != "roukmoute/pdf":
+        elif name != "pdftoolkit/pdf":
             selected_lock, selected_installed = composer_inputs(reader_consumer) if name == "pdftoolkit/pdf-reader" else (locked, installed)
             module_root = reader_consumer if name == "pdftoolkit/pdf-reader" else source_root
             for label, inventory in (("lock", selected_lock), ("installed", selected_installed)):
@@ -209,7 +224,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     if args.github_output:
         packages = load_manifest(args.manifest)
-        core = packages["roukmoute/pdf"]
+        core = packages["pdftoolkit/pdf"]
         opentype = packages["pdftoolkit/opentype"]
         html = packages["pdftoolkit/pdf-to-html"]
         codecs = packages["pdftoolkit/pdf-codecs"]

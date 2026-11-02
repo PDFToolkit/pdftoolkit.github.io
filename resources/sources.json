@@ -2,31 +2,31 @@
   "schemaVersion": 1,
   "packages": [
     {
-      "name": "roukmoute/pdf",
+      "name": "pdftoolkit/pdf",
       "repository": "https://github.com/PDFToolkit/pdf",
-      "version": "0.12.1",
-      "revision": "ea9ae2c134bbaf5fc3a22dbc7c81ff8e7b29a6cc",
+      "version": "0.12.3",
+      "revision": "cdb3cb1798177944adb4d1e6fd92e0ff2dfc6f06",
       "optional": false
     },
     {
       "name": "pdftoolkit/pdf-reader",
       "repository": "https://github.com/PDFToolkit/pdf-reader",
-      "version": "0.8.0",
-      "revision": "007ed70a2e77d62df8d7f8775382af594070714e",
+      "version": "0.8.1",
+      "revision": "41bfcae6bc4bea76fe6a94486a0bb59c82d61e79",
       "optional": true
     },
     {
       "name": "pdftoolkit/pdf-images",
       "repository": "https://github.com/PDFToolkit/pdf-images",
-      "version": "0.2.1",
-      "revision": "fd8b0f7bb9215817c83ea26ef5e3ba25ad77576f",
+      "version": "0.2.2",
+      "revision": "2f818878156f191986e8d75369d0bd2e46a5ceb9",
       "optional": true
     },
     {
       "name": "pdftoolkit/pdf-fonts",
       "repository": "https://github.com/PDFToolkit/pdf-fonts",
-      "version": "0.2.0",
-      "revision": "4478c9d38549d8f3e8264a59505f4d9e1312eaf2",
+      "version": "0.2.1",
+      "revision": "3bd7d19f0e35b0ecc5208a4950f13770e53cbfd8",
       "optional": true
     },
     {
@@ -39,8 +39,8 @@
     {
       "name": "pdftoolkit/pdf-to-html",
       "repository": "https://github.com/PDFToolkit/pdf-to-html",
-      "version": "0.8.2",
-      "revision": "89c1328ece98a131866810d3f0e21c752fbf5c09",
+      "version": "0.8.3",
+      "revision": "9da8bf2e80a52cafd87543a3d27345e75804e01b",
       "optional": true
     },
     {
@@ -53,8 +53,8 @@
     {
       "name": "pdftoolkit/html-to-pdf",
       "repository": "https://github.com/PDFToolkit/html-to-pdf",
-      "version": "0.2.0",
-      "revision": "d7b7331673425fdd7ada7d1267452741fa33896a",
+      "version": "0.2.1",
+      "revision": "f5e48330ce99836d8d1fa248cd4a7568e77a1a4f",
       "optional": true
     }
   ]

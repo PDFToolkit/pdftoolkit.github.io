@@ -48,7 +48,7 @@ class DemoPublicationTest(unittest.TestCase):
             runtime_files[path] = {key: artifact[key] for key in ('bytes', 'sha256')}
         worker = self.assets[2]
         runtime_files['conversion-worker.js'] = {key: worker[key] for key in ('bytes', 'sha256')}
-        packages = [{'name': name, 'version': 'v0.6.0', 'source': {'reference': 'b' * 40}, 'dist': {'reference': 'b' * 40}} for name in ('pdftoolkit/pdf-to-html', 'pdftoolkit/pdf-reader', 'roukmoute/pdf', 'pdftoolkit/pdf-codecs')]
+        packages = [{'name': name, 'version': 'v0.6.0', 'source': {'reference': 'b' * 40}, 'dist': {'reference': 'b' * 40}} for name in ('pdftoolkit/pdf-to-html', 'pdftoolkit/pdf-reader', 'pdftoolkit/pdf', 'pdftoolkit/pdf-codecs')]
         self.runtime = {'schema': 1, 'phpIntegerBytes': 8, 'maximumInputBytes': 8 * 1024 * 1024,
                         'maximumDurationMs': 30000, 'phpMemoryLimitBytes': 128 * 1024 * 1024,
                         'packages': packages, 'files': runtime_files, 'application': 'runtime/application.zip',
@@ -99,6 +99,24 @@ class DemoPublicationTest(unittest.TestCase):
 
     def load(self):
         return DemoGallery(self.pin, self.source, self.build, self.html)
+
+    def test_historical_and_canonical_runtime_core_names_keep_their_own_provenance(self):
+        for name in ('pdftoolkit/pdf', 'roukmoute/pdf'):
+            with self.subTest(name=name):
+                self.runtime['packages'][2]['name'] = name
+                runtime = self.asset('assets/runtime-manifest.json', json.dumps(self.runtime).encode(), 'application/json')
+                self.assets = [item for item in self.assets if item['path'] != runtime['path']] + [runtime]
+                self.save()
+                self.load()
+                self.assertEqual(name, json.loads((self.build / 'assets/runtime-manifest.json').read_text())['packages'][2]['name'])
+
+    def test_two_runtime_cores_cannot_replace_another_required_dependency(self):
+        self.runtime['packages'][-1]['name'] = 'roukmoute/pdf'
+        runtime = self.asset('assets/runtime-manifest.json', json.dumps(self.runtime).encode(), 'application/json')
+        self.assets = [item for item in self.assets if item['path'] != runtime['path']] + [runtime]
+        self.save()
+        with self.assertRaisesRegex(ValueError, 'four locked package identities'):
+            self.load()
 
     def enable_inspection(self):
         self.pin = replace(self.pin, version='0.4.0', tag='v0.4.0')

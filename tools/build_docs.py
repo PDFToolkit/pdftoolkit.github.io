@@ -191,7 +191,7 @@ def build(args) -> None:
         "executionDependencies": execution_dependencies(source, images, html, packages, html_to_pdf),
         "documentedReader": packages["pdftoolkit/pdf-reader"],
         "readerConsumer": str(reader_consumer),
-        "readerCore": packages["roukmoute/pdf"] if reader_consumer == source else html_dependencies(html)[0],
+        "readerCore": packages["pdftoolkit/pdf"] if reader_consumer == source else html_dependencies(html)[0],
         "htmlPackage": packages["pdftoolkit/pdf-to-html"],
         "htmlValidationDependencies": html_dependencies(html),
     }, indent=2) + "\n", encoding="utf-8")

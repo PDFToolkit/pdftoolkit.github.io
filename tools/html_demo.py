@@ -15,6 +15,8 @@ import shutil
 import subprocess
 from urllib.parse import urlsplit
 
+from check_sources import CORE_IDENTITIES
+
 
 @dataclass(frozen=True)
 class DemoSource:
@@ -389,7 +391,8 @@ class DemoGallery:
             if type(runtime.get(key)) is not int or not 0 < runtime[key] <= maximum:
                 raise ValueError('Missing or excessive browser runtime limit: ' + key)
         packages = runtime.get('packages', [])
-        if not isinstance(packages, list) or len(packages) != 4 or {package.get('name') for package in packages} != {'pdftoolkit/pdf-to-html', 'pdftoolkit/pdf-reader', 'pdftoolkit/pdf-codecs', 'roukmoute/pdf'}:
+        names = {package.get('name') for package in packages} if isinstance(packages, list) else set()
+        if not isinstance(packages, list) or len(packages) != 4 or len(names & CORE_IDENTITIES) != 1 or names - CORE_IDENTITIES != {'pdftoolkit/pdf-to-html', 'pdftoolkit/pdf-reader', 'pdftoolkit/pdf-codecs'}:
             raise ValueError('Browser runtime must retain its four locked package identities')
         for package in packages:
             version = package.get('version', '').removeprefix('v')

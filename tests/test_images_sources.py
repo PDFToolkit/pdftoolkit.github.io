@@ -31,7 +31,7 @@ class ImagesSourcesTest(unittest.TestCase):
         packages = self.verify()
         provenance = execution_dependencies(self.core, self.images, self.html, packages)
         self.assertEqual(self.selected['pdftoolkit/pdf-images'], provenance['imagesValidation']['package'])
-        self.assertEqual([{'name': 'roukmoute/pdf', 'version': '0.0.1', 'revision': 'a' * 40}], provenance['imagesValidation']['dependencies'])
+        self.assertEqual([{'name': 'pdftoolkit/pdf', 'version': '0.0.1', 'revision': 'a' * 40}], provenance['imagesValidation']['dependencies'])
         image = next(record for record in provenance['coreExamples']['dependencies'] if record['name'] == 'pdftoolkit/pdf-images')
         self.assertEqual({'name': 'pdftoolkit/pdf-images', 'version': '0.0.9', 'revision': 'b' * 40}, image)
         self.assertEqual(before, [path.read_bytes() for path in paths])
@@ -61,12 +61,12 @@ class ImagesSourcesTest(unittest.TestCase):
             self.verify()
 
     def test_images_own_installation_must_match_its_lock(self):
-        self.alter(self.images, 'roukmoute/pdf', version='0.0.2', inventories=('vendor/composer/installed.json',))
+        self.alter(self.images, 'pdftoolkit/pdf', version='0.0.2', inventories=('vendor/composer/installed.json',))
         with self.assertRaisesRegex(ValueError, 'differs from its consumer lock'):
             self.verify()
 
     def test_images_distribution_must_match_its_own_source(self):
-        self.alter(self.images, 'roukmoute/pdf', dist='f' * 40)
+        self.alter(self.images, 'pdftoolkit/pdf', dist='f' * 40)
         with self.assertRaisesRegex(ValueError, 'source/distribution commit'):
             self.verify()
 

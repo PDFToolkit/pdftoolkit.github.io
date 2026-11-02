@@ -42,7 +42,7 @@ class ReaderSourcesTest(unittest.TestCase):
         self.assertEqual(self.core, select_reader(self.core, self.html, self.selected))
 
     def test_html_keeps_its_older_core_and_reader_without_changing_published_locks(self):
-        for name in ("roukmoute/pdf", "pdftoolkit/pdf-reader"):
+        for name in ("pdftoolkit/pdf", "pdftoolkit/pdf-reader"):
             self.alter(self.html, name, version="v0.0.9", source="a" * 40, dist="a" * 40)
         paths = [root / "composer.lock" for root in (self.core, self.html)]
         before = [path.read_bytes() for path in paths]
@@ -79,7 +79,7 @@ class ReaderSourcesTest(unittest.TestCase):
             self.verify()
 
     def test_html_runtime_core_cannot_silently_substitute_the_documented_core(self):
-        self.alter(self.html, "roukmoute/pdf", version="0.0.9", source="a" * 40, dist="a" * 40,
+        self.alter(self.html, "pdftoolkit/pdf", version="0.0.9", source="a" * 40, dist="a" * 40,
                    inventories=("composer.lock",))
         with self.assertRaisesRegex(ValueError, "differs from its consumer lock"):
             self.verify()

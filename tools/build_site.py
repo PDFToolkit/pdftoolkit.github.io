@@ -25,7 +25,7 @@ from localization import LANGUAGES, ENGLISH_ROUTES, PUBLISHED_ROUTE_ALIASES, can
 REPOSITORY = 'https://github.com/PDFToolkit/pdf'
 DOCUMENTATION_REPOSITORY = 'https://github.com/PDFToolkit/pdftoolkit.github.io'
 SITE_ORIGIN = 'https://pdftoolkit.github.io'
-CORE_PACKAGE = 'roukmoute/pdf'
+CORE_PACKAGE = 'pdftoolkit/pdf'
 
 
 def publish_derivation_assets(report_path: Path, html_path: Path, target: Path) -> list[dict]:
@@ -425,7 +425,7 @@ class Site:
         self.example_sources = {}
         for example, route in self.examples.items():
             external = EXTERNAL_EXAMPLES.get(example)
-            package_name = external['package'] if external else 'roukmoute/pdf'
+            package_name = external['package'] if external else 'pdftoolkit/pdf'
             package = self.packages.get(package_name)
             if package is None:
                 raise ValueError('Missing example source package: ' + package_name)

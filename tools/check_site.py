@@ -357,9 +357,9 @@ def check(root):
         if (english['url'], french['url']) not in translated_pairs:
             errors.append('API search records must target their reciprocal translation pair: ' + title)
     packages = {item['name']: item for item in manifest['packages']}
-    if len(packages) != len(manifest['packages']) or set(packages) != {'roukmoute/pdf', 'pdftoolkit/pdf-reader', 'pdftoolkit/pdf-images', 'pdftoolkit/pdf-fonts', 'pdftoolkit/opentype', 'pdftoolkit/pdf-to-html', 'pdftoolkit/pdf-codecs', 'pdftoolkit/html-to-pdf'}:
+    if len(packages) != len(manifest['packages']) or set(packages) != {'pdftoolkit/pdf', 'pdftoolkit/pdf-reader', 'pdftoolkit/pdf-images', 'pdftoolkit/pdf-fonts', 'pdftoolkit/opentype', 'pdftoolkit/pdf-to-html', 'pdftoolkit/pdf-codecs', 'pdftoolkit/html-to-pdf'}:
         errors.append('Package inventory must cover every unique package name')
-    if packages.get('roukmoute/pdf', {}).get('revision') != manifest.get('revision'):
+    if packages.get('pdftoolkit/pdf', {}).get('revision') != manifest.get('revision'):
         errors.append('Core source revision differs from the site source revision')
     if sum(package['components'] for package in packages.values()) != len(index):
         errors.append('Package inventory does not cover every API component')
@@ -368,7 +368,7 @@ def check(root):
             errors.append('Incorrect API package component count: ' + name)
         if not re.fullmatch(r'[0-9a-f]{40}', package.get('revision', '')) or not re.fullmatch(r'\d+\.\d+\.\d+', package.get('version', '')):
             errors.append('Package source needs a stable version and exact commit: ' + name)
-        optional = name != 'roukmoute/pdf'
+        optional = name != 'pdftoolkit/pdf'
         repository = 'https://github.com/PDFToolkit/' + (name.split('/')[-1] if optional else 'pdf')
         if package.get('optional') is not optional or package.get('repository') != repository:
             errors.append('Incorrect source package identity: ' + name)
@@ -543,7 +543,7 @@ def check(root):
             if pdf.is_file() and hashlib.sha256(pdf.read_bytes()).hexdigest() != record.get('pdfSha256'):
                 errors.append('Example PDF bytes do not match their inventory: ' + name)
             if record.get('kind') == 'generated':
-                if package['name'] != 'roukmoute/pdf' or source_path != f'examples/{name}.php':
+                if package['name'] != 'pdftoolkit/pdf' or source_path != f'examples/{name}.php':
                     errors.append('Generated example must retain its core writer source: ' + name)
             elif record.get('kind') == 'html-to-pdf':
                 try:
@@ -629,7 +629,7 @@ def check(root):
         errors.append('ISO 32000-2 needs one distinct repository-source provenance record')
     else:
         source = repository_sources[0]
-        core = packages.get('roukmoute/pdf', {})
+        core = packages.get('pdftoolkit/pdf', {})
         metadata_url = core.get('repository', '') + '/blob/' + core.get('revision', '') + '/resources/iso32000-2-2020/metadata.json'
         if source.get('source') != 'ISO_32000-2_sponsored_EC3.pdf' or source.get('editionIdentifier') != 'iso32000-2:2020' or source.get('standard') != 'ISO 32000-2:2020' or source.get('specifiedPdfVersion') != '2.0':
             errors.append('Repository-source identity must remain the distinct ISO 32000-2:2020 edition')
@@ -668,7 +668,7 @@ def check(root):
     }
     if len(bundle_sources) != 11 or {item.get('source') for item in bundle_sources} != expected_bundle or sum(item.get('pdfPages', 0) for item in bundle_sources) != 1234:
         errors.append('The supplied PDF 2.0 bundle must retain eleven distinct originals and 1234 physical pages')
-    core = packages.get('roukmoute/pdf', {})
+    core = packages.get('pdftoolkit/pdf', {})
     bundle_metadata_url = core.get('repository', '') + '/blob/' + core.get('revision', '') + '/resources/iso32000-2-bundle/sources.json'
     for source in bundle_sources:
         path = 'resources/reference-documents/' + source['source']
