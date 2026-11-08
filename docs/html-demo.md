@@ -72,6 +72,40 @@ conserve par défaut la sélection stricte du premier Supplement HTML du catalog
 les applications choisissent explicitement ces
 [politiques de styles](https://pdftoolkit.github.io/fr/modules/to-html/policies.html).
 
+## Si la conversion locale ne démarre pas
+
+La galerie reste disponible sans démarrer le moteur de conversion. Les imports
+nécessitent HTTPS ou localhost, les Workers, WebAssembly, Web Crypto et
+`DecompressionStream`. La démo 0.4.2 vérifie ces prérequis, puis instancie un petit
+module WebAssembly dans le Worker de conversion. Elle teste aussi une suspension
+et une reprise JSPI réelles avant de choisir ce moteur ; sinon, elle choisit
+Asyncify embarqué. Asyncify exige toujours WebAssembly fonctionnel et ne
+contourne pas les restrictions du navigateur.
+
+En cas d’échec de démarrage, ouvrez **Diagnostic du moteur de conversion**, puis
+choisissez **Copier le diagnostic**. Si le presse-papiers est indisponible, le
+rapport est sélectionné pour permettre une copie manuelle. Vous pouvez partager
+ce texte pour demander de l’aide sans partager votre PDF. Rien n’est envoyé
+automatiquement. Ce rapport est distinct des diagnostics de conversion et de
+l’inspection PDF téléchargeable.
+
+La version 1 du schéma contient uniquement `applicationVersion`, un `code`
+stable, `stage`, `runtimeVariant` et les booléens `capabilities`, en plus de
+`schemaVersion`. Les indicateurs (`secureContext`, `worker`, `webAssembly`,
+`crypto`, `decompressionStream`) décrivent la disponibilité des API dans la page.
+Ils ne prouvent pas que WebAssembly peut s’exécuter dans son Worker :
+`wasm_unavailable` à l’étape `checking-runtime` signale cet échec d’exécution
+séparé même si l’indicateur `webAssembly` de la page vaut `true`. Le rapport
+exclut contenu, nom et empreinte PDF, messages bruts d’exception et traces
+d’exécution.
+
+Les dépassements du délai de démarrage sont distingués de ceux de l’inspection
+ou de la conversion PDF. Le rapport décrit l’étape observée, pas le réglage ou
+l’extension qui en est la cause. L’environnement Firefox 157 / Arch Linux /
+NoScript signalé n’a pas été reproduit : la résolution de son échec d’origine
+n’est donc pas confirmée. Le rapport seul ne permet pas de désigner NoScript ou
+une autre restriction comme responsable.
+
 ## Lire les exemples visuels
 
 Les onze exemples couvrent la structure, les tableaux et listes, MathML, les valeurs

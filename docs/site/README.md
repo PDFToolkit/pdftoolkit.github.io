@@ -432,7 +432,7 @@ Reader, sans transformer l’inspection en certification PDF/UA.
 
 La [page de démo](https://pdftoolkit.github.io/fr/modules/to-html/demo/index.html)
 native et sa contrepartie anglaise intègrent une application publiée séparément.
-La documentation 0.17 sélectionne la démo 0.4.1 avec HTML 0.8.3, Reader 0.8.1 et onze cas de galerie,
+La documentation 0.18 sélectionne la démo 0.4.2 avec HTML 0.8.3, Reader 0.8.1 et onze cas de galerie,
 dont un PDF original LuaLaTeX avec des éléments de structure MathML.
 `resources/demo-source.json` sélectionne sa version stable, son tag annoté et le
 commit désigné. Cette sélection d’application est distincte :

@@ -25,7 +25,7 @@ This repository contains the shared prose, site assets, generator and deployment
 workflow. PHP code, executable examples, fixtures and original specification
 documents remain in [their package repositories](https://github.com/orgs/PDFToolkit/repositories).
 The module guides are published here from their released package sources.
-Documentation **0.18** selects HTML-to-PDF **0.3.0** and retains PDF-to-HTML **0.8.3** and the interactive demo **0.4.1**;
+Documentation **0.18** selects HTML-to-PDF **0.3.0** and retains PDF-to-HTML **0.8.3** and the interactive demo **0.4.2**;
 core and Reader are **0.12.3** and **0.8.1**, with exact revisions pinned separately.
 The core groups its eighteen original reference PDFs under
 `resources/reference-documents/`, preserving their original names and bytes.
@@ -43,7 +43,7 @@ The PHP libraries are available on Packagist. Install the core with Composer:
 composer require "pdftoolkit/pdf:^0.12.3"
 ```
 
-The documented release series are core **0.12**, Reader **0.8**, Images and Fonts **0.2**, OpenType **0.4**, Codecs **0.1**, PDF-to-HTML **0.8** and HTML-to-PDF **0.2**. They require **64-bit PHP 8.3 or later**; qualification covers PHP 8.3, 8.4 and 8.5. The source manifest pins exact versions and revisions. OpenType and Codecs have no PDF core dependency.
+The documented release series are core **0.12**, Reader **0.8**, Images and Fonts **0.2**, OpenType **0.4**, Codecs **0.1**, PDF-to-HTML **0.8** and HTML-to-PDF **0.3**. They require **64-bit PHP 8.3 or later**; qualification covers PHP 8.3, 8.4 and 8.5. The source manifest pins exact versions and revisions. OpenType and Codecs have no PDF core dependency.
 
 Choose the optional modules according to the files your application handles:
 

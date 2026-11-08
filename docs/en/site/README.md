@@ -420,7 +420,7 @@ inspection into PDF/UA certification.
 
 The native [demo page](https://pdftoolkit.github.io/modules/to-html/demo/index.html)
 and its French counterpart integrate a separately released application.
-Documentation 0.17 selects demo 0.4.1 with HTML 0.8.3, Reader 0.8.1 and eleven gallery cases,
+Documentation 0.18 selects demo 0.4.2 with HTML 0.8.3, Reader 0.8.1 and eleven gallery cases,
 including an original LuaLaTeX PDF with MathML structure elements.
 `resources/demo-source.json` selects its stable version, annotated tag and peeled
 commit. This is a distinct application source pin; `resources/sources.json`

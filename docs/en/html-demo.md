@@ -69,6 +69,37 @@ of the first catalogue HTML Supplement; applications choose these
 [stylesheet policies](https://pdftoolkit.github.io/modules/to-html/policies.html)
 explicitly.
 
+## If local conversion cannot start
+
+The gallery remains available without starting the conversion engine. Imports
+require HTTPS or localhost, Workers, WebAssembly, Web Crypto and
+`DecompressionStream`. Demo 0.4.2 checks these prerequisites, then instantiates a
+small WebAssembly module inside the conversion Worker. It also tests an actual
+JSPI suspension and resumption before selecting that runtime; otherwise it
+selects bundled Asyncify. Asyncify still requires working WebAssembly and does
+not bypass browser restrictions.
+
+If startup fails, open **Conversion engine diagnostic** and choose **Copy
+diagnostic**. If clipboard access is unavailable, the report is selected so you
+can copy it manually. You can share that text when asking for help without
+sharing your PDF. Nothing is sent automatically. This report is separate from
+the conversion diagnostics and the downloadable PDF inspection.
+
+Schema version 1 contains only `applicationVersion`, a stable `code`, `stage`,
+`runtimeVariant` and the `capabilities` booleans, alongside `schemaVersion`.
+The capability flags (`secureContext`, `worker`, `webAssembly`, `crypto`,
+`decompressionStream`) describe API availability in the page. They do not prove
+that WebAssembly can execute in its Worker: `wasm_unavailable` at
+`checking-runtime` records that separate execution failure even when the page's
+`webAssembly` flag is `true`. The report excludes PDF content, filename and hash,
+raw exception messages and stack traces.
+
+Startup deadlines are distinguished from deadlines reached while inspecting or
+converting a PDF. The report identifies the observed stage, not which setting
+or extension caused it. The reported Firefox 157 / Arch Linux / NoScript
+environment has not been reproduced, so its original failure is not confirmed
+resolved. NoScript or another restriction is not inferred from the report alone.
+
 ## Read the visual examples
 
 The eleven examples cover structure, tables and lists, MathML, form defaults and
