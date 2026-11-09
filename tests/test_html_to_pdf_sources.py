@@ -1,5 +1,6 @@
 """Keep HTML-to-PDF sources, generated files and CSS-level guides attributable."""
 from contextlib import redirect_stdout
+import copy
 import hashlib
 import io
 import json
@@ -121,7 +122,15 @@ class HtmlToPdfSourcesTest(unittest.TestCase):
         pdfs, previews = self.root / 'pdfs', self.root / 'previews'
         pdfs.mkdir()
         previews.mkdir()
-        args = SimpleNamespace(php='php', qpdf='qpdf', pdftoppm='pdftoppm', pdftotext='pdftotext')
+        text = output / 'text-spacing'
+        (text / 'validation').mkdir(parents=True)
+        (text / 'browser').mkdir()
+        (text / 'text-spacing.pdf').write_bytes(b'%PDF-1.7 text fixture')
+        for relative in ('manifest.json', 'validation/pdf-report.json', 'browser/browser-report.json'):
+            (text / relative).write_text('{}')
+        for page in range(1, 4):
+            (text / 'validation' / f'native-{page}.png').write_bytes(b'PNG text fixture')
+        args = SimpleNamespace(php='php', qpdf='qpdf', pdftoppm='pdftoppm', pdftotext='pdftotext', node='node', demo_root=self.root / 'demo')
         with patch('build_docs.run') as run:
             validate_html_to_pdf_module(args, self.from_html, self.root, pdfs, previews)
         self.assertEqual('tools/check_css_coverage.py', run.call_args_list[0].args[0][1])
@@ -131,7 +140,12 @@ class HtmlToPdfSourcesTest(unittest.TestCase):
         self.assertEqual('tools/validate_w3c_css1.py', run.call_args_list[4].args[0][1])
         self.assertIn(historical / 'test5526c.pdf', run.call_args_list[4].args[0])
         self.assertTrue(all(call.args[1] == self.from_html for call in run.call_args_list))
-        self.assertEqual(2 * len(HTML_TO_PDF_STANDARD_EXAMPLES) + 1, len(list(previews.glob('*.png'))))
+        self.assertEqual(['php', '-d', 'memory_limit=512M', 'examples/generate-text-spacing.php', text], run.call_args_list[5].args[0])
+        self.assertEqual(['node', 'tools/validate_text_spacing.cjs', text / 'browser'], run.call_args_list[6].args[0])
+        self.assertEqual(str(args.demo_root / 'node_modules'), run.call_args_list[6].kwargs['env']['NODE_PATH'])
+        self.assertEqual('tools/validate_text_spacing.py', run.call_args_list[7].args[0][1])
+        self.assertIn(text / 'browser/browser-report.json', run.call_args_list[7].args[0])
+        self.assertEqual(2 * len(HTML_TO_PDF_STANDARD_EXAMPLES) + 1 + 3, len(list(previews.glob('*.png'))))
         self.assertEqual(len(HTML_TO_PDF_EXAMPLES), len(list(pdfs.glob('*.pdf'))))
 
     def test_example_guides_use_one_generated_preview_panel_and_preserve_package_sources(self):
@@ -153,7 +167,8 @@ class HtmlToPdfSourcesTest(unittest.TestCase):
             site.example_sources = {example: {'kind': 'html-to-pdf', 'path': generator, 'source': definition.generator,
                 'package': owner, 'sourceUrl': 'https://example.test/generate.php', 'htmlSourceUrl': 'https://example.test/' + sample + '.html',
                 'htmlSource': definition.source, 'htmlSourceDownload': 'examples/' + example + '.html.txt',
-                'generationReceipt': 'examples/' + example + '.manifest.json', 'validationReport': 'examples/' + example + '.validation.json'}}
+                'generationReceipt': 'examples/' + example + '.manifest.json', 'validationReport': 'examples/' + example + '.validation.json',
+                'browserReport': 'examples/' + example + '.browsers.json'}}
             site.pdf_pages = {example: [{'file': example + '-' + str(number) + '.png', 'width': 794, 'height': 1123} for number in (1, 2)]}
             for language in ('en', 'fr'):
                 with self.subTest(sample=sample, language=language):
@@ -189,15 +204,17 @@ class HtmlToPdfSourcesTest(unittest.TestCase):
                     rendered = translate_interface(rendered)
                 document = Document(rendered)
                 self.assertFalse(document.duplicates)
-                self.assertEqual(2, rendered.count('class="pdf-pages"'))
+                self.assertEqual(3, rendered.count('class="pdf-pages"'))
                 self.assertTrue({'resultat-pdf', 'source-html', 'code-source', 'w3c-css1',
-                                 'w3c-css1-source-html', 'w3c-css1-code-source'} <= document.ids)
+                                 'w3c-css1-source-html', 'w3c-css1-code-source', 'text-spacing',
+                                 'text-spacing-source-html', 'text-spacing-code-source'} <= document.ids)
                 self.assertIn('Historical W3C CSS1 sample' if language == 'en' else 'Témoin historique W3C CSS1', rendered)
                 self.assertIn('/examples/from-html-w3c-css1.manifest.json', document.links)
                 self.assertIn('/examples/from-html-w3c-css1.validation.json', document.links)
+                self.assertIn('/examples/from-html-text-spacing.browsers.json', document.links)
 
     def test_css1_has_a_localized_gallery_card_and_navigation_route(self):
-        self.assertEqual(('invoice', 'catalogue', 'multipage', 'css1', 'w3c-css1'), HTML_TO_PDF_EXAMPLES)
+        self.assertEqual(('invoice', 'catalogue', 'multipage', 'css1', 'w3c-css1', 'text-spacing'), HTML_TO_PDF_EXAMPLES)
         site = Site.__new__(Site)
         site.base = '/'
         site.examples = {'from-html-' + name: sample.route for name, sample in HTML_TO_PDF_SAMPLES.items()}
@@ -209,11 +226,14 @@ class HtmlToPdfSourcesTest(unittest.TestCase):
                 if language == 'en':
                     cards = translate_interface(cards)
                 document = Document(cards)
-                self.assertEqual(5, cards.count('class="card"'))
+                self.assertEqual(6, cards.count('class="card"'))
                 self.assertIn(site.url('modules/from-html/css1.html'), document.links)
                 self.assertIn(site.url('examples/from-html-css1.pdf'), document.links)
                 self.assertIn(site.url('modules/from-html/css1.html') + '#w3c-css1', document.links)
                 self.assertIn(site.url('examples/from-html-w3c-css1.pdf'), document.links)
+                self.assertIn(site.url('modules/from-html/css1.html') + '#text-spacing', document.links)
+                self.assertIn(site.url('examples/from-html-text-spacing.pdf'), document.links)
+                self.assertIn('CSS1 text spacing and indentation' if language == 'en' else 'Espacements et retraits CSS1', cards)
                 self.assertIn('CSS1 borders and cascade' if language == 'en' else 'Bordures et cascade CSS1', cards)
 
     def test_a_generation_receipt_without_the_css1_sample_is_incomplete(self):
@@ -269,3 +289,98 @@ class HtmlToPdfSourcesTest(unittest.TestCase):
         (pdfs / 'html-to-pdf-w3c-validation.json').write_text(json.dumps(report))
         with self.assertRaisesRegex(ValueError, 'independent validation'):
             publish_html_to_pdf_source(self.from_html, pdfs, output, name, record)
+
+
+    def text_spacing_fixture(self):
+        """Synthetic evidence binds bytes and page identity, without impersonating a renderer run."""
+        name = 'from-html-text-spacing'
+        definition = HTML_TO_PDF_SAMPLES['text-spacing']
+        original, pdf, font = b'<p>Signed spacing fixture</p>', b'%PDF-1.7 text unit fixture', b'font unit fixture'
+        source = self.from_html / definition.source
+        source.parent.mkdir(parents=True, exist_ok=True)
+        source.write_bytes(original)
+        font_path = self.from_html / 'tests/Fixtures/fonts/NotoSans-Regular.ttf'
+        font_path.parent.mkdir(parents=True, exist_ok=True)
+        font_path.write_bytes(font)
+        pdfs, output = self.root / 'pdfs', self.root / 'site/examples'
+        pdfs.mkdir()
+        output.mkdir(parents=True)
+        (pdfs / (name + '.pdf')).write_bytes(pdf)
+        (output / (name + '.pdf')).write_bytes(pdf)
+        receipt = {'engine': 'native-php', 'pages': 3, 'diagnostics': [],
+                   'sourceSha256': hashlib.sha256(original).hexdigest(), 'pdfSha256': hashlib.sha256(pdf).hexdigest(),
+                   'fonts': [{'family': 'Noto Sans (explicit fallback)', 'sha256': hashlib.sha256(font).hexdigest()}]}
+        renders = []
+        previews = output.parent / 'assets/pdf-pages'
+        previews.mkdir(parents=True)
+        for number in range(1, 4):
+            image = f'PNG unit page {number}'.encode()
+            (previews / f'{name}-{number}.png').write_bytes(image)
+            renders.append({'file': f'native-{number}.png', 'sha256': hashlib.sha256(image).hexdigest()})
+        report = {'status': 'pass', 'receipt': receipt, 'comparisons': 125,
+                  'checks': [{'passed': True} for _ in range(125)], 'renders': renders}
+        browsers = {'status': 'pass', 'sourceSha256': receipt['sourceSha256'], 'fontSha256': receipt['fonts'][0]['sha256'],
+                    'browsers': {engine: {'version': 'unit fixture', 'passed': True, 'comparisons': 43,
+                                         'checks': [{'passed': True} for _ in range(43)],
+                                         'fontBinding': {'family': 'ExplicitWitness', 'status': 'loaded', 'faces': 1}}
+                                 for engine in ('chromium', 'firefox')}}
+        for label, contents in [('manifest', receipt), ('validation', report), ('browsers', browsers)]:
+            (pdfs / f'html-to-pdf-text-spacing-{label}.json').write_text(json.dumps(contents))
+        package = self.selected['pdftoolkit/html-to-pdf']
+        url = package['repository'] + '/blob/' + package['revision'] + '/' + definition.source
+        record = {'source': definition.generator, 'htmlSource': definition.source, 'htmlSourceUrl': url}
+        return SimpleNamespace(name=name, pdfs=pdfs, output=output, receipt=receipt, report=report, browsers=browsers,
+                               package=package, record=record, source_url=url, previews=previews)
+
+    def test_text_example_keeps_three_native_pages_and_all_downloadable_evidence(self):
+        fixture = self.text_spacing_fixture()
+        publish_html_to_pdf_source(self.from_html, fixture.pdfs, fixture.output, fixture.name, fixture.record)
+        record = fixture.record
+        self.assertEqual(3, record['expectedPages'])
+        self.assertEqual(fixture.receipt['fonts'][0]['sha256'], record['fontSha256'])
+        document = SimpleNamespace(ids={'text-spacing'}, links=[fixture.source_url] +
+                                   ['/' + record[key] for key in ('generationReceipt', 'validationReport', 'browserReport')])
+        validate_html_to_pdf_source(fixture.output.parent, fixture.name, record, fixture.package,
+                                    {'css1.html': document}, {'en': 'css1.html'})
+        (fixture.previews / (fixture.name + '-3.png')).write_bytes(b'modified last page')
+        with self.assertRaisesRegex(ValueError, 'preview differs'):
+            validate_html_to_pdf_source(fixture.output.parent, fixture.name, record, fixture.package,
+                                        {'css1.html': document}, {'en': 'css1.html'})
+
+    def test_text_example_rejects_incomplete_or_mismatched_independent_evidence(self):
+        fixture = self.text_spacing_fixture()
+        mutations = [
+            ('manifest', lambda value: value.update(pages=2)),
+            ('manifest', lambda value: value.update(pdfSha256='f' * 64)),
+            ('manifest', lambda value: value.update(sourceSha256='f' * 64)),
+            ('manifest', lambda value: value['fonts'][0].update(sha256='f' * 64)),
+            ('validation', lambda value: value.update(status='fail')),
+            ('validation', lambda value: value['checks'][0].update(passed=False)),
+            ('validation', lambda value: value.update(comparisons=0, checks=[])),
+            ('validation', lambda value: value.update(comparisons=1, checks=value['checks'][:1])),
+            ('validation', lambda value: value.update(comparisons=124, checks=value['checks'][:-1])),
+            ('validation', lambda value: value['renders'].pop()),
+            ('validation', lambda value: value['renders'][0].update(file='../native-1.png')),
+            ('browsers', lambda value: value['browsers'].pop('firefox')),
+            ('browsers', lambda value: value.update(sourceSha256='f' * 64)),
+            ('browsers', lambda value: value.update(fontSha256='f' * 64)),
+            ('browsers', lambda value: value['browsers']['firefox']['checks'][0].update(passed=False)),
+            ('browsers', lambda value: value['browsers']['firefox'].update(comparisons=1, checks=[{'passed': True}])),
+            ('browsers', lambda value: value['browsers']['chromium'].update(comparisons=42, checks=value['browsers']['chromium']['checks'][:-1])),
+            ('browsers', lambda value: value['browsers']['firefox'].pop('fontBinding')),
+            ('browsers', lambda value: value['browsers']['firefox']['fontBinding'].update(family='sans-serif')),
+            ('browsers', lambda value: value['browsers']['chromium']['fontBinding'].update(status='unloaded')),
+            ('browsers', lambda value: value['browsers']['firefox']['fontBinding'].update(faces=0)),
+            ('browsers', lambda value: value['browsers']['firefox']['fontBinding'].update(faces=2)),
+            ('browsers', lambda value: value['browsers']['firefox']['fontBinding'].update(faces=True)),
+        ]
+        originals = {'manifest': fixture.receipt, 'validation': fixture.report, 'browsers': fixture.browsers}
+        for label, mutation in mutations:
+            with self.subTest(label=label, mutation=mutations.index((label, mutation))):
+                changed = copy.deepcopy(originals[label])
+                mutation(changed)
+                path = fixture.pdfs / f'html-to-pdf-text-spacing-{label}.json'
+                path.write_text(json.dumps(changed))
+                with self.assertRaisesRegex(ValueError, 'Text-spacing'):
+                    publish_html_to_pdf_source(self.from_html, fixture.pdfs, fixture.output, fixture.name, fixture.record)
+                path.write_text(json.dumps(originals[label]))

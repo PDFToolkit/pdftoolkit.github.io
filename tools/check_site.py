@@ -12,6 +12,7 @@ import struct
 from urllib.parse import quote, unquote, urlsplit
 
 from html_demo import DemoGallery
+from html_to_pdf_evidence import TextSpacingEvidence
 from html_to_pdf_examples import HTML_TO_PDF_SAMPLES
 from localization import PUBLISHED_ROUTE_ALIASES
 
@@ -184,6 +185,29 @@ def validate_html_to_pdf_source(root, name, record, package, documents, example_
             for key in ('generationReceipt', 'validationReport'):
                 if not any(urlsplit(link).path.endswith('/' + record[key]) for link in document.links):
                     raise ValueError('Missing historical HTML-to-PDF validation download: ' + page)
+
+    if sample == 'text-spacing':
+        evidence = {}
+        for key, suffix in [('generationReceipt', '.manifest.json'), ('validationReport', '.validation.json'),
+                            ('browserReport', '.browsers.json')]:
+            expected = 'examples/' + name + suffix
+            if (record.get(key) != expected or not (root / expected).is_file()
+                    or hashlib.sha256((root / expected).read_bytes()).hexdigest() != record.get(key + 'Sha256')):
+                raise ValueError('Missing or modified text-spacing validation evidence: ' + name)
+            evidence[key] = json.loads((root / expected).read_text(encoding='utf-8'))
+        pdf = root / 'examples' / (name + '.pdf')
+        if not pdf.is_file() or record['expectedPages'] != 3:
+            raise ValueError('Missing text-spacing three-page PDF: ' + name)
+        validation = TextSpacingEvidence(evidence['generationReceipt'], evidence['validationReport'], evidence['browserReport'])
+        validation.validate(record['htmlSourceSha256'], hashlib.sha256(pdf.read_bytes()).hexdigest(), record.get('fontSha256'))
+        validation.validate_previews(root / 'assets/pdf-pages', name + '-')
+        for page in example_pages.values():
+            document = documents[page]
+            if definition.pdf_anchor not in document.ids:
+                raise ValueError('Missing text-spacing preview panel: ' + page)
+            for key in evidence:
+                if not any(urlsplit(link).path.endswith('/' + record[key]) for link in document.links):
+                    raise ValueError('Missing text-spacing validation download: ' + page)
 
 
 def check(root):

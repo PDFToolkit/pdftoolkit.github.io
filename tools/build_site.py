@@ -19,6 +19,7 @@ from markdown.extensions.toc import slugify
 from check_sources import select_reader, execution_dependencies
 from guide_headings import translated_anchors
 from html_demo import DemoGallery, DemoSource
+from html_to_pdf_evidence import TextSpacingEvidence
 from html_to_pdf_examples import HTML_TO_PDF_EXAMPLES, HTML_TO_PDF_EXAMPLE_TITLES, HTML_TO_PDF_SAMPLES, HTML_TO_PDF_STANDARD_EXAMPLES
 from localization import LANGUAGES, ENGLISH_ROUTES, PUBLISHED_ROUTE_ALIASES, canonical_source, localized_source, route_for, translate, translate_interface, ISO2_DESCRIPTIONS_FR, iso2_description
 
@@ -234,6 +235,16 @@ def publish_html_to_pdf_source(source: Path, pdfs: Path, output: Path, example: 
         if report.get('status') != 'pass' or report.get('sourceUnmodified') is not True or report.get('sourceSha256') != receipt.get('sourceSha256') or report.get('receipt') != receipt:
             raise ValueError('HTML-to-PDF historical independent validation is missing or mismatched')
         entry = receipt
+    elif name == 'text-spacing':
+        receipt = json.loads((pdfs / 'html-to-pdf-text-spacing-manifest.json').read_text(encoding='utf-8'))
+        report = json.loads((pdfs / 'html-to-pdf-text-spacing-validation.json').read_text(encoding='utf-8'))
+        browsers = json.loads((pdfs / 'html-to-pdf-text-spacing-browsers.json').read_text(encoding='utf-8'))
+        font_hash = hashlib.sha256((source / 'tests/Fixtures/fonts/NotoSans-Regular.ttf').read_bytes()).hexdigest()
+        TextSpacingEvidence(receipt, report, browsers).validate(
+            hashlib.sha256((source / relative).read_bytes()).hexdigest(),
+            hashlib.sha256((pdfs / (example + '.pdf')).read_bytes()).hexdigest(), font_hash)
+        record['fontSha256'] = font_hash
+        entry = receipt
     else:
         receipt = json.loads((pdfs / 'html-to-pdf-manifest.json').read_text(encoding='utf-8'))
         if receipt.get('engine') != 'native-php' or set(receipt.get('documents', {})) != set(HTML_TO_PDF_STANDARD_EXAMPLES):
@@ -241,7 +252,7 @@ def publish_html_to_pdf_source(source: Path, pdfs: Path, output: Path, example: 
         entry = receipt['documents'][name]
     html = (source / relative).read_bytes()
     pdf = (pdfs / (example + '.pdf')).read_bytes()
-    if entry.get('sourceSha256') != hashlib.sha256(html).hexdigest() or entry.get('pdfSha256') != hashlib.sha256(pdf).hexdigest() or (name != 'w3c-css1' and entry.get('bytes') != len(pdf)):
+    if entry.get('sourceSha256') != hashlib.sha256(html).hexdigest() or entry.get('pdfSha256') != hashlib.sha256(pdf).hexdigest() or (name in HTML_TO_PDF_STANDARD_EXAMPLES and entry.get('bytes') != len(pdf)):
         raise ValueError('HTML-to-PDF generation receipt does not match the source and PDF bytes')
     if type(entry.get('pages')) is not int or entry['pages'] < 1:
         raise ValueError('Invalid generated HTML-to-PDF page count')
@@ -252,6 +263,14 @@ def publish_html_to_pdf_source(source: Path, pdfs: Path, output: Path, example: 
         for key, original, suffix in [('generationReceipt', 'html-to-pdf-w3c-manifest.json', '.manifest.json'), ('validationReport', 'html-to-pdf-w3c-validation.json', '.validation.json')]:
             target = example + suffix
             shutil.copyfile(pdfs / original, output / target)
+            record[key] = 'examples/' + target
+            record[key + 'Sha256'] = hashlib.sha256((output / target).read_bytes()).hexdigest()
+    if name == 'text-spacing':
+        for key, original, suffix in [('generationReceipt', 'manifest', '.manifest.json'),
+                                     ('validationReport', 'validation', '.validation.json'),
+                                     ('browserReport', 'browsers', '.browsers.json')]:
+            target = example + suffix
+            shutil.copyfile(pdfs / f'html-to-pdf-text-spacing-{original}.json', output / target)
             record[key] = 'examples/' + target
             record[key + 'Sha256'] = hashlib.sha256((output / target).read_bytes()).hexdigest()
 
@@ -657,7 +676,7 @@ class Site:
         for name, record in self.example_sources.items():
             if record['package'] == package_name and not fragment:
                 if record['source'] == target:
-                    anchor = 'w3c-css1-code-source' if name == 'from-html-w3c-css1' else 'code-source'
+                    anchor = HTML_TO_PDF_SAMPLES[name.removeprefix('from-html-')].code_anchor if record['kind'] == 'html-to-pdf' else 'code-source'
                     return self.url(self.examples[name]) + ('?' + query if query else '') + '#' + anchor
                 if record.get('input') == target:
                     return self.url(f'examples/{name}.pdf') + suffix
@@ -808,9 +827,11 @@ class Site:
     def example_panel(self, example: str) -> str:
         record = self.example_sources[example]
         historical = example == 'from-html-w3c-css1'
-        pdf_id = 'w3c-css1' if historical else 'resultat-pdf'
-        source_id = 'w3c-css1-source-html' if historical else 'source-html'
-        code_id = 'w3c-css1-code-source' if historical else 'code-source'
+        text_spacing = example == 'from-html-text-spacing'
+        definition = HTML_TO_PDF_SAMPLES[example.removeprefix('from-html-')] if record['kind'] == 'html-to-pdf' else None
+        pdf_id = definition.pdf_anchor if definition else 'resultat-pdf'
+        source_id = definition.source_anchor if definition else 'source-html'
+        code_id = definition.code_anchor if definition else 'code-source'
         code = record['path'].read_text(encoding='utf-8')
         pdf = self.url(f'examples/{example}.pdf')
         source = self.url(f'examples/{example}.php.txt')
@@ -819,8 +840,8 @@ class Site:
         is_conversion = record['kind'] == 'conversion'
         pdf_label = 'PDF d’entrée' if is_input else 'Résultat PDF'
         heading = 'Voir le PDF d’entrée' if is_input else 'Voir le résultat PDF'
-        if historical:
-            heading = 'Témoin historique W3C CSS1'
+        if definition and definition.anchor:
+            heading = definition.title
         source_name = Path(record['source']).name
         page_images = ''.join(
             f'<figure class="pdf-page"><a href="{e(self.url("assets/pdf-pages/" + image["file"]))}" target="_blank" rel="noopener" aria-label="Agrandir la page {number} sur {len(pages)}">'
@@ -836,6 +857,8 @@ class Site:
         )
         if historical:
             description = 'La source historique W3C test5526c.htm est convertie sans modification en PHP. Les boutons radio sont des instantanés statiques explicites. La géométrie vérifiée ne constitue pas une conformité CSS1 complète.'
+        if text_spacing:
+            description = 'Trois pages PDF natives montrent les espacements signés, les accents combinants et le retrait de première ligne, y compris après pagination. Les mesures Chromium/Firefox et les contrôles PDF sont téléchargeables ; ils ne qualifient pas CSS1 complet.'
         provenance = f'<p>Code de <code>{e(record["package"])}</code> · <a href="{e(record["sourceUrl"])}">Consulter la source au commit documenté ↗</a>'
         if is_input:
             provenance += f' · <a href="{e(record["inputSourceUrl"])}">Origine du PDF d’entrée ↗</a>'
@@ -852,8 +875,10 @@ class Site:
         if record['kind'] == 'html-to-pdf':
             html_source = (self.package_roots[record['package']] / record['htmlSource']).read_text(encoding='utf-8')
             console = f'<section class="source-panel" id="{source_id}"><h2>Source HTML</h2><p><a href="{e(self.url(record["htmlSourceDownload"]))}" download>Télécharger la source HTML</a></p><details><summary>Lire la source HTML</summary><pre><code class="language-html">{e(html_source)}</code></pre></details></section>'
-            if historical:
+            if historical or text_spacing:
                 console += f'<p><a href="{e(self.url(record["generationReceipt"]))}" download>Reçu de génération JSON</a> · <a href="{e(self.url(record["validationReport"]))}" download>Validation indépendante JSON</a></p>'
+            if text_spacing:
+                console += f'<p><a href="{e(self.url(record["browserReport"]))}" download>Mesures Chromium/Firefox JSON</a></p>'
         if is_conversion:
             html_result = self.url(f'examples/{example}.html')
             console += f'''<section class="source-panel" id="resultat-html"><div class="panel-intro"><h2>Résultat HTML</h2>
@@ -1413,8 +1438,11 @@ class Site:
                 body = self.tutorial_cards() + body
             for example in (name for name, target in self.examples.items() if target == route):
                 body += self.example_panel(example)
-                if example == 'from-html-w3c-css1':
-                    toc += [{'id': 'w3c-css1', 'name': 'Témoin historique W3C CSS1', 'level': 2}, {'id': 'w3c-css1-source-html', 'name': 'Source HTML W3C', 'level': 2}, {'id': 'w3c-css1-code-source', 'name': 'Code source W3C', 'level': 2}]
+                definition = HTML_TO_PDF_SAMPLES.get(example.removeprefix('from-html-'))
+                if definition and definition.anchor:
+                    toc += [{'id': definition.pdf_anchor, 'name': definition.title, 'level': 2},
+                            {'id': definition.source_anchor, 'name': 'Source HTML', 'level': 2},
+                            {'id': definition.code_anchor, 'name': 'Code source', 'level': 2}]
                     continue
                 if self.example_sources[example]['kind'] in {'input', 'conversion'}:
                     toc += [{'id': 'resultat-pdf', 'name': 'PDF d’entrée', 'level': 2}, {'id': 'resultat-lecture', 'name': 'Résultat de la lecture', 'level': 2}]

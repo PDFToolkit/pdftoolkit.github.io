@@ -168,6 +168,20 @@ def validate_html_to_pdf_module(args, source: Path, work: Path, pdfs: Path, prev
     shutil.copyfile(historical / 'validation/native-96dpi.png', previews / 'from-html-w3c-css1-1.png')
     shutil.copyfile(historical / 'manifest.json', pdfs / 'html-to-pdf-w3c-manifest.json')
     shutil.copyfile(historical / 'validation/pdf-report.json', pdfs / 'html-to-pdf-w3c-validation.json')
+    text = output / 'text-spacing'
+    run([args.php, '-d', 'memory_limit=512M', 'examples/generate-text-spacing.php', text], source)
+    run([args.node, 'tools/validate_text_spacing.cjs', text / 'browser'], source,
+        env={**os.environ, 'NODE_PATH': str(args.demo_root.absolute() / 'node_modules')})
+    run([sys.executable, 'tools/validate_text_spacing.py', '--pdf', text / 'text-spacing.pdf',
+         '--manifest', text / 'manifest.json', '--browser-report', text / 'browser/browser-report.json',
+         '--output', text / 'validation', '--qpdf', args.qpdf,
+         '--pdftoppm', args.pdftoppm, '--pdftotext', args.pdftotext], source)
+    shutil.copyfile(text / 'text-spacing.pdf', pdfs / 'from-html-text-spacing.pdf')
+    for number in range(1, 4):
+        shutil.copyfile(text / 'validation' / f'native-{number}.png', previews / f'from-html-text-spacing-{number}.png')
+    for original, target in [('manifest.json', 'manifest'), ('validation/pdf-report.json', 'validation'),
+                             ('browser/browser-report.json', 'browsers')]:
+        shutil.copyfile(text / original, pdfs / f'html-to-pdf-text-spacing-{target}.json')
 
 
 def build(args) -> None:
