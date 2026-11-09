@@ -2,6 +2,14 @@
 
 [English](CHANGELOG.md) · [Français](CHANGELOG.fr.md)
 
+## [0.19.0] - 2026-11-09
+
+- Select HTML-to-PDF 0.4.0 and render its English/French text-spacing and first-line indentation guides from the exact published source.
+- Add a sixth native example with three PDF pages, Unicode combining marks, signed spacing and paragraph continuation. Keep all existing examples and routes, with separate anchors on the CSS1 guide.
+- Run the module's independent Chromium/Firefox measurements and PDF oracle. Publish the HTML/PHP source, generation receipt, PDF validation and browser measurements; bind every preview to the validated native render.
+- Test incomplete or modified evidence, bilingual gallery cards, distinct preview panels and all three page identities. Preserve explicit shaping/layout limits and the registry's 52 partial / 10 unsupported entries; no complete CSS1, PDF/A or PDF/UA claim.
+- Preserve every other selected package and the existing browser demo release.
+
 ## [0.18.0] - 2026-11-09
 
 - Add a fifth native HTML-to-PDF example: the unchanged historical W3C `test5526c.htm` source, its one-page PDF and native preview in a second CSS1 guide panel. Preserve the four existing examples and routes.

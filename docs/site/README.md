@@ -432,7 +432,7 @@ Reader, sans transformer l’inspection en certification PDF/UA.
 
 La [page de démo](https://pdftoolkit.github.io/fr/modules/to-html/demo/index.html)
 native et sa contrepartie anglaise intègrent une application publiée séparément.
-La documentation 0.18 sélectionne la démo 0.4.3 avec HTML 0.8.4, Reader 0.8.1 et onze cas de galerie,
+La documentation 0.19 sélectionne la démo 0.4.3 avec HTML 0.8.4, Reader 0.8.1 et onze cas de galerie,
 dont un PDF original LuaLaTeX avec des éléments de structure MathML.
 `resources/demo-source.json` sélectionne sa version stable, son tag annoté et le
 commit désigné. Cette sélection d’application est distincte :
@@ -503,7 +503,7 @@ validation hashées dans le même environnement d’oracles avant la constructio
 
 ## Génération native HTML vers PDF
 
-Le huitième package, `pdftoolkit/html-to-pdf` 0.3, vient du checkout publié `_sources/html-to-pdf`, passé à `--html-to-pdf-root`. HEAD, tag et absence de modifications sont contrôlés ; son lock et ses dépendances installées doivent correspondre, y compris Masterminds HTML5, Sabberworm et Symfony CssSelector. Les exemples utilisent son véritable autoloader dans un processus séparé. L’API charge uniquement `PDF\HtmlToPdf\` et les namespaces des parseurs, en préservant les namespaces PDF déjà sélectionnés. `executionDependencies.htmlToPdfValidation` identifie cet environnement séparément des exemples du core et de la dérivation inverse.
+Le huitième package, `pdftoolkit/html-to-pdf` 0.4, vient du checkout publié `_sources/html-to-pdf`, passé à `--html-to-pdf-root`. HEAD, tag et absence de modifications sont contrôlés ; son lock et ses dépendances installées doivent correspondre, y compris Masterminds HTML5, Sabberworm et Symfony CssSelector. Les exemples utilisent son véritable autoloader dans un processus séparé. L’API charge uniquement `PDF\HtmlToPdf\` et les namespaces des parseurs, en préservant les namespaces PDF déjà sélectionnés. `executionDependencies.htmlToPdfValidation` identifie cet environnement séparément des exemples du core et de la dérivation inverse.
 
 Le build contrôle d’abord la cohérence du registre avec `tools/check_css_coverage.py --report <output.json>`, puis exécute `php -d memory_limit=512M examples/generate.php <output>` puis l’oracle indépendant `tools/validate_pdf.py` du package avec qpdf, pypdf et Poppler. Il publie la facture, le catalogue, le document multipage et l’exemple de bordures CSS1 sous `/modules/from-html/`, en anglais et français, avec les vrais PDF et toutes les pages rendues. Les empreintes du reçu de génération doivent correspondre aux sources HTML et aux PDF. Les sources HTML sont des téléchargements inertes `.html.txt`, aussi affichés comme texte échappé. Le rapport `html-to-pdf-validation/validation.json` et les images rendues sont conservés comme preuves de build.
 
@@ -511,6 +511,24 @@ Les guides de couverture et `css-levels` proviennent de la même version. L’or
 
 La sélection 0.3 conserve les quatre exemples et leur reçu standard complet. Elle ajoute un cinquième PDF, le témoin historique W3C `test5526c.htm`, dans un second panneau `#w3c-css1` sur `/modules/from-html/css1.html` et sa traduction française. Le build exécute `examples/generate-w3c.php`, puis `tools/validate_w3c_css1.py` sur ce PDF et son reçu distinct. Cet oracle indépendant vérifie les octets source inchangés, le reçu, la page, le texte, les boîtes et le rendu Poppler ; l’aperçu publié provient de ce rendu natif.
 
-Le générateur reste dans le module et la source conserve le chemin `resources/css1/w3c/test5526c.htm`. Le site publie `/examples/from-html-w3c-css1.pdf`, sa source `.html.txt`, le reçu `.manifest.json` et le rapport `.validation.json`. Le vérificateur refuse une source, un générateur ou un PDF d’une autre identité, un rapport en échec ou des instantanés de boutons radio non explicitement déclarés. Les cinq cartes, les panneaux sans identifiants dupliqués, les liens de langue et les preuves téléchargeables sont testés ensemble.
+Le générateur reste dans le module et la source conserve le chemin `resources/css1/w3c/test5526c.htm`. Le site publie `/examples/from-html-w3c-css1.pdf`, sa source `.html.txt`, le reçu `.manifest.json` et le rapport `.validation.json`. Le vérificateur refuse une source, un générateur ou un PDF d’une autre identité, un rapport en échec ou des instantanés de boutons radio non explicitement déclarés. Les six cartes, les panneaux sans identifiants dupliqués, les liens de langue et les preuves téléchargeables sont testés ensemble.
 
-Le registre CSS1 de cette version compte 49 entrées partielles et 13 non prises en charge ; aucune n’est complètement qualifiée. Les guides du package précisent les largeurs explicites, les contextes flottants limités à une page et les combinaisons de placement rejetées. Ce témoin ne termine pas CSS1 et ne constitue pas une certification PDF/UA ou PDF/A.
+Le registre CSS1 de cette version compte 52 entrées partielles et 10 non prises en charge ; aucune n’est complètement qualifiée. Les guides du package précisent les largeurs explicites, les contextes flottants limités à une page et les combinaisons de placement rejetées. Ce témoin ne termine pas CSS1 et ne constitue pas une certification PDF/UA ou PDF/A.
+
+La sélection 0.4 ajoute un sixième PDF natif au panneau `#text-spacing` du même
+guide CSS1. Elle exécute `examples/generate-text-spacing.php`, mesure exactement
+le HTML et la police Noto Sans fournie dans Chromium et Firefox avec
+`tools/validate_text_spacing.cjs`, puis transmet ce reçu navigateur à
+`tools/validate_text_spacing.py`. Le processus navigateur réutilise l’installation
+Playwright verrouillée de la démo avec un `NODE_PATH` explicite, sans télécharger
+de ressource. L’oracle PDF indépendant vérifie Unicode, positions de glyphes,
+annotations de lien et continuation entre pages, puis conserve les trois rendus
+natifs à 96 dpi.
+
+`TextSpacingEvidence` relie les empreintes de source, police et PDF aux reçus
+PDF/navigateurs complets réussis. Il refuse moteur navigateur absent, contrôle
+faux ou manquant, inventaire de pages incorrect et aperçu modifié. Le site publie
+PDF, sources inertes `.html.txt` et `.php.txt`, `.manifest.json`, `.validation.json`
+et `.browsers.json` sous `/examples/from-html-text-spacing`, avec trois aperçus
+distincts. Les preuves de build restent sous `html-to-pdf-validation/text-spacing/`.
+Ces témoins ciblés n’établissent ni CSS1 complet ni équivalence d’impression navigateur.

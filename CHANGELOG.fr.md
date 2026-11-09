@@ -2,6 +2,14 @@
 
 [English](CHANGELOG.md) · [Français](CHANGELOG.fr.md)
 
+## [0.19.0] - 2026-11-09
+
+- Sélectionner HTML vers PDF 0.4.0 et publier ses guides FR/EN sur les espacements et retraits de première ligne depuis la source publiée exacte.
+- Ajouter un sixième exemple natif avec trois pages PDF, accents combinants Unicode, espacements signés et continuation de paragraphe. Conserver tous les exemples et routes, avec des ancres distinctes dans le guide CSS1.
+- Exécuter les mesures Chromium/Firefox indépendantes et l’oracle PDF du module. Publier sources HTML/PHP, reçu de génération, validation PDF et mesures navigateur ; relier chaque aperçu au rendu natif validé.
+- Tester preuves incomplètes ou modifiées, cartes bilingues, panneaux distincts et identité des trois pages. Conserver limites explicites de shaping/placement et registre à 52 entrées partielles / 10 absentes, sans annoncer CSS1 complet, PDF/A ou PDF/UA.
+- Conserver les autres packages sélectionnés et la version existante de la démo navigateur.
+
 ## [0.18.0] - 2026-11-09
 
 - Ajouter un cinquième exemple HTML vers PDF natif : la source historique W3C `test5526c.htm` inchangée, son PDF d’une page et son aperçu natif dans un second panneau du guide CSS1. Conserver les quatre exemples et routes existants.

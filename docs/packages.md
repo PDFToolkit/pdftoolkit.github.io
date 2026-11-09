@@ -1,7 +1,7 @@
 # Core et modules optionnels
 
 PDFToolkit sépare le modèle PDF des traitements de fichiers externes.
-Les versions documentées sont le core **0.12**, Reader **0.8**, Images et Fonts **0.2**, OpenType **0.4**, Codecs **0.1**, PDF vers HTML **0.8** et HTML vers PDF **0.3**. Elles nécessitent **PHP 8.3 ou supérieur en 64 bits** ; leurs validations couvrent PHP 8.3, 8.4 et 8.5. Les versions et révisions exactes sont fixées dans le manifeste de sources. OpenType et Codecs ne dépendent pas du core PDF.
+Les versions documentées sont le core **0.12**, Reader **0.8**, Images et Fonts **0.2**, OpenType **0.4**, Codecs **0.1**, PDF vers HTML **0.8** et HTML vers PDF **0.4**. Elles nécessitent **PHP 8.3 ou supérieur en 64 bits** ; leurs validations couvrent PHP 8.3, 8.4 et 8.5. Les versions et révisions exactes sont fixées dans le manifeste de sources. OpenType et Codecs ne dépendent pas du core PDF.
 Depuis la version 0.12.2, le nom Composer du core est `pdftoolkit/pdf`, comme les autres bibliothèques sous `pdftoolkit/`. L’ancien nom `roukmoute/pdf` reste présent dans les versions et locks historiques ; il ne change pas les classes PHP ni les adresses de référence API.
 
 ## La frontière du core
@@ -50,7 +50,7 @@ Le core 0.8.0 conserve l'écriture PDF 2.0 avec cryptographie moderne/PDF MAC, m
 
 ## Installer ce dont l'application a besoin
 
-Les huit bibliothèques sont disponibles sur Packagist sous les noms `pdftoolkit/` ci-dessus. Les contraintes documentées sont core `^0.12.4`, Reader `^0.8.1`, HTML `^0.8.4`, Images `^0.2.3`, Fonts `^0.2.1`, OpenType `^0.4.1`, Codecs `^0.1.1` et HTML vers PDF `^0.3.1`. Les anciens tags du core `v0.1.0` et `v0.1.1` conservent leur contrainte PHP 8.5.
+Les huit bibliothèques sont disponibles sur Packagist sous les noms `pdftoolkit/` ci-dessus. Les contraintes documentées sont core `^0.12.4`, Reader `^0.8.1`, HTML `^0.8.4`, Images `^0.2.3`, Fonts `^0.2.1`, OpenType `^0.4.1`, Codecs `^0.1.1` et HTML vers PDF `^0.4.0`. Les anciens tags du core `v0.1.0` et `v0.1.1` conservent leur contrainte PHP 8.5.
 
 Pour migrer une dépendance directe existante, retirer l’ancien nom sans installer un second core, puis demander le package canonique. Le namespace PHP `PDF\` et les classes restent identiques :
 
@@ -284,12 +284,14 @@ Chromium et Firefox.
 
 ## HTML vers PDF natif
 
-Le module optionnel [HTML vers PDF 0.3](https://pdftoolkit.github.io/fr/modules/from-html/index.html) reçoit du HTML5/CSS UTF-8 et des objets `FontSet`, `ResourceCatalog` et `PageSettings`. Il compose des PDF avec le core, Fonts et Images, sans navigateur, JavaScript ni accès réseau implicite. `UnsupportedPolicy::Reject` refuse par défaut les capacités hors profil ; le mode `Report` conserve des diagnostics.
+Le module optionnel [HTML vers PDF 0.4](https://pdftoolkit.github.io/fr/modules/from-html/index.html) reçoit du HTML5/CSS UTF-8 et des objets `FontSet`, `ResourceCatalog` et `PageSettings`. Il compose des PDF avec le core, Fonts et Images, sans navigateur, JavaScript ni accès réseau implicite. `UnsupportedPolicy::Reject` refuse par défaut les capacités hors profil ; le mode `Report` conserve des diagnostics.
 
 ```sh
-composer require "pdftoolkit/html-to-pdf:^0.3.1"
+composer require "pdftoolkit/html-to-pdf:^0.4.0"
 ```
 
 La version 0.3 ajoute les flottants gauche/droite bornés, `clear`, le retour à la ligne autour des exclusions et les correspondances explicites de familles de fontes. Le [témoin historique W3C CSS1](https://pdftoolkit.github.io/fr/modules/from-html/css1.html#w3c-css1) convertit la source inchangée `test5526c.htm` en un PDF d’une page, avec des instantanés statiques de boutons radio explicitement activés. L’[exemple de bordures CSS1](https://pdftoolkit.github.io/fr/modules/from-html/css1.html) reste disponible. Les flottants exigent des largeurs explicites et un contexte tenant sur une page ; les combinaisons de placement hors profil échouent explicitement. Les bordures inline, les marges automatiques ou négatives et les marges/paddings en pourcentage restent hors profil.
 
-La [progression CSS](https://pdftoolkit.github.io/fr/modules/from-html/css-levels.html) valide CSS1 avant CSS2.0/2.1 puis les modules ultérieurs. Le registre 0.3 compte 49 entrées partielles et 13 non prises en charge ; aucune n’annonce une conformité CSS1 complète. Les [facture](https://pdftoolkit.github.io/fr/modules/from-html/invoice.html), [catalogue](https://pdftoolkit.github.io/fr/modules/from-html/catalogue.html), [document multipage](https://pdftoolkit.github.io/fr/modules/from-html/multipage.html), [bordures CSS1](https://pdftoolkit.github.io/fr/modules/from-html/css1.html) et [témoin W3C](https://pdftoolkit.github.io/fr/modules/from-html/css1.html#w3c-css1) montrent les vrais PDF, toutes leurs pages et les sources. Le témoin W3C fournit aussi son reçu de génération et son rapport de validation indépendante. Le balisage produit ne constitue pas une certification PDF/UA ou PDF/A.
+La version 0.4 ajoute `word-spacing`, `letter-spacing` et le retrait de première ligne `text-indent`, avec longueurs signées héritées et retrait en pourcentage. L’[exemple de texte natif](https://pdftoolkit.github.io/fr/modules/from-html/css1.html#text-spacing) montre trois pages PDF, espacements des glyphes, accents combinants et continuation après un saut de page. `normal` et zéro conservent le shaping ; l’espacement de lettres non nul garde les graphèmes et désactive les ligatures facultatives. Les mêmes avances servent aux retours, au dessin et aux liens. Graphèmes inter-spans non pris en charge, avances totales négatives et retrait sans largeur utile échouent explicitement. Le guide détaille les limites CSS1 restantes.
+
+La [progression CSS](https://pdftoolkit.github.io/fr/modules/from-html/css-levels.html) valide CSS1 avant CSS2.0/2.1 puis les modules ultérieurs. Le registre 0.4 compte 52 entrées partielles et 10 non prises en charge ; aucune n’annonce une conformité CSS1 complète. Les [facture](https://pdftoolkit.github.io/fr/modules/from-html/invoice.html), [catalogue](https://pdftoolkit.github.io/fr/modules/from-html/catalogue.html), [document multipage](https://pdftoolkit.github.io/fr/modules/from-html/multipage.html), [bordures CSS1](https://pdftoolkit.github.io/fr/modules/from-html/css1.html), [témoin W3C](https://pdftoolkit.github.io/fr/modules/from-html/css1.html#w3c-css1) et [espacements du texte](https://pdftoolkit.github.io/fr/modules/from-html/css1.html#text-spacing) montrent les vrais PDF, toutes leurs pages et les sources. Les exemples W3C et de texte fournissent aussi reçus de génération et rapports PDF indépendants ; l’exemple de texte inclut les mesures Chromium/Firefox. Les contrôles navigateur portent sur une page continue, pas sur l’équivalence de pagination imprimée. Le balisage produit ne constitue pas une certification PDF/UA ou PDF/A.
