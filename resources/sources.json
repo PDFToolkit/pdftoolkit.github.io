@@ -4,8 +4,8 @@
     {
       "name": "pdftoolkit/pdf",
       "repository": "https://github.com/PDFToolkit/pdf",
-      "version": "0.12.3",
-      "revision": "cdb3cb1798177944adb4d1e6fd92e0ff2dfc6f06",
+      "version": "0.12.4",
+      "revision": "e98bc2368701569c21c0eb665fae2a4d62655620",
       "optional": false
     },
     {
@@ -18,8 +18,8 @@
     {
       "name": "pdftoolkit/pdf-images",
       "repository": "https://github.com/PDFToolkit/pdf-images",
-      "version": "0.2.2",
-      "revision": "2f818878156f191986e8d75369d0bd2e46a5ceb9",
+      "version": "0.2.3",
+      "revision": "81d43cb91ff4eb80c83587e6bbba86e7b67d3fb5",
       "optional": true
     },
     {
@@ -32,29 +32,29 @@
     {
       "name": "pdftoolkit/opentype",
       "repository": "https://github.com/PDFToolkit/opentype",
-      "version": "0.4.0",
-      "revision": "22014ed40f29c61dc7068df5da19b09eed340678",
+      "version": "0.4.1",
+      "revision": "569e676f14bea15be109e90978e47fd571a2eefd",
       "optional": true
     },
     {
       "name": "pdftoolkit/pdf-to-html",
       "repository": "https://github.com/PDFToolkit/pdf-to-html",
-      "version": "0.8.3",
-      "revision": "9da8bf2e80a52cafd87543a3d27345e75804e01b",
+      "version": "0.8.4",
+      "revision": "f6c662140b0ff2abd98fe048d832cbc10fcd2c1b",
       "optional": true
     },
     {
       "name": "pdftoolkit/pdf-codecs",
       "repository": "https://github.com/PDFToolkit/pdf-codecs",
-      "version": "0.1.0",
-      "revision": "1f82ae19d6dd874c574a5601d37f3ac63e0d4170",
+      "version": "0.1.1",
+      "revision": "cec87784274c69031edf52d535f08656bcc40ce9",
       "optional": true
     },
     {
       "name": "pdftoolkit/html-to-pdf",
       "repository": "https://github.com/PDFToolkit/html-to-pdf",
-      "version": "0.3.0",
-      "revision": "af56205c46198a00ab3f4936e9abf128e5b4c96a",
+      "version": "0.3.1",
+      "revision": "d0d61f83eda10e6d80bda588c541362fc1734560",
       "optional": true
     }
   ]

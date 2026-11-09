@@ -14,11 +14,11 @@ output and commented code appear after the explanations.
 
 ## Run the example
 
-In a standalone application, install the reader from Packagist with core 0.12.3,
+In a standalone application, install the reader from Packagist with core 0.12.4,
 then run the script distributed with the module:
 
 ```sh
-composer require "pdftoolkit/pdf:^0.12.3" "pdftoolkit/pdf-reader:^0.8.1"
+composer require "pdftoolkit/pdf:^0.12.4" "pdftoolkit/pdf-reader:^0.8.1"
 php vendor/pdftoolkit/pdf-reader/examples/pages.php vendor/pdftoolkit/pdf-reader/tests/Fixtures/page-tree/classic.pdf
 ```
 

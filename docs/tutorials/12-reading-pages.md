@@ -15,10 +15,10 @@ réelle et son code commenté sont présentés après les explications.
 ## Exécuter l'exemple
 
 Dans une application indépendante, installer le lecteur depuis Packagist avec
-le core 0.12.3, puis exécuter le script distribué avec le module :
+le core 0.12.4, puis exécuter le script distribué avec le module :
 
 ```sh
-composer require "pdftoolkit/pdf:^0.12.3" "pdftoolkit/pdf-reader:^0.8.1"
+composer require "pdftoolkit/pdf:^0.12.4" "pdftoolkit/pdf-reader:^0.8.1"
 php vendor/pdftoolkit/pdf-reader/examples/pages.php vendor/pdftoolkit/pdf-reader/tests/Fixtures/page-tree/classic.pdf
 ```
 

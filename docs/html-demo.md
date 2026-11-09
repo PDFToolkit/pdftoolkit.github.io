@@ -76,7 +76,7 @@ les applications choisissent explicitement ces
 
 La galerie reste disponible sans démarrer le moteur de conversion. Les imports
 nécessitent HTTPS ou localhost, les Workers, WebAssembly, Web Crypto et
-`DecompressionStream`. La démo 0.4.2 vérifie ces prérequis, puis instancie un petit
+`DecompressionStream`. La démo 0.4.3 vérifie ces prérequis, puis instancie un petit
 module WebAssembly dans le Worker de conversion. Elle teste aussi une suspension
 et une reprise JSPI réelles avant de choisir ce moteur ; sinon, elle choisit
 Asyncify embarqué. Asyncify exige toujours WebAssembly fonctionnel et ne

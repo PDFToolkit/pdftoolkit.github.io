@@ -1,7 +1,7 @@
 # Core and optional modules
 
 PDFToolkit separates the PDF model from external-file processing.
-The documented release series are core **0.12**, Reader **0.8**, Images and Fonts **0.2**, OpenType **0.4**, Codecs **0.1**, PDF-to-HTML **0.8** and HTML-to-PDF **0.2**. They require **64-bit PHP 8.3 or later**; qualification covers PHP 8.3, 8.4 and 8.5. The source manifest pins exact versions and revisions. OpenType and Codecs have no PDF core dependency.
+The documented release series are core **0.12**, Reader **0.8**, Images and Fonts **0.2**, OpenType **0.4**, Codecs **0.1**, PDF-to-HTML **0.8** and HTML-to-PDF **0.3**. They require **64-bit PHP 8.3 or later**; qualification covers PHP 8.3, 8.4 and 8.5. The source manifest pins exact versions and revisions. OpenType and Codecs have no PDF core dependency.
 Since version 0.12.2, the core Composer name is `pdftoolkit/pdf`, alongside the other `pdftoolkit/` libraries. The former name `roukmoute/pdf` remains in historical releases and locks; the PHP classes and API reference addresses are unchanged.
 
 ## The core boundary
@@ -52,43 +52,43 @@ Core 0.8.0 retains PDF 2.0 writing with modern cryptography and PDF MAC, metadat
 
 ## Installing what the application needs
 
-All eight libraries are available on Packagist under the `pdftoolkit/` names above. The documented constraints are core `^0.12.3`, Reader `^0.8.1`, HTML `^0.8.3`, Images `^0.2.2`, Fonts `^0.2.1`, OpenType `^0.4`, Codecs `^0.1` and HTML-to-PDF `^0.3`. Older core tags `v0.1.0` and `v0.1.1` retain their PHP 8.5 constraint.
+All eight libraries are available on Packagist under the `pdftoolkit/` names above. The documented constraints are core `^0.12.4`, Reader `^0.8.1`, HTML `^0.8.4`, Images `^0.2.3`, Fonts `^0.2.1`, OpenType `^0.4.1`, Codecs `^0.1.1` and HTML-to-PDF `^0.3.1`. Older core tags `v0.1.0` and `v0.1.1` retain their PHP 8.5 constraint.
 
 To migrate an existing direct dependency, remove the former name without installing a second core, then require the canonical package. The PHP `PDF\` namespace and classes stay unchanged:
 
 ```sh
 composer remove roukmoute/pdf --no-update
-composer require "pdftoolkit/pdf:^0.12.3" --with-all-dependencies
+composer require "pdftoolkit/pdf:^0.12.4" --with-all-dependencies
 ```
 
 To generate PDFs only:
 
 ```sh
-composer require "pdftoolkit/pdf:^0.12.3"
+composer require "pdftoolkit/pdf:^0.12.4"
 ```
 
 To add reading of existing PDFs:
 
 ```sh
-composer require "pdftoolkit/pdf:^0.12.3" "pdftoolkit/pdf-reader:^0.8.1"
+composer require "pdftoolkit/pdf:^0.12.4" "pdftoolkit/pdf-reader:^0.8.1"
 ```
 
 To convert images:
 
 ```sh
-composer require "pdftoolkit/pdf:^0.12.3" "pdftoolkit/pdf-images:^0.2.2"
+composer require "pdftoolkit/pdf:^0.12.4" "pdftoolkit/pdf-images:^0.2.3"
 ```
 
 To embed TrueType/CFF fonts and select layout:
 
 ```sh
-composer require "pdftoolkit/pdf:^0.12.3" "pdftoolkit/pdf-fonts:^0.2.1"
+composer require "pdftoolkit/pdf:^0.12.4" "pdftoolkit/pdf-fonts:^0.2.1"
 ```
 
 To analyze a font independently of PDF:
 
 ```sh
-composer require "pdftoolkit/opentype:^0.4.0"
+composer require "pdftoolkit/opentype:^0.4.1"
 ```
 
 This command installs only OpenType, without the PDF core or converters.
@@ -96,7 +96,7 @@ This command installs only OpenType, without the PDF core or converters.
 To make the pure-PHP image fallback available:
 
 ```sh
-composer require "pdftoolkit/pdf-codecs:^0.1"
+composer require "pdftoolkit/pdf-codecs:^0.1.1"
 ```
 
 Ghostscript and `prlimit` are optional system tools, supplied separately. Reader uses only native profiles qualified to preserve the requested samples and metadata. Malformed input and resource-limit failures do not trigger another decoder.
@@ -117,7 +117,7 @@ exclude the next minor release. Consult changelogs before switching series.
 To work with upcoming development, explicitly request `dev-master` for the
 relevant packages.
 
-The selected Reader 0.8.1, Images 0.2.2 and Fonts 0.2.1 releases all require the canonical core `pdftoolkit/pdf:^0.12.2`. Fonts also requires OpenType `^0.4`. This documentation selects core 0.12.3. Earlier module releases retain their historical constraints in their own published manifests; those constraints do not describe the compatibility of this selection. The [migration guide](migration-0.11.md) remains relevant to 0.11 API changes. Core needs `ctype`, `iconv` and `zlib`; selected AES, CMS and signature providers also need `openssl`. Exact compatibility is recorded in each published Composer manifest.
+The selected Reader 0.8.1, Images 0.2.3 and Fonts 0.2.1 releases all require the canonical core `pdftoolkit/pdf:^0.12.2`. Fonts also requires OpenType `^0.4`. This documentation selects core 0.12.4. Earlier module releases retain their historical constraints in their own published manifests; those constraints do not describe the compatibility of this selection. The [migration guide](migration-0.11.md) remains relevant to 0.11 API changes. Core needs `ctype`, `iconv` and `zlib`; selected AES, CMS and signature providers also need `openssl`. Exact compatibility is recorded in each published Composer manifest.
 
 ## Reading an external PDF
 
@@ -253,10 +253,10 @@ and [coverage guide](coverage.md).
 
 ## Derive HTML from a tagged PDF
 
-The optional [PDF-to-HTML module](https://pdftoolkit.github.io/modules/to-html/index.html) follows the retained PDF Association **Deriving HTML from PDF 1.2** usage specification. HTML 0.8.3 requires Reader `^0.8.1` and the canonical core `pdftoolkit/pdf:^0.12.2`; this documentation selects Reader 0.8.1 and core 0.12.3, with 64-bit PHP 8.3+, DOM and mbstring; the source manifest fixes its exact core and module revisions. It derives semantic HTML from logical structure without inferring absent structure, OCR or PDF page layout. Model coverage, file adaptation and browser integration remain distinct.
+The optional [PDF-to-HTML module](https://pdftoolkit.github.io/modules/to-html/index.html) follows the retained PDF Association **Deriving HTML from PDF 1.2** usage specification. HTML 0.8.4 requires Reader `^0.8.1` and the canonical core `pdftoolkit/pdf:^0.12.2`; this documentation selects Reader 0.8.1 and core 0.12.4, with 64-bit PHP 8.3+, DOM and mbstring; the source manifest fixes its exact core and module revisions. It derives semantic HTML from logical structure without inferring absent structure, OCR or PDF page layout. Model coverage, file adaptation and browser integration remain distinct.
 
 ```sh
-composer require "pdftoolkit/pdf:^0.12.3" "pdftoolkit/pdf-to-html:^0.8.3"
+composer require "pdftoolkit/pdf:^0.12.4" "pdftoolkit/pdf-to-html:^0.8.4"
 ```
 
 [Follow the executable tutorial](tutorials/35-derive-html.md) and inspect diagnostics before publishing HTML. ParentTree associations, table-header identities, destinations, Unicode mappings, inline images and form actions have tests and independent oracles. The [requirements ledger](https://pdftoolkit.github.io/modules/to-html/requirements.html) links each rule to decisions and evidence; it does not certify universal PDF acceptance.
@@ -287,7 +287,7 @@ exact-candidate CI checks PHP 8.3/8.4/8.5 and both Chromium and Firefox.
 The optional [HTML-to-PDF 0.3 module](https://pdftoolkit.github.io/modules/from-html/index.html) receives UTF-8 HTML5/CSS and explicit `FontSet`, `ResourceCatalog` and `PageSettings` objects. It composes PDF through the core, Fonts and Images without a browser, JavaScript or implicit network access. `UnsupportedPolicy::Reject` rejects unsupported capabilities by default; `Report` retains diagnostics.
 
 ```sh
-composer require "pdftoolkit/html-to-pdf:^0.3"
+composer require "pdftoolkit/html-to-pdf:^0.3.1"
 ```
 
 Version 0.3 adds bounded left/right floats, `clear`, text wrapping around exclusions and explicit font-family bindings. The [historical W3C CSS1 sample](https://pdftoolkit.github.io/modules/from-html/css1.html#w3c-css1) converts the unchanged `test5526c.htm` source to a one-page PDF with explicitly enabled static radio snapshots. The original [CSS1 border example](https://pdftoolkit.github.io/modules/from-html/css1.html) remains available. Floats require explicit widths and a context that fits on one page; unsupported placement combinations fail explicitly. Inline borders, automatic or negative margins and percentage margins/padding remain outside the profile.

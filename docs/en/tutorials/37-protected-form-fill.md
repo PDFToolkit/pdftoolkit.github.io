@@ -1,6 +1,6 @@
 # 37. Fill a certified form
 
-This tutorial uses core 0.12.3. Its complete PHP source and generated PDF are
+This tutorial uses core 0.12.4. Its complete PHP source and generated PDF are
 supplied by the core checkout selected for the site;
 there is no second implementation in the documentation repository.
 

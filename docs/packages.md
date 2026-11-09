@@ -1,7 +1,7 @@
 # Core et modules optionnels
 
 PDFToolkit sépare le modèle PDF des traitements de fichiers externes.
-Les versions documentées sont le core **0.12**, Reader **0.8**, Images et Fonts **0.2**, OpenType **0.4**, Codecs **0.1**, PDF vers HTML **0.8** et HTML vers PDF **0.2**. Elles nécessitent **PHP 8.3 ou supérieur en 64 bits** ; leurs validations couvrent PHP 8.3, 8.4 et 8.5. Les versions et révisions exactes sont fixées dans le manifeste de sources. OpenType et Codecs ne dépendent pas du core PDF.
+Les versions documentées sont le core **0.12**, Reader **0.8**, Images et Fonts **0.2**, OpenType **0.4**, Codecs **0.1**, PDF vers HTML **0.8** et HTML vers PDF **0.3**. Elles nécessitent **PHP 8.3 ou supérieur en 64 bits** ; leurs validations couvrent PHP 8.3, 8.4 et 8.5. Les versions et révisions exactes sont fixées dans le manifeste de sources. OpenType et Codecs ne dépendent pas du core PDF.
 Depuis la version 0.12.2, le nom Composer du core est `pdftoolkit/pdf`, comme les autres bibliothèques sous `pdftoolkit/`. L’ancien nom `roukmoute/pdf` reste présent dans les versions et locks historiques ; il ne change pas les classes PHP ni les adresses de référence API.
 
 ## La frontière du core
@@ -50,43 +50,43 @@ Le core 0.8.0 conserve l'écriture PDF 2.0 avec cryptographie moderne/PDF MAC, m
 
 ## Installer ce dont l'application a besoin
 
-Les huit bibliothèques sont disponibles sur Packagist sous les noms `pdftoolkit/` ci-dessus. Les contraintes documentées sont core `^0.12.3`, Reader `^0.8.1`, HTML `^0.8.3`, Images `^0.2.2`, Fonts `^0.2.1`, OpenType `^0.4`, Codecs `^0.1` et HTML vers PDF `^0.3`. Les anciens tags du core `v0.1.0` et `v0.1.1` conservent leur contrainte PHP 8.5.
+Les huit bibliothèques sont disponibles sur Packagist sous les noms `pdftoolkit/` ci-dessus. Les contraintes documentées sont core `^0.12.4`, Reader `^0.8.1`, HTML `^0.8.4`, Images `^0.2.3`, Fonts `^0.2.1`, OpenType `^0.4.1`, Codecs `^0.1.1` et HTML vers PDF `^0.3.1`. Les anciens tags du core `v0.1.0` et `v0.1.1` conservent leur contrainte PHP 8.5.
 
 Pour migrer une dépendance directe existante, retirer l’ancien nom sans installer un second core, puis demander le package canonique. Le namespace PHP `PDF\` et les classes restent identiques :
 
 ```sh
 composer remove roukmoute/pdf --no-update
-composer require "pdftoolkit/pdf:^0.12.3" --with-all-dependencies
+composer require "pdftoolkit/pdf:^0.12.4" --with-all-dependencies
 ```
 
 Pour générer seulement des PDF :
 
 ```sh
-composer require "pdftoolkit/pdf:^0.12.3"
+composer require "pdftoolkit/pdf:^0.12.4"
 ```
 
 Pour ajouter la lecture de PDF existants :
 
 ```sh
-composer require "pdftoolkit/pdf:^0.12.3" "pdftoolkit/pdf-reader:^0.8.1"
+composer require "pdftoolkit/pdf:^0.12.4" "pdftoolkit/pdf-reader:^0.8.1"
 ```
 
 Pour convertir des images :
 
 ```sh
-composer require "pdftoolkit/pdf:^0.12.3" "pdftoolkit/pdf-images:^0.2.2"
+composer require "pdftoolkit/pdf:^0.12.4" "pdftoolkit/pdf-images:^0.2.3"
 ```
 
 Pour incorporer des fontes TrueType/CFF et choisir le layout :
 
 ```sh
-composer require "pdftoolkit/pdf:^0.12.3" "pdftoolkit/pdf-fonts:^0.2.1"
+composer require "pdftoolkit/pdf:^0.12.4" "pdftoolkit/pdf-fonts:^0.2.1"
 ```
 
 Pour analyser une fonte indépendamment du PDF :
 
 ```sh
-composer require "pdftoolkit/opentype:^0.4.0"
+composer require "pdftoolkit/opentype:^0.4.1"
 ```
 
 Cette commande installe uniquement OpenType, sans le core ni les convertisseurs PDF.
@@ -94,7 +94,7 @@ Cette commande installe uniquement OpenType, sans le core ni les convertisseurs 
 Pour rendre disponible le repli image en PHP pur :
 
 ```sh
-composer require "pdftoolkit/pdf-codecs:^0.1"
+composer require "pdftoolkit/pdf-codecs:^0.1.1"
 ```
 
 Ghostscript et `prlimit` sont des outils système optionnels fournis séparément. Reader n’utilise que les profils natifs qualifiés pour préserver les échantillons et métadonnées demandés. Une entrée malformée ou une limite dépassée ne déclenche pas un autre décodeur.
@@ -115,7 +115,7 @@ Les contraintes `^0.12`, `^0.8` et `^0.2` autorisent les correctifs de leur sér
 de série. Pour travailler sur les développements à venir, demander explicitement
 `dev-master` pour les packages concernés.
 
-Les versions sélectionnées Reader 0.8.1, Images 0.2.2 et Fonts 0.2.1 exigent toutes le core canonique `pdftoolkit/pdf:^0.12.2`. Fonts exige aussi OpenType `^0.4`. Cette documentation sélectionne le core 0.12.3. Les versions antérieures des modules conservent leurs contraintes historiques dans leurs propres manifestes publiés ; elles ne décrivent pas la compatibilité de cette sélection. Le [guide de migration](migration-0.11.md) reste pertinent pour les changements d’API 0.11. Le core demande `ctype`, `iconv` et `zlib` ; les fournisseurs AES, CMS et de signature choisis demandent aussi `openssl`. Chaque manifeste Composer publié précise la compatibilité exacte.
+Les versions sélectionnées Reader 0.8.1, Images 0.2.3 et Fonts 0.2.1 exigent toutes le core canonique `pdftoolkit/pdf:^0.12.2`. Fonts exige aussi OpenType `^0.4`. Cette documentation sélectionne le core 0.12.4. Les versions antérieures des modules conservent leurs contraintes historiques dans leurs propres manifestes publiés ; elles ne décrivent pas la compatibilité de cette sélection. Le [guide de migration](migration-0.11.md) reste pertinent pour les changements d’API 0.11. Le core demande `ctype`, `iconv` et `zlib` ; les fournisseurs AES, CMS et de signature choisis demandent aussi `openssl`. Chaque manifeste Composer publié précise la compatibilité exacte.
 
 ## Lire un PDF externe
 
@@ -251,10 +251,10 @@ politique de confiance d'une signature. Ces frontières sont détaillées dans l
 
 ## Dériver du HTML depuis un PDF balisé
 
-Le [module PDF vers HTML](https://pdftoolkit.github.io/fr/modules/to-html/index.html), optionnel, suit la spécification d’usage PDF Association **Deriving HTML from PDF 1.2** conservée. HTML 0.8.3 exige Reader `^0.8.1` et le core canonique `pdftoolkit/pdf:^0.12.2` ; cette documentation sélectionne Reader 0.8.1 et le core 0.12.3, avec PHP 8.3+ en 64 bits, DOM et mbstring ; le manifeste de sources fixe les révisions exactes du core et des modules. Elle dérive le HTML sémantique de la structure logique sans inférer de structure absente, faire d’OCR ni reproduire la mise en page PDF. Modèle, adaptation des fichiers et intégration navigateur restent distincts.
+Le [module PDF vers HTML](https://pdftoolkit.github.io/fr/modules/to-html/index.html), optionnel, suit la spécification d’usage PDF Association **Deriving HTML from PDF 1.2** conservée. HTML 0.8.4 exige Reader `^0.8.1` et le core canonique `pdftoolkit/pdf:^0.12.2` ; cette documentation sélectionne Reader 0.8.1 et le core 0.12.4, avec PHP 8.3+ en 64 bits, DOM et mbstring ; le manifeste de sources fixe les révisions exactes du core et des modules. Elle dérive le HTML sémantique de la structure logique sans inférer de structure absente, faire d’OCR ni reproduire la mise en page PDF. Modèle, adaptation des fichiers et intégration navigateur restent distincts.
 
 ```sh
-composer require "pdftoolkit/pdf:^0.12.3" "pdftoolkit/pdf-to-html:^0.8.3"
+composer require "pdftoolkit/pdf:^0.12.4" "pdftoolkit/pdf-to-html:^0.8.4"
 ```
 
 [Suivre le tutoriel exécutable](tutorials/35-derive-html.md) et examiner les diagnostics avant publication du HTML. Les associations ParentTree, identités des en-têtes de tableaux, destinations, correspondances Unicode, images inline et actions de formulaire disposent de tests et d'oracles indépendants. Le [registre des exigences](https://pdftoolkit.github.io/fr/modules/to-html/requirements.html) relie chaque règle aux décisions et preuves ; il ne certifie pas l'acceptation de tout PDF.
@@ -287,7 +287,7 @@ Chromium et Firefox.
 Le module optionnel [HTML vers PDF 0.3](https://pdftoolkit.github.io/fr/modules/from-html/index.html) reçoit du HTML5/CSS UTF-8 et des objets `FontSet`, `ResourceCatalog` et `PageSettings`. Il compose des PDF avec le core, Fonts et Images, sans navigateur, JavaScript ni accès réseau implicite. `UnsupportedPolicy::Reject` refuse par défaut les capacités hors profil ; le mode `Report` conserve des diagnostics.
 
 ```sh
-composer require "pdftoolkit/html-to-pdf:^0.3"
+composer require "pdftoolkit/html-to-pdf:^0.3.1"
 ```
 
 La version 0.3 ajoute les flottants gauche/droite bornés, `clear`, le retour à la ligne autour des exclusions et les correspondances explicites de familles de fontes. Le [témoin historique W3C CSS1](https://pdftoolkit.github.io/fr/modules/from-html/css1.html#w3c-css1) convertit la source inchangée `test5526c.htm` en un PDF d’une page, avec des instantanés statiques de boutons radio explicitement activés. L’[exemple de bordures CSS1](https://pdftoolkit.github.io/fr/modules/from-html/css1.html) reste disponible. Les flottants exigent des largeurs explicites et un contexte tenant sur une page ; les combinaisons de placement hors profil échouent explicitement. Les bordures inline, les marges automatiques ou négatives et les marges/paddings en pourcentage restent hors profil.

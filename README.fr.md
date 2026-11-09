@@ -27,8 +27,8 @@ workflow de déploiement. Le code PHP, les exemples exécutables, les fixtures
 et les documents de spécification originaux restent dans
 [leurs dépôts de packages](https://github.com/orgs/PDFToolkit/repositories).
 Les guides des modules sont publiés ici à partir de leurs sources versionnées.
-La documentation **0.18** sélectionne HTML vers PDF **0.3.0** et conserve PDF vers HTML **0.8.3** ainsi que la démo interactive **0.4.2** ;
-le core et Reader sont en **0.12.3** et **0.8.1**, avec des révisions exactes distinctes.
+La documentation **0.18** sélectionne HTML vers PDF **0.3.1**, PDF vers HTML **0.8.4** et la démo interactive **0.4.3** ;
+le core et Reader sont en **0.12.4** et **0.8.1**, avec des révisions exactes distinctes.
 Le core regroupe ses dix-huit PDF de référence originaux dans
 `resources/reference-documents/`, avec leurs noms et octets d’origine.
 Les téléchargements publics des références conservent leurs URL existantes.
@@ -43,7 +43,7 @@ Les bibliothèques PHP sont disponibles sur Packagist. Installer le core avec
 Composer :
 
 ```sh
-composer require "pdftoolkit/pdf:^0.12.3"
+composer require "pdftoolkit/pdf:^0.12.4"
 ```
 
 Les versions documentées sont le core **0.12**, Reader **0.8**, Images et Fonts **0.2**, OpenType **0.4**, Codecs **0.1**, PDF vers HTML **0.8** et HTML vers PDF **0.3**. Elles nécessitent **PHP 8.3 ou supérieur en 64 bits** ; leurs validations couvrent PHP 8.3, 8.4 et 8.5. Les versions et révisions exactes sont fixées dans le manifeste de sources. OpenType et Codecs ne dépendent pas du core PDF.

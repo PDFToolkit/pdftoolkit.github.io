@@ -73,7 +73,7 @@ explicitly.
 
 The gallery remains available without starting the conversion engine. Imports
 require HTTPS or localhost, Workers, WebAssembly, Web Crypto and
-`DecompressionStream`. Demo 0.4.2 checks these prerequisites, then instantiates a
+`DecompressionStream`. Demo 0.4.3 checks these prerequisites, then instantiates a
 small WebAssembly module inside the conversion Worker. It also tests an actual
 JSPI suspension and resumption before selecting that runtime; otherwise it
 selects bundled Asyncify. Asyncify still requires working WebAssembly and does

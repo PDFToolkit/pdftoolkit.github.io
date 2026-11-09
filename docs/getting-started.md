@@ -16,14 +16,14 @@ Le core 0.8.0 étend l'[écriture PDF 2.0](pdf-2-0.md) avec les [spécifications
 
 ## Installation
 
-Le core **0.12.3** nécessite PHP 8.3 ou supérieur en 64 bits et les extensions `ctype`, `iconv` et `zlib`. Les backends AES et CMS sont optionnels et nécessitent `openssl`. Le package [`pdftoolkit/pdf`](https://packagist.org/packages/pdftoolkit/pdf) est disponible sur Packagist. Depuis le projet consommateur :
+Le core **0.12.4** nécessite PHP 8.3 ou supérieur en 64 bits et les extensions `ctype`, `iconv` et `zlib`. Les backends AES et CMS sont optionnels et nécessitent `openssl`. Le package [`pdftoolkit/pdf`](https://packagist.org/packages/pdftoolkit/pdf) est disponible sur Packagist. Depuis le projet consommateur :
 
 ```sh
-composer require "pdftoolkit/pdf:^0.12.3"
+composer require "pdftoolkit/pdf:^0.12.4"
 ```
 
 Les modifications d'API figurent dans le [changelog](../CHANGELOG.md) et le
-[guide de migration 0.12](https://github.com/PDFToolkit/pdf/blob/v0.12.3/docs/fr/migration-0.12.md). Conserver le `composer.lock` du
+[guide de migration 0.12](https://github.com/PDFToolkit/pdf/blob/v0.12.4/docs/fr/migration-0.12.md). Conserver le `composer.lock` du
 projet consommateur pour fixer les versions installées.
 
 ### Migration du nom du package
@@ -52,19 +52,19 @@ identité d’origine.
 | [`pdftoolkit/pdf-images`](https://pdftoolkit.github.io/modules/images/index.html) | Inspecter des fichiers JPEG et décoder des fichiers PNG en objets image du core. |
 | [`pdftoolkit/pdf-fonts`](https://pdftoolkit.github.io/modules/fonts/index.html) | Sélectionner une face TrueType/CFF1 statique, préparer ses métriques et correspondances et appliquer explicitement le layout OpenType au texte PDF. |
 
-Reader **0.8.1**, Images **0.2.2** et Fonts **0.2.1** exigent le package canonique du core `pdftoolkit/pdf:^0.12.2`. Cette documentation sélectionne le core **0.12.3** ; les versions antérieures des modules conservent leurs contraintes historiques. Reader accepte la syntaxe PDF 1.0–2.0, l’authentification explicite par mot de passe ou clé publique, la vérification du MAC source et l’import borné d’objets. Son adaptateur d’images sélectionne d’abord un moteur natif compatible, puis les codecs PHP optionnels. Images traite les profondeurs PNG statiques, Adam7 et les métadonnées couleur JPEG. Fonts accepte les faces TrueType/CFF1 statiques et le layout OpenType explicite ; l’incorporation de CFF2 variable reste exclue. Ces packages sont disponibles sur Packagist : [lecteur](https://packagist.org/packages/pdftoolkit/pdf-reader), [images](https://packagist.org/packages/pdftoolkit/pdf-images) et [fontes](https://packagist.org/packages/pdftoolkit/pdf-fonts). Par exemple, pour importer des fichiers image avec le core 0.12.3 :
+Reader **0.8.1**, Images **0.2.3** et Fonts **0.2.1** exigent le package canonique du core `pdftoolkit/pdf:^0.12.2`. Cette documentation sélectionne le core **0.12.4** ; les versions antérieures des modules conservent leurs contraintes historiques. Reader accepte la syntaxe PDF 1.0–2.0, l’authentification explicite par mot de passe ou clé publique, la vérification du MAC source et l’import borné d’objets. Son adaptateur d’images sélectionne d’abord un moteur natif compatible, puis les codecs PHP optionnels. Images traite les profondeurs PNG statiques, Adam7 et les métadonnées couleur JPEG. Fonts accepte les faces TrueType/CFF1 statiques et le layout OpenType explicite ; l’incorporation de CFF2 variable reste exclue. Ces packages sont disponibles sur Packagist : [lecteur](https://packagist.org/packages/pdftoolkit/pdf-reader), [images](https://packagist.org/packages/pdftoolkit/pdf-images) et [fontes](https://packagist.org/packages/pdftoolkit/pdf-fonts). Par exemple, pour importer des fichiers image avec le core 0.12.4 :
 
 ```sh
-composer require "pdftoolkit/pdf:^0.12.3" "pdftoolkit/pdf-images:^0.2.2"
+composer require "pdftoolkit/pdf:^0.12.4" "pdftoolkit/pdf-images:^0.2.3"
 ```
 
 Le module installe le core avec sa contrainte stable. Le [guide des packages](packages.md) explique leur frontière, les installations et le fonctionnement du lecteur. Conserver le `composer.lock` de l'application pour fixer les versions et les commits utilisés.
 
 
-Le [modèle OpenType indépendant](https://pdftoolkit.github.io/fr/modules/opentype/index.html), [`pdftoolkit/opentype`](https://packagist.org/packages/pdftoolkit/opentype), représente les tables de fonte, les correspondances Unicode, le layout GSUB/GPOS, les métriques variables et les contours TrueType/CFF/CFF2 non hintés. Il ne dépend d’aucun package PDF. Sa [couverture](https://github.com/PDFToolkit/opentype/blob/v0.4.0/docs/fr/coverage.md) détaille les mécanismes présents et ceux restant à construire.
+Le [modèle OpenType indépendant](https://pdftoolkit.github.io/fr/modules/opentype/index.html), [`pdftoolkit/opentype`](https://packagist.org/packages/pdftoolkit/opentype), représente les tables de fonte, les correspondances Unicode, le layout GSUB/GPOS, les métriques variables et les contours TrueType/CFF/CFF2 non hintés. Il ne dépend d’aucun package PDF. Sa [couverture](https://github.com/PDFToolkit/opentype/blob/v0.4.1/docs/fr/coverage.md) détaille les mécanismes présents et ceux restant à construire.
 
 ```sh
-composer require "pdftoolkit/opentype:^0.4.0"
+composer require "pdftoolkit/opentype:^0.4.1"
 ```
 
 La bibliothèque indépendante [`pdftoolkit/pdf-codecs`](https://packagist.org/packages/pdftoolkit/pdf-codecs) décode JPEG, JPEG 2000 et JBIG2 en PHP sans dépendre d’un package PDF. Reader la détecte lorsqu’elle est installée. Si aucun moteur natif compatible ni décodeur PHP n’est disponible, il indique la commande d’installation ; il n’installe jamais de dépendance lui-même et ne masque pas une entrée malformée ou un budget épuisé. Le [guide des codecs](https://pdftoolkit.github.io/fr/modules/reader/image-codecs.html) précise la sélection, la précision et les profils acceptés.
@@ -121,7 +121,7 @@ $file = new FileStructure(new FileHeader('1.7'), new FileBody($catalog));
 $file->writeTo('hello-world.pdf');
 ```
 
-L'exemple complet, avec les imports et les métadonnées, se trouve dans [`examples/hello-world.php`](https://github.com/PDFToolkit/pdf/blob/v0.12.3/examples/hello-world.php).
+L'exemple complet, avec les imports et les métadonnées, se trouve dans [`examples/hello-world.php`](https://github.com/PDFToolkit/pdf/blob/v0.12.4/examples/hello-world.php).
 
 ## Tutoriels et recettes
 
@@ -172,7 +172,7 @@ Le writer assemble actuellement le fichier en mémoire. Le lecteur est fourni pa
 
 ## Sécurité
 
-La [politique de sécurité](https://github.com/PDFToolkit/pdf/blob/v0.12.3/SECURITY.md) décrit les signalements privés et les frontières de confiance. La [revue de sécurité](security.md) explique les protections de sérialisation et les responsabilités de l'application pour les chemins, les actions PDF et les limites de ressources.
+La [politique de sécurité](https://github.com/PDFToolkit/pdf/blob/v0.12.4/SECURITY.md) décrit les signalements privés et les frontières de confiance. La [revue de sécurité](security.md) explique les protections de sérialisation et les responsabilités de l'application pour les chemins, les actions PDF et les limites de ressources.
 
 ## Génération des définitions
 
@@ -186,9 +186,9 @@ L'extracteur `tools/extract_spec.py` conserve la source et les localisations dan
 
 ## Dériver du HTML
 
-Pour dériver du HTML sémantique depuis un PDF balisé, installer `pdftoolkit/pdf-to-html:^0.8.3` puis suivre le [tutoriel 35](tutorials/35-derive-html.md). Cette conversion optionnelle reste hors du core.
+Pour dériver du HTML sémantique depuis un PDF balisé, installer `pdftoolkit/pdf-to-html:^0.8.4` puis suivre le [tutoriel 35](tutorials/35-derive-html.md). Cette conversion optionnelle reste hors du core.
 
-La version 0.8.3 exige Reader `^0.8.1`, le core canonique `pdftoolkit/pdf:^0.12.2` et PHP 8.3+ en 64 bits avec DOM et mbstring. Son [registre des exigences](https://pdftoolkit.github.io/fr/modules/to-html/requirements.html) rattache les règles aux tests. Les [profils](https://pdftoolkit.github.io/fr/modules/to-html/policies.html) distinguent contenu sémantique, actions de formulaire optionnelles et scripts PDF ; aucune de ces actions actives n'est autorisée par défaut. Le [rendu graphique](https://pdftoolkit.github.io/fr/modules/to-html/graphics.html) et l'authentification restent des capacités fournies explicitement par l'application. Conserver les ressources retournées et lire les diagnostics avant publication.
+La version 0.8.4 exige Reader `^0.8.1`, le core canonique `pdftoolkit/pdf:^0.12.2` et PHP 8.3+ en 64 bits avec DOM et mbstring. Son [registre des exigences](https://pdftoolkit.github.io/fr/modules/to-html/requirements.html) rattache les règles aux tests. Les [profils](https://pdftoolkit.github.io/fr/modules/to-html/policies.html) distinguent contenu sémantique, actions de formulaire optionnelles et scripts PDF ; aucune de ces actions actives n'est autorisée par défaut. Le [rendu graphique](https://pdftoolkit.github.io/fr/modules/to-html/graphics.html) et l'authentification restent des capacités fournies explicitement par l'application. Conserver les ressources retournées et lire les diagnostics avant publication.
 
 [Packagist: pdftoolkit/pdf-to-html](https://packagist.org/packages/pdftoolkit/pdf-to-html).
 

@@ -135,7 +135,7 @@ distinctes. Un mauvais credential de pièce jointe doit permettre l'ouverture
 du document puis échouer à son accès. Certificats générés et entrées adverses
 restent des données privées du build.
 
-La sélection actuelle documente PDF vers HTML 0.8.3 et le lecteur 0.8.1. Le
+La sélection actuelle documente PDF vers HTML 0.8.4 et le lecteur 0.8.1. Le
 [registre des exigences](https://pdftoolkit.github.io/fr/modules/to-html/requirements.html),
 les [politiques](https://pdftoolkit.github.io/fr/modules/to-html/policies.html) et
 les [graphiques](https://pdftoolkit.github.io/fr/modules/to-html/graphics.html)
@@ -418,7 +418,7 @@ le `--pdftoppm` choisi. Le profil par défaut et les frames du site n'exécutent
 pas le runtime ; les cas activés explicitement sont contrôlés dans l'espace privé
 de validation. Tous les guides du module conservent leur variante EN/FR.
 
-Le checkout publié `_sources/pdf-to-html` est sélectionné indépendamment. Son core et son lecteur installés doivent correspondre exactement à son propre lock publié (versions et commits source/dist), séparément des pins core/Reader documentés. HTML 0.8.3 exécute ses oracles et le tutoriel 35 avec son lock publié, qui sélectionne Reader 0.8.1. Le Reader 0.8.1 documenté provient de ce vendor HTML ; ses guides, API, tutoriel 12 et oracles utilisent tous cette sélection. Le core 0.12.3 conserve son propre lock publié avec Reader 0.8.1, Fonts 0.2.1 et Images 0.2.2 pour ses exemples de développement. HTML 0.8.3 s’exécute avec son core canonique 0.12.2 verrouillé indépendamment ; cette identité d’exécution reste distincte du core 0.12.3 documenté. Exemples et oracles Reader chargent le véritable core de ce consumer. `_build/validation-sources.json` consigne les deux environnements de validation et leurs commits de packages exacts. L’exporteur API enregistre uniquement les namespaces HTML et lecteur sélectionnés contre leurs arbres choisis. Les guides apparaissent sous `/modules/to-html/` dans les deux langues. Le tutoriel 35 copie le PDF d’entrée, rend toutes ses pages et exécute le CLI pour produire le vrai HTML et les diagnostics JSON. `derivedHtml` inventorie cette sortie séparément des routes documentaires avec package/SHA et frames sandboxées ; le vérificateur refuse le contenu actif dans ces aperçus. L’original fourni de 74 pages reste dans le package, lié au commit de la version retenue.
+Le checkout publié `_sources/pdf-to-html` est sélectionné indépendamment. Son core et son lecteur installés doivent correspondre exactement à son propre lock publié (versions et commits source/dist), séparément des pins core/Reader documentés. HTML 0.8.4 exécute ses oracles et le tutoriel 35 avec son lock publié, qui sélectionne Reader 0.8.1. Le Reader 0.8.1 documenté provient de ce vendor HTML ; ses guides, API, tutoriel 12 et oracles utilisent tous cette sélection. Le core 0.12.4 conserve son propre lock publié avec Reader 0.8.1, Fonts 0.2.1 et Images 0.2.2 pour ses exemples de développement. HTML 0.8.4 s’exécute avec son core canonique 0.12.2 verrouillé indépendamment ; cette identité d’exécution reste distincte du core 0.12.4 documenté. Exemples et oracles Reader chargent le véritable core de ce consumer. `_build/validation-sources.json` consigne les deux environnements de validation et leurs commits de packages exacts. L’exporteur API enregistre uniquement les namespaces HTML et lecteur sélectionnés contre leurs arbres choisis. Les guides apparaissent sous `/modules/to-html/` dans les deux langues. Le tutoriel 35 copie le PDF d’entrée, rend toutes ses pages et exécute le CLI pour produire le vrai HTML et les diagnostics JSON. `derivedHtml` inventorie cette sortie séparément des routes documentaires avec package/SHA et frames sandboxées ; le vérificateur refuse le contenu actif dans ces aperçus. L’original fourni de 74 pages reste dans le package, lié au commit de la version retenue.
 
 Le guide Reader d’inspection est publié sous `/modules/reader/inspection.html`
 et `/fr/modules/reader/inspection.html`. Le build exécute l’oracle indépendant
@@ -432,7 +432,7 @@ Reader, sans transformer l’inspection en certification PDF/UA.
 
 La [page de démo](https://pdftoolkit.github.io/fr/modules/to-html/demo/index.html)
 native et sa contrepartie anglaise intègrent une application publiée séparément.
-La documentation 0.18 sélectionne la démo 0.4.2 avec HTML 0.8.3, Reader 0.8.1 et onze cas de galerie,
+La documentation 0.18 sélectionne la démo 0.4.3 avec HTML 0.8.4, Reader 0.8.1 et onze cas de galerie,
 dont un PDF original LuaLaTeX avec des éléments de structure MathML.
 `resources/demo-source.json` sélectionne sa version stable, son tag annoté et le
 commit désigné. Cette sélection d’application est distincte :

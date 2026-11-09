@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "repository": "https://github.com/PDFToolkit/pdf-to-html-demo",
-  "version": "0.4.2",
-  "tag": "v0.4.2",
-  "revision": "d5b4f7de78d9bd535d450db49382386b765e7b76"
+  "version": "0.4.3",
+  "tag": "v0.4.3",
+  "revision": "56e53ce5bd84d7d2dd3c8272397f8ce8af5a258b"
 }

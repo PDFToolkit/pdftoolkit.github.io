@@ -16,14 +16,14 @@ Core 0.8.0 extends [PDF 2.0 writing](pdf-2-0.md) with the [companion specificati
 
 ## Installation
 
-Core **0.12.3** requires 64-bit PHP 8.3 or later and the `ctype`, `iconv` and `zlib` extensions. AES and CMS backends are optional and require `openssl`. The [`pdftoolkit/pdf`](https://packagist.org/packages/pdftoolkit/pdf) package is available on Packagist. From the consuming project:
+Core **0.12.4** requires 64-bit PHP 8.3 or later and the `ctype`, `iconv` and `zlib` extensions. AES and CMS backends are optional and require `openssl`. The [`pdftoolkit/pdf`](https://packagist.org/packages/pdftoolkit/pdf) package is available on Packagist. From the consuming project:
 
 ```sh
-composer require "pdftoolkit/pdf:^0.12.3"
+composer require "pdftoolkit/pdf:^0.12.4"
 ```
 
 API changes appear in the [changelog](../../CHANGELOG.md) and the
-[0.12 migration guide](https://github.com/PDFToolkit/pdf/blob/v0.12.3/docs/migration-0.12.md). Keep the consuming project's
+[0.12 migration guide](https://github.com/PDFToolkit/pdf/blob/v0.12.4/docs/migration-0.12.md). Keep the consuming project's
 `composer.lock` to pin installed versions.
 
 ### Package name migration
@@ -51,19 +51,19 @@ files retain their original package identity.
 | [`pdftoolkit/pdf-images`](https://pdftoolkit.github.io/modules/images/index.html) | Inspect JPEG files and decode PNG files into core image objects. |
 | [`pdftoolkit/pdf-fonts`](https://pdftoolkit.github.io/modules/fonts/index.html) | Select a static TrueType/CFF1 face, prepare metrics and mappings, and apply explicit OpenType layout to PDF text. |
 
-Reader **0.8.1**, Images **0.2.2** and Fonts **0.2.1** require the canonical core package `pdftoolkit/pdf:^0.12.2`. This documentation selects core **0.12.3**; older module releases retain their historical constraints. Reader accepts PDF 1.0–2.0 syntax, explicit password/public-key authentication, source MAC verification and bounded object imports. Its image adapter selects a compatible native engine first, then the optional PHP codecs. Images handles static PNG depths, Adam7 and JPEG colour metadata. Fonts supports static TrueType/CFF1 faces and explicit OpenType layout; variable CFF2 embedding remains excluded. These packages are available on Packagist: [reader](https://packagist.org/packages/pdftoolkit/pdf-reader), [images](https://packagist.org/packages/pdftoolkit/pdf-images) and [fonts](https://packagist.org/packages/pdftoolkit/pdf-fonts). For example, to import image files with core 0.12.3:
+Reader **0.8.1**, Images **0.2.3** and Fonts **0.2.1** require the canonical core package `pdftoolkit/pdf:^0.12.2`. This documentation selects core **0.12.4**; older module releases retain their historical constraints. Reader accepts PDF 1.0–2.0 syntax, explicit password/public-key authentication, source MAC verification and bounded object imports. Its image adapter selects a compatible native engine first, then the optional PHP codecs. Images handles static PNG depths, Adam7 and JPEG colour metadata. Fonts supports static TrueType/CFF1 faces and explicit OpenType layout; variable CFF2 embedding remains excluded. These packages are available on Packagist: [reader](https://packagist.org/packages/pdftoolkit/pdf-reader), [images](https://packagist.org/packages/pdftoolkit/pdf-images) and [fonts](https://packagist.org/packages/pdftoolkit/pdf-fonts). For example, to import image files with core 0.12.4:
 
 ```sh
-composer require "pdftoolkit/pdf:^0.12.3" "pdftoolkit/pdf-images:^0.2.2"
+composer require "pdftoolkit/pdf:^0.12.4" "pdftoolkit/pdf-images:^0.2.3"
 ```
 
 The module installs the core with its stable constraint. The [package guide](packages.md) explains boundaries, installation and reader behavior. Keep the application's `composer.lock` to pin the versions and commits used.
 
 
-The [independent OpenType model](https://pdftoolkit.github.io/modules/opentype/index.html), [`pdftoolkit/opentype`](https://packagist.org/packages/pdftoolkit/opentype), represents font tables, Unicode mappings, GSUB/GPOS layout, variable metrics and unhinted TrueType/CFF/CFF2 outlines. It depends on no PDF package. Its [coverage](https://github.com/PDFToolkit/opentype/blob/v0.4.0/docs/coverage.md) details the implemented mechanisms and work remaining.
+The [independent OpenType model](https://pdftoolkit.github.io/modules/opentype/index.html), [`pdftoolkit/opentype`](https://packagist.org/packages/pdftoolkit/opentype), represents font tables, Unicode mappings, GSUB/GPOS layout, variable metrics and unhinted TrueType/CFF/CFF2 outlines. It depends on no PDF package. Its [coverage](https://github.com/PDFToolkit/opentype/blob/v0.4.1/docs/coverage.md) details the implemented mechanisms and work remaining.
 
 ```sh
-composer require "pdftoolkit/opentype:^0.4.0"
+composer require "pdftoolkit/opentype:^0.4.1"
 ```
 
 The independent [`pdftoolkit/pdf-codecs`](https://packagist.org/packages/pdftoolkit/pdf-codecs) library decodes JPEG, JPEG 2000 and JBIG2 in PHP without depending on a PDF package. Reader detects it when installed. If no compatible native engine or PHP decoder is available, it reports the installation command; it never installs dependencies itself or hides malformed input and exhausted budgets. The [codec guide](https://pdftoolkit.github.io/modules/reader/image-codecs.html) documents selection, precision and supported profiles.
@@ -120,7 +120,7 @@ $file = new FileStructure(new FileHeader('1.7'), new FileBody($catalog));
 $file->writeTo('hello-world.pdf');
 ```
 
-The complete example, with imports and metadata, is in [`examples/hello-world.php`](https://github.com/PDFToolkit/pdf/blob/v0.12.3/examples/hello-world.php).
+The complete example, with imports and metadata, is in [`examples/hello-world.php`](https://github.com/PDFToolkit/pdf/blob/v0.12.4/examples/hello-world.php).
 
 ## Tutorials and recipes
 
@@ -171,7 +171,7 @@ The writer currently assembles the file in memory. The reader is supplied by `pd
 
 ## Security
 
-The [security policy](https://github.com/PDFToolkit/pdf/blob/v0.12.3/SECURITY.md) describes private reporting and trust boundaries. The [security review](security.md) explains serialization protections and application responsibilities for paths, PDF actions and resource limits.
+The [security policy](https://github.com/PDFToolkit/pdf/blob/v0.12.4/SECURITY.md) describes private reporting and trust boundaries. The [security review](security.md) explains serialization protections and application responsibilities for paths, PDF actions and resource limits.
 
 ## Generating definitions
 
@@ -185,9 +185,9 @@ The `tools/extract_spec.py` extractor retains the source and PDF locations. Usin
 
 ## Derive HTML
 
-For semantic HTML from tagged PDF, install `pdftoolkit/pdf-to-html:^0.8.3` and follow [tutorial 35](tutorials/35-derive-html.md). This optional conversion remains outside the core.
+For semantic HTML from tagged PDF, install `pdftoolkit/pdf-to-html:^0.8.4` and follow [tutorial 35](tutorials/35-derive-html.md). This optional conversion remains outside the core.
 
-Version 0.8.3 requires Reader `^0.8.1`, the canonical core `pdftoolkit/pdf:^0.12.2` and 64-bit PHP 8.3+ with DOM and mbstring. Its [requirements ledger](https://pdftoolkit.github.io/modules/to-html/requirements.html) links rules to tests. [Profiles](https://pdftoolkit.github.io/modules/to-html/policies.html) distinguish semantic content, optional form actions and PDF scripts; none of those active operations is enabled by default. [Graphics rendering](https://pdftoolkit.github.io/modules/to-html/graphics.html) and authentication remain capabilities supplied explicitly by the application. Keep returned assets and read diagnostics before publication.
+Version 0.8.4 requires Reader `^0.8.1`, the canonical core `pdftoolkit/pdf:^0.12.2` and 64-bit PHP 8.3+ with DOM and mbstring. Its [requirements ledger](https://pdftoolkit.github.io/modules/to-html/requirements.html) links rules to tests. [Profiles](https://pdftoolkit.github.io/modules/to-html/policies.html) distinguish semantic content, optional form actions and PDF scripts; none of those active operations is enabled by default. [Graphics rendering](https://pdftoolkit.github.io/modules/to-html/graphics.html) and authentication remain capabilities supplied explicitly by the application. Keep returned assets and read diagnostics before publication.
 
 [Packagist: pdftoolkit/pdf-to-html](https://packagist.org/packages/pdftoolkit/pdf-to-html).
 

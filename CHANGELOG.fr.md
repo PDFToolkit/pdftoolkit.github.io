@@ -2,13 +2,14 @@
 
 [English](CHANGELOG.md) · [Français](CHANGELOG.fr.md)
 
-## [0.18.0] - 2026-11-08
+## [0.18.0] - 2026-11-09
 
 - Ajouter un cinquième exemple HTML vers PDF natif : la source historique W3C `test5526c.htm` inchangée, son PDF d’une page et son aperçu natif dans un second panneau du guide CSS1. Conserver les quatre exemples et routes existants.
 - Exécuter son générateur dédié et son oracle PDF indépendant, publier les empreintes source/PDF et les reçus de génération/validation téléchargeables, et contrôler leurs identités dans les deux langues.
-- Sélectionner HTML vers PDF 0.3.0 publié et mettre à jour sa documentation avec flottants bornés, instantanés statiques de boutons radio explicites et bilan CSS1 : 49 entrées partielles et 13 non prises en charge, sans annonce de conformité complète.
-- Sélectionner la démo 0.4.2 publiée avec un véritable contrôle de démarrage WebAssembly/JSPI et un repli Asyncify lorsque JSPI ne peut pas s’exécuter. Conserver les pins PHP et les onze exemples de galerie.
+- Sélectionner HTML vers PDF 0.3.1 publié et mettre à jour sa documentation avec flottants bornés, instantanés statiques de boutons radio explicites et bilan CSS1 : 49 entrées partielles et 13 non prises en charge, sans annonce de conformité complète.
+- Sélectionner la démo 0.4.3 publiée avec un véritable contrôle de démarrage WebAssembly/JSPI et un repli Asyncify lorsque JSPI ne peut pas s’exécuter. Conserver les onze exemples de galerie et reconstruire le runtime depuis les versions de maintenance sélectionnées.
 - Expliquer le rapport local de démarrage en français et en anglais : étape/code stables, moteur choisi et indicateurs de disponibilité côté page, sans données PDF ni envoi automatique. Distinguer le délai de démarrage du traitement PDF et conserver la limite explicite concernant l’environnement Firefox 157 non confirmé.
+- Sélectionner les versions de maintenance core 0.12.4, Images 0.2.3, OpenType 0.4.1, Codecs 0.1.1, PDF vers HTML 0.8.4 et HTML vers PDF 0.3.1, dont les locks de développement utilisent `symfony/filesystem` 7.4.23 corrigé. Conserver Reader 0.8.1, Fonts 0.2.1 et les API publiques existantes ; chaque environnement de validation conserve son propre lock publié.
 
 ## [0.17.1] - 2026-11-02
 
